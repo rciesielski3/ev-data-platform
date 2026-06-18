@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum IngestionStatus {
+  RUNNING
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+enum RangeStandard {
+  WLTP
+  EPA
+  NEDC
+  CLTC
+  ESTIMATED
+  UNKNOWN
+}
+
+model DataSource {
+  id             String          @id @default(cuid())
+  key            String          @unique
+  label          String
+  url            String?
+  licenseStatus  String          @default("pending")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  ingestionRuns  IngestionRun[]
+}
+
+model IngestionRun {
+  id              String          @id @default(cuid())
+  sourceId        String
+  source          DataSource      @relation(fields: [sourceId], references: [id])
+  status          IngestionStatus @default(RUNNING)
+  startedAt       DateTime        @default(now())
+  completedAt     DateTime?
+  recordsFetched  Int             @default(0)
+  recordsUpserted Int             @default(0)
+  recordsFailed   Int             @default(0)
+  errorMessage    String?
+  metadata        Json?
+}
+
+model ChargingOperator {
+  id             String            @id @default(cuid())
+  sourceName     String
+  sourceRecordId String
+  name           String?
+  normalizedName String
+  countryCode    String            @default("PL")
+  sourceUrl      String?
+  importedAt     DateTime
+  updatedAt      DateTime          @updatedAt
+  stations       ChargingStation[]
+
+  @@unique([sourceName, sourceRecordId])
+  @@index([normalizedName])
+}
+
+model ChargingStation {
+  id              String              @id @default(cuid())
+  sourceName      String
+  sourceRecordId  String
+  externalCode    String?
+  name            String?
+  latitude        Float
+  longitude       Float
+  city            String?
+  province        String?
+  district        String?
+  community       String?
+  countryCode     String              @default("PL")
+  address         String?
+  postalCode      String?
+  operatorId      String?
+  operator        ChargingOperator?   @relation(fields: [operatorId], references: [id])
+  poolSourceId    String?
+  stationType     String?
+  sourceUrl       String?
+  sourceUpdatedAt DateTime?
+  importedAt      DateTime
+  updatedAt       DateTime            @updatedAt
+  isManualOverride Boolean            @default(false)
+  rawPayload      Json?
+  connectors      ChargingConnector[]
+
+  @@unique([sourceName, sourceRecordId])
+  @@index([latitude, longitude])
+  @@index([city])
+  @@index([countryCode])
+}
+
+model ChargingConnector {
+  id              String          @id @default(cuid())
+  stationId       String
+  station         ChargingStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  connectorType   String
+  powerKw         Float?
+  cableAttached   Boolean?
+  chargingMode    String?
+  sourcePointId   String?
+  sourceInterfaceIds Int[]
+  importedAt      DateTime
+  updatedAt       DateTime        @updatedAt
+
+  @@index([connectorType])
+  @@index([stationId])
+}
+
+model EvBrand {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  models    EvModel[]
+}
+
+model EvModel {
+  id               String   @id @default(cuid())
+  brandId          String
+  brand            EvBrand  @relation(fields: [brandId], references: [id])
+  sourceName       String
+  sourceRecordId   String   @unique
+  modelName        String
+  trimName         String?
+  variantName      String?
+  year             Int?
+  vehicleType      String?
+  sourceUrl        String?
+  sourceUpdatedAt  DateTime?
+  importedAt       DateTime
+  updatedAt        DateTime @updatedAt
+  isManualOverride Boolean  @default(false)
+  rawPayload       Json?
+  specs            EvSpec?
+
+  @@index([modelName])
+  @@index([year])
+}
+
+model EvSpec {
+  id                      String         @id @default(cuid())
+  modelId                 String         @unique
+  model                   EvModel        @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  batteryCapacityKwhNet   Float?
+  batteryCapacityKwhGross Float?
+  rangeWltpKm             Float?
+  rangeEpaKm              Float?
+  rangeStandard           RangeStandard  @default(UNKNOWN)
+  acMaxPowerKw            Float?
+  dcMaxPowerKw            Float?
+  primaryConnector        String?
+  drivetrain              String?
+  systemPowerKw           Float?
+  manualOverrides         Json?
+  importedAt              DateTime
+  updatedAt               DateTime       @updatedAt
+}
+
+model EvManualOverride {
+  id             String   @id @default(cuid())
+  sourceRecordId String   @unique
+  patch          Json
+  reason         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

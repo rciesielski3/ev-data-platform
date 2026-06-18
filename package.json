@@ -1,0 +1,48 @@
+{
+  "name": "ev-data-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "validate:quick": "npm run lint && npm run typecheck && npm run test",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "import:eipa": "tsx src/server/jobs/run-eipa-import.ts",
+    "import:eipa:test": "EIPA_IMPORT_LIMIT=100 npm run import:eipa",
+    "import:openev": "tsx src/server/jobs/run-openev-import.ts",
+    "import:all": "npm run import:eipa && npm run import:openev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "@types/node": "^20.19.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "^15.3.3",
+    "husky": "^9.1.7",
+    "prisma": "^6.9.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
