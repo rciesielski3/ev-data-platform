@@ -267,6 +267,12 @@ const StationsPage = async ({
                             .filter(Boolean)
                             .join(", ") || "Location details unavailable"}
                         </p>
+                        <Link
+                          href={`/stations/${station.id}`}
+                          className="mt-3 inline-flex text-sm font-medium text-sky-700 hover:text-sky-900"
+                        >
+                          View details
+                        </Link>
                       </div>
                       {strongestConnector?.powerKw && (
                         <span className="badge">
