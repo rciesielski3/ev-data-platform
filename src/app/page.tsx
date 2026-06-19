@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,18 @@ const getStatus = async () => {
   ]);
 
   return { evCount, stationCount, connectorCount, latestRuns };
+};
+
+const formatDate = (value: Date | null | undefined) => {
+  if (!value) {
+    return "unknown";
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(value);
 };
 
 const HomePage = async () => {
@@ -34,11 +47,11 @@ const HomePage = async () => {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-6 py-12">
       <header className="space-y-3">
-        <span className="badge">Milestone 1 · Data Foundation</span>
+        <span className="badge">Milestone 2 - Searchable MVP</span>
         <h1 className="text-4xl font-semibold tracking-tight">EV Data Platform</h1>
         <p className="muted max-w-2xl text-lg">
-          Normalized EV models and Polish charging infrastructure imported from
-          OpenEV Data and EIPA with idempotent upserts and ingestion logging.
+          Search normalized EV models and Polish charging infrastructure with
+          source attribution, import freshness, and simple filters.
         </p>
       </header>
 
@@ -64,6 +77,33 @@ const HomePage = async () => {
             </div>
           </section>
 
+          <section className="grid gap-4 md:grid-cols-2">
+            <Link
+              href="/vehicles"
+              className="card transition-shadow hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-sky-700">EV catalog</p>
+              <h2 className="mt-2 text-xl font-semibold">Browse vehicle models</h2>
+              <p className="muted mt-2 text-sm">
+                Search brands and models, then open detail pages for battery,
+                range, charging, source, and freshness.
+              </p>
+            </Link>
+            <Link
+              href="/stations"
+              className="card transition-shadow hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-sky-700">Station search</p>
+              <h2 className="mt-2 text-xl font-semibold">
+                Find charging infrastructure
+              </h2>
+              <p className="muted mt-2 text-sm">
+                Filter stations by location, connector, minimum power, and
+                operator using imported EIPA data.
+              </p>
+            </Link>
+          </section>
+
           <section className="card">
             <h2 className="mb-4 text-xl font-medium">Latest ingestion runs</h2>
             {status.latestRuns.length === 0 ? (
@@ -85,6 +125,12 @@ const HomePage = async () => {
                     <p className="muted text-sm">
                       fetched {run.recordsFetched} · upserted {run.recordsUpserted} ·
                       failed {run.recordsFailed}
+                    </p>
+                    <p className="muted text-sm">
+                      started {formatDate(run.startedAt)}
+                      {run.completedAt
+                        ? ` / completed ${formatDate(run.completedAt)}`
+                        : ""}
                     </p>
                   </li>
                 ))}
