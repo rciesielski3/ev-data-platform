@@ -5,6 +5,7 @@ import {
   formatConnectorLabel,
   formatPowerKw,
   getConnectorCurrentType,
+  getConnectorImagePath,
   getConnectorKnowledge,
 } from "@/features/charging/connectors";
 
@@ -19,6 +20,7 @@ describe("getConnectorKnowledge", () => {
       supportedRegions: ["Imported source data incomplete"],
       supportedVehicleBrands: ["Unknown"],
       imageLabel: "Connector type unavailable",
+      imagePath: "/connectors/unknown.webp",
     };
 
     expect(getConnectorKnowledge(null)).toEqual(expectedUnknown);
@@ -37,6 +39,7 @@ describe("getConnectorKnowledge", () => {
       supportedRegions: ["Europe", "Poland"],
       supportedVehicleBrands: expect.arrayContaining(["Volkswagen", "Hyundai"]),
       imageLabel: "CCS2 DC fast charging connector",
+      imagePath: "/connectors/ccs2.webp",
     });
     expect(formatConnectorLabel("CCS2")).toBe("CCS2");
     expect(formatConnectorLabel("CCS")).toBe("CCS2");
@@ -54,6 +57,7 @@ describe("getConnectorKnowledge", () => {
       supportedRegions: ["Europe", "Poland"],
       supportedVehicleBrands: expect.arrayContaining(["Renault", "Tesla"]),
       imageLabel: "Type 2 AC charging connector",
+      imagePath: "/connectors/type2.webp",
     });
     expect(formatConnectorLabel("Type 2")).toBe("Type 2");
     expect(formatConnectorLabel("type-2")).toBe("Type 2");
@@ -71,10 +75,20 @@ describe("getConnectorKnowledge", () => {
       supportedRegions: ["Europe", "Japan"],
       supportedVehicleBrands: expect.arrayContaining(["Nissan", "Mitsubishi"]),
       imageLabel: "CHAdeMO DC fast charging connector",
+      imagePath: "/connectors/chademo.webp",
     });
     expect(formatConnectorLabel("CHAdeMO")).toBe("CHAdeMO");
     expect(formatConnectorLabel("cha de mo")).toBe("CHAdeMO");
     expect(getConnectorCurrentType("CHAdeMO")).toBe("DC");
+  });
+});
+
+describe("getConnectorImagePath", () => {
+  it("returns connector image paths with the Unknown image as fallback", () => {
+    expect(getConnectorImagePath("CCS2")).toBe("/connectors/ccs2.webp");
+    expect(getConnectorImagePath("Type 2")).toBe("/connectors/type2.webp");
+    expect(getConnectorImagePath("CHAdeMO")).toBe("/connectors/chademo.webp");
+    expect(getConnectorImagePath("NACS")).toBe("/connectors/unknown.webp");
   });
 });
 

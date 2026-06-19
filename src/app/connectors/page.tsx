@@ -1,4 +1,5 @@
 import { getConnectorPageEntries } from "@/features/charging/connector-pages";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ConnectorsPage() {
@@ -25,13 +26,14 @@ export default function ConnectorsPage() {
             href={connector.href}
             className="card group transition-shadow hover:shadow-md"
           >
-            <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Visual label
-              </p>
-              <p className="mt-2 text-sm font-medium text-slate-900">
-                {connector.imageLabel}
-              </p>
+            <div className="mb-4 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+              <Image
+                src={connector.imagePath}
+                alt={connector.imageLabel}
+                width={640}
+                height={360}
+                className="aspect-video w-full object-cover"
+              />
             </div>
             <div className="flex items-start justify-between gap-4">
               <div>

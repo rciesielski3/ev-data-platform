@@ -11,7 +11,10 @@ export type ConnectorKnowledge = {
   supportedRegions: string[];
   supportedVehicleBrands: string[];
   imageLabel: string;
+  imagePath: string;
 };
+
+const UNKNOWN_CONNECTOR_IMAGE_PATH = "/connectors/unknown.webp";
 
 const UNKNOWN_CONNECTOR: ConnectorKnowledge = {
   key: "unknown",
@@ -23,6 +26,7 @@ const UNKNOWN_CONNECTOR: ConnectorKnowledge = {
   supportedRegions: ["Imported source data incomplete"],
   supportedVehicleBrands: ["Unknown"],
   imageLabel: "Connector type unavailable",
+  imagePath: UNKNOWN_CONNECTOR_IMAGE_PATH,
 };
 
 const CONNECTOR_KNOWLEDGE = {
@@ -43,6 +47,7 @@ const CONNECTOR_KNOWLEDGE = {
       "Tesla",
     ],
     imageLabel: "CCS2 DC fast charging connector",
+    imagePath: "/connectors/ccs2.webp",
   },
   type2: {
     key: "type2",
@@ -61,6 +66,7 @@ const CONNECTOR_KNOWLEDGE = {
       "Hyundai",
     ],
     imageLabel: "Type 2 AC charging connector",
+    imagePath: "/connectors/type2.webp",
   },
   chademo: {
     key: "chademo",
@@ -72,6 +78,7 @@ const CONNECTOR_KNOWLEDGE = {
     supportedRegions: ["Europe", "Japan"],
     supportedVehicleBrands: ["Nissan", "Mitsubishi", "Kia"],
     imageLabel: "CHAdeMO DC fast charging connector",
+    imagePath: "/connectors/chademo.webp",
   },
   unknown: UNKNOWN_CONNECTOR,
 } satisfies Record<ConnectorKey, ConnectorKnowledge>;
@@ -135,6 +142,9 @@ export const formatConnectorLabel = (type: string | null | undefined) =>
 
 export const getConnectorCurrentType = (type: string | null | undefined) =>
   getConnectorKnowledge(type).currentType;
+
+export const getConnectorImagePath = (type: string | null | undefined) =>
+  getConnectorKnowledge(type).imagePath || UNKNOWN_CONNECTOR_IMAGE_PATH;
 
 export const formatPowerKw = (value: number | string | null | undefined) => {
   if (value === null || value === undefined || value === "") {

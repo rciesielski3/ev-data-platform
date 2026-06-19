@@ -2,6 +2,7 @@ import {
   getConnectorPageEntries,
   getConnectorPageKnowledge,
 } from "@/features/charging/connector-pages";
+import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-static";
@@ -68,10 +69,15 @@ export default async function ConnectorDetailPage({
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Image label
           </p>
-          <div className="mt-4 flex min-h-48 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
-            <p className="text-lg font-semibold text-slate-700">
-              {connector.imageLabel}
-            </p>
+          <div className="mt-4 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+            <Image
+              src={connector.imagePath}
+              alt={connector.imageLabel}
+              width={720}
+              height={480}
+              className="aspect-[3/2] w-full object-cover"
+              priority
+            />
           </div>
           <p className="muted mt-4 text-sm">
             Static visual label only. No live connector availability is implied.
