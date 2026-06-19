@@ -1,3 +1,5 @@
+import { formatStationOperatorLabel } from "@/features/charging/station-search";
+
 export type OperatorInsightRow = {
   operatorName: string | null;
   stationCount: number;
@@ -50,6 +52,12 @@ const sortByCountThenLabel = <T extends { count: number; label: string }>(
   right: T,
 ) => right.count - left.count || compareLabels(left.label, right.label);
 
+const formatOperatorInsightLabel = (operatorName: string | null) =>
+  formatStationOperatorLabel({
+    name: operatorName,
+    normalizedName: operatorName ?? "",
+  });
+
 export const formatInteger = (value: number) => numberFormatter.format(value);
 
 export const formatPercent = (value: number, total: number) => {
@@ -67,17 +75,19 @@ export const formatConnectorPower = (powerKw: number) =>
   `${Number.isInteger(powerKw) ? powerKw.toFixed(0) : powerKw.toFixed(1)} kW`;
 
 export const buildChargingInsights = (input: ChargingInsightsInput) => {
-  const topOperators = input.operatorRows
-    .map((row) => {
-      const label = displayText(row.operatorName, "Unknown operator");
+  const operatorTotals = new Map<string, number>();
 
-      return {
-        label,
-        stationCount: row.stationCount,
-        stationShare: formatPercent(row.stationCount, input.totalStations),
-        count: row.stationCount,
-      };
-    })
+  for (const row of input.operatorRows) {
+    const label = formatOperatorInsightLabel(row.operatorName);
+    operatorTotals.set(label, (operatorTotals.get(label) ?? 0) + row.stationCount);
+  }
+
+  const topOperators = Array.from(operatorTotals, ([label, stationCount]) => ({
+    label,
+    stationCount,
+    stationShare: formatPercent(stationCount, input.totalStations),
+    count: stationCount,
+  }))
     .sort(sortByCountThenLabel)
     .map((operator) => ({
       label: operator.label,
@@ -110,7 +120,7 @@ export const buildChargingInsights = (input: ChargingInsightsInput) => {
       return {
         stationId: station.stationId,
         stationName,
-        operatorName: displayText(station.operatorName, "Unknown operator"),
+        operatorName: formatOperatorInsightLabel(station.operatorName),
         location:
           locationParts.length > 0 ? locationParts.join(", ") : "Location unavailable",
         connectorType: displayText(station.connectorType, "Unknown connector"),

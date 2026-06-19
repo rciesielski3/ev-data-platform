@@ -3,10 +3,10 @@ import {
   formatPowerKw,
   getConnectorCurrentType,
 } from "@/features/charging/connectors";
+import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 
 const UNKNOWN = "Unknown";
-const UNKNOWN_OPERATOR = "Unknown operator";
 
 export type StationDetailsInput = {
   id: string;
@@ -63,10 +63,6 @@ const firstDisplayValue = (...values: Array<string | null | undefined>) => {
 
 export const buildStationDetails = (station: StationDetailsInput) => {
   const sourceUpdatedAt = formatDisplayDate(station.sourceUpdatedAt);
-  const operatorName = firstDisplayValue(
-    station.operator?.name,
-    station.operator?.normalizedName,
-  );
 
   return {
     id: station.id,
@@ -75,7 +71,7 @@ export const buildStationDetails = (station: StationDetailsInput) => {
       station.externalCode,
       "Charging station",
     ),
-    operatorName: operatorName === UNKNOWN ? UNKNOWN_OPERATOR : operatorName,
+    operatorName: formatStationOperatorLabel(station.operator),
     address: displayValue(station.address),
     city: displayValue(station.city),
     province: displayValue(station.province),

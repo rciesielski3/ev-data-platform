@@ -46,11 +46,13 @@ export type OperatorFilterOption = {
 };
 
 export type StationConnectorSummaryInput = {
+  id?: string | null;
   connectorType: string | null | undefined;
   powerKw: number | string | null | undefined;
 };
 
 export type StationConnectorSummaryItem = {
+  key: string;
   label: string;
   title: string;
   currentType: ConnectorCurrentType;
@@ -131,9 +133,9 @@ export const buildOperatorFilterOptions = (
   const options: OperatorFilterOption[] = [];
 
   for (const operator of operators) {
-    const value = cleanNullableText(operator.name) ?? cleanNullableText(operator.normalizedName);
+    const value = formatStationOperatorLabel(operator);
 
-    if (!value || isTechnicalEipaOperatorIdentifier(value)) {
+    if (value === "Unknown operator") {
       continue;
     }
 
@@ -154,12 +156,13 @@ export const buildStationConnectorSummary = (
   connectors: StationConnectorSummaryInput[],
   limit = 4,
 ): StationConnectorSummaryItem[] =>
-  connectors.slice(0, limit).map((connector) => {
+  connectors.slice(0, limit).map((connector, index) => {
     const label = formatConnectorLabel(connector.connectorType);
     const power = formatPowerKw(connector.powerKw);
     const currentType = getConnectorCurrentType(connector.connectorType);
 
     return {
+      key: connector.id ?? `connector-${index}`,
       label: power === "Unknown" ? label : `${label} ${power}`,
       title: formatConnectorTitle(label, currentType, power),
       currentType,

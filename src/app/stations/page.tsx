@@ -285,7 +285,7 @@ const StationsPage = async ({
                             <span className="flex flex-wrap gap-2">
                               {connectorSummary.map((connector) => (
                                 <span
-                                  key={`${connector.label}-${connector.title}`}
+                                  key={connector.key}
                                   title={connector.title}
                                   className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2 py-1 text-xs"
                                 >

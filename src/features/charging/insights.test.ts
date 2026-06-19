@@ -68,6 +68,31 @@ describe("buildChargingInsights", () => {
     ]);
   });
 
+  it("hides and aggregates technical EIPA operator identifiers", () => {
+    const insights = buildChargingInsights({
+      ...baseInput,
+      totalStations: 10,
+      operatorRows: [
+        { operatorName: "eipa-operator-123", stationCount: 2 },
+        { operatorName: "eipa-operator-456", stationCount: 3 },
+        { operatorName: "Orlen", stationCount: 4 },
+      ],
+    });
+
+    expect(insights.topOperators).toEqual([
+      {
+        label: "Unknown operator",
+        stationCount: 5,
+        stationShare: "50%",
+      },
+      {
+        label: "Orlen",
+        stationCount: 4,
+        stationShare: "40%",
+      },
+    ]);
+  });
+
   it("builds connector distribution sorted by count and connector type", () => {
     const insights = buildChargingInsights({
       ...baseInput,
@@ -102,7 +127,7 @@ describe("buildChargingInsights", () => {
         {
           stationId: "station-2",
           stationName: "Alpha Hub",
-          operatorName: null,
+          operatorName: "eipa-operator-123",
           city: null,
           province: "Mazowieckie",
           connectorType: "CCS2",

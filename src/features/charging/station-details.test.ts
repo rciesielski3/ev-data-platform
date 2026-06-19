@@ -125,4 +125,39 @@ describe("buildStationDetails", () => {
     expect(details.connectorCount).toBe("0");
     expect(details.connectors).toEqual([]);
   });
+
+  it("hides technical EIPA operator identifiers on station details", () => {
+    const details = buildStationDetails({
+      id: "station-3",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-3",
+      externalCode: "EXT-3",
+      name: "Technical Operator Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 3",
+      postalCode: null,
+      operatorId: "operator-3",
+      operator: {
+        name: null,
+        normalizedName: "eipa-operator-123",
+      },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: null,
+      connectors: [],
+    });
+
+    expect(details.operatorName).toBe("Unknown operator");
+  });
 });
