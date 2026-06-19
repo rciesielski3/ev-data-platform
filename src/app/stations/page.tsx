@@ -7,23 +7,12 @@ import {
   type StationSearchParams,
 } from "@/features/charging/station-search";
 import { geocodeStationLocation } from "@/features/charging/geocoding";
+import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 20;
-
-const formatDate = (value: Date | null | undefined) => {
-  if (!value) {
-    return "unknown";
-  }
-
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(value);
-};
 
 const getStationsData = async (filters: ReturnType<typeof parseStationSearchParams>) => {
   const geocodedLocation = await geocodeStationLocation(filters.location);
@@ -234,8 +223,8 @@ const StationsPage = async ({
             </p>
             {data.latestRuns.length > 0 && (
               <p className="text-sm text-slate-500">
-                Latest import: {data.latestRuns[0].source.label} /{" "}
-                {formatDate(data.latestRuns[0].completedAt ?? data.latestRuns[0].startedAt)}
+                Stacje: {data.latestRuns[0].source.label}, ostatni import{" "}
+                {formatDisplayDate(data.latestRuns[0].completedAt ?? data.latestRuns[0].startedAt)}
               </p>
             )}
           </section>
@@ -252,6 +241,7 @@ const StationsPage = async ({
             <section className="grid gap-4 lg:grid-cols-2">
               {data.stations.map((station) => {
                 const strongestConnector = station.connectors[0];
+                const safeSourceUrl = getSafeHttpUrl(station.sourceUrl);
                 const connectorSummary = station.connectors
                   .slice(0, 4)
                   .map((connector) =>
@@ -305,11 +295,11 @@ const StationsPage = async ({
                         <dt className="text-slate-500">Source</dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {station.sourceName}
-                          {station.sourceUrl && (
+                          {safeSourceUrl && (
                             <>
                               {" / "}
                               <a
-                                href={station.sourceUrl}
+                                href={safeSourceUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-sky-700 underline hover:text-sky-900"
@@ -323,9 +313,9 @@ const StationsPage = async ({
                       <div>
                         <dt className="text-slate-500">Freshness</dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          Imported {formatDate(station.importedAt)}
+                          Imported {formatDisplayDate(station.importedAt)}
                           {station.sourceUpdatedAt
-                            ? ` / source ${formatDate(station.sourceUpdatedAt)}`
+                            ? ` / source ${formatDisplayDate(station.sourceUpdatedAt)}`
                             : ""}
                         </dd>
                       </div>

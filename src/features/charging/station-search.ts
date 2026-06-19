@@ -171,6 +171,15 @@ export const buildStationWhere = (
 };
 
 export const buildStationFreshnessRunWhere = (): Prisma.IngestionRunWhereInput => ({
+  status: {
+    in: ["SUCCESS", "PARTIAL"],
+  },
+  recordsUpserted: {
+    gt: 0,
+  },
+  completedAt: {
+    not: null,
+  },
   source: {
     key: {
       in: [DATA_SOURCES.EIPA.key, DATA_SOURCES.OCM.key],

@@ -1,10 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { geocodeStationLocation } from "@/features/charging/geocoding";
+import {
+  clearStationGeocodeCache,
+  geocodeStationLocation,
+} from "@/features/charging/geocoding";
 
 describe("geocodeStationLocation", () => {
   afterEach(() => {
+    clearStationGeocodeCache();
     vi.unstubAllGlobals();
+    vi.useRealTimers();
   });
 
   it("returns the first geocoded coordinate for a user-provided location", async () => {
@@ -35,6 +40,100 @@ describe("geocodeStationLocation", () => {
         signal: expect.any(AbortSignal),
       },
     );
+  });
+
+  it("reuses cached geocoding results for repeated normalized locations", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [
+        {
+          lat: "52.2297",
+          lon: "21.0122",
+          display_name: "Warsaw, Masovian Voivodeship, Poland",
+        },
+      ],
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(geocodeStationLocation(" Warsaw ")).resolves.toEqual({
+      latitude: 52.2297,
+      longitude: 21.0122,
+      label: "Warsaw, Masovian Voivodeship, Poland",
+    });
+    await expect(geocodeStationLocation("Warsaw")).resolves.toEqual({
+      latitude: 52.2297,
+      longitude: 21.0122,
+      label: "Warsaw, Masovian Voivodeship, Poland",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("caches no-result geocoder responses", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [],
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(geocodeStationLocation("Nowhere")).resolves.toBeNull();
+    await expect(geocodeStationLocation("Nowhere")).resolves.toBeNull();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not evict another location when concurrent requests cache the same query at the limit", async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      const query = new URL(url).searchParams.get("q") ?? "";
+      const seedIndex = query.startsWith("seed-")
+        ? Number(query.replace("seed-", ""))
+        : 99;
+      const offset = seedIndex / 1000;
+
+      return {
+        ok: true,
+        json: async () => [
+          {
+            lat: String(50 + offset),
+            lon: String(19 + offset),
+            display_name: query,
+          },
+        ],
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    for (let index = 0; index < 99; index += 1) {
+      await geocodeStationLocation(`seed-${index}`);
+    }
+
+    await expect(
+      Promise.all([
+        geocodeStationLocation("repeat"),
+        geocodeStationLocation("repeat"),
+      ]),
+    ).resolves.toEqual([
+      {
+        latitude: 50.099,
+        longitude: 19.099,
+        label: "repeat",
+      },
+      {
+        latitude: 50.099,
+        longitude: 19.099,
+        label: "repeat",
+      },
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(101);
+
+    await expect(geocodeStationLocation("seed-0")).resolves.toEqual({
+      latitude: 50,
+      longitude: 19,
+      label: "seed-0",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(101);
   });
 
   it("does not call the geocoder for an empty location", async () => {
@@ -69,6 +168,32 @@ describe("geocodeStationLocation", () => {
     await expect(geocodeStationLocation("Krakow")).resolves.toBeNull();
   });
 
+  it("does not cache failed geocoder requests", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [
+          {
+            lat: "50.0614",
+            lon: "19.9366",
+            display_name: "Krakow, Lesser Poland, Poland",
+          },
+        ],
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(geocodeStationLocation("Krakow")).resolves.toBeNull();
+    await expect(geocodeStationLocation("Krakow")).resolves.toEqual({
+      latitude: 50.0614,
+      longitude: 19.9366,
+      label: "Krakow, Lesser Poland, Poland",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it("returns null when fetch throws", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network down")));
 
@@ -95,6 +220,5 @@ describe("geocodeStationLocation", () => {
 
     await expect(result).resolves.toBeNull();
 
-    vi.useRealTimers();
   });
 });

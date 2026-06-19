@@ -1,6 +1,8 @@
 const GEOCODER_URL = "https://nominatim.openstreetmap.org/search";
 const USER_AGENT = "ev-data-platform/0.1 station-search";
 const REQUEST_TIMEOUT_MS = 2500;
+const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
+const MAX_CACHE_ENTRIES = 100;
 
 export type StationGeocodeResult = {
   latitude: number;
@@ -14,6 +16,50 @@ type NominatimResult = {
   display_name?: string;
 };
 
+type CacheEntry = {
+  value: StationGeocodeResult | null;
+  expiresAt: number;
+};
+
+const geocodeCache = new Map<string, CacheEntry>();
+
+export const clearStationGeocodeCache = () => {
+  geocodeCache.clear();
+};
+
+const getCachedResult = (query: string) => {
+  const entry = geocodeCache.get(query);
+
+  if (!entry) {
+    return undefined;
+  }
+
+  if (entry.expiresAt <= Date.now()) {
+    geocodeCache.delete(query);
+    return undefined;
+  }
+
+  return entry.value;
+};
+
+const setCachedResult = (
+  query: string,
+  value: StationGeocodeResult | null,
+) => {
+  if (!geocodeCache.has(query) && geocodeCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = geocodeCache.keys().next().value;
+
+    if (oldestKey) {
+      geocodeCache.delete(oldestKey);
+    }
+  }
+
+  geocodeCache.set(query, {
+    value,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  });
+};
+
 export const geocodeStationLocation = async (
   location: string | undefined,
 ): Promise<StationGeocodeResult | null> => {
@@ -21,6 +67,12 @@ export const geocodeStationLocation = async (
 
   if (!query) {
     return null;
+  }
+
+  const cached = getCachedResult(query);
+
+  if (cached !== undefined) {
+    return cached;
   }
 
   const url = new URL(GEOCODER_URL);
@@ -50,14 +102,18 @@ export const geocodeStationLocation = async (
     const longitude = Number(firstResult?.lon);
 
     if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      setCachedResult(query, null);
       return null;
     }
 
-    return {
+    const result = {
       latitude,
       longitude,
       label: firstResult.display_name,
     };
+    setCachedResult(query, result);
+
+    return result;
   } catch {
     return null;
   } finally {
