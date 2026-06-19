@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,6 +23,8 @@ export default async function VehicleDetailPage({
   if (!vehicle) {
     notFound();
   }
+
+  const safeSourceUrl = getSafeHttpUrl(vehicle.sourceUrl);
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
@@ -121,17 +124,17 @@ export default async function VehicleDetailPage({
       <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
         <p>
           Data source: {vehicle.sourceName}
-          {vehicle.sourceUrl && (
+          {safeSourceUrl && (
             <>
               {" · "}
-              <a href={vehicle.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-900">
+              <a href={safeSourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-900">
                 Original source
               </a>
             </>
           )}
         </p>
         <p className="mt-1">
-          Last imported: {new Date(vehicle.importedAt).toLocaleDateString()}
+          Last imported: {formatDisplayDate(vehicle.importedAt)}
         </p>
       </div>
     </main>
