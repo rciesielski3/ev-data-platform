@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 
 describe("formatDisplayDate", () => {
-  it("formats dates with a stable locale", () => {
-    expect(formatDisplayDate(new Date("2026-06-18T10:30:00.000Z"))).toBe(
+  it("formats dates with a stable locale and UTC timezone", () => {
+    expect(formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"))).toBe(
       "Jun 18, 2026",
     );
   });

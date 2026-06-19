@@ -29,6 +29,8 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - Searchable EV catalog with paginated vehicle cards
 - Vehicle detail pages with battery, range, charging and source metadata
 - Charging station search with connector, power, operator and freshness details
+- Visible station data freshness copy, for example `Stacje: EIPA / UDT Poland, ostatni import Jun 18, 2026`
+- Source links are rendered only when they use safe `http` or `https` URLs
 
 ### Data Pipeline
 
@@ -190,7 +192,7 @@ For Vercel deployment:
 - Set `DATABASE_URL` to a PostGIS-enabled PostgreSQL database.
 - Set `CRON_SECRET` in production before enabling cron-triggered imports.
 - Add optional import variables only when needed: `EIPA_EXPORT_KEY`, `EIPA_IMPORT_LIMIT`, `OPENEV_DATA_URL`.
-- Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches and does not require an API key.
+- Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches, does not require an API key, and uses a small in-memory cache to avoid repeated lookups for the same location.
 - Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
 - Smoke check `/`, `/vehicles`, `/stations`, `/api/status`, and one `/vehicles/[id]` page after deployment.
 - Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.

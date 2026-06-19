@@ -222,8 +222,17 @@ describe("buildStationWhere", () => {
 });
 
 describe("buildStationFreshnessRunWhere", () => {
-  it("limits station freshness to charging data sources", () => {
+  it("limits station freshness to completed charging imports with upserted records", () => {
     expect(buildStationFreshnessRunWhere()).toEqual({
+      status: {
+        in: ["SUCCESS", "PARTIAL"],
+      },
+      recordsUpserted: {
+        gt: 0,
+      },
+      completedAt: {
+        not: null,
+      },
       source: {
         key: {
           in: ["eipa", "ocm"],
