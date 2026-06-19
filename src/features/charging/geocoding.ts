@@ -46,7 +46,7 @@ const setCachedResult = (
   query: string,
   value: StationGeocodeResult | null,
 ) => {
-  if (geocodeCache.size >= MAX_CACHE_ENTRIES) {
+  if (!geocodeCache.has(query) && geocodeCache.size >= MAX_CACHE_ENTRIES) {
     const oldestKey = geocodeCache.keys().next().value;
 
     if (oldestKey) {

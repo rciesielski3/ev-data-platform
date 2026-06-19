@@ -82,6 +82,60 @@ describe("geocodeStationLocation", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("does not evict another location when concurrent requests cache the same query at the limit", async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      const query = new URL(url).searchParams.get("q") ?? "";
+      const seedIndex = query.startsWith("seed-")
+        ? Number(query.replace("seed-", ""))
+        : 99;
+      const offset = seedIndex / 1000;
+
+      return {
+        ok: true,
+        json: async () => [
+          {
+            lat: String(50 + offset),
+            lon: String(19 + offset),
+            display_name: query,
+          },
+        ],
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    for (let index = 0; index < 99; index += 1) {
+      await geocodeStationLocation(`seed-${index}`);
+    }
+
+    await expect(
+      Promise.all([
+        geocodeStationLocation("repeat"),
+        geocodeStationLocation("repeat"),
+      ]),
+    ).resolves.toEqual([
+      {
+        latitude: 50.099,
+        longitude: 19.099,
+        label: "repeat",
+      },
+      {
+        latitude: 50.099,
+        longitude: 19.099,
+        label: "repeat",
+      },
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(101);
+
+    await expect(geocodeStationLocation("seed-0")).resolves.toEqual({
+      latitude: 50,
+      longitude: 19,
+      label: "seed-0",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(101);
+  });
+
   it("does not call the geocoder for an empty location", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
