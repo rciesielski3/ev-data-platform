@@ -271,3 +271,21 @@ Commit:
 
 Final validation:
 - `npm run validate` must pass before PR.
+
+---
+
+## Implementation Coverage
+
+Status:
+- P0 Station Details Page: implemented at `/stations/[id]`
+- P0 Connector Knowledge Base: implemented at `/connectors` and `/connectors/[type]`
+- P0 Operator Cleanup: implemented for user-facing operator suggestions
+- P1 Insights Dashboard: implemented at `/insights`
+- P1 UX Improvements: implemented with normalized connector labels, AC/DC badges, tooltips and connector images
+
+Assets:
+- Connector images are stored in `public/connectors`
+- `unknown.webp` is the fallback image for unknown or unsupported connector values
+
+Validation requirement:
+- `npm run validate` must pass before push or PR creation
