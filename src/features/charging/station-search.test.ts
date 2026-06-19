@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildOperatorFilterOptions,
+  buildStationConnectorSummary,
   buildStationSearchHref,
   buildStationFreshnessRunWhere,
   buildStationWhere,
@@ -218,6 +220,68 @@ describe("buildStationWhere", () => {
         },
       ],
     });
+  });
+});
+
+describe("buildOperatorFilterOptions", () => {
+  it("excludes technical EIPA operator identifiers from user-facing options", () => {
+    const options = buildOperatorFilterOptions([
+      { normalizedName: "greenway", name: "GreenWay Polska" },
+      { normalizedName: "eipa-operator-123", name: null },
+      { normalizedName: "orlen", name: " eipa-operator-456 " },
+      { normalizedName: "pge", name: "PGE Nowa Energia" },
+    ]);
+
+    expect(options).toEqual([
+      { key: "greenway", value: "GreenWay Polska" },
+      { key: "orlen", value: "orlen" },
+      { key: "pge", value: "PGE Nowa Energia" },
+    ]);
+  });
+});
+
+describe("buildStationConnectorSummary", () => {
+  it("renders normalized connector labels with current type metadata", () => {
+    const summary = buildStationConnectorSummary([
+      { connectorType: "Combined Charging System 2", powerKw: 150 },
+      { connectorType: "type-2", powerKw: 22 },
+      { connectorType: "cha de mo", powerKw: null },
+    ]);
+
+    expect(summary).toEqual([
+      {
+        currentType: "DC",
+        key: "connector-0",
+        label: "CCS2 150 kW",
+        title: "CCS2 connector (DC), up to 150 kW",
+      },
+      {
+        currentType: "AC",
+        key: "connector-1",
+        label: "Type 2 22 kW",
+        title: "Type 2 connector (AC), up to 22 kW",
+      },
+      {
+        currentType: "DC",
+        key: "connector-2",
+        label: "CHAdeMO",
+        title: "CHAdeMO connector (DC)",
+      },
+    ]);
+  });
+
+  it("preserves connector ids for stable duplicate connector chip keys", () => {
+    const summary = buildStationConnectorSummary([
+      { id: "connector-a", connectorType: "type-2", powerKw: 22 },
+      { id: "connector-b", connectorType: "type-2", powerKw: 22 },
+    ]);
+
+    expect(summary.map((connector) => connector.key)).toEqual([
+      "connector-a",
+      "connector-b",
+    ]);
+    expect(summary[0].label).toBe(summary[1].label);
+    expect(summary[0].title).toBe(summary[1].title);
   });
 });
 

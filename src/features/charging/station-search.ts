@@ -1,5 +1,11 @@
 import type { Prisma } from "@prisma/client";
 
+import {
+  formatConnectorLabel,
+  formatPowerKw,
+  getConnectorCurrentType,
+  type ConnectorCurrentType,
+} from "@/features/charging/connectors";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 
 const MAX_PAGE = 500;
@@ -29,9 +35,51 @@ export type GeocodedStationLocation = {
   radiusKm: number;
 };
 
+export type OperatorFilterOptionInput = {
+  normalizedName: string;
+  name: string | null;
+};
+
+export type OperatorFilterOption = {
+  key: string;
+  value: string;
+};
+
+export type StationConnectorSummaryInput = {
+  id?: string | null;
+  connectorType: string | null | undefined;
+  powerKw: number | string | null | undefined;
+};
+
+export type StationConnectorSummaryItem = {
+  key: string;
+  label: string;
+  title: string;
+  currentType: ConnectorCurrentType;
+};
+
 const cleanText = (value: string | undefined) => {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
+};
+
+const cleanNullableText = (value: string | null | undefined) => {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+};
+
+const isTechnicalEipaOperatorIdentifier = (value: string | null | undefined) =>
+  /^eipa-operator-/i.test(value?.trim() ?? "");
+
+const formatConnectorTitle = (
+  label: string,
+  currentType: ConnectorCurrentType,
+  power: string,
+) => {
+  const currentTypeText = currentType === "Unknown" ? "" : ` (${currentType})`;
+  const powerText = power === "Unknown" ? "" : `, up to ${power}`;
+
+  return `${label} connector${currentTypeText}${powerText}`;
 };
 
 const parsePositiveNumber = (value: string | undefined) => {
@@ -59,6 +107,67 @@ export const parseStationSearchParams = (
   location: cleanText(params.location),
   page: parsePage(params.page),
 });
+
+export const formatStationOperatorLabel = (
+  operator: OperatorFilterOptionInput | null | undefined,
+) => {
+  const displayName = cleanNullableText(operator?.name);
+
+  if (displayName && !isTechnicalEipaOperatorIdentifier(displayName)) {
+    return displayName;
+  }
+
+  const normalizedName = cleanNullableText(operator?.normalizedName);
+
+  if (normalizedName && !isTechnicalEipaOperatorIdentifier(normalizedName)) {
+    return normalizedName;
+  }
+
+  return "Unknown operator";
+};
+
+export const buildOperatorFilterOptions = (
+  operators: OperatorFilterOptionInput[],
+): OperatorFilterOption[] => {
+  const seenValues = new Set<string>();
+  const options: OperatorFilterOption[] = [];
+
+  for (const operator of operators) {
+    const value = formatStationOperatorLabel(operator);
+
+    if (value === "Unknown operator") {
+      continue;
+    }
+
+    const normalizedValue = value.toLowerCase();
+
+    if (seenValues.has(normalizedValue)) {
+      continue;
+    }
+
+    seenValues.add(normalizedValue);
+    options.push({ key: operator.normalizedName, value });
+  }
+
+  return options;
+};
+
+export const buildStationConnectorSummary = (
+  connectors: StationConnectorSummaryInput[],
+  limit = 4,
+): StationConnectorSummaryItem[] =>
+  connectors.slice(0, limit).map((connector, index) => {
+    const label = formatConnectorLabel(connector.connectorType);
+    const power = formatPowerKw(connector.powerKw);
+    const currentType = getConnectorCurrentType(connector.connectorType);
+
+    return {
+      key: connector.id ?? `connector-${index}`,
+      label: power === "Unknown" ? label : `${label} ${power}`,
+      title: formatConnectorTitle(label, currentType, power),
+      currentType,
+    };
+  });
 
 const textFilter = (value: string): Prisma.StringNullableFilter => ({
   contains: value,

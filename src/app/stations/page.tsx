@@ -1,8 +1,11 @@
 import { prisma } from "@/lib/db/prisma";
 import {
+  buildOperatorFilterOptions,
+  buildStationConnectorSummary,
   buildStationSearchHref,
   buildStationFreshnessRunWhere,
   buildStationWhere,
+  formatStationOperatorLabel,
   parseStationSearchParams,
   type StationSearchParams,
 } from "@/features/charging/station-search";
@@ -14,7 +17,9 @@ export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 20;
 
-const getStationsData = async (filters: ReturnType<typeof parseStationSearchParams>) => {
+const getStationsData = async (
+  filters: ReturnType<typeof parseStationSearchParams>,
+) => {
   const geocodedLocation = await geocodeStationLocation(filters.location);
   const where = buildStationWhere(
     filters,
@@ -74,7 +79,7 @@ const getStationsData = async (filters: ReturnType<typeof parseStationSearchPara
     stations,
     total,
     connectorOptions,
-    operatorOptions,
+    operatorOptions: buildOperatorFilterOptions(operatorOptions),
     latestRuns,
   };
 };
@@ -193,10 +198,7 @@ const StationsPage = async ({
               />
               <datalist id="station-operators">
                 {data.operatorOptions.map((option) => (
-                  <option
-                    key={option.normalizedName}
-                    value={option.name ?? option.normalizedName}
-                  />
+                  <option key={option.key} value={option.value} />
                 ))}
               </datalist>
             </label>
@@ -242,22 +244,16 @@ const StationsPage = async ({
               {data.stations.map((station) => {
                 const strongestConnector = station.connectors[0];
                 const safeSourceUrl = getSafeHttpUrl(station.sourceUrl);
-                const connectorSummary = station.connectors
-                  .slice(0, 4)
-                  .map((connector) =>
-                    connector.powerKw
-                      ? `${connector.connectorType} ${connector.powerKw} kW`
-                      : connector.connectorType,
-                  );
+                const connectorSummary = buildStationConnectorSummary(
+                  station.connectors,
+                );
 
                 return (
                   <article key={station.id} className="card">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="text-sm font-medium text-sky-700">
-                          {station.operator?.name ??
-                            station.operator?.normalizedName ??
-                            "Unknown operator"}
+                          {formatStationOperatorLabel(station.operator)}
                         </p>
                         <h2 className="mt-1 text-xl font-semibold text-slate-950">
                           {station.name ?? station.externalCode ?? "Charging station"}
@@ -267,6 +263,12 @@ const StationsPage = async ({
                             .filter(Boolean)
                             .join(", ") || "Location details unavailable"}
                         </p>
+                        <Link
+                          href={`/stations/${station.id}`}
+                          className="mt-3 inline-flex text-sm font-medium text-sky-700 hover:text-sky-900"
+                        >
+                          View details
+                        </Link>
                       </div>
                       {strongestConnector?.powerKw && (
                         <span className="badge">
@@ -279,9 +281,26 @@ const StationsPage = async ({
                       <div>
                         <dt className="text-slate-500">Connectors</dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          {connectorSummary.length > 0
-                            ? connectorSummary.join(", ")
-                            : "No connector details"}
+                          {connectorSummary.length > 0 ? (
+                            <span className="flex flex-wrap gap-2">
+                              {connectorSummary.map((connector) => (
+                                <span
+                                  key={connector.key}
+                                  title={connector.title}
+                                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2 py-1 text-xs"
+                                >
+                                  {connector.label}
+                                  {connector.currentType !== "Unknown" && (
+                                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                                      {connector.currentType}
+                                    </span>
+                                  )}
+                                </span>
+                              ))}
+                            </span>
+                          ) : (
+                            "No connector details"
+                          )}
                         </dd>
                       </div>
                       <div>

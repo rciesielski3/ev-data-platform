@@ -102,6 +102,36 @@ const HomePage = async () => {
                 operator using imported EIPA data.
               </p>
             </Link>
+            <Link
+              href="/connectors"
+              className="card transition-shadow hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-sky-700">
+                Connector knowledge
+              </p>
+              <h2 className="mt-2 text-xl font-semibold">
+                Understand connector types
+              </h2>
+              <p className="muted mt-2 text-sm">
+                Review CCS2, Type 2, CHAdeMO, and unknown connector records with
+                AC/DC context and typical power ranges.
+              </p>
+            </Link>
+            <Link
+              href="/insights"
+              className="card transition-shadow hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-sky-700">
+                Charging insights
+              </p>
+              <h2 className="mt-2 text-xl font-semibold">
+                Explore infrastructure metrics
+              </h2>
+              <p className="muted mt-2 text-sm">
+                See top operators, connector distribution, strongest stations,
+                and province coverage from imported station data.
+              </p>
+            </Link>
           </section>
 
           <section className="card">
