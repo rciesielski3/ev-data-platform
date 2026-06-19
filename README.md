@@ -20,7 +20,15 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - Import charging stations from EIPA (UDT Poland)
 - Normalize station, operator and connector data
 - Store geospatial coordinates
+- Search stations by text, location, connector, power and operator
 - Support future enrichment from additional sources
+
+### Searchable MVP
+
+- Public status homepage with import counts and latest ingestion runs
+- Searchable EV catalog with paginated vehicle cards
+- Vehicle detail pages with battery, range, charging and source metadata
+- Charging station search with connector, power, operator and freshness details
 
 ### Data Pipeline
 
@@ -79,8 +87,9 @@ DATABASE_URL=
 Optional:
 
 ```env
-EIPA_EXPORT_KEY=
 CRON_SECRET=
+EIPA_EXPORT_KEY=
+EIPA_IMPORT_LIMIT=
 OPENEV_DATA_URL=
 ```
 
@@ -132,6 +141,9 @@ http://localhost:3000
 npm run dev
 npm run build
 npm run lint
+npm run typecheck
+npm run test
+npm run validate
 ```
 
 ### Database
@@ -145,8 +157,43 @@ npm run db:push
 ```bash
 npm run import:openev
 npm run import:eipa
+npm run import:eipa:test
 npm run import:all
 ```
+
+---
+
+## Public Routes
+
+```text
+/                         Status homepage with dataset counts and ingestion freshness
+/vehicles                 Searchable EV catalog
+/vehicles/[id]            EV battery, range, charging and source details
+/stations                 Searchable Polish charging infrastructure
+/api/status               JSON status endpoint for deployment smoke checks
+/api/cron/import-eipa     Protected EIPA import endpoint
+/api/cron/import-openev   Protected OpenEV import endpoint
+```
+
+---
+
+## Deployment Readiness
+
+Recommended validation before deployment:
+
+```bash
+npm run validate
+```
+
+For Vercel deployment:
+
+- Set `DATABASE_URL` to a PostGIS-enabled PostgreSQL database.
+- Set `CRON_SECRET` in production before enabling cron-triggered imports.
+- Add optional import variables only when needed: `EIPA_EXPORT_KEY`, `EIPA_IMPORT_LIMIT`, `OPENEV_DATA_URL`.
+- Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches and does not require an API key.
+- Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
+- Smoke check `/`, `/vehicles`, `/stations`, `/api/status`, and one `/vehicles/[id]` page after deployment.
+- Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.
 
 ---
 
