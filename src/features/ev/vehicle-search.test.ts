@@ -32,6 +32,17 @@ describe("parseVehicleSearchParams", () => {
       page: 500,
     });
   });
+
+  it("reads and trims the brand param", () => {
+    expect(parseVehicleSearchParams({ brand: "  tesla  " })).toEqual({
+      brand: "tesla",
+      page: 1,
+    });
+  });
+
+  it("defaults the brand param to undefined when absent", () => {
+    expect(parseVehicleSearchParams({})).toEqual({ page: 1 });
+  });
 });
 
 describe("buildVehicleWhere", () => {
@@ -47,6 +58,32 @@ describe("buildVehicleWhere", () => {
       ],
     });
   });
+
+  it("filters by brand slug when present", () => {
+    expect(buildVehicleWhere({ brand: "tesla", page: 1 })).toEqual({
+      brand: { slug: "tesla" },
+    });
+  });
+
+  it("is unaffected by brand when absent", () => {
+    expect(buildVehicleWhere({ q: "Tesla", page: 1 })).not.toHaveProperty(
+      "AND",
+    );
+  });
+
+  it("combines brand and q with AND, not OR", () => {
+    expect(buildVehicleWhere({ q: "Model", brand: "tesla", page: 1 })).toEqual({
+      AND: [
+        {
+          OR: [
+            { modelName: { contains: "Model", mode: "insensitive" } },
+            { brand: { name: { contains: "Model", mode: "insensitive" } } },
+          ],
+        },
+        { brand: { slug: "tesla" } },
+      ],
+    });
+  });
 });
 
 describe("buildVehicleSearchHref", () => {
@@ -57,6 +94,22 @@ describe("buildVehicleSearchHref", () => {
   });
 
   it("omits an empty search query", () => {
+    expect(buildVehicleSearchHref({ page: 1 }, 2)).toBe("/vehicles?page=2");
+  });
+
+  it("preserves the brand param across page links", () => {
+    expect(buildVehicleSearchHref({ brand: "tesla", page: 1 }, 2)).toBe(
+      "/vehicles?brand=tesla&page=2",
+    );
+  });
+
+  it("preserves both brand and q params together", () => {
+    expect(
+      buildVehicleSearchHref({ q: "Model", brand: "tesla", page: 1 }, 2),
+    ).toBe("/vehicles?q=Model&brand=tesla&page=2");
+  });
+
+  it("omits an empty brand param", () => {
     expect(buildVehicleSearchHref({ page: 1 }, 2)).toBe("/vehicles?page=2");
   });
 });

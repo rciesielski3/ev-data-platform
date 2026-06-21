@@ -4,6 +4,7 @@ import {
   buildVehicleSearchHref,
   buildVehicleWhere,
   formatDrivetrainLabel,
+  getTopVehicleBrands,
   parseVehicleSearchParams,
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
@@ -36,13 +37,17 @@ const formatDate = (value: Date | null | undefined) => {
 const BrandLogo = ({
   brandMark,
   brandName,
+  size = "md",
 }: {
   brandMark: ReturnType<typeof buildBrandMark>;
   brandName: string;
+  size?: "sm" | "md";
 }) => (
   <span
     aria-label={`${brandName} logo`}
-    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-[0.62rem] font-bold uppercase leading-none text-slate-700"
+    className={`flex shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-[0.62rem] font-bold uppercase leading-none text-slate-700 ${
+      size === "sm" ? "h-6 w-6" : "h-10 w-10"
+    }`}
     style={
       brandMark.kind === "icon"
         ? { borderColor: `#${brandMark.hex}` }
@@ -54,12 +59,14 @@ const BrandLogo = ({
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className="h-5 w-5 text-slate-800"
+        className={size === "sm" ? "h-3.5 w-3.5 text-slate-800" : "h-5 w-5 text-slate-800"}
       >
         <path fill="currentColor" d={brandMark.path} />
       </svg>
     ) : (
-      <span className="max-w-9 truncate px-1">{brandMark.title}</span>
+      <span className={size === "sm" ? "max-w-5 truncate px-0.5" : "max-w-9 truncate px-1"}>
+        {brandMark.title}
+      </span>
     )}
   </span>
 );
@@ -79,9 +86,10 @@ export default async function VehiclesPage({
         total: number;
       }
     | { error: string };
+  let topBrands: Awaited<ReturnType<typeof getTopVehicleBrands>> = [];
 
   try {
-    const [vehicles, total] = await Promise.all([
+    const [vehicles, total, brands] = await Promise.all([
       prisma.evModel.findMany({
         where,
         include: {
@@ -96,9 +104,11 @@ export default async function VehiclesPage({
         skip,
       }),
       prisma.evModel.count({ where }),
+      getTopVehicleBrands(),
     ]);
 
     data = { vehicles, total };
+    topBrands = brands;
   } catch {
     data = {
       error:
@@ -135,6 +145,47 @@ export default async function VehiclesPage({
           </button>
         </form>
       </div>
+
+      {topBrands.length > 0 && (
+        <div className="mb-8 flex flex-wrap gap-2">
+          <Link
+            href={buildVehicleSearchHref({ ...filters, brand: undefined }, 1)}
+            className={`rounded-full border px-4 py-2 text-sm font-medium ${
+              filters.brand
+                ? "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                : "border-slate-900 bg-slate-900 text-white"
+            }`}
+          >
+            All brands
+          </Link>
+          {topBrands.map((brand) => {
+            const isSelected = filters.brand === brand.slug;
+            const brandMark = buildBrandMark(brand.name);
+
+            return (
+              <Link
+                key={brand.id}
+                href={buildVehicleSearchHref(
+                  { ...filters, brand: brand.slug },
+                  1,
+                )}
+                className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium ${
+                  isSelected
+                    ? "border-slate-900 bg-slate-900 text-white"
+                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <BrandLogo
+                  brandMark={brandMark}
+                  brandName={brand.name}
+                  size="sm"
+                />
+                {brand.name}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       {"error" in data ? (
         <section className="card border-amber-200 bg-amber-50 text-amber-900">
