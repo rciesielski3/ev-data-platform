@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -102,7 +103,7 @@ export default async function VehicleDetailPage({
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <dt className="text-slate-500">Drivetrain</dt>
               <dd className="font-medium text-slate-900">
-                {vehicle.specs?.drivetrain || "N/A"}
+                {formatDrivetrainLabel(vehicle.specs?.drivetrain)}
               </dd>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-2">

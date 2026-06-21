@@ -154,6 +154,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     markerLayer.clearLayers();
 
     if (groups.length === 0) {
+      map.invalidateSize();
       map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
       return;
     }
@@ -177,8 +178,10 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     }
 
     if (groups.length === 1) {
+      map.invalidateSize();
       map.setView([groups[0].latitude, groups[0].longitude], 12);
     } else {
+      map.invalidateSize();
       map.fitBounds(bounds, {
         padding: [28, 28],
         maxZoom: 13,

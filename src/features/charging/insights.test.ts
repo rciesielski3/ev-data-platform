@@ -194,6 +194,50 @@ describe("buildChargingInsights", () => {
     ]);
   });
 
+  it("deduplicates highest power stations by station id", () => {
+    const insights = buildChargingInsights({
+      ...baseInput,
+      highestPowerStations: [
+        {
+          stationId: "station-1",
+          stationName: "Alpha Hub",
+          operatorName: "FastCo",
+          city: "Warsaw",
+          province: "Mazowieckie",
+          connectorType: "CCS2",
+          powerKw: 350,
+        },
+        {
+          stationId: "station-1",
+          stationName: "Alpha Hub",
+          operatorName: "FastCo",
+          city: "Warsaw",
+          province: "Mazowieckie",
+          connectorType: "Type 2",
+          powerKw: 22,
+        },
+        {
+          stationId: "station-2",
+          stationName: "Beta Hub",
+          operatorName: "ChargeCo",
+          city: "Krakow",
+          province: "Malopolskie",
+          connectorType: "CCS2",
+          powerKw: 150,
+        },
+      ],
+    });
+
+    expect(
+      insights.highestPowerStations.map((station) => station.stationId),
+    ).toEqual(["station-1", "station-2"]);
+    expect(insights.highestPowerStations[0]).toMatchObject({
+      stationId: "station-1",
+      connectorType: "CCS2",
+      powerKw: 350,
+    });
+  });
+
   it("orders province coverage by station count and province name", () => {
     const insights = buildChargingInsights({
       ...baseInput,

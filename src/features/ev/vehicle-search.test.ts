@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildBrandMark,
+  formatDrivetrainLabel,
   buildVehicleSearchHref,
   buildVehicleWhere,
   parseVehicleSearchParams,
@@ -61,18 +62,33 @@ describe("buildVehicleSearchHref", () => {
 });
 
 describe("buildBrandMark", () => {
-  it("builds compact deterministic brand marks for vehicle cards", () => {
-    expect(buildBrandMark("Volkswagen")).toEqual({
-      initials: "VW",
-      colorClass: "bg-sky-100 text-sky-800",
+  it("uses curated Simple Icons logotypes when available", () => {
+    expect(buildBrandMark("Volkswagen")).toMatchObject({
+      kind: "icon",
+      title: "Volkswagen",
+      hex: "151F5D",
     });
-    expect(buildBrandMark("BMW")).toEqual({
-      initials: "BMW",
-      colorClass: "bg-violet-100 text-violet-800",
+    expect(buildBrandMark("BMW")).toMatchObject({
+      kind: "icon",
+      title: "BMW",
     });
+  });
+
+  it("falls back to a brand wordmark instead of initials", () => {
     expect(buildBrandMark("Mercedes-Benz")).toEqual({
-      initials: "MB",
-      colorClass: "bg-emerald-100 text-emerald-800",
+      kind: "wordmark",
+      title: "Mercedes-Benz",
     });
+  });
+});
+
+describe("formatDrivetrainLabel", () => {
+  it("uppercases drivetrain acronyms for user-facing vehicle pages", () => {
+    expect(formatDrivetrainLabel("rwd")).toBe("RWD");
+    expect(formatDrivetrainLabel(" awd ")).toBe("AWD");
+    expect(formatDrivetrainLabel("4wd")).toBe("4WD");
+    expect(formatDrivetrainLabel("Rear")).toBe("Rear");
+    expect(formatDrivetrainLabel("Front Wheel Drive")).toBe("Front Wheel Drive");
+    expect(formatDrivetrainLabel(null)).toBe("N/A");
   });
 });
