@@ -101,8 +101,13 @@ const formatOperatingHours = (rawPayload: unknown): string[] | null => {
   const allSame = parsed.every(
     (entry) => entry.from === parsed[0].from && entry.to === parsed[0].to,
   );
+  const uniqueWeekdayCount = new Set(parsed.map((entry) => entry.weekday)).size;
 
-  if (allSame && parsed.length === WEEKDAY_LABELS.length) {
+  if (
+    allSame &&
+    parsed.length === WEEKDAY_LABELS.length &&
+    uniqueWeekdayCount === WEEKDAY_LABELS.length
+  ) {
     return [
       `${WEEKDAY_LABELS[0]}-${WEEKDAY_LABELS[WEEKDAY_LABELS.length - 1]}: ${parsed[0].from}-${parsed[0].to}`,
     ];
