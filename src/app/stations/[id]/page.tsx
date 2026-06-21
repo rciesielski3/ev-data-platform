@@ -83,7 +83,27 @@ export default async function StationDetailPage({
             <DetailRow label="Address" value={details.address} />
             <DetailRow label="City" value={details.city} />
             <DetailRow label="Province" value={details.province} />
-            <DetailRow label="Coordinates" value={details.coordinates} />
+            <DetailRow
+              label="Coordinates"
+              value={
+                <>
+                  {details.coordinates}
+                  {details.mapHref && (
+                    <>
+                      {" / "}
+                      <a
+                        href={details.mapHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sky-700 underline hover:text-sky-900"
+                      >
+                        OpenStreetMap
+                      </a>
+                    </>
+                  )}
+                </>
+              }
+            />
             <DetailRow
               label="Source"
               value={

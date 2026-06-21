@@ -49,6 +49,21 @@ export type StationDetails = ReturnType<typeof buildStationDetails>;
 
 const displayValue = (value: string | null | undefined) => value?.trim() || UNKNOWN;
 
+export const buildOpenStreetMapHref = (latitude: number, longitude: number) => {
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude) ||
+    latitude < -90 ||
+    latitude > 90 ||
+    longitude < -180 ||
+    longitude > 180
+  ) {
+    return null;
+  }
+
+  return `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=17/${latitude}/${longitude}`;
+};
+
 const firstDisplayValue = (...values: Array<string | null | undefined>) => {
   for (const value of values) {
     const trimmed = value?.trim();
@@ -76,6 +91,7 @@ export const buildStationDetails = (station: StationDetailsInput) => {
     city: displayValue(station.city),
     province: displayValue(station.province),
     coordinates: `${station.latitude.toFixed(4)}, ${station.longitude.toFixed(4)}`,
+    mapHref: buildOpenStreetMapHref(station.latitude, station.longitude),
     sourceName: station.sourceName,
     safeSourceUrl: getSafeHttpUrl(station.sourceUrl),
     lastUpdated: formatDisplayDate(station.updatedAt),

@@ -10,6 +10,7 @@ import {
   type StationSearchParams,
 } from "@/features/charging/station-search";
 import { geocodeStationLocation } from "@/features/charging/geocoding";
+import { buildOpenStreetMapHref } from "@/features/charging/station-details";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 
@@ -117,12 +118,20 @@ const StationsPage = async ({
             and operator.
           </p>
         </div>
-        <Link
-          href="/vehicles"
-          className="text-sm font-medium text-sky-700 hover:text-sky-900"
-        >
-          Browse EV catalog
-        </Link>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/insights"
+            className="text-sm font-medium text-sky-700 hover:text-sky-900"
+          >
+            View insights
+          </Link>
+          <Link
+            href="/vehicles"
+            className="text-sm font-medium text-sky-700 hover:text-sky-900"
+          >
+            Browse EV catalog
+          </Link>
+        </div>
       </div>
 
       {"error" in data ? (
@@ -244,6 +253,10 @@ const StationsPage = async ({
               {data.stations.map((station) => {
                 const strongestConnector = station.connectors[0];
                 const safeSourceUrl = getSafeHttpUrl(station.sourceUrl);
+                const mapHref = buildOpenStreetMapHref(
+                  station.latitude,
+                  station.longitude,
+                );
                 const connectorSummary = buildStationConnectorSummary(
                   station.connectors,
                 );
@@ -278,7 +291,7 @@ const StationsPage = async ({
                     </div>
 
                     <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-                      <div>
+                      <div className="sm:col-span-2">
                         <dt className="text-slate-500">Connectors</dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {connectorSummary.length > 0 ? (
@@ -287,11 +300,11 @@ const StationsPage = async ({
                                 <span
                                   key={connector.key}
                                   title={connector.title}
-                                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2 py-1 text-xs"
+                                  className="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full border border-slate-200 px-2 py-1 text-xs"
                                 >
                                   {connector.label}
                                   {connector.currentType !== "Unknown" && (
-                                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                                    <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
                                       {connector.currentType}
                                     </span>
                                   )}
@@ -308,6 +321,19 @@ const StationsPage = async ({
                         <dd className="mt-1 font-medium text-slate-900">
                           {station.latitude.toFixed(4)},{" "}
                           {station.longitude.toFixed(4)}
+                          {mapHref && (
+                            <>
+                              {" / "}
+                              <a
+                                href={mapHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sky-700 underline hover:text-sky-900"
+                              >
+                                map
+                              </a>
+                            </>
+                          )}
                         </dd>
                       </div>
                       <div>

@@ -1,10 +1,22 @@
 import { describe, expect, it } from "vitest";
 
-import { buildStationDetails } from "@/features/charging/station-details";
+import {
+  buildOpenStreetMapHref,
+  buildStationDetails,
+} from "@/features/charging/station-details";
 
 const baseDate = new Date("2026-06-01T12:00:00.000Z");
 
 describe("buildStationDetails", () => {
+  it("builds safe OpenStreetMap links from station coordinates", () => {
+    expect(buildOpenStreetMapHref(52.2297, 21.0122)).toBe(
+      "https://www.openstreetmap.org/?mlat=52.2297&mlon=21.0122#map=17/52.2297/21.0122",
+    );
+    expect(buildOpenStreetMapHref(Number.NaN, 21.0122)).toBeNull();
+    expect(buildOpenStreetMapHref(91, 21.0122)).toBeNull();
+    expect(buildOpenStreetMapHref(52.2297, 181)).toBeNull();
+  });
+
   it("formats station detail fields and connector rows for display", () => {
     const details = buildStationDetails({
       id: "station-1",
@@ -59,6 +71,8 @@ describe("buildStationDetails", () => {
       city: "Warsaw",
       province: "Mazowieckie",
       coordinates: "52.2297, 21.0122",
+      mapHref:
+        "https://www.openstreetmap.org/?mlat=52.2297&mlon=21.0122#map=17/52.2297/21.0122",
       sourceName: "EIPA",
       safeSourceUrl: "https://example.com/stations/1",
       lastUpdated: "Jun 1, 2026",

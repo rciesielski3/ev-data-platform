@@ -45,6 +45,12 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
               >
                 Stations
               </Link>
+              <Link
+                href="/insights"
+                className="text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                Insights
+              </Link>
             </nav>
           </div>
         </header>
