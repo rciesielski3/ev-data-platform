@@ -36,8 +36,8 @@ export type GeocodedStationLocation = {
 };
 
 export type OperatorFilterOptionInput = {
-  normalizedName: string;
-  name: string | null;
+  normalizedName?: string | null;
+  name?: string | null;
 };
 
 export type OperatorFilterOption = {
@@ -58,18 +58,14 @@ export type StationConnectorSummaryItem = {
   currentType: ConnectorCurrentType;
 };
 
-const cleanText = (value: string | undefined) => {
+export const cleanText = (value: string | null | undefined) => {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
 };
 
-const cleanNullableText = (value: string | null | undefined) => {
-  const trimmed = value?.trim();
-  return trimmed ? trimmed : undefined;
-};
-
-const isTechnicalEipaOperatorIdentifier = (value: string | null | undefined) =>
-  /^eipa-operator-/i.test(value?.trim() ?? "");
+export const isTechnicalEipaOperatorIdentifier = (
+  value: string | null | undefined,
+) => /^eipa-operator-/i.test(value?.trim() ?? "");
 
 const formatConnectorTitle = (
   label: string,
@@ -111,13 +107,13 @@ export const parseStationSearchParams = (
 export const formatStationOperatorLabel = (
   operator: OperatorFilterOptionInput | null | undefined,
 ) => {
-  const displayName = cleanNullableText(operator?.name);
+  const displayName = cleanText(operator?.name);
 
   if (displayName && !isTechnicalEipaOperatorIdentifier(displayName)) {
     return displayName;
   }
 
-  const normalizedName = cleanNullableText(operator?.normalizedName);
+  const normalizedName = cleanText(operator?.normalizedName);
 
   if (normalizedName && !isTechnicalEipaOperatorIdentifier(normalizedName)) {
     return normalizedName;
@@ -146,7 +142,7 @@ export const buildOperatorFilterOptions = (
     }
 
     seenValues.add(normalizedValue);
-    options.push({ key: operator.normalizedName, value });
+    options.push({ key: operator.normalizedName ?? value, value });
   }
 
   return options;
