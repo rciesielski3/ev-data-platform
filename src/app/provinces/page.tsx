@@ -110,7 +110,21 @@ export default async function ProvincesPage() {
     (total, row) => total + row.hpcStationCount,
     0,
   );
-  const strongestProvince = provinceRows.find((row) => row.maxPowerKw !== null);
+  const strongestProvince = provinceRows.reduce<ProvinceIntelligenceRow | null>(
+    (strongest, row) => {
+      if (row.maxPowerKw === null) {
+        return strongest;
+      }
+
+      const isStronger =
+        strongest === null ||
+        strongest.maxPowerKw === null ||
+        row.maxPowerKw > strongest.maxPowerKw;
+
+      return isStronger ? row : strongest;
+    },
+    null,
+  );
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">

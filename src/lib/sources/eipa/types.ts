@@ -14,6 +14,22 @@ export type EipaClosingHoursEntry = {
   to_time?: string;
 };
 
+export type EipaDictionaryEntry = {
+  id: number;
+  description: string;
+};
+
+// The dictionary export returns a flat object keyed by dictionary name (not
+// the {data, generated} envelope the other resources use). Only the two
+// dictionaries this codebase resolves against are typed here; the live
+// response also includes charging_mode, connector_interface, fuel_type,
+// gas_connector_interface, hydrogen_refill_solution, weekday, company_type,
+// and country, which are left untyped since nothing consumes them yet.
+export type EipaDictionary = {
+  station_payment_method: EipaDictionaryEntry[];
+  station_authentication_method: EipaDictionaryEntry[];
+};
+
 export type EipaPool = {
   id: number;
   operator_id: number;
@@ -66,6 +82,12 @@ export type EipaStation = {
     province: string;
   };
   ts: string;
+  // Each element is a `station_payment_method` / `station_authentication_method`
+  // dictionary entry id (see EipaDictionary / fetchEipaDictionary), not a
+  // single combined bitmask integer -- the live API already reports the set
+  // bits as a plain array of dictionary ids.
+  payment_methods?: number[];
+  authentication_methods?: number[];
 };
 
 export type EipaPoint = {

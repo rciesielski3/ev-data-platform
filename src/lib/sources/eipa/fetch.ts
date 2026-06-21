@@ -50,3 +50,8 @@ export const fetchEipaOperators = async () =>
     data: import("./types").EipaOperator[];
     generated: string;
   }>("operator");
+
+// Unlike the other resources, the dictionary export returns a flat object
+// keyed by dictionary name directly -- there is no {data, generated} envelope.
+export const fetchEipaDictionary = async () =>
+  fetchEipaExport<import("./types").EipaDictionary>("dictionary");

@@ -8,6 +8,7 @@ import {
 } from "@/lib/sources/ingestion";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 import {
+  fetchEipaDictionary,
   fetchEipaOperators,
   fetchEipaPoints,
   fetchEipaPools,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/sources/eipa/fetch";
 import { normalizeEipaStations } from "@/lib/sources/eipa/normalize";
 import type {
+  EipaDictionary,
   EipaOperator,
   NormalizedChargingStation,
 } from "@/lib/sources/eipa/types";
@@ -45,6 +47,22 @@ const fetchEipaOperatorsSafely = async (): Promise<{
       error instanceof Error ? error.message : error,
     );
     return { data: [], generated: null };
+  }
+};
+
+// Same rationale as fetchEipaOperatorsSafely: payment/auth method labels are
+// an enrichment of station.payment_methods / station.authentication_methods
+// (which are stored regardless), so a dictionary fetch failure should leave
+// those codes unresolved for this run rather than abort the whole import.
+const fetchEipaDictionarySafely = async (): Promise<EipaDictionary> => {
+  try {
+    return await fetchEipaDictionary();
+  } catch (error) {
+    console.warn(
+      "[EIPA] dictionary fetch failed; continuing without payment/auth method enrichment:",
+      error instanceof Error ? error.message : error,
+    );
+    return { station_payment_method: [], station_authentication_method: [] };
   }
 };
 
@@ -185,21 +203,31 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       }
     };
 
-    // Pools/stations/points/operators have no interdependency, so fetch them
-    // concurrently. The operators fetch uses fetchEipaOperatorsSafely, which
-    // degrades to an empty array instead of throwing, so a failure there
-    // can't abort the other three (and thus can't abort the whole import).
-    const [pools, stations, points, operators] = await Promise.all([
+    // Pools/stations/points/operators/dictionary have no interdependency, so
+    // fetch them concurrently. The operators and dictionary fetches use their
+    // *Safely wrappers, which degrade to empty data instead of throwing, so a
+    // failure there can't abort the other fetches (and thus can't abort the
+    // whole import).
+    const [pools, stations, points, operators, dictionary] = await Promise.all([
       timedFetch("[EIPA] pools", fetchEipaPools),
       timedFetch("[EIPA] stations", fetchEipaStations),
       timedFetch("[EIPA] points", fetchEipaPoints),
       timedFetch("[EIPA] operators", fetchEipaOperatorsSafely),
+      timedFetch("[EIPA] dictionary", fetchEipaDictionarySafely),
     ]);
 
     console.log("[EIPA] pools:", pools.data.length);
     console.log("[EIPA] stations:", stations.data.length);
     console.log("[EIPA] points:", points.data.length);
     console.log("[EIPA] operators:", operators.data.length);
+    console.log(
+      "[EIPA] dictionary payment methods:",
+      dictionary.station_payment_method.length,
+    );
+    console.log(
+      "[EIPA] dictionary auth methods:",
+      dictionary.station_authentication_method.length,
+    );
 
     const dynamic = { data: [] };
 
@@ -210,6 +238,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       points: points.data,
       dynamicPoints: dynamic.data,
       operators: operators.data,
+      dictionary,
     });
     console.timeEnd("[EIPA] normalize");
     console.log("[EIPA] normalized:", normalized.length);

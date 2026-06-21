@@ -209,6 +209,10 @@ describe("buildStationDetails", () => {
     expect(details.accessibility).toBe("Not provided by source");
     expect(details.hasAccessibilityInfo).toBe(false);
     expect(details.closingPeriods).toBeNull();
+    expect(details.paymentMethods).toEqual(["Not provided by source"]);
+    expect(details.hasPaymentMethodsInfo).toBe(false);
+    expect(details.authMethods).toEqual(["Not provided by source"]);
+    expect(details.hasAuthMethodsInfo).toBe(false);
   });
 
   it("collapses identical weekday hours into a single Mon-Sun range", () => {
@@ -303,6 +307,63 @@ describe("buildStationDetails", () => {
     ]);
   });
 
+  it("does not collapse to Mon-Sun when a weekday is duplicated and another is missing", () => {
+    const details = buildStationDetails({
+      id: "station-8",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-8",
+      externalCode: "EXT-8",
+      name: "Split Shift Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 8",
+      postalCode: null,
+      operatorId: "operator-8",
+      operator: { name: "Operator 8", normalizedName: "operator-8" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        pool: {
+          // Monday reported twice (e.g. a split-shift schedule) while
+          // Sunday is missing entirely. All 7 entries share the same
+          // from/to time, but they only cover 6 distinct weekdays, so
+          // this must not be reported as full "Mon-Sun" coverage.
+          operating_hours: [
+            { weekday: 1, from_time: "08:00", to_time: "20:00" },
+            { weekday: 1, from_time: "08:00", to_time: "20:00" },
+            { weekday: 2, from_time: "08:00", to_time: "20:00" },
+            { weekday: 3, from_time: "08:00", to_time: "20:00" },
+            { weekday: 4, from_time: "08:00", to_time: "20:00" },
+            { weekday: 5, from_time: "08:00", to_time: "20:00" },
+            { weekday: 6, from_time: "08:00", to_time: "20:00" },
+          ],
+        },
+      },
+      connectors: [],
+    });
+
+    expect(details.operatingHours).toEqual([
+      "Mon: 08:00-20:00",
+      "Mon: 08:00-20:00",
+      "Tue: 08:00-20:00",
+      "Wed: 08:00-20:00",
+      "Thu: 08:00-20:00",
+      "Fri: 08:00-20:00",
+      "Sat: 08:00-20:00",
+    ]);
+    expect(details.hasOperatingHoursInfo).toBe(true);
+  });
+
   it("ignores malformed rawPayload shapes without throwing", () => {
     const details = buildStationDetails({
       id: "station-7",
@@ -334,6 +395,8 @@ describe("buildStationDetails", () => {
           operating_hours: "not-an-array",
           closing_hours: [{ from_time: "missing-to" }],
         },
+        resolvedPaymentMethods: "not-an-array",
+        resolvedAuthMethods: [123, null, "", "  "],
       },
       connectors: [],
     });
@@ -343,5 +406,95 @@ describe("buildStationDetails", () => {
     expect(details.accessibility).toBe("Not provided by source");
     expect(details.hasAccessibilityInfo).toBe(false);
     expect(details.closingPeriods).toBeNull();
+    expect(details.paymentMethods).toEqual(["Not provided by source"]);
+    expect(details.hasPaymentMethodsInfo).toBe(false);
+    expect(details.authMethods).toEqual(["Not provided by source"]);
+    expect(details.hasAuthMethodsInfo).toBe(false);
+  });
+
+  it("shows resolved payment and authentication method labels when present in rawPayload", () => {
+    const details = buildStationDetails({
+      id: "station-9",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-9",
+      externalCode: "EXT-9",
+      name: "Payment Methods Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 9",
+      postalCode: null,
+      operatorId: "operator-9",
+      operator: { name: "Operator 9", normalizedName: "operator-9" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        resolvedPaymentMethods: [
+          "Bezpłatne ładowanie",
+          "Płatne ładowanie, karta płatnicza",
+        ],
+        resolvedAuthMethods: [
+          "Aplikacje – dedykowana aplikacja na smartfon lub przeglądarkowa",
+        ],
+      },
+      connectors: [],
+    });
+
+    expect(details.paymentMethods).toEqual([
+      "Bezpłatne ładowanie",
+      "Płatne ładowanie, karta płatnicza",
+    ]);
+    expect(details.hasPaymentMethodsInfo).toBe(true);
+    expect(details.authMethods).toEqual([
+      "Aplikacje – dedykowana aplikacja na smartfon lub przeglądarkowa",
+    ]);
+    expect(details.hasAuthMethodsInfo).toBe(true);
+  });
+
+  it("shows 'Not provided by source' for payment/auth methods when the resolved arrays are empty", () => {
+    const details = buildStationDetails({
+      id: "station-10",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-10",
+      externalCode: "EXT-10",
+      name: "No Payment Methods Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 10",
+      postalCode: null,
+      operatorId: "operator-10",
+      operator: { name: "Operator 10", normalizedName: "operator-10" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        resolvedPaymentMethods: [],
+        resolvedAuthMethods: [],
+      },
+      connectors: [],
+    });
+
+    expect(details.paymentMethods).toEqual(["Not provided by source"]);
+    expect(details.hasPaymentMethodsInfo).toBe(false);
+    expect(details.authMethods).toEqual(["Not provided by source"]);
+    expect(details.hasAuthMethodsInfo).toBe(false);
   });
 });

@@ -4,6 +4,8 @@ import {
   normalizeOperatorName,
 } from "@/lib/normalizers/charging";
 import type {
+  EipaDictionary,
+  EipaDictionaryEntry,
   EipaDynamicPoint,
   EipaOperator,
   EipaPoint,
@@ -97,16 +99,51 @@ export const resolveEipaOperatorName = (
   return normalizeOperatorName(operatorId);
 };
 
+const buildDictionaryMap = (entries: EipaDictionaryEntry[] | undefined) =>
+  new Map(
+    Array.isArray(entries)
+      ? entries.map((entry) => [entry.id, entry.description])
+      : [],
+  );
+
+/**
+ * Resolves an array of dictionary entry ids (e.g. station.payment_methods)
+ * into their human-readable descriptions. Unknown ids (not present in the
+ * dictionary) are silently dropped rather than guessed at; a station with no
+ * resolvable codes at all yields an empty array.
+ */
+const resolveDictionaryCodes = (
+  codes: number[] | undefined,
+  labelsById: Map<number, string>,
+): string[] => {
+  if (!Array.isArray(codes)) {
+    return [];
+  }
+
+  const labels = codes
+    .map((code) => labelsById.get(code))
+    .filter((label): label is string => Boolean(label));
+
+  return Array.from(new Set(labels));
+};
+
 export const normalizeEipaStations = (input: {
   pools: EipaPool[];
   stations: EipaStation[];
   points: EipaPoint[];
   dynamicPoints: EipaDynamicPoint[];
   operators: EipaOperator[];
+  dictionary?: EipaDictionary;
 }): NormalizedChargingStation[] => {
   const poolsById = new Map(input.pools.map((pool) => [pool.id, pool]));
   const operatorsById = new Map(
     input.operators.map((operator) => [operator.id, operator]),
+  );
+  const paymentMethodsById = buildDictionaryMap(
+    input.dictionary?.station_payment_method,
+  );
+  const authenticationMethodsById = buildDictionaryMap(
+    input.dictionary?.station_authentication_method,
   );
   const pointsByStationId = new Map<number, EipaPoint[]>();
 
@@ -177,6 +214,14 @@ export const normalizeEipaStations = (input: {
           dynamic: stationPoints
             .map((point) => dynamicByPointId.get(point.id))
             .filter(Boolean),
+          resolvedPaymentMethods: resolveDictionaryCodes(
+            station.payment_methods,
+            paymentMethodsById,
+          ),
+          resolvedAuthMethods: resolveDictionaryCodes(
+            station.authentication_methods,
+            authenticationMethodsById,
+          ),
         },
       };
     });

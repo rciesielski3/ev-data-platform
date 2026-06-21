@@ -56,11 +56,43 @@ const getRawPool = (rawPayload: unknown): Record<string, unknown> | null => {
   return isPlainObject(pool) ? pool : null;
 };
 
+/**
+ * Defensively reads the top-level raw payload object itself. Station-level
+ * fields (as opposed to pool-level fields like accessibility/operating_hours)
+ * live directly on `rawPayload`, e.g. `resolvedPaymentMethods` /
+ * `resolvedAuthMethods` written by normalizeEipaStations.
+ */
+const getRawStation = (rawPayload: unknown): Record<string, unknown> | null =>
+  isPlainObject(rawPayload) ? rawPayload : null;
+
 const formatAccessibility = (rawPayload: unknown): string | null => {
   const pool = getRawPool(rawPayload);
   const accessibility = cleanRawText(pool?.accessibility);
 
   return accessibility ?? null;
+};
+
+/**
+ * Reads a resolved description-array field (e.g. resolvedPaymentMethods)
+ * written by normalizeEipaStations. Returns null when absent/empty/malformed
+ * so callers can fall back to a "not provided" message instead of guessing.
+ */
+const formatResolvedMethodLabels = (
+  rawPayload: unknown,
+  field: "resolvedPaymentMethods" | "resolvedAuthMethods",
+): string[] | null => {
+  const raw = getRawStation(rawPayload);
+  const entries = raw?.[field];
+
+  if (!Array.isArray(entries)) {
+    return null;
+  }
+
+  const labels = entries
+    .map((entry) => cleanRawText(entry))
+    .filter((label): label is string => Boolean(label));
+
+  return labels.length > 0 ? labels : null;
 };
 
 /**
@@ -101,8 +133,13 @@ const formatOperatingHours = (rawPayload: unknown): string[] | null => {
   const allSame = parsed.every(
     (entry) => entry.from === parsed[0].from && entry.to === parsed[0].to,
   );
+  const uniqueWeekdayCount = new Set(parsed.map((entry) => entry.weekday)).size;
 
-  if (allSame && parsed.length === WEEKDAY_LABELS.length) {
+  if (
+    allSame &&
+    parsed.length === WEEKDAY_LABELS.length &&
+    uniqueWeekdayCount === WEEKDAY_LABELS.length
+  ) {
     return [
       `${WEEKDAY_LABELS[0]}-${WEEKDAY_LABELS[WEEKDAY_LABELS.length - 1]}: ${parsed[0].from}-${parsed[0].to}`,
     ];
@@ -217,6 +254,14 @@ export const buildStationDetails = (station: StationDetailsInput) => {
   const sourceUpdatedAt = formatDisplayDate(station.sourceUpdatedAt);
   const accessibility = formatAccessibility(station.rawPayload);
   const operatingHours = formatOperatingHours(station.rawPayload);
+  const paymentMethods = formatResolvedMethodLabels(
+    station.rawPayload,
+    "resolvedPaymentMethods",
+  );
+  const authMethods = formatResolvedMethodLabels(
+    station.rawPayload,
+    "resolvedAuthMethods",
+  );
   const quality = buildStationQuality({
     sourceUpdatedAt: station.sourceUpdatedAt,
     importedAt: station.importedAt,
@@ -272,10 +317,9 @@ export const buildStationDetails = (station: StationDetailsInput) => {
     operatingHours: operatingHours ?? [NOT_PROVIDED],
     hasOperatingHoursInfo: operatingHours !== null,
     closingPeriods: formatClosingPeriods(station.rawPayload),
-    // authentication_methods / payment_methods are intentionally not
-    // surfaced here: EIPA returns them as bitmask integer arrays with no
-    // documented code-to-label mapping, so displaying them would mean
-    // guessing at meaning we can't verify. Skip until the source documents
-    // the enum.
+    paymentMethods: paymentMethods ?? [NOT_PROVIDED],
+    hasPaymentMethodsInfo: paymentMethods !== null,
+    authMethods: authMethods ?? [NOT_PROVIDED],
+    hasAuthMethodsInfo: authMethods !== null,
   };
 };
