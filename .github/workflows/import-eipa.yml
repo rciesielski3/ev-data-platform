@@ -23,4 +23,3 @@ jobs:
       - run: npm run import:eipa
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          EIPA_EXPORT_KEY: ${{ secrets.EIPA_EXPORT_KEY }}
