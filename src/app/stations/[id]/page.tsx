@@ -248,6 +248,36 @@ export default async function StationDetailPage({
               {details.accessibility}
             </dd>
           </div>
+
+          <div>
+            <dt className="text-sm text-slate-500">Payment methods</dt>
+            <dd
+              className={
+                details.hasPaymentMethodsInfo
+                  ? "mt-1 space-y-1 font-medium text-slate-900"
+                  : "muted mt-1"
+              }
+            >
+              {details.paymentMethods.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </dd>
+          </div>
+
+          <div>
+            <dt className="text-sm text-slate-500">Authentication methods</dt>
+            <dd
+              className={
+                details.hasAuthMethodsInfo
+                  ? "mt-1 space-y-1 font-medium text-slate-900"
+                  : "muted mt-1"
+              }
+            >
+              {details.authMethods.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </dd>
+          </div>
         </div>
       </section>
 

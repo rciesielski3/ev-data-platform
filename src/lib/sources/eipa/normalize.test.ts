@@ -5,6 +5,7 @@ import {
   resolveEipaOperatorName,
 } from "@/lib/sources/eipa/normalize";
 import type {
+  EipaDictionary,
   EipaOperator,
   EipaPool,
   EipaStation,
@@ -289,5 +290,111 @@ describe("normalizeEipaStations operator resolution", () => {
       name: "GreenWay Polska",
       normalizedName: "eipa-operator-55",
     });
+  });
+});
+
+describe("normalizeEipaStations payment/auth method dictionary resolution", () => {
+  const dictionary: EipaDictionary = {
+    station_payment_method: [
+      { id: 1, description: "Bezpłatne ładowanie" },
+      { id: 2, description: "Płatne ładowanie, umowa z operatorem" },
+    ],
+    station_authentication_method: [
+      {
+        id: 0,
+        description:
+          "Nieograniczony dostęp (brak autentykacji / identyfikacji użytkownika)",
+      },
+      { id: 32, description: "Aplikacje – dedykowana aplikacja na smartfon lub przeglądarkowa" },
+    ],
+  };
+
+  it("resolves known payment_methods/authentication_methods codes to their dictionary descriptions", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [
+        { ...baseStation, payment_methods: [1, 2], authentication_methods: [0, 32] },
+      ],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+      dictionary,
+    });
+
+    expect(station.rawPayload.resolvedPaymentMethods).toEqual([
+      "Bezpłatne ładowanie",
+      "Płatne ładowanie, umowa z operatorem",
+    ]);
+    expect(station.rawPayload.resolvedAuthMethods).toEqual([
+      "Nieograniczony dostęp (brak autentykacji / identyfikacji użytkownika)",
+      "Aplikacje – dedykowana aplikacja na smartfon lub przeglądarkowa",
+    ]);
+  });
+
+  it("drops unknown codes that have no matching dictionary entry instead of guessing", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [
+        { ...baseStation, payment_methods: [1, 9999], authentication_methods: [9999] },
+      ],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+      dictionary,
+    });
+
+    expect(station.rawPayload.resolvedPaymentMethods).toEqual([
+      "Bezpłatne ładowanie",
+    ]);
+    expect(station.rawPayload.resolvedAuthMethods).toEqual([]);
+  });
+
+  it("resolves to empty arrays when the station has no payment_methods/authentication_methods fields at all", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [baseStation],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+      dictionary,
+    });
+
+    expect(station.rawPayload.resolvedPaymentMethods).toEqual([]);
+    expect(station.rawPayload.resolvedAuthMethods).toEqual([]);
+  });
+
+  it("degrades gracefully to empty arrays when the dictionary itself is missing (fetch failure upstream)", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [
+        { ...baseStation, payment_methods: [1, 2], authentication_methods: [0, 32] },
+      ],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+      // No dictionary passed at all -- importer's safe-fetch wrapper degrades
+      // to an empty dictionary on fetch failure, so normalize must not throw.
+    });
+
+    expect(station.rawPayload.resolvedPaymentMethods).toEqual([]);
+    expect(station.rawPayload.resolvedAuthMethods).toEqual([]);
+  });
+
+  it("does not throw when dictionary entries are malformed (non-array dictionary fields)", () => {
+    expect(() =>
+      normalizeEipaStations({
+        pools: [basePool],
+        stations: [
+          { ...baseStation, payment_methods: [1], authentication_methods: [0] },
+        ],
+        points: [],
+        dynamicPoints: [],
+        operators: [],
+        dictionary: {
+          station_payment_method: undefined as unknown as EipaDictionary["station_payment_method"],
+          station_authentication_method: [],
+        },
+      }),
+    ).not.toThrow();
   });
 });
