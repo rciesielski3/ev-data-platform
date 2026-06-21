@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildBrandMark,
   buildVehicleSearchHref,
   buildVehicleWhere,
   parseVehicleSearchParams,
@@ -56,5 +57,22 @@ describe("buildVehicleSearchHref", () => {
 
   it("omits an empty search query", () => {
     expect(buildVehicleSearchHref({ page: 1 }, 2)).toBe("/vehicles?page=2");
+  });
+});
+
+describe("buildBrandMark", () => {
+  it("builds compact deterministic brand marks for vehicle cards", () => {
+    expect(buildBrandMark("Volkswagen")).toEqual({
+      initials: "VW",
+      colorClass: "bg-sky-100 text-sky-800",
+    });
+    expect(buildBrandMark("BMW")).toEqual({
+      initials: "BMW",
+      colorClass: "bg-violet-100 text-violet-800",
+    });
+    expect(buildBrandMark("Mercedes-Benz")).toEqual({
+      initials: "MB",
+      colorClass: "bg-emerald-100 text-emerald-800",
+    });
   });
 });

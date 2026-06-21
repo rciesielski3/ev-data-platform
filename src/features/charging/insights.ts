@@ -1,3 +1,4 @@
+import { formatConnectorLabel } from "@/features/charging/connectors";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 
 export type OperatorInsightRow = {
@@ -95,14 +96,23 @@ export const buildChargingInsights = (input: ChargingInsightsInput) => {
       stationShare: operator.stationShare,
     }));
 
-  const connectorDistribution = input.connectorRows
-    .map((row) => ({
-      connectorType: displayText(row.connectorType, "Unknown connector"),
-      connectorCount: row.connectorCount,
-      connectorShare: formatPercent(row.connectorCount, input.totalConnectors),
-      count: row.connectorCount,
-      label: displayText(row.connectorType, "Unknown connector"),
-    }))
+  const connectorTotals = new Map<string, number>();
+
+  for (const row of input.connectorRows) {
+    const label = formatConnectorLabel(row.connectorType);
+    connectorTotals.set(label, (connectorTotals.get(label) ?? 0) + row.connectorCount);
+  }
+
+  const connectorDistribution = Array.from(
+    connectorTotals,
+    ([connectorType, connectorCount]) => ({
+      connectorType,
+      connectorCount,
+      connectorShare: formatPercent(connectorCount, input.totalConnectors),
+      count: connectorCount,
+      label: connectorType,
+    }),
+  )
     .sort(sortByCountThenLabel)
     .map((connector) => ({
       connectorType: connector.connectorType,

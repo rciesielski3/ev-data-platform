@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import {
+  buildBrandMark,
   buildVehicleSearchHref,
   buildVehicleWhere,
   parseVehicleSearchParams,
@@ -117,25 +118,38 @@ export default async function VehiclesPage({
         </section>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {data.vehicles.map((vehicle) => (
-            <Link
-              key={vehicle.id}
-              href={`/vehicles/${vehicle.id}`}
-              className="group block rounded-xl border border-slate-200 bg-white p-5 transition-shadow hover:shadow-md"
-            >
-              <div className="mb-4">
-                <div className="text-sm font-medium text-slate-500">
-                  {vehicle.brand.name}
-                </div>
-                <h2 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600">
-                  {vehicle.modelName}
-                </h2>
-                {vehicle.variantName && (
-                  <p className="text-sm text-slate-600">{vehicle.variantName}</p>
-                )}
-              </div>
+          {data.vehicles.map((vehicle) => {
+            const brandMark = buildBrandMark(vehicle.brand.name);
 
-              <dl className="grid grid-cols-2 gap-4 text-sm">
+            return (
+              <Link
+                key={vehicle.id}
+                href={`/vehicles/${vehicle.id}`}
+                className="group block rounded-xl border border-slate-200 bg-white p-5 transition-shadow hover:shadow-md"
+              >
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-medium text-slate-500">
+                      {vehicle.brand.name}
+                    </div>
+                    <h2 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600">
+                      {vehicle.modelName}
+                    </h2>
+                    {vehicle.variantName && (
+                      <p className="text-sm text-slate-600">
+                        {vehicle.variantName}
+                      </p>
+                    )}
+                  </div>
+                  <span
+                    aria-label={`${vehicle.brand.name} mark`}
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${brandMark.colorClass}`}
+                  >
+                    {brandMark.initials}
+                  </span>
+                </div>
+
+                <dl className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <dt className="text-slate-500">Range (WLTP)</dt>
                   <dd className="font-medium text-slate-900">
@@ -166,14 +180,15 @@ export default async function VehiclesPage({
                     {vehicle.specs?.drivetrain || "N/A"}
                   </dd>
                 </div>
-              </dl>
+                </dl>
 
-              <p className="mt-5 border-t border-slate-100 pt-3 text-xs text-slate-500">
-                Source {vehicle.sourceName} / imported{" "}
-                {formatDate(vehicle.importedAt)}
-              </p>
-            </Link>
-          ))}
+                <p className="mt-5 border-t border-slate-100 pt-3 text-xs text-slate-500">
+                  Source {vehicle.sourceName} / imported{" "}
+                  {formatDate(vehicle.importedAt)}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       )}
 

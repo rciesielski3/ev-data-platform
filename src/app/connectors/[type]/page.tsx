@@ -74,13 +74,14 @@ export default async function ConnectorDetailPage({
               src={connector.imagePath}
               alt={connector.imageLabel}
               width={720}
-              height={480}
-              className="aspect-[3/2] w-full object-cover"
+              height={560}
+              className="aspect-[4/3] w-full object-contain p-4"
               priority
             />
           </div>
           <p className="muted mt-4 text-sm">
-            Static visual label only. No live connector availability is implied.
+            Preview image only: the graphic above shows what this connector type
+            looks like.
           </p>
         </section>
 

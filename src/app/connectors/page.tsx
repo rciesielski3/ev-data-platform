@@ -31,8 +31,8 @@ export default function ConnectorsPage() {
                 src={connector.imagePath}
                 alt={connector.imageLabel}
                 width={640}
-                height={360}
-                className="aspect-video w-full object-cover"
+                height={520}
+                className="aspect-[4/3] w-full object-contain p-4"
               />
             </div>
             <div className="flex items-start justify-between gap-4">

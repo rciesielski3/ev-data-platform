@@ -103,6 +103,19 @@ const HomePage = async () => {
               </p>
             </Link>
             <Link
+              href="/map"
+              className="card transition-shadow hover:shadow-md"
+            >
+              <p className="text-sm font-medium text-sky-700">Station map</p>
+              <h2 className="mt-2 text-xl font-semibold">
+                Explore chargers on a map
+              </h2>
+              <p className="muted mt-2 text-sm">
+                View grouped Polish charging stations with province, connector,
+                and minimum-power filters.
+              </p>
+            </Link>
+            <Link
               href="/connectors"
               className="card transition-shadow hover:shadow-md"
             >

@@ -111,6 +111,24 @@ describe("buildChargingInsights", () => {
     ]);
   });
 
+  it("aggregates connector distribution by normalized connector labels", () => {
+    const insights = buildChargingInsights({
+      ...baseInput,
+      totalConnectors: 10,
+      connectorRows: [
+        { connectorType: "CCS", connectorCount: 2 },
+        { connectorType: "CCS2", connectorCount: 3 },
+        { connectorType: "Combined Charging System 2", connectorCount: 1 },
+        { connectorType: "type-2", connectorCount: 4 },
+      ],
+    });
+
+    expect(insights.connectorDistribution).toEqual([
+      { connectorType: "CCS2", connectorCount: 6, connectorShare: "60%" },
+      { connectorType: "Type 2", connectorCount: 4, connectorShare: "40%" },
+    ]);
+  });
+
   it("orders highest power stations by power and station name", () => {
     const insights = buildChargingInsights({
       ...baseInput,
