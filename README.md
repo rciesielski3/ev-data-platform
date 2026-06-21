@@ -213,6 +213,7 @@ For Vercel deployment:
 - Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
 - Smoke check `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
 - Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.
+- Scheduled EIPA/OpenEV imports now run via GitHub Actions (`.github/workflows/import-eipa.yml`, `import-openev.yml`) rather than Vercel cron, since a full EIPA import (60-75 min) exceeds Vercel's function-duration limit. The `/api/cron/*` routes above remain available for manual/on-demand triggering.
 
 ---
 
