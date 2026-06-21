@@ -100,7 +100,11 @@ export const resolveEipaOperatorName = (
 };
 
 const buildDictionaryMap = (entries: EipaDictionaryEntry[] | undefined) =>
-  new Map((entries ?? []).map((entry) => [entry.id, entry.description]));
+  new Map(
+    Array.isArray(entries)
+      ? entries.map((entry) => [entry.id, entry.description])
+      : [],
+  );
 
 /**
  * Resolves an array of dictionary entry ids (e.g. station.payment_methods)
@@ -116,9 +120,11 @@ const resolveDictionaryCodes = (
     return [];
   }
 
-  return codes
+  const labels = codes
     .map((code) => labelsById.get(code))
     .filter((label): label is string => Boolean(label));
+
+  return Array.from(new Set(labels));
 };
 
 export const normalizeEipaStations = (input: {
