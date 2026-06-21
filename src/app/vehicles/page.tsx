@@ -43,14 +43,18 @@ const BrandLogo = ({
   <span
     aria-label={`${brandName} logo`}
     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-[0.62rem] font-bold uppercase leading-none text-slate-700"
+    style={
+      brandMark.kind === "icon"
+        ? { borderColor: `#${brandMark.hex}` }
+        : undefined
+    }
     title={brandName}
   >
     {brandMark.kind === "icon" ? (
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className="h-5 w-5"
-        style={{ color: `#${brandMark.hex}` }}
+        className="h-5 w-5 text-slate-800"
       >
         <path fill="currentColor" d={brandMark.path} />
       </svg>

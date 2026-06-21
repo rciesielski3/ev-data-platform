@@ -181,7 +181,7 @@ const StationMapPage = async ({
         </div>
       </div>
 
-      <Suspense key={JSON.stringify(params)} fallback={<MapPanelLoading />}>
+      <Suspense fallback={<MapPanelLoading />}>
         <MapDataPanel params={params} />
       </Suspense>
     </main>

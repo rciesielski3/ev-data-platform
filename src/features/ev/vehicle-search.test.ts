@@ -86,6 +86,8 @@ describe("formatDrivetrainLabel", () => {
   it("uppercases drivetrain acronyms for user-facing vehicle pages", () => {
     expect(formatDrivetrainLabel("rwd")).toBe("RWD");
     expect(formatDrivetrainLabel(" awd ")).toBe("AWD");
+    expect(formatDrivetrainLabel("4wd")).toBe("4WD");
+    expect(formatDrivetrainLabel("Rear")).toBe("Rear");
     expect(formatDrivetrainLabel("Front Wheel Drive")).toBe("Front Wheel Drive");
     expect(formatDrivetrainLabel(null)).toBe("N/A");
   });

@@ -39,13 +39,13 @@ const StationMapFiltersClient = ({
     const query = params.toString();
 
     startTransition(() => {
-      router.push(query ? `${pathname}?${query}` : pathname);
+      router.replace(query ? `${pathname}?${query}` : pathname);
     });
   };
 
   const clearFilters = () => {
     startTransition(() => {
-      router.push(pathname);
+      router.replace(pathname);
     });
   };
 

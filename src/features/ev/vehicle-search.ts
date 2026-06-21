@@ -133,6 +133,8 @@ export const buildBrandMark = (brandName: string) => {
   };
 };
 
+const DRIVETRAIN_ACRONYMS = new Set(["rwd", "awd", "fwd", "4wd", "2wd", "4x4"]);
+
 export const formatDrivetrainLabel = (drivetrain: string | null | undefined) => {
   const trimmed = drivetrain?.trim();
 
@@ -140,5 +142,7 @@ export const formatDrivetrainLabel = (drivetrain: string | null | undefined) => 
     return "N/A";
   }
 
-  return /^[a-z]{2,4}$/i.test(trimmed) ? trimmed.toUpperCase() : trimmed;
+  return DRIVETRAIN_ACRONYMS.has(trimmed.toLowerCase())
+    ? trimmed.toUpperCase()
+    : trimmed;
 };
