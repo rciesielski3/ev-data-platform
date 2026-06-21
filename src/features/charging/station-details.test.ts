@@ -174,4 +174,174 @@ describe("buildStationDetails", () => {
 
     expect(details.operatorName).toBe("Unknown operator");
   });
+
+  it("shows 'Not provided by source' when rawPayload has no pool data", () => {
+    const details = buildStationDetails({
+      id: "station-4",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-4",
+      externalCode: "EXT-4",
+      name: "No Hours Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 4",
+      postalCode: null,
+      operatorId: "operator-4",
+      operator: { name: "Operator 4", normalizedName: "operator-4" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: null,
+      connectors: [],
+    });
+
+    expect(details.operatingHours).toEqual(["Not provided by source"]);
+    expect(details.hasOperatingHoursInfo).toBe(false);
+    expect(details.accessibility).toBe("Not provided by source");
+    expect(details.hasAccessibilityInfo).toBe(false);
+    expect(details.closingPeriods).toBeNull();
+  });
+
+  it("collapses identical weekday hours into a single Mon-Sun range", () => {
+    const details = buildStationDetails({
+      id: "station-5",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-5",
+      externalCode: "EXT-5",
+      name: "Always Open Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 5",
+      postalCode: null,
+      operatorId: "operator-5",
+      operator: { name: "Operator 5", normalizedName: "operator-5" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        pool: {
+          accessibility: "Restauracja w pobliżu",
+          operating_hours: Array.from({ length: 7 }, (_, index) => ({
+            weekday: index + 1,
+            from_time: "00:00",
+            to_time: "23:59",
+          })),
+          closing_hours: [
+            { from_time: "2024-07-31T16:00:00+02:00", to_time: "2026-07-31T16:00:00+02:00" },
+          ],
+        },
+      },
+      connectors: [],
+    });
+
+    expect(details.operatingHours).toEqual(["Mon-Sun: 00:00-23:59"]);
+    expect(details.hasOperatingHoursInfo).toBe(true);
+    expect(details.accessibility).toBe("Restauracja w pobliżu");
+    expect(details.hasAccessibilityInfo).toBe(true);
+    expect(details.closingPeriods).toEqual([
+      "2024-07-31T16:00:00+02:00 to 2026-07-31T16:00:00+02:00",
+    ]);
+  });
+
+  it("lists per-day hours when weekdays differ", () => {
+    const details = buildStationDetails({
+      id: "station-6",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-6",
+      externalCode: "EXT-6",
+      name: "Weekday Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 6",
+      postalCode: null,
+      operatorId: "operator-6",
+      operator: { name: "Operator 6", normalizedName: "operator-6" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        pool: {
+          operating_hours: [
+            { weekday: 1, from_time: "08:00", to_time: "20:00" },
+            { weekday: 7, from_time: "10:00", to_time: "14:00" },
+          ],
+        },
+      },
+      connectors: [],
+    });
+
+    expect(details.operatingHours).toEqual([
+      "Mon: 08:00-20:00",
+      "Sun: 10:00-14:00",
+    ]);
+  });
+
+  it("ignores malformed rawPayload shapes without throwing", () => {
+    const details = buildStationDetails({
+      id: "station-7",
+      sourceName: "EIPA",
+      sourceRecordId: "eipa-7",
+      externalCode: "EXT-7",
+      name: "Malformed Station",
+      latitude: 50,
+      longitude: 19,
+      city: "Krakow",
+      province: "Malopolskie",
+      district: null,
+      community: null,
+      countryCode: "PL",
+      address: "Main 7",
+      postalCode: null,
+      operatorId: "operator-7",
+      operator: { name: "Operator 7", normalizedName: "operator-7" },
+      poolSourceId: null,
+      stationType: null,
+      sourceUrl: null,
+      sourceUpdatedAt: null,
+      importedAt: baseDate,
+      updatedAt: baseDate,
+      isManualOverride: false,
+      rawPayload: {
+        pool: {
+          accessibility: 12345,
+          operating_hours: "not-an-array",
+          closing_hours: [{ from_time: "missing-to" }],
+        },
+      },
+      connectors: [],
+    });
+
+    expect(details.operatingHours).toEqual(["Not provided by source"]);
+    expect(details.hasOperatingHoursInfo).toBe(false);
+    expect(details.accessibility).toBe("Not provided by source");
+    expect(details.hasAccessibilityInfo).toBe(false);
+    expect(details.closingPeriods).toBeNull();
+  });
 });

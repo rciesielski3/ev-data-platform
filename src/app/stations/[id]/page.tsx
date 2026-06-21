@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { buildStationDetails } from "@/features/charging/station-details";
+import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
@@ -177,6 +178,78 @@ export default async function StationDetailPage({
           )}
         </section>
       </div>
+
+      <section className="card mt-6">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-medium text-slate-900">Data Quality</h2>
+          <span className="badge">
+            {details.quality.completeness.scorePercent}% complete
+          </span>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <dt className="text-sm text-slate-500">Completeness</dt>
+            <dd className="mt-1 font-medium text-slate-900">
+              {details.quality.completeness.presentFieldCount} of{" "}
+              {details.quality.completeness.totalFieldCount} fields present
+            </dd>
+            <dd className="muted mt-2 text-sm">
+              {details.quality.completeness.missingFields.length === 0
+                ? "No missing fields."
+                : `Missing: ${details.quality.completeness.missingFields.join(", ")}`}
+            </dd>
+          </div>
+
+          <div>
+            <dt className="text-sm text-slate-500">Freshness</dt>
+            <dd className="mt-1">
+              <StationFreshnessIndicator freshness={details.quality.freshness} />
+            </dd>
+            <dd className="muted mt-2 text-sm">
+              {details.quality.freshness.bucket === "unknown"
+                ? "No source timestamp or import date is available for this station."
+                : `Based on ${details.quality.freshnessSourceLabel} (${details.quality.freshnessReferenceDate}).`}
+            </dd>
+          </div>
+        </div>
+      </section>
+
+      <section className="card mt-6">
+        <h2 className="mb-5 text-xl font-medium text-slate-900">
+          Operating Hours &amp; Accessibility
+        </h2>
+
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <dt className="text-sm text-slate-500">Opening hours</dt>
+            <dd className="mt-1 space-y-1 font-medium text-slate-900">
+              {details.operatingHours.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </dd>
+            {details.closingPeriods && details.closingPeriods.length > 0 && (
+              <dd className="muted mt-2 text-sm">
+                Scheduled closures:{" "}
+                {details.closingPeriods.join("; ")}
+              </dd>
+            )}
+          </div>
+
+          <div>
+            <dt className="text-sm text-slate-500">Accessibility</dt>
+            <dd
+              className={
+                details.hasAccessibilityInfo
+                  ? "mt-1 font-medium text-slate-900"
+                  : "muted mt-1"
+              }
+            >
+              {details.accessibility}
+            </dd>
+          </div>
+        </div>
+      </section>
 
       <section className="mt-6 rounded-xl bg-slate-100 p-6 text-sm text-slate-600">
         <p>Connector Count: {details.connectorCount}</p>
