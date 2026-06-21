@@ -7,6 +7,7 @@ import {
   type HighestPowerStationRow,
   type OperatorInsightRow,
 } from "@/features/charging/insights";
+import { MetricCard } from "@/features/charging/metric-card";
 
 export const dynamic = "force-dynamic";
 
@@ -145,22 +146,6 @@ const getInsightsData = async () => {
     })),
   });
 };
-
-const MetricCard = ({
-  label,
-  value,
-  helper,
-}: {
-  label: string;
-  value: string;
-  helper: string;
-}) => (
-  <section className="card">
-    <p className="text-sm font-medium text-slate-500">{label}</p>
-    <p className="mt-2 text-3xl font-semibold text-slate-950">{value}</p>
-    <p className="muted mt-1 text-sm">{helper}</p>
-  </section>
-);
 
 const ShareBar = ({ percentLabel }: { percentLabel: string }) => {
   const percent = Number(percentLabel.replace("%", ""));

@@ -58,6 +58,24 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
               >
                 Insights
               </Link>
+              <Link
+                href="/provinces"
+                className="text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                Provinces
+              </Link>
+              <Link
+                href="/operators"
+                className="text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                Operators
+              </Link>
+              <Link
+                href="/coverage"
+                className="text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                Coverage
+              </Link>
             </nav>
           </div>
         </header>

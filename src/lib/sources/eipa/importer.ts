@@ -8,12 +8,16 @@ import {
 } from "@/lib/sources/ingestion";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 import {
+  fetchEipaOperators,
   fetchEipaPoints,
   fetchEipaPools,
   fetchEipaStations,
 } from "@/lib/sources/eipa/fetch";
 import { normalizeEipaStations } from "@/lib/sources/eipa/normalize";
-import type { NormalizedChargingStation } from "@/lib/sources/eipa/types";
+import type {
+  EipaOperator,
+  NormalizedChargingStation,
+} from "@/lib/sources/eipa/types";
 import { validateChargingStations } from "@/lib/validators/charging";
 
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
@@ -22,6 +26,26 @@ const PROGRESS_STEP = 100;
 const getImportLimit = () => {
   const value = Number(process.env.EIPA_IMPORT_LIMIT ?? 0);
   return Number.isFinite(value) && value > 0 ? value : null;
+};
+
+// The operator export is an enrichment lookup: operator-name resolution
+// already has a fallback chain (table -> pool.operator_name -> placeholder),
+// so a failure to fetch operators should degrade gracefully rather than
+// abort the entire import (which would otherwise import 0 stations even
+// though pools/stations/points all fetched successfully).
+const fetchEipaOperatorsSafely = async (): Promise<{
+  data: EipaOperator[];
+  generated: string | null;
+}> => {
+  try {
+    return await fetchEipaOperators();
+  } catch (error) {
+    console.warn(
+      "[EIPA] operators fetch failed; continuing without operator enrichment:",
+      error instanceof Error ? error.message : error,
+    );
+    return { data: [], generated: null };
+  }
 };
 
 const upsertOperator = async (
@@ -152,20 +176,30 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
   console.time("[EIPA] total import");
 
   try {
-    console.time("[EIPA] pools");
-    const pools = await fetchEipaPools();
-    console.timeEnd("[EIPA] pools");
+    const timedFetch = async <T>(label: string, fetcher: () => Promise<T>) => {
+      console.time(label);
+      try {
+        return await fetcher();
+      } finally {
+        console.timeEnd(label);
+      }
+    };
+
+    // Pools/stations/points/operators have no interdependency, so fetch them
+    // concurrently. The operators fetch uses fetchEipaOperatorsSafely, which
+    // degrades to an empty array instead of throwing, so a failure there
+    // can't abort the other three (and thus can't abort the whole import).
+    const [pools, stations, points, operators] = await Promise.all([
+      timedFetch("[EIPA] pools", fetchEipaPools),
+      timedFetch("[EIPA] stations", fetchEipaStations),
+      timedFetch("[EIPA] points", fetchEipaPoints),
+      timedFetch("[EIPA] operators", fetchEipaOperatorsSafely),
+    ]);
+
     console.log("[EIPA] pools:", pools.data.length);
-
-    console.time("[EIPA] stations");
-    const stations = await fetchEipaStations();
-    console.timeEnd("[EIPA] stations");
     console.log("[EIPA] stations:", stations.data.length);
-
-    console.time("[EIPA] points");
-    const points = await fetchEipaPoints();
-    console.timeEnd("[EIPA] points");
     console.log("[EIPA] points:", points.data.length);
+    console.log("[EIPA] operators:", operators.data.length);
 
     const dynamic = { data: [] };
 
@@ -175,6 +209,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       stations: stations.data,
       points: points.data,
       dynamicPoints: dynamic.data,
+      operators: operators.data,
     });
     console.timeEnd("[EIPA] normalize");
     console.log("[EIPA] normalized:", normalized.length);

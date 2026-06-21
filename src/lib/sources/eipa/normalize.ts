@@ -5,6 +5,7 @@ import {
 } from "@/lib/normalizers/charging";
 import type {
   EipaDynamicPoint,
+  EipaOperator,
   EipaPoint,
   EipaPool,
   EipaStation,
@@ -54,13 +55,59 @@ const normalizeConnectors = (
   return connectors;
 };
 
+// Guards a field access against malformed API responses: the live EIPA API
+// is not guaranteed to return a string for every field (e.g. a record could
+// have a number where a string is expected), so we defensively type-check
+// before calling .trim(). A malformed field just falls through to the next
+// fallback tier instead of throwing and aborting normalization for every
+// station in the batch.
+const trimIfString = (value: unknown): string | undefined =>
+  typeof value === "string" ? value.trim() : undefined;
+
+/**
+ * Resolves a human-readable operator name for a pool using a fallback chain:
+ *   1. The operator-table record's `name` (or `short_name` if `name` is blank).
+ *   2. The `pool.operator_name` field, when present and non-empty (only a
+ *      subset of pool records carry this).
+ *   3. The synthesized `eipa-operator-<id>` placeholder, as a genuine
+ *      last-resort fallback for operator ids we can't resolve at all.
+ */
+export const resolveEipaOperatorName = (
+  operatorId: number,
+  pool: Pick<EipaPool, "operator_name"> | undefined,
+  operatorsById: Map<number, EipaOperator>,
+): string => {
+  const operatorRecord = operatorsById.get(operatorId);
+  const tableName = trimIfString(operatorRecord?.name);
+  const tableShortName = trimIfString(operatorRecord?.short_name);
+
+  if (tableName) {
+    return tableName;
+  }
+
+  if (tableShortName) {
+    return tableShortName;
+  }
+
+  const poolOperatorName = trimIfString(pool?.operator_name);
+  if (poolOperatorName) {
+    return poolOperatorName;
+  }
+
+  return normalizeOperatorName(operatorId);
+};
+
 export const normalizeEipaStations = (input: {
   pools: EipaPool[];
   stations: EipaStation[];
   points: EipaPoint[];
   dynamicPoints: EipaDynamicPoint[];
+  operators: EipaOperator[];
 }): NormalizedChargingStation[] => {
   const poolsById = new Map(input.pools.map((pool) => [pool.id, pool]));
+  const operatorsById = new Map(
+    input.operators.map((operator) => [operator.id, operator]),
+  );
   const pointsByStationId = new Map<number, EipaPoint[]>();
 
   for (const point of input.points) {
@@ -105,7 +152,20 @@ export const normalizeEipaStations = (input: {
         operator: pool
           ? {
               sourceRecordId: String(pool.operator_id),
-              name: normalizeOperatorName(pool.operator_id),
+              name: resolveEipaOperatorName(
+                pool.operator_id,
+                pool,
+                operatorsById,
+              ),
+              // normalizedName stays the stable, technical, ID-derived key
+              // (eipa-operator-<id>) -- it must remain unique/stable per
+              // operator id regardless of how the human-readable `name` (or
+              // its underlying source data) changes over time. Downstream
+              // consumers index/group/sort by this field
+              // (@@index([normalizedName]) in prisma/schema.prisma) and
+              // treat it as a fallback display value behind `name`, so it
+              // must not collide across distinct operator ids the way two
+              // human-readable names might.
               normalizedName: normalizeOperatorName(pool.operator_id),
             }
           : null,

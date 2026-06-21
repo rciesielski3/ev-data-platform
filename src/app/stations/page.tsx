@@ -11,6 +11,11 @@ import {
 } from "@/features/charging/station-search";
 import { geocodeStationLocation } from "@/features/charging/geocoding";
 import { buildOpenStreetMapHref } from "@/features/charging/station-details";
+import { buildStationQuality } from "@/features/charging/data-quality";
+import {
+  StationCompletenessBadge,
+  StationFreshnessIndicator,
+} from "@/features/charging/station-quality-badge";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 
@@ -260,6 +265,7 @@ const StationsPage = async ({
                 const connectorSummary = buildStationConnectorSummary(
                   station.connectors,
                 );
+                const quality = buildStationQuality(station);
 
                 return (
                   <article key={station.id} className="card">
@@ -276,6 +282,14 @@ const StationsPage = async ({
                             .filter(Boolean)
                             .join(", ") || "Location details unavailable"}
                         </p>
+                        <div className="mt-3 flex flex-wrap items-center gap-3">
+                          <StationCompletenessBadge
+                            completeness={quality.completeness}
+                          />
+                          <StationFreshnessIndicator
+                            freshness={quality.freshness}
+                          />
+                        </div>
                         <Link
                           href={`/stations/${station.id}`}
                           className="mt-3 inline-flex text-sm font-medium text-sky-700 hover:text-sky-900"

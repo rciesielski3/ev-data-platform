@@ -3,6 +3,17 @@ export type EipaExportEnvelope<T> = {
   generated: string;
 };
 
+export type EipaOperatingHoursEntry = {
+  weekday?: number;
+  from_time?: string;
+  to_time?: string;
+};
+
+export type EipaClosingHoursEntry = {
+  from_time?: string;
+  to_time?: string;
+};
+
 export type EipaPool = {
   id: number;
   operator_id: number;
@@ -16,6 +27,30 @@ export type EipaPool = {
   city?: string;
   charging: boolean;
   ts: string;
+  // Present on a subset of records only (live API observed ~27% coverage).
+  operator_name?: string;
+  operator_email?: string;
+  operator_phone?: string;
+  operator_website?: string;
+  // Free text describing nearby amenities; populated on a subset of records.
+  accessibility?: string;
+  // Per-weekday opening windows. Most records report all 7 weekdays as
+  // 00:00-23:59 when there is no restriction.
+  operating_hours?: EipaOperatingHoursEntry[];
+  // Date-ranged closures/overrides; rarely populated.
+  closing_hours?: EipaClosingHoursEntry[];
+};
+
+export type EipaOperator = {
+  id: number;
+  name: string;
+  code: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  short_name?: string;
+  type?: string;
+  country?: string;
 };
 
 export type EipaStation = {
