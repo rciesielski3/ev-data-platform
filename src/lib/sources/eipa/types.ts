@@ -59,7 +59,7 @@ export type EipaStation = {
   latitude: number;
   longitude: number;
   type: string;
-  location: {
+  location?: {
     city: string;
     community: string;
     district: string;

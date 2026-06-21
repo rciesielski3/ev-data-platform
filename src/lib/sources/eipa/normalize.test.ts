@@ -130,6 +130,32 @@ describe("resolveEipaOperatorName", () => {
   });
 });
 
+describe("normalizeEipaStations location handling", () => {
+  it("does not throw when a station is missing location", () => {
+    const stationWithoutLocation: EipaStation = {
+      id: baseStation.id,
+      pool_id: baseStation.pool_id,
+      latitude: baseStation.latitude,
+      longitude: baseStation.longitude,
+      type: baseStation.type,
+      ts: baseStation.ts,
+    };
+
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [stationWithoutLocation],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+    });
+
+    expect(station.city).toBeNull();
+    expect(station.province).toBeNull();
+    expect(station.district).toBeNull();
+    expect(station.community).toBeNull();
+  });
+});
+
 describe("normalizeEipaStations operator resolution", () => {
   it("resolves operator name from the operator table over pool.operator_name", () => {
     const [station] = normalizeEipaStations({
