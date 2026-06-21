@@ -3,6 +3,7 @@ import {
   buildBrandMark,
   buildVehicleSearchHref,
   buildVehicleWhere,
+  formatDrivetrainLabel,
   parseVehicleSearchParams,
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
@@ -31,6 +32,33 @@ const formatDate = (value: Date | null | undefined) => {
     day: "numeric",
   }).format(value);
 };
+
+const BrandLogo = ({
+  brandMark,
+  brandName,
+}: {
+  brandMark: ReturnType<typeof buildBrandMark>;
+  brandName: string;
+}) => (
+  <span
+    aria-label={`${brandName} logo`}
+    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-[0.62rem] font-bold uppercase leading-none text-slate-700"
+    title={brandName}
+  >
+    {brandMark.kind === "icon" ? (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="h-5 w-5"
+        style={{ color: `#${brandMark.hex}` }}
+      >
+        <path fill="currentColor" d={brandMark.path} />
+      </svg>
+    ) : (
+      <span className="max-w-9 truncate px-1">{brandMark.title}</span>
+    )}
+  </span>
+);
 
 export default async function VehiclesPage({
   searchParams,
@@ -141,12 +169,10 @@ export default async function VehiclesPage({
                       </p>
                     )}
                   </div>
-                  <span
-                    aria-label={`${vehicle.brand.name} mark`}
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${brandMark.colorClass}`}
-                  >
-                    {brandMark.initials}
-                  </span>
+                  <BrandLogo
+                    brandMark={brandMark}
+                    brandName={vehicle.brand.name}
+                  />
                 </div>
 
                 <dl className="grid grid-cols-2 gap-4 text-sm">
@@ -177,7 +203,7 @@ export default async function VehiclesPage({
                 <div>
                   <dt className="text-slate-500">Drivetrain</dt>
                   <dd className="font-medium text-slate-900">
-                    {vehicle.specs?.drivetrain || "N/A"}
+                    {formatDrivetrainLabel(vehicle.specs?.drivetrain)}
                   </dd>
                 </div>
                 </dl>

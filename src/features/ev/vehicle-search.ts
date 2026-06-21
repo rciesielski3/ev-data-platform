@@ -1,20 +1,56 @@
 import type { Prisma } from "@prisma/client";
+import {
+  siAudi,
+  siBmw,
+  siCitroen,
+  siDacia,
+  siFiat,
+  siFord,
+  siHyundai,
+  siKia,
+  siMg,
+  siMini,
+  siNissan,
+  siOpel,
+  siPeugeot,
+  siPolestar,
+  siPorsche,
+  siRenault,
+  siSeat,
+  siSkoda,
+  siSmart,
+  siTesla,
+  siToyota,
+  siVolkswagen,
+  siVolvo,
+  type SimpleIcon,
+} from "simple-icons";
 
 const MAX_PAGE = 500;
-const BRAND_MARK_COLORS = [
-  "bg-sky-100 text-sky-800",
-  "bg-emerald-100 text-emerald-800",
-  "bg-violet-100 text-violet-800",
-  "bg-amber-100 text-amber-800",
-  "bg-rose-100 text-rose-800",
-];
-const BRAND_MARK_INITIALS: Record<string, string> = {
-  volkswagen: "VW",
-};
-const BRAND_MARK_COLOR_OVERRIDES: Record<string, string> = {
-  bmw: "bg-violet-100 text-violet-800",
-  "mercedes-benz": "bg-emerald-100 text-emerald-800",
-  volkswagen: "bg-sky-100 text-sky-800",
+const BRAND_LOGO_ICONS: Record<string, SimpleIcon> = {
+  audi: siAudi,
+  bmw: siBmw,
+  citroen: siCitroen,
+  dacia: siDacia,
+  fiat: siFiat,
+  ford: siFord,
+  hyundai: siHyundai,
+  kia: siKia,
+  mg: siMg,
+  mini: siMini,
+  nissan: siNissan,
+  opel: siOpel,
+  peugeot: siPeugeot,
+  polestar: siPolestar,
+  porsche: siPorsche,
+  renault: siRenault,
+  seat: siSeat,
+  skoda: siSkoda,
+  smart: siSmart,
+  tesla: siTesla,
+  toyota: siToyota,
+  volkswagen: siVolkswagen,
+  volvo: siVolvo,
 };
 
 export type VehicleSearchParams = {
@@ -76,26 +112,33 @@ export const buildVehicleSearchHref = (
   return `/vehicles?${params.toString()}`;
 };
 
+const normalizeBrandName = (brandName: string) =>
+  brandName.trim().toLowerCase().replaceAll("&", "and");
+
 export const buildBrandMark = (brandName: string) => {
-  const words = brandName
-    .split(/[^a-z0-9]+/i)
-    .map((word) => word.trim())
-    .filter(Boolean);
-  const normalizedBrandName = brandName.trim().toLowerCase();
-  const initials =
-    BRAND_MARK_INITIALS[normalizedBrandName] ??
-    (words.length === 1
-      ? words[0].slice(0, 3).toUpperCase()
-      : words
-          .slice(0, 2)
-          .map((word) => word[0].toUpperCase())
-          .join(""));
-  const colorIndex = brandName.length % BRAND_MARK_COLORS.length;
+  const icon = BRAND_LOGO_ICONS[normalizeBrandName(brandName)];
+
+  if (icon) {
+    return {
+      kind: "icon" as const,
+      title: icon.title,
+      path: icon.path,
+      hex: icon.hex,
+    };
+  }
 
   return {
-    initials: initials || "EV",
-    colorClass:
-      BRAND_MARK_COLOR_OVERRIDES[normalizedBrandName] ??
-      BRAND_MARK_COLORS[colorIndex],
+    kind: "wordmark" as const,
+    title: brandName.trim() || "EV",
   };
+};
+
+export const formatDrivetrainLabel = (drivetrain: string | null | undefined) => {
+  const trimmed = drivetrain?.trim();
+
+  if (!trimmed) {
+    return "N/A";
+  }
+
+  return /^[a-z]{2,4}$/i.test(trimmed) ? trimmed.toUpperCase() : trimmed;
 };

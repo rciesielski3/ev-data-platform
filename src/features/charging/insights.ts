@@ -120,6 +120,7 @@ export const buildChargingInsights = (input: ChargingInsightsInput) => {
       connectorShare: connector.connectorShare,
     }));
 
+  const seenHighestPowerStationIds = new Set<string>();
   const highestPowerStations = input.highestPowerStations
     .map((station) => {
       const stationName = displayText(station.stationName, "Charging station");
@@ -142,7 +143,15 @@ export const buildChargingInsights = (input: ChargingInsightsInput) => {
       (left, right) =>
         right.powerKw - left.powerKw ||
         compareLabels(left.stationName, right.stationName),
-    );
+    )
+    .filter((station) => {
+      if (seenHighestPowerStationIds.has(station.stationId)) {
+        return false;
+      }
+
+      seenHighestPowerStationIds.add(station.stationId);
+      return true;
+    });
 
   const provinceCoverage = input.provinceRows
     .map((row) => {
