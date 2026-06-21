@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildStationMapWhere,
   formatStationMapDto,
+  groupStationMapDtos,
   parseStationMapFilters,
 } from "@/features/charging/station-map";
 
@@ -116,5 +117,67 @@ describe("formatStationMapDto", () => {
 
     expect(dto.operatorName).toBe("Unknown operator");
     expect(dto.operatorName).not.toContain("eipa-operator-");
+  });
+});
+
+describe("groupStationMapDtos", () => {
+  it("aggregates stations in the same coordinate bucket", () => {
+    const groups = groupStationMapDtos([
+      {
+        id: "station-1",
+        name: "Central Charger A",
+        operatorName: "Fast Charge",
+        latitude: 52.22971,
+        longitude: 21.01221,
+        province: "Mazowieckie",
+        maxPowerKw: 150,
+        connectorLabels: ["CCS2", "Type 2"],
+        detailsHref: "/stations/station-1",
+      },
+      {
+        id: "station-2",
+        name: "Central Charger B",
+        operatorName: "City Energy",
+        latitude: 52.22979,
+        longitude: 21.01229,
+        province: "Mazowieckie",
+        maxPowerKw: 50,
+        connectorLabels: ["CCS2", "CHAdeMO"],
+        detailsHref: "/stations/station-2",
+      },
+      {
+        id: "station-3",
+        name: "Distant Charger",
+        operatorName: "Fast Charge",
+        latitude: 50.0614,
+        longitude: 19.9366,
+        province: "Malopolskie",
+        maxPowerKw: null,
+        connectorLabels: ["Type 2"],
+        detailsHref: "/stations/station-3",
+      },
+    ]);
+
+    expect(groups).toHaveLength(2);
+    expect(groups[0]).toMatchObject({
+      id: "52.230:21.012",
+      latitude: 52.22975,
+      longitude: 21.01225,
+      stationCount: 2,
+      maxPowerKw: 150,
+      connectorLabels: ["CCS2", "Type 2", "CHAdeMO"],
+      operatorNames: ["Fast Charge", "City Energy"],
+    });
+    expect(groups[0].stations.map((station) => station.id)).toEqual([
+      "station-1",
+      "station-2",
+    ]);
+    expect(groups[1]).toMatchObject({
+      id: "50.061:19.937",
+      stationCount: 1,
+      maxPowerKw: null,
+      connectorLabels: ["Type 2"],
+      operatorNames: ["Fast Charge"],
+    });
   });
 });

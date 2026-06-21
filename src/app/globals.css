@@ -36,3 +36,84 @@ body {
   background: #e0f2fe;
   color: #0369a1;
 }
+
+.station-map-marker-wrapper {
+  background: transparent;
+  border: 0;
+}
+
+.station-map-marker {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #0284c7;
+  box-shadow: 0 8px 20px rgb(15 23 42 / 0.25);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.station-map-marker::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.station-map-marker-cluster {
+  background: #0f172a;
+}
+
+.station-map-marker-cluster::after {
+  content: none;
+}
+
+.station-map-popup {
+  min-width: 220px;
+}
+
+.station-map-popup p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.station-map-popup h3 {
+  margin: 0.25rem 0 0.75rem;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.station-map-popup dl {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.station-map-popup dt {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.station-map-popup dd {
+  margin: 0.1rem 0 0;
+  color: #0f172a;
+}
+
+.station-map-popup ul {
+  margin: 0 0 0.75rem;
+  padding-left: 1rem;
+}
+
+.station-map-popup a {
+  color: #0369a1;
+  font-weight: 700;
+  text-decoration: underline;
+}

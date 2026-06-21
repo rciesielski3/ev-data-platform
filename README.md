@@ -21,6 +21,7 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - Normalize station, operator and connector data
 - Store geospatial coordinates
 - Search stations by text, location, connector, power and operator
+- Explore grouped charging stations on an OpenStreetMap-powered map with province, connector and minimum-power filters
 - Open station detail pages with source, freshness, coordinate and connector metadata
 - Hide technical EIPA operator identifiers from user-facing operator suggestions
 - Support future enrichment from additional sources
@@ -58,6 +59,7 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - PostgreSQL
 - PostGIS
 - Tailwind CSS
+- Leaflet with OpenStreetMap tiles
 
 ---
 
@@ -182,6 +184,7 @@ npm run import:all
 /vehicles/[id]            EV battery, range, charging and source details
 /stations                 Searchable Polish charging infrastructure
 /stations/[id]            Charging station source, freshness and connector details
+/map                      OpenStreetMap-powered charging station map with grouped markers
 /connectors               Connector knowledge base
 /connectors/[type]        Connector details for CCS2, Type 2, CHAdeMO and Unknown
 /insights                 Charging infrastructure insights dashboard
@@ -206,8 +209,9 @@ For Vercel deployment:
 - Set `CRON_SECRET` in production before enabling cron-triggered imports.
 - Add optional import variables only when needed: `EIPA_EXPORT_KEY`, `EIPA_IMPORT_LIMIT`, `OPENEV_DATA_URL`.
 - Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches, does not require an API key, and uses a small in-memory cache to avoid repeated lookups for the same location.
+- The `/map` experience uses Leaflet with public OpenStreetMap tiles; it does not add live availability, routing or turn-by-turn navigation.
 - Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
-- Smoke check `/`, `/vehicles`, `/stations`, `/connectors`, `/insights`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
+- Smoke check `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
 - Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.
 
 ---

@@ -33,6 +33,17 @@ export type StationMapInput = {
 
 export type StationMapDto = ReturnType<typeof formatStationMapDto>;
 
+export type StationMapGroup = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  stationCount: number;
+  maxPowerKw: number | null;
+  connectorLabels: string[];
+  operatorNames: string[];
+  stations: StationMapDto[];
+};
+
 const UNKNOWN = "Unknown";
 
 const cleanText = (value: string | undefined) => {
@@ -73,6 +84,24 @@ const maxPowerKw = (connectors: StationMapInput["connectors"]) => {
     .filter((power): power is number => typeof power === "number");
 
   return powers.length > 0 ? Math.max(...powers) : null;
+};
+
+const roundToPrecision = (value: number, precision: number) => {
+  const factor = 10 ** precision;
+
+  return Math.round(value * factor) / factor;
+};
+
+const coordinateBucket = (latitude: number, longitude: number, precision: number) =>
+  `${roundToPrecision(latitude, precision).toFixed(precision)}:${roundToPrecision(
+    longitude,
+    precision,
+  ).toFixed(precision)}`;
+
+const pushUnique = (values: string[], value: string) => {
+  if (!values.includes(value)) {
+    values.push(value);
+  }
 };
 
 export const parseStationMapFilters = (
@@ -131,3 +160,63 @@ export const formatStationMapDto = (station: StationMapInput) => ({
   connectorLabels: uniqueConnectorLabels(station.connectors),
   detailsHref: `/stations/${station.id}`,
 });
+
+export const groupStationMapDtos = (
+  stations: StationMapDto[],
+  coordinatePrecision = 3,
+): StationMapGroup[] => {
+  const groupsByCoordinate = new Map<
+    string,
+    {
+      latitudeTotal: number;
+      longitudeTotal: number;
+      connectorLabels: string[];
+      operatorNames: string[];
+      stations: StationMapDto[];
+    }
+  >();
+
+  for (const station of stations) {
+    const groupId = coordinateBucket(
+      station.latitude,
+      station.longitude,
+      coordinatePrecision,
+    );
+    const group = groupsByCoordinate.get(groupId) ?? {
+      latitudeTotal: 0,
+      longitudeTotal: 0,
+      connectorLabels: [],
+      operatorNames: [],
+      stations: [],
+    };
+
+    group.latitudeTotal += station.latitude;
+    group.longitudeTotal += station.longitude;
+    group.stations.push(station);
+    pushUnique(group.operatorNames, station.operatorName);
+
+    for (const label of station.connectorLabels) {
+      pushUnique(group.connectorLabels, label);
+    }
+
+    groupsByCoordinate.set(groupId, group);
+  }
+
+  return Array.from(groupsByCoordinate.entries()).map(([id, group]) => {
+    const stationCount = group.stations.length;
+    const powers = group.stations
+      .map((station) => station.maxPowerKw)
+      .filter((power): power is number => typeof power === "number");
+
+    return {
+      id,
+      latitude: roundToPrecision(group.latitudeTotal / stationCount, 5),
+      longitude: roundToPrecision(group.longitudeTotal / stationCount, 5),
+      stationCount,
+      maxPowerKw: powers.length > 0 ? Math.max(...powers) : null,
+      connectorLabels: group.connectorLabels,
+      operatorNames: group.operatorNames,
+      stations: group.stations,
+    };
+  });
+};
