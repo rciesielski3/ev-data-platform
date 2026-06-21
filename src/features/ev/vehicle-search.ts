@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db/prisma";
 import {
   siAudi,
   siBmw,
@@ -27,6 +28,7 @@ import {
 } from "simple-icons";
 
 const MAX_PAGE = 500;
+export const TOP_BRANDS_LIMIT = 8;
 const BRAND_LOGO_ICONS: Record<string, SimpleIcon> = {
   audi: siAudi,
   bmw: siBmw,
@@ -55,11 +57,13 @@ const BRAND_LOGO_ICONS: Record<string, SimpleIcon> = {
 
 export type VehicleSearchParams = {
   q?: string;
+  brand?: string;
   page?: string;
 };
 
 export type VehicleSearchFilters = {
   q?: string;
+  brand?: string;
   page: number;
 };
 
@@ -82,20 +86,34 @@ export const parseVehicleSearchParams = (
   params: VehicleSearchParams,
 ): VehicleSearchFilters => ({
   q: cleanText(params.q),
+  brand: cleanText(params.brand),
   page: parsePage(params.page),
 });
 
 export const buildVehicleWhere = (
   filters: VehicleSearchFilters,
-): Prisma.EvModelWhereInput =>
-  filters.q
-    ? {
-        OR: [
-          { modelName: { contains: filters.q, mode: "insensitive" } },
-          { brand: { name: { contains: filters.q, mode: "insensitive" } } },
-        ],
-      }
-    : {};
+): Prisma.EvModelWhereInput => {
+  const conditions: Prisma.EvModelWhereInput[] = [];
+
+  if (filters.q) {
+    conditions.push({
+      OR: [
+        { modelName: { contains: filters.q, mode: "insensitive" } },
+        { brand: { name: { contains: filters.q, mode: "insensitive" } } },
+      ],
+    });
+  }
+
+  if (filters.brand) {
+    conditions.push({ brand: { slug: filters.brand } });
+  }
+
+  if (conditions.length === 0) {
+    return {};
+  }
+
+  return conditions.length === 1 ? conditions[0] : { AND: conditions };
+};
 
 export const buildVehicleSearchHref = (
   filters: VehicleSearchFilters,
@@ -107,9 +125,54 @@ export const buildVehicleSearchHref = (
     params.set("q", filters.q);
   }
 
+  if (filters.brand) {
+    params.set("brand", filters.brand);
+  }
+
   params.set("page", String(Math.min(Math.max(page, 1), MAX_PAGE)));
 
   return `/vehicles?${params.toString()}`;
+};
+
+export type TopVehicleBrand = {
+  id: string;
+  slug: string;
+  name: string;
+  vehicleCount: number;
+};
+
+export const getTopVehicleBrands = async (
+  limit: number = TOP_BRANDS_LIMIT,
+): Promise<TopVehicleBrand[]> => {
+  const grouped = await prisma.evModel.groupBy({
+    by: ["brandId"],
+    _count: true,
+    orderBy: { _count: { brandId: "desc" } },
+    take: limit,
+  });
+
+  const brands = await prisma.evBrand.findMany({
+    where: { id: { in: grouped.map((group) => group.brandId) } },
+  });
+
+  const brandById = new Map(brands.map((brand) => [brand.id, brand]));
+
+  return grouped.flatMap((group) => {
+    const brand = brandById.get(group.brandId);
+
+    if (!brand) {
+      return [];
+    }
+
+    return [
+      {
+        id: brand.id,
+        slug: brand.slug,
+        name: brand.name,
+        vehicleCount: group._count,
+      },
+    ];
+  });
 };
 
 const normalizeBrandName = (brandName: string) =>
