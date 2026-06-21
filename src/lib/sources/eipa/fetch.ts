@@ -44,3 +44,9 @@ export const fetchEipaDynamic = async () =>
     data: import("./types").EipaDynamicPoint[];
     generated: string;
   }>("dynamic");
+
+export const fetchEipaOperators = async () =>
+  fetchEipaExport<{
+    data: import("./types").EipaOperator[];
+    generated: string;
+  }>("operator");
