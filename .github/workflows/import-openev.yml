@@ -1,0 +1,25 @@
+name: Import OpenEV vehicle data
+
+on:
+  schedule:
+    - cron: "0 4 1 * *"
+  workflow_dispatch:
+
+jobs:
+  import-openev:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
+      - run: npm run import:openev
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
