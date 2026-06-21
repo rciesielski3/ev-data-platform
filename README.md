@@ -24,6 +24,8 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - Explore grouped charging stations on an OpenStreetMap-powered map with province, connector and minimum-power filters
 - Open station detail pages with source, freshness, coordinate and connector metadata
 - Hide technical EIPA operator identifiers from user-facing operator suggestions
+- Resolve EIPA operator names via a live operator registry lookup, falling back to the pool operator name
+- Show operating hours and accessibility details on station detail pages when present in the imported EIPA payload
 - Support future enrichment from additional sources
 
 ### Data Usability
@@ -32,6 +34,11 @@ Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 - Connector images stored in `public/connectors` with an unknown fallback image
 - AC/DC badges, normalized connector labels and lightweight connector tooltips
 - Charging insights dashboard for top operators, connector distribution, strongest stations and province coverage
+- Per-station data quality: a completeness score (present/missing fields) and a freshness indicator (fresh/stale/unknown), shown as a compact badge on the station list and a full breakdown on station detail pages
+- Province comparison page with station/connector counts, HPC coverage, power stats and top operators per province
+- Operator comparison page with station count, province coverage and average/max power, using normalized operator names
+- Infrastructure coverage page highlighting lowest/highest station-count provinces, lowest HPC-coverage provinces and the network-wide connector power availability ratio
+- CSV/JSON export endpoints for province and operator comparison tables
 
 ### Searchable MVP
 
@@ -188,9 +195,14 @@ npm run import:all
 /connectors               Connector knowledge base
 /connectors/[type]        Connector details for CCS2, Type 2, CHAdeMO and Unknown
 /insights                 Charging infrastructure insights dashboard
+/provinces                Province comparison: station/connector counts, HPC coverage, power stats, top operators
+/operators                Operator comparison: station count, province coverage, average/max power
+/coverage                 Infrastructure coverage rankings (lowest/highest station counts, HPC coverage, power availability)
 /api/status               JSON status endpoint for deployment smoke checks
 /api/cron/import-eipa     Protected EIPA import endpoint
 /api/cron/import-openev   Protected OpenEV import endpoint
+/api/exports/provinces    CSV/JSON export of province comparison data (?format=csv|json)
+/api/exports/operators    CSV/JSON export of operator comparison data (?format=csv|json)
 ```
 
 ---
@@ -211,9 +223,19 @@ For Vercel deployment:
 - Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches, does not require an API key, and uses a small in-memory cache to avoid repeated lookups for the same location.
 - The `/map` experience uses Leaflet with public OpenStreetMap tiles; it does not add live availability, routing or turn-by-turn navigation.
 - Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
-- Smoke check `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
+- Smoke check `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/provinces`, `/operators`, `/coverage`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
+- Smoke check the export links from `/provinces` and `/operators` (`/api/exports/provinces` and `/api/exports/operators`, both `csv` and `json` formats).
 - Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.
 - Scheduled EIPA/OpenEV imports now run via GitHub Actions (`.github/workflows/import-eipa.yml`, `import-openev.yml`) rather than Vercel cron, since a full EIPA import (60-75 min) exceeds Vercel's function-duration limit. The `/api/cron/*` routes above remain available for manual/on-demand triggering.
+
+---
+
+## Known Limitations
+
+- Growth trend charts are deferred: there is no historical snapshot data yet, and a single import would only support a misleading single-point trend line.
+- EIPA `payment_methods` and `authentication_methods` fields exist in the upstream source but use undocumented numeric codes and are not surfaced anywhere in the app. This is a known limitation, not a bug.
+- EIPA operator name resolution was fixed to use a live `operator` registry lookup (falling back to `pool.operator_name`), which resolves most "Unknown operator" cases going forward. Stations imported before this fix still show the old placeholder names until `npm run import:eipa` is re-run to backfill them; this backfill has not been run yet.
+- `/coverage` reports infrastructure coverage only. It does not predict demand, plan routes, or normalize by population.
 
 ---
 
