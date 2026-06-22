@@ -8,21 +8,18 @@ type CardOwnProps<T extends ElementType> = {
 type CardProps<T extends ElementType> = CardOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof CardOwnProps<T>>;
 
-const Card = <T extends ElementType = "div">(
-  incomingProps: CardProps<T>
-) => {
-  const {
-    as,
-    interactive = false,
-    className = "",
-    ...rest
-  } = incomingProps as any;
-
+const Card = <T extends ElementType = "div">({
+  as,
+  interactive = false,
+  className,
+  ...rest
+}: CardProps<T>) => {
   const Component = (as ?? "div") as ElementType;
+  const classNameValue = (className ?? "") as string;
 
   return (
     <Component
-      className={`card ${className}`.trim()}
+      className={`card ${classNameValue}`.trim()}
       data-interactive={interactive ? "true" : undefined}
       {...rest}
     />

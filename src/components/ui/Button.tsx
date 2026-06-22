@@ -21,25 +21,20 @@ type ButtonOwnProps<T extends ElementType> = {
 type ButtonProps<T extends ElementType> = ButtonOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof ButtonOwnProps<T>>;
 
-const Button = <T extends ElementType = "button">(
-  incomingProps: ButtonProps<T>
-) => {
-  const {
-    as,
-    variant,
-    className,
-    ...rest
-  } = incomingProps as any;
-
+const Button = <T extends ElementType = "button">({
+  as,
+  variant = "primary",
+  className,
+  ...rest
+}: ButtonProps<T>) => {
   const Component = (as ?? "button") as ElementType;
-  const variantValue: ButtonVariant = variant ?? "primary";
-  const classNameValue: string = className ?? "";
+  const classNameValue = (className ?? "") as string;
   const base =
     "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
   return (
     <Component
-      className={`${base} ${VARIANT_CLASSES[variantValue]} ${classNameValue}`.trim()}
+      className={`${base} ${VARIANT_CLASSES[variant]} ${classNameValue}`.trim()}
       {...rest}
     />
   );
