@@ -140,6 +140,7 @@
   },
   "stationDetail": {
     "backLink": "← Wróć do stacji",
+    "viewDetailsLink": "Zobacz szczegóły",
     "stationDetailsTitle": "Szczegóły stacji",
     "connectorsTitle": "Złącza",
     "stationNameLabel": "Nazwa stacji",
