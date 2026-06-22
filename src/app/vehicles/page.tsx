@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { filterInputClassName } from "@/components/ui/FilterField";
+import { buildChargingCostEstimate } from "@/features/ev/charging-cost";
 import {
   buildBrandMark,
   buildVehicleSearchHref,
@@ -198,6 +199,9 @@ export default async function VehiclesPage({
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.vehicles.map((vehicle) => {
             const brandMark = buildBrandMark(vehicle.brand.name);
+            const chargingCost = buildChargingCostEstimate(
+              vehicle.specs?.batteryCapacityKwhNet ?? null,
+            );
 
             return (
               <Card
@@ -259,6 +263,16 @@ export default async function VehiclesPage({
                         formatDrivetrainLabel(vehicle.specs?.drivetrain),
                         tCommon,
                       )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-slate-500">{t("chargingCostLabel")}</dt>
+                    <dd className="font-medium text-slate-900">
+                      {chargingCost
+                        ? t("chargingCostFromLabel", {
+                            price: chargingCost.dcCostRangePln![0],
+                          })
+                        : tCommon("notAvailable")}
                     </dd>
                   </div>
                 </dl>
