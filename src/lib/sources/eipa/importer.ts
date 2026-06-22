@@ -24,6 +24,15 @@ import { validateChargingStations } from "@/lib/validators/charging";
 
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
 const PROGRESS_STEP = 100;
+const UPSERT_BATCH_SIZE = 20;
+
+const chunk = <T>(items: T[], size: number): T[][] => {
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+};
 
 const getImportLimit = () => {
   const value = Number(process.env.EIPA_IMPORT_LIMIT ?? 0);
@@ -67,36 +76,74 @@ const fetchEipaDictionarySafely = async (): Promise<EipaDictionary> => {
 };
 
 const upsertOperator = async (
-  station: NormalizedChargingStation,
+  operator: NonNullable<NormalizedChargingStation["operator"]>,
   importedAt: Date,
 ) => {
-  if (!station.operator) {
-    return null;
-  }
-
   return prisma.chargingOperator.upsert({
     where: {
       sourceName_sourceRecordId: {
         sourceName: SOURCE_NAME,
-        sourceRecordId: station.operator.sourceRecordId,
+        sourceRecordId: operator.sourceRecordId,
       },
     },
     create: {
       sourceName: SOURCE_NAME,
-      sourceRecordId: station.operator.sourceRecordId,
-      name: station.operator.name,
-      normalizedName: station.operator.normalizedName,
+      sourceRecordId: operator.sourceRecordId,
+      name: operator.name,
+      normalizedName: operator.normalizedName,
       countryCode: "PL",
       sourceUrl: DATA_SOURCES.EIPA.url,
       importedAt,
       updatedAt: importedAt,
     },
     update: {
-      name: station.operator.name,
-      normalizedName: station.operator.normalizedName,
+      name: operator.name,
+      normalizedName: operator.normalizedName,
       updatedAt: importedAt,
     },
   });
+};
+
+// Many stations share the same operator (e.g. large chains like GreenWay or
+// Lidl cluster hundreds of stations under one operator record), so upserting
+// per-station inside the concurrent batch loop below would race multiple
+// `chargingOperator.upsert()` calls against the same `sourceName_sourceRecordId`
+// unique constraint. Resolving every unique operator once, sequentially,
+// before the batches run avoids that race entirely.
+const upsertUniqueOperators = async (
+  stations: NormalizedChargingStation[],
+  importedAt: Date,
+): Promise<{
+  operatorIdByRecordId: Map<string, string>;
+  failed: Array<{ sourceRecordId: string; message: string }>;
+}> => {
+  const uniqueOperators = new Map<
+    string,
+    NonNullable<NormalizedChargingStation["operator"]>
+  >();
+
+  for (const station of stations) {
+    if (station.operator) {
+      uniqueOperators.set(station.operator.sourceRecordId, station.operator);
+    }
+  }
+
+  const operatorIdByRecordId = new Map<string, string>();
+  const failed: Array<{ sourceRecordId: string; message: string }> = [];
+
+  for (const operator of uniqueOperators.values()) {
+    try {
+      const saved = await upsertOperator(operator, importedAt);
+      operatorIdByRecordId.set(operator.sourceRecordId, saved.id);
+    } catch (error) {
+      failed.push({
+        sourceRecordId: operator.sourceRecordId,
+        message: error instanceof Error ? error.message : "Unknown operator upsert error",
+      });
+    }
+  }
+
+  return { operatorIdByRecordId, failed };
 };
 
 const upsertStation = async (
@@ -257,25 +304,61 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       );
     }
 
+    console.time("[EIPA] operators");
+    const { operatorIdByRecordId, failed: failedOperators } =
+      await upsertUniqueOperators(stationsToImport, importedAt);
+    console.timeEnd("[EIPA] operators");
+    console.log(
+      `[EIPA] unique operators upserted: ${operatorIdByRecordId.size}/${operatorIdByRecordId.size + failedOperators.length}`,
+    );
+
+    const failedOperatorRecordIds = new Set(
+      failedOperators.map((failure) => failure.sourceRecordId),
+    );
+    invalid.push(...failedOperators);
+
     let upserted = 0;
+    let processed = 0;
 
     console.time("[EIPA] upsert");
 
-    for (const [index, station] of stationsToImport.entries()) {
-      if (index === 0 || (index + 1) % PROGRESS_STEP === 0) {
-        console.log(`[EIPA] upserting ${index + 1}/${stationsToImport.length}`);
+    for (const batch of chunk(stationsToImport, UPSERT_BATCH_SIZE)) {
+      const results = await Promise.allSettled(
+        batch.map(async (station) => {
+          if (station.operator && failedOperatorRecordIds.has(station.operator.sourceRecordId)) {
+            throw new Error(
+              `Operator upsert failed for sourceRecordId ${station.operator.sourceRecordId}`,
+            );
+          }
+          const operatorId = station.operator
+            ? operatorIdByRecordId.get(station.operator.sourceRecordId) ?? null
+            : null;
+          await upsertStation(station, operatorId, importedAt);
+          return station;
+        }),
+      );
+
+      for (const [i, result] of results.entries()) {
+        if (result.status === "fulfilled") {
+          upserted += 1;
+        } else {
+          invalid.push({
+            sourceRecordId: batch[i].sourceRecordId,
+            message:
+              result.reason instanceof Error
+                ? result.reason.message
+                : "Unknown upsert error",
+          });
+        }
       }
 
-      try {
-        const operator = await upsertOperator(station, importedAt);
-        await upsertStation(station, operator?.id ?? null, importedAt);
-        upserted += 1;
-      } catch (error) {
-        invalid.push({
-          sourceRecordId: station.sourceRecordId,
-          message:
-            error instanceof Error ? error.message : "Unknown upsert error",
-        });
+      processed += batch.length;
+      if (
+        processed === batch.length ||
+        processed % PROGRESS_STEP === 0 ||
+        processed === stationsToImport.length
+      ) {
+        console.log(`[EIPA] upserting ${processed}/${stationsToImport.length}`);
       }
     }
 
