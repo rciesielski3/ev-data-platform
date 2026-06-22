@@ -167,6 +167,15 @@
     "body": "Nie udało się wczytać rekordu stacji. Spróbuj ponownie lub wróć do wyszukiwania stacji.",
     "backLink": "Wróć do stacji"
   },
+  "stationQuality": {
+    "freshLabel": "Świeże",
+    "staleLabel": "Nieaktualne",
+    "unknownLabel": "Nieznane",
+    "ageUnknown": "Nieznany wiek",
+    "updatedToday": "Zaktualizowano dzisiaj",
+    "daysOld": "{count, plural, one {# dzień temu} few {# dni temu} many {# dni temu} other {# dni temu}}",
+    "completePercent": "{percent}% kompletne"
+  },
   "map": {
     "badge": "Mapa ładowania",
     "title": "Mapa stacji ładowania",

@@ -167,6 +167,15 @@
     "body": "The station detail record could not be loaded. Try again, or return to the station search.",
     "backLink": "Back to stations"
   },
+  "stationQuality": {
+    "freshLabel": "Fresh",
+    "staleLabel": "Stale",
+    "unknownLabel": "Unknown",
+    "ageUnknown": "Age unknown",
+    "updatedToday": "Updated today",
+    "daysOld": "{count, plural, one {# day old} other {# days old}}",
+    "completePercent": "{percent}% complete"
+  },
   "map": {
     "badge": "Charging map",
     "title": "Charging Station Map",
