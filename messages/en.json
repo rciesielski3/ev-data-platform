@@ -457,7 +457,7 @@
     "description": "What data evsource.pl collects, why, and how to reach us about it.",
     "updatedLabel": "Last updated: {date}",
     "controllerTitle": "Data controller",
-    "controllerBody": "The data controller for personal data processed through evsource.pl is Adateo Rafał Ciesielski [COMPANY NAME / NIP - to be completed]. For data-protection inquiries, contact kontakt@evsource.pl.",
+    "controllerBody": "The data controller for personal data processed through evsource.pl is Adateo Rafał Ciesielski, NIP: 7781461342 [CORRESPONDENCE ADDRESS - optional, to be completed]. For data-protection inquiries, contact kontakt@evsource.pl.",
     "dataCollectedLeadTitle": "Contact form / lead submission",
     "dataCollectedLeadBody": "If you use the lead submission form (for example, to report a station for the report or to inquire about a featured listing), we collect: name (optional), email address, company name (optional), and message (optional). This data is used only to respond to your submission.",
     "dataCollectedCookieTitle": "Language cookie",
