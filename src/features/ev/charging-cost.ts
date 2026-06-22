@@ -15,6 +15,9 @@ export type ChargingCostEstimate = {
   dcCostRangePln: [number, number] | null;
 };
 
+export const formatPlnRange = ([low, high]: [number, number]): string =>
+  `${low}–${high} zł`;
+
 export const buildChargingCostEstimate = (
   batteryCapacityKwhNet: number | null,
 ): ChargingCostEstimate | null => {
