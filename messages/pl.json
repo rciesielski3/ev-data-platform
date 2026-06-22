@@ -323,5 +323,44 @@
   "insightsError": {
     "title": "Nie udało się wczytać statystyk",
     "body": "Zagregowane statystyki ładowania są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
+  },
+  "operators": {
+    "badge": "Analiza operatorów",
+    "title": "Analiza operatorów",
+    "description": "Porównuj operatorów ładowania według liczby stacji, pokrycia województw, liczby złączy i zgłoszonej mocy.",
+    "viewInsightsLink": "Zobacz statystyki",
+    "browseStationsLink": "Przeglądaj stacje",
+    "exportCsvLink": "Eksportuj CSV",
+    "exportJsonLink": "Eksportuj JSON",
+    "setupRequiredMessage": "Analiza operatorów nie jest jeszcze dostępna. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
+    "emptyTitle": "Brak jeszcze danych o operatorach",
+    "emptyBody": "Zaimportuj dane stacji EIPA lub Open Charge Map, aby wypełnić porównania operatorów.",
+    "operatorsMetricLabel": "Operatorzy",
+    "operatorsMetricHelper": "{count} stacji pogrupowanych według widocznej nazwy operatora",
+    "connectorCoverageMetricLabel": "Pokrycie złączy",
+    "connectorCoverageMetricHelper": "{count} złączy zgłasza użyteczne wartości kW",
+    "strongestConnectorMetricLabel": "Najmocniejsze złącze",
+    "strongestConnectorMetricHelper": "{operator} / {station}",
+    "noKnownPowerValues": "Brak znanych wartości mocy",
+    "largestFootprintTitle": "Największy zasięg",
+    "largestFootprintSubtitle": "Operatorzy są sklasyfikowani według liczby odrębnych stacji, a nie złączy.",
+    "stationsUnit": "stacji",
+    "provinceReachTitle": "Pokrycie województw",
+    "provinceReachSubtitle": "Najszersze znane pokrycie regionalne w danych stacji.",
+    "provinceReachBody": "{provinces} województw w {stations} stacjach.",
+    "comparisonTitle": "Porównanie operatorów",
+    "comparisonSubtitle": "Techniczne identyfikatory operatorów EIPA są grupowane jako Nieznany operator.",
+    "operatorHeader": "Operator",
+    "stationsHeader": "Stacje",
+    "provincesHeader": "Województwa",
+    "connectorsHeader": "Złącza",
+    "knownPowerHeader": "Znana moc",
+    "avgPowerHeader": "Śr. moc",
+    "maxPowerHeader": "Maks. moc",
+    "strongestStationHeader": "Najmocniejsza stacja"
+  },
+  "operatorsError": {
+    "title": "Nie udało się wczytać analizy operatorów",
+    "body": "Wskaźniki porównania operatorów są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   }
 }

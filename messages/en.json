@@ -323,5 +323,44 @@
   "insightsError": {
     "title": "Insights could not load",
     "body": "Charging aggregate metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
+  },
+  "operators": {
+    "badge": "Operator intelligence",
+    "title": "Operator Intelligence",
+    "description": "Compare charging operators by station footprint, province coverage, connector volume, and reported power.",
+    "viewInsightsLink": "View insights",
+    "browseStationsLink": "Browse stations",
+    "exportCsvLink": "Export CSV",
+    "exportJsonLink": "Export JSON",
+    "setupRequiredMessage": "Operator intelligence is not available yet. Configure the database and run the charging station imports.",
+    "emptyTitle": "No operator data yet",
+    "emptyBody": "Import EIPA or Open Charge Map station data to populate operator comparisons.",
+    "operatorsMetricLabel": "Operators",
+    "operatorsMetricHelper": "{count} stations grouped by visible operator name",
+    "connectorCoverageMetricLabel": "Connector coverage",
+    "connectorCoverageMetricHelper": "{count} connectors report usable kW values",
+    "strongestConnectorMetricLabel": "Strongest connector",
+    "strongestConnectorMetricHelper": "{operator} / {station}",
+    "noKnownPowerValues": "No known power values",
+    "largestFootprintTitle": "Largest footprint",
+    "largestFootprintSubtitle": "Operators are ranked by distinct stations, not connectors.",
+    "stationsUnit": "stations",
+    "provinceReachTitle": "Province reach",
+    "provinceReachSubtitle": "Broadest known regional coverage in the station data.",
+    "provinceReachBody": "{provinces} provinces across {stations} stations.",
+    "comparisonTitle": "Operator comparison",
+    "comparisonSubtitle": "Technical EIPA operator identifiers are grouped as Unknown operator.",
+    "operatorHeader": "Operator",
+    "stationsHeader": "Stations",
+    "provincesHeader": "Provinces",
+    "connectorsHeader": "Connectors",
+    "knownPowerHeader": "Known power",
+    "avgPowerHeader": "Avg power",
+    "maxPowerHeader": "Max power",
+    "strongestStationHeader": "Strongest station"
+  },
+  "operatorsError": {
+    "title": "Operator intelligence could not load",
+    "body": "Operator comparison metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
   }
 }
