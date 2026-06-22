@@ -26,7 +26,7 @@ Public, open-source platform that imports, normalizes, and serves Polish EV char
 ## Development & Conventions
 - **No public API/auth/billing yet.** Routes are `/api/status` and the two cron import endpoints only — no user accounts, sessions, or payments exist in this codebase.
 - **Named exports only** for everything in `src/lib/` and `src/features/`; arrow-function consts, not `function` declarations. Default exports appear only where Next.js requires them (page/layout/loading/error components in `src/app/`).
-- **Minimal comments:** the codebase has almost none. Only add a comment for non-obvious *why* (e.g. a business rule or external-API quirk); never restate what the code does.
+- **No comments unless absolutely necessary:** default to zero. Only add one when omitting it would genuinely confuse a future reader (a hidden constraint, a subtle invariant, a workaround for a specific external-API quirk) — never to restate what the code already says through naming.
 - **No premature abstraction:** small, single-purpose modules (e.g. `src/features/charging/insights.ts`, `station-search.ts`) rather than shared generic layers. Follow this; don't introduce new abstractions speculatively.
 - **Styling:** Tailwind utility classes plus three shared primitives defined in `globals.css` — `.card`, `.muted`, `.badge`. Reuse those instead of redefining similar styles inline.
 - **Tests:** colocate `*.test.ts` with the module under test (see `src/features/charging/insights.test.ts`); test exported pure functions directly, not through pages.
