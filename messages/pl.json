@@ -190,6 +190,7 @@
     "minPowerLabel": "Minimalna moc",
     "anyPower": "Każda moc",
     "updateButton": "Zaktualizuj mapę",
+    "updatingButton": "Aktualizowanie...",
     "clearButton": "Wyczyść",
     "summary": "Wyświetlono {shown} z {total} stacji. Liczba znaczników na mapie: {markers}.",
     "limited": "Wyniki są ograniczone do {limit}; zawęź filtry, aby uzyskać bardziej precyzyjną mapę.",

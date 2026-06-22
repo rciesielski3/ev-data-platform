@@ -190,6 +190,7 @@
     "minPowerLabel": "Minimum power",
     "anyPower": "Any power",
     "updateButton": "Update map",
+    "updatingButton": "Updating...",
     "clearButton": "Clear",
     "summary": "Showing {shown} of {total} {total, plural, one {station} other {stations}} across {markers} {markers, plural, one {map marker} other {map markers}}.",
     "limited": "Results are capped at {limit}; narrow the filters for a more precise map.",

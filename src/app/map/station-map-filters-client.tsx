@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition, type FormEvent } from "react";
 
+import Button from "@/components/ui/Button";
+import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
 import type { StationMapFilters } from "@/features/charging/station-map";
 
 type StationMapFiltersClientProps = {
@@ -18,6 +21,7 @@ const StationMapFiltersClient = ({
   provinceOptions,
   connectorOptions,
 }: StationMapFiltersClientProps) => {
+  const t = useTranslations("map");
   const pathname = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -51,70 +55,63 @@ const StationMapFiltersClient = ({
 
   return (
     <form onSubmit={updateFilters} className="card mb-6 grid gap-4 md:grid-cols-4">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-slate-700">Province</span>
+      <FilterField label={t("provinceLabel")}>
         <select
           name="province"
           defaultValue={filters.province ?? ""}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+          className={filterInputClassName}
         >
-          <option value="">All provinces</option>
+          <option value="">{t("allProvinces")}</option>
           {provinceOptions.map((province) => (
             <option key={province} value={province}>
               {province}
             </option>
           ))}
         </select>
-      </label>
+      </FilterField>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-slate-700">Connector</span>
+      <FilterField label={t("connectorLabel")}>
         <select
           name="connector"
           defaultValue={filters.connector ?? ""}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+          className={filterInputClassName}
         >
-          <option value="">Any connector</option>
+          <option value="">{t("anyConnector")}</option>
           {connectorOptions.map((connectorType) => (
             <option key={connectorType} value={connectorType}>
               {connectorType}
             </option>
           ))}
         </select>
-      </label>
+      </FilterField>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-slate-700">Minimum power</span>
+      <FilterField label={t("minPowerLabel")}>
         <select
           name="minPowerKw"
           defaultValue={filters.minPowerKw?.toString() ?? ""}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+          className={filterInputClassName}
         >
-          <option value="">Any power</option>
+          <option value="">{t("anyPower")}</option>
           {POWER_OPTIONS.map((power) => (
             <option key={power} value={power}>
               {power} kW+
             </option>
           ))}
         </select>
-      </label>
+      </FilterField>
 
       <div className="flex items-end gap-3">
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isPending ? "Updating..." : "Update map"}
-        </button>
-        <button
+        <Button type="submit" variant="primary" disabled={isPending}>
+          {isPending ? t("updatingButton") : t("updateButton")}
+        </Button>
+        <Button
           type="button"
+          variant="secondary"
           onClick={clearFilters}
           disabled={isPending}
-          className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Clear
-        </button>
+          {t("clearButton")}
+        </Button>
       </div>
     </form>
   );
