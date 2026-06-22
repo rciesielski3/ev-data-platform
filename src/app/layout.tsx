@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
+import Footer from "@/components/ui/Footer";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -91,6 +92,7 @@ const RootLayout = async ({
             </div>
           </header>
           <div className="flex-1">{children}</div>
+          <Footer />
           <Analytics />
           <SpeedInsights />
         </NextIntlClientProvider>
