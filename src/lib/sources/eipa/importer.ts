@@ -24,6 +24,15 @@ import { validateChargingStations } from "@/lib/validators/charging";
 
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
 const PROGRESS_STEP = 100;
+const UPSERT_BATCH_SIZE = 20;
+
+const chunk = <T>(items: T[], size: number): T[][] => {
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+};
 
 const getImportLimit = () => {
   const value = Number(process.env.EIPA_IMPORT_LIMIT ?? 0);
@@ -258,24 +267,40 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
     }
 
     let upserted = 0;
+    let processed = 0;
 
     console.time("[EIPA] upsert");
 
-    for (const [index, station] of stationsToImport.entries()) {
-      if (index === 0 || (index + 1) % PROGRESS_STEP === 0) {
-        console.log(`[EIPA] upserting ${index + 1}/${stationsToImport.length}`);
+    for (const batch of chunk(stationsToImport, UPSERT_BATCH_SIZE)) {
+      const results = await Promise.allSettled(
+        batch.map(async (station) => {
+          const operator = await upsertOperator(station, importedAt);
+          await upsertStation(station, operator?.id ?? null, importedAt);
+          return station;
+        }),
+      );
+
+      for (const [i, result] of results.entries()) {
+        if (result.status === "fulfilled") {
+          upserted += 1;
+        } else {
+          invalid.push({
+            sourceRecordId: batch[i].sourceRecordId,
+            message:
+              result.reason instanceof Error
+                ? result.reason.message
+                : "Unknown upsert error",
+          });
+        }
       }
 
-      try {
-        const operator = await upsertOperator(station, importedAt);
-        await upsertStation(station, operator?.id ?? null, importedAt);
-        upserted += 1;
-      } catch (error) {
-        invalid.push({
-          sourceRecordId: station.sourceRecordId,
-          message:
-            error instanceof Error ? error.message : "Unknown upsert error",
-        });
+      processed += batch.length;
+      if (
+        processed === batch.length ||
+        processed % PROGRESS_STEP === 0 ||
+        processed === stationsToImport.length
+      ) {
+        console.log(`[EIPA] upserting ${processed}/${stationsToImport.length}`);
       }
     }
 
