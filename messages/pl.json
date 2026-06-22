@@ -362,5 +362,46 @@
   "operatorsError": {
     "title": "Nie udało się wczytać analizy operatorów",
     "body": "Wskaźniki porównania operatorów są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
+  },
+  "provinces": {
+    "badge": "Jakość danych",
+    "title": "Analiza województw",
+    "description": "Porównuj pokrycie infrastrukturą ładowania, jakość mocy, dostępność HPC i zróżnicowanie operatorów w poszczególnych województwach.",
+    "viewInsightsLink": "Zobacz statystyki",
+    "browseStationsLink": "Przeglądaj stacje",
+    "exportCsvLink": "Eksportuj CSV",
+    "exportJsonLink": "Eksportuj JSON",
+    "setupRequiredMessage": "Analiza województw nie jest jeszcze dostępna. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
+    "emptyTitle": "Brak jeszcze danych o województwach",
+    "emptyBody": "Zaimportuj dane stacji ładowania, aby wypełnić wskaźniki porównania województw. Stacje bez przypisanego województwa zostaną pogrupowane jako Nieznane województwo.",
+    "provincesMetricLabel": "Województwa",
+    "provincesMetricHelper": "Grupy województw dostępne do porównania",
+    "stationsMetricLabel": "Stacje",
+    "stationsMetricHelper": "Lokalizacje ładowania uwzględnione w zestawieniu",
+    "connectorsMetricLabel": "Złącza",
+    "connectorsMetricHelper": "Pojedyncze złącza zliczone we wszystkich stacjach",
+    "hpcStationsMetricLabel": "Stacje HPC",
+    "hpcStationsMetricHelper": "Stacje z przynajmniej jednym złączem o mocy 150 kW lub więcej",
+    "stationsConnectorsLine": "{stations} stacji / {connectors} złączy",
+    "hpcBadge": "{share} HPC",
+    "maxPowerLabel": "Maks. moc",
+    "averagePowerLabel": "Średnia moc",
+    "knownPowerLabel": "Znana moc",
+    "operatorsLabel": "Operatorzy",
+    "comparisonTitle": "Porównanie województw",
+    "comparisonSubtitle": "Wiersze są sklasyfikowane według liczby stacji, następnie liczby złączy i nazwy województwa.",
+    "strongestProvinceLine": "Najsilniejsze obserwowane województwo: {province}",
+    "provinceHeader": "Województwo",
+    "stationsHeader": "Stacje",
+    "connectorsHeader": "Złącza",
+    "knownPowerHeader": "Znana moc",
+    "hpcStationsHeader": "Stacje HPC",
+    "maxPowerHeader": "Maks. moc",
+    "avgPowerHeader": "Śr. moc",
+    "operatorsHeader": "Operatorzy"
+  },
+  "provincesError": {
+    "title": "Nie udało się wczytać analizy województw",
+    "body": "Wskaźniki porównania województw są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   }
 }

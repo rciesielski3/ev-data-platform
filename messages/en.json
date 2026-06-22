@@ -362,5 +362,46 @@
   "operatorsError": {
     "title": "Operator intelligence could not load",
     "body": "Operator comparison metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
+  },
+  "provinces": {
+    "badge": "Data quality",
+    "title": "Province Intelligence",
+    "description": "Compare charging infrastructure coverage, power quality, HPC availability, and operator diversity across provinces.",
+    "viewInsightsLink": "View insights",
+    "browseStationsLink": "Browse stations",
+    "exportCsvLink": "Export CSV",
+    "exportJsonLink": "Export JSON",
+    "setupRequiredMessage": "Province intelligence is not available yet. Configure the database and run the charging station imports.",
+    "emptyTitle": "No province data yet",
+    "emptyBody": "Import charging station data to populate province comparison metrics. Stations without a province will be grouped as Unknown province.",
+    "provincesMetricLabel": "Provinces",
+    "provincesMetricHelper": "Province groups available for comparison",
+    "stationsMetricLabel": "Stations",
+    "stationsMetricHelper": "Charging locations included in the rollup",
+    "connectorsMetricLabel": "Connectors",
+    "connectorsMetricHelper": "Individual plugs counted across all stations",
+    "hpcStationsMetricLabel": "HPC stations",
+    "hpcStationsMetricHelper": "Stations with at least one connector at 150 kW+",
+    "stationsConnectorsLine": "{stations} stations / {connectors} connectors",
+    "hpcBadge": "{share} HPC",
+    "maxPowerLabel": "Max power",
+    "averagePowerLabel": "Average power",
+    "knownPowerLabel": "Known power",
+    "operatorsLabel": "Operators",
+    "comparisonTitle": "Province comparison",
+    "comparisonSubtitle": "Rows are ranked by station count, then connector count and province name.",
+    "strongestProvinceLine": "Strongest observed province: {province}",
+    "provinceHeader": "Province",
+    "stationsHeader": "Stations",
+    "connectorsHeader": "Connectors",
+    "knownPowerHeader": "Known power",
+    "hpcStationsHeader": "HPC stations",
+    "maxPowerHeader": "Max power",
+    "avgPowerHeader": "Avg power",
+    "operatorsHeader": "Operators"
+  },
+  "provincesError": {
+    "title": "Province intelligence could not load",
+    "body": "Province comparison metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
   }
 }
