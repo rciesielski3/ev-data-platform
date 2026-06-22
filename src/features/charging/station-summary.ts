@@ -10,7 +10,11 @@ export type StationSummaryInput = {
 };
 
 const formatConnectorTypesList = (connectorTypes: string[]) => {
-  const labels = [...new Set(connectorTypes.map((type) => formatConnectorLabel(type)))];
+  const labels = [
+    ...new Set(
+      connectorTypes.map((type) => formatConnectorLabel(type)).filter((label) => label !== "Unknown"),
+    ),
+  ];
 
   if (labels.length === 0) {
     return null;

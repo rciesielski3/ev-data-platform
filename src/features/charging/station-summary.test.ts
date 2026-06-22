@@ -49,6 +49,26 @@ describe("buildStationSummarySentence", () => {
     ).toBe("This charging station.");
   });
 
+  it("filters out Unknown connector types while keeping known ones", () => {
+    expect(
+      buildStationSummarySentence({
+        ...fullStation,
+        connectorTypes: ["CCS2", "some-unrecognized-type"],
+      }),
+    ).toBe(
+      "Operated by GreenWay Polska in Warszawa, with CCS2 connectors up to 150 kW.",
+    );
+  });
+
+  it("omits the connector clause when every connector type is Unknown", () => {
+    expect(
+      buildStationSummarySentence({
+        ...fullStation,
+        connectorTypes: ["some-unrecognized-type", "another-unrecognized-type"],
+      }),
+    ).toBe("Operated by GreenWay Polska in Warszawa, with charging up to 150 kW.");
+  });
+
   it("lists multiple distinct connector types naturally", () => {
     expect(
       buildStationSummarySentence({
