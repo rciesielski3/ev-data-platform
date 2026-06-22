@@ -1,16 +1,17 @@
-const MapLoading = () => {
+import { getTranslations } from "next-intl/server";
+
+import PageHeader from "@/components/ui/PageHeader";
+
+const MapLoading = async () => {
+  const t = await getTranslations("map");
+
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
-      <div className="mb-6">
-        <span className="badge">Milestone 4 - Map Experience</span>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-          Charging Station Map
-        </h1>
-        <p className="muted mt-2 max-w-2xl">
-          Explore Polish charging stations by province, connector type, and
-          minimum charging power.
-        </p>
-      </div>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={t("description")}
+      />
       <div className="card mb-6 grid gap-4 md:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <div

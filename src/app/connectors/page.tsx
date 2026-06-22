@@ -1,35 +1,38 @@
-import { getConnectorPageEntries } from "@/features/charging/connector-pages";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export default function ConnectorsPage() {
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import PageHeader from "@/components/ui/PageHeader";
+import { getConnectorPageEntries } from "@/features/charging/connector-pages";
+
+export default async function ConnectorsPage() {
+  const t = await getTranslations("connectors");
+  const tKnowledge = await getTranslations("connectorKnowledge");
   const connectors = getConnectorPageEntries();
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
-      <header className="mb-8">
-        <span className="badge">Milestone 3 - Data usability</span>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-          Connector knowledge base
-        </h1>
-        <p className="muted mt-2 max-w-2xl">
-          Static reference notes for interpreting connector names in imported
-          charging station and vehicle data. These pages do not claim live
-          compatibility or charger availability.
-        </p>
-      </header>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={t("description")}
+      />
 
       <section className="grid gap-5 sm:grid-cols-2">
         {connectors.map((connector) => (
-          <Link
+          <Card
             key={connector.key}
+            as={Link}
             href={connector.href}
-            className="card group transition-shadow hover:shadow-md"
+            interactive
+            className="group"
           >
             <div className="mb-4 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
               <Image
                 src={connector.imagePath}
-                alt={connector.imageLabel}
+                alt={tKnowledge(`${connector.key}.imageLabel`)}
                 width={640}
                 height={520}
                 className="aspect-[4/3] w-full object-contain p-4"
@@ -37,17 +40,19 @@ export default function ConnectorsPage() {
             </div>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-slate-900 group-hover:text-sky-700">
+                <h2 className="text-xl font-semibold text-slate-900 group-hover:text-emerald-700">
                   {connector.label}
                 </h2>
-                <p className="muted mt-2 text-sm">{connector.description}</p>
+                <p className="muted mt-2 text-sm">
+                  {tKnowledge(`${connector.key}.description`)}
+                </p>
               </div>
-              <span className="badge">{connector.currentType}</span>
+              <Badge>{connector.currentType}</Badge>
             </div>
-            <p className="mt-4 text-sm font-medium text-sky-700">
-              View connector details
+            <p className="mt-4 text-sm font-medium text-emerald-700">
+              {t("viewDetailsLink")}
             </p>
-          </Link>
+          </Card>
         ))}
       </section>
     </main>

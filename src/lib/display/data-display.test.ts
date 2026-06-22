@@ -13,6 +13,18 @@ describe("formatDisplayDate", () => {
     expect(formatDisplayDate(null)).toBe("unknown");
     expect(formatDisplayDate(undefined)).toBe("unknown");
   });
+
+  it("formats dates in Polish when a pl locale is requested", () => {
+    expect(
+      formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"), "pl"),
+    ).toBe("18 cze 2026");
+  });
+
+  it("defaults to English when no locale is passed", () => {
+    expect(formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"))).toBe(
+      "Jun 18, 2026",
+    );
+  });
 });
 
 describe("getSafeHttpUrl", () => {

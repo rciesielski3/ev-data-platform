@@ -250,8 +250,11 @@ const FRESHNESS_SOURCE_LABEL: Record<StationFreshnessSource, string> = {
   unknown: "unknown",
 };
 
-export const buildStationDetails = (station: StationDetailsInput) => {
-  const sourceUpdatedAt = formatDisplayDate(station.sourceUpdatedAt);
+export const buildStationDetails = (
+  station: StationDetailsInput,
+  locale: string = "en",
+) => {
+  const sourceUpdatedAt = formatDisplayDate(station.sourceUpdatedAt, locale);
   const accessibility = formatAccessibility(station.rawPayload);
   const operatingHours = formatOperatingHours(station.rawPayload);
   const paymentMethods = formatResolvedMethodLabels(
@@ -291,8 +294,8 @@ export const buildStationDetails = (station: StationDetailsInput) => {
     mapHref: buildOpenStreetMapHref(station.latitude, station.longitude),
     sourceName: station.sourceName,
     safeSourceUrl: getSafeHttpUrl(station.sourceUrl),
-    lastUpdated: formatDisplayDate(station.updatedAt),
-    importedAt: formatDisplayDate(station.importedAt),
+    lastUpdated: formatDisplayDate(station.updatedAt, locale),
+    importedAt: formatDisplayDate(station.importedAt, locale),
     sourceUpdatedAt,
     connectorCount: String(station.connectors.length),
     connectors: station.connectors.map((connector) => ({
@@ -300,7 +303,7 @@ export const buildStationDetails = (station: StationDetailsInput) => {
       type: formatConnectorLabel(connector.connectorType),
       power: formatPowerKw(connector.powerKw),
       currentType: getConnectorCurrentType(connector.connectorType),
-      importedAt: formatDisplayDate(connector.importedAt),
+      importedAt: formatDisplayDate(connector.importedAt, locale),
       sourceUpdatedAt,
     })),
     quality: {
@@ -308,7 +311,7 @@ export const buildStationDetails = (station: StationDetailsInput) => {
       freshness: quality.freshness,
       freshnessReferenceDate:
         quality.freshness.referenceDate !== null
-          ? formatDisplayDate(quality.freshness.referenceDate)
+          ? formatDisplayDate(quality.freshness.referenceDate, locale)
           : null,
       freshnessSourceLabel: FRESHNESS_SOURCE_LABEL[quality.freshness.source],
     },

@@ -1,10 +1,28 @@
-import { prisma } from "@/lib/db/prisma";
-import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
-import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+
+import Card from "@/components/ui/Card";
+import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
+import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
+import { localizeFallback } from "@/lib/display/localize-fallback";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
+
+const DetailRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) => (
+  <div className="flex justify-between border-b border-slate-100 pb-2">
+    <dt className="text-slate-500">{label}</dt>
+    <dd className="font-medium text-slate-900">{value}</dd>
+  </div>
+);
 
 export default async function VehicleDetailPage({
   params,
@@ -12,6 +30,9 @@ export default async function VehicleDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const locale = (await getLocale()) as SupportedLocale;
+  const t = await getTranslations("vehicleDetail");
+  const tCommon = await getTranslations("common");
 
   const vehicle = await prisma.evModel.findUnique({
     where: { id },
@@ -26,15 +47,16 @@ export default async function VehicleDetailPage({
   }
 
   const safeSourceUrl = getSafeHttpUrl(vehicle.sourceUrl);
+  const notAvailable = tCommon("notAvailable");
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
       <div className="mb-8">
         <Link
           href="/vehicles"
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
         >
-          &larr; Back to vehicles
+          {t("backLink")}
         </Link>
       </div>
 
@@ -51,91 +73,111 @@ export default async function VehicleDetailPage({
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
-        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-medium text-slate-900">Battery & Range</h2>
+        <Card as="section">
+          <h2 className="mb-4 text-xl font-medium text-slate-900">
+            {t("batteryRangeTitle")}
+          </h2>
           <dl className="space-y-4 text-sm">
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Range (WLTP)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.rangeWltpKm ? `${vehicle.specs.rangeWltpKm} km` : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Range (EPA)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.rangeEpaKm ? `${vehicle.specs.rangeEpaKm} km` : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Battery Capacity (Net)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.batteryCapacityKwhNet
+            <DetailRow
+              label={t("rangeWltpLabel")}
+              value={
+                vehicle.specs?.rangeWltpKm
+                  ? `${vehicle.specs.rangeWltpKm} km`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("rangeEpaLabel")}
+              value={
+                vehicle.specs?.rangeEpaKm
+                  ? `${vehicle.specs.rangeEpaKm} km`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("batteryNetLabel")}
+              value={
+                vehicle.specs?.batteryCapacityKwhNet
                   ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
-                  : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Battery Capacity (Gross)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.batteryCapacityKwhGross
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("batteryGrossLabel")}
+              value={
+                vehicle.specs?.batteryCapacityKwhGross
                   ? `${vehicle.specs.batteryCapacityKwhGross} kWh`
-                  : "N/A"}
-              </dd>
-            </div>
+                  : notAvailable
+              }
+            />
           </dl>
-        </section>
+        </Card>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-medium text-slate-900">Charging & Performance</h2>
+        <Card as="section">
+          <h2 className="mb-4 text-xl font-medium text-slate-900">
+            {t("chargingPerformanceTitle")}
+          </h2>
           <dl className="space-y-4 text-sm">
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">DC Fast Charging (Max)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.dcMaxPowerKw ? `${vehicle.specs.dcMaxPowerKw} kW` : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">AC Charging (Max)</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.acMaxPowerKw ? `${vehicle.specs.acMaxPowerKw} kW` : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Drivetrain</dt>
-              <dd className="font-medium text-slate-900">
-                {formatDrivetrainLabel(vehicle.specs?.drivetrain)}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">System Power</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.systemPowerKw ? `${vehicle.specs.systemPowerKw} kW` : "N/A"}
-              </dd>
-            </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <dt className="text-slate-500">Primary Connector</dt>
-              <dd className="font-medium text-slate-900">
-                {vehicle.specs?.primaryConnector || "N/A"}
-              </dd>
-            </div>
+            <DetailRow
+              label={t("dcFastLabel")}
+              value={
+                vehicle.specs?.dcMaxPowerKw
+                  ? `${vehicle.specs.dcMaxPowerKw} kW`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("acChargingLabel")}
+              value={
+                vehicle.specs?.acMaxPowerKw
+                  ? `${vehicle.specs.acMaxPowerKw} kW`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("drivetrainLabel")}
+              value={localizeFallback(
+                formatDrivetrainLabel(vehicle.specs?.drivetrain),
+                tCommon,
+              )}
+            />
+            <DetailRow
+              label={t("systemPowerLabel")}
+              value={
+                vehicle.specs?.systemPowerKw
+                  ? `${vehicle.specs.systemPowerKw} kW`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("primaryConnectorLabel")}
+              value={vehicle.specs?.primaryConnector || notAvailable}
+            />
           </dl>
-        </section>
+        </Card>
       </div>
 
       <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
         <p>
-          Data source: {vehicle.sourceName}
+          {t("dataSourceLabel", { source: vehicle.sourceName })}
           {safeSourceUrl && (
             <>
               {" · "}
-              <a href={safeSourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-900">
-                Original source
+              <a
+                href={safeSourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-slate-900"
+              >
+                {t("originalSourceLink")}
               </a>
             </>
           )}
         </p>
         <p className="mt-1">
-          Last imported: {formatDisplayDate(vehicle.importedAt)}
+          {t("lastImportedLabel", {
+            date: formatDisplayDate(vehicle.importedAt, locale),
+          })}
         </p>
       </div>
     </main>

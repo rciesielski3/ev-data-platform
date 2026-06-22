@@ -497,4 +497,41 @@ describe("buildStationDetails", () => {
     expect(details.authMethods).toEqual(["Not provided by source"]);
     expect(details.hasAuthMethodsInfo).toBe(false);
   });
+
+  it("formats dates using the provided locale", () => {
+    const details = buildStationDetails(
+      {
+        id: "station-11",
+        sourceName: "EIPA",
+        sourceRecordId: "eipa-11",
+        externalCode: "EXT-11",
+        name: "Locale Station",
+        latitude: 50,
+        longitude: 19,
+        city: "Krakow",
+        province: "Malopolskie",
+        district: null,
+        community: null,
+        countryCode: "PL",
+        address: "Main 11",
+        postalCode: null,
+        operatorId: "operator-11",
+        operator: { name: "Operator 11", normalizedName: "operator-11" },
+        poolSourceId: null,
+        stationType: null,
+        sourceUrl: null,
+        sourceUpdatedAt: new Date("2026-05-31T10:00:00.000Z"),
+        importedAt: baseDate,
+        updatedAt: baseDate,
+        isManualOverride: false,
+        rawPayload: null,
+        connectors: [],
+      },
+      "pl",
+    );
+
+    expect(details.importedAt).toBe("1 cze 2026");
+    expect(details.lastUpdated).toBe("1 cze 2026");
+    expect(details.sourceUpdatedAt).toBe("31 maj 2026");
+  });
 });

@@ -1,23 +1,36 @@
-import { prisma } from "@/lib/db/prisma";
+import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
+
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
+import Notice from "@/components/ui/Notice";
+import PageHeader from "@/components/ui/PageHeader";
+import { buildStationQuality } from "@/features/charging/data-quality";
+import { geocodeStationLocation } from "@/features/charging/geocoding";
 import {
   buildOperatorFilterOptions,
   buildStationConnectorSummary,
-  buildStationSearchHref,
   buildStationFreshnessRunWhere,
+  buildStationSearchHref,
   buildStationWhere,
   formatStationOperatorLabel,
   parseStationSearchParams,
   type StationSearchParams,
 } from "@/features/charging/station-search";
-import { geocodeStationLocation } from "@/features/charging/geocoding";
 import { buildOpenStreetMapHref } from "@/features/charging/station-details";
-import { buildStationQuality } from "@/features/charging/data-quality";
 import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
-import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
-import Link from "next/link";
+import { prisma } from "@/lib/db/prisma";
+import {
+  formatDisplayDate,
+  getSafeHttpUrl,
+} from "@/lib/display/data-display";
+import { localizeFallback } from "@/lib/display/localize-fallback";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -39,47 +52,38 @@ const getStationsData = async (
   );
   const skip = (filters.page - 1) * PAGE_SIZE;
 
-  const [
-    stations,
-    total,
-    connectorOptions,
-    operatorOptions,
-    latestRuns,
-  ] = await Promise.all([
-    prisma.chargingStation.findMany({
-      where,
-      include: {
-        operator: true,
-        connectors: {
-          orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+  const [stations, total, connectorOptions, operatorOptions, latestRuns] =
+    await Promise.all([
+      prisma.chargingStation.findMany({
+        where,
+        include: {
+          operator: true,
+          connectors: {
+            orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+          },
         },
-      },
-      orderBy: [
-        { city: "asc" },
-        { name: "asc" },
-        { updatedAt: "desc" },
-      ],
-      take: PAGE_SIZE,
-      skip,
-    }),
-    prisma.chargingStation.count({ where }),
-    prisma.chargingConnector.findMany({
-      distinct: ["connectorType"],
-      select: { connectorType: true },
-      orderBy: { connectorType: "asc" },
-    }),
-    prisma.chargingOperator.findMany({
-      select: { normalizedName: true, name: true },
-      orderBy: { normalizedName: "asc" },
-      take: 60,
-    }),
-    prisma.ingestionRun.findMany({
-      where: buildStationFreshnessRunWhere(),
-      orderBy: { startedAt: "desc" },
-      take: 3,
-      include: { source: true },
-    }),
-  ]);
+        orderBy: [{ city: "asc" }, { name: "asc" }, { updatedAt: "desc" }],
+        take: PAGE_SIZE,
+        skip,
+      }),
+      prisma.chargingStation.count({ where }),
+      prisma.chargingConnector.findMany({
+        distinct: ["connectorType"],
+        select: { connectorType: true },
+        orderBy: { connectorType: "asc" },
+      }),
+      prisma.chargingOperator.findMany({
+        select: { normalizedName: true, name: true },
+        orderBy: { normalizedName: "asc" },
+        take: 60,
+      }),
+      prisma.ingestionRun.findMany({
+        where: buildStationFreshnessRunWhere(),
+        orderBy: { startedAt: "desc" },
+        take: 3,
+        include: { source: true },
+      }),
+    ]);
 
   return {
     stations,
@@ -95,6 +99,11 @@ const StationsPage = async ({
 }: {
   searchParams: Promise<StationSearchParams>;
 }) => {
+  const locale = (await getLocale()) as SupportedLocale;
+  const t = await getTranslations("stations");
+  const tCommon = await getTranslations("common");
+  const tStationDetail = await getTranslations("stationDetail");
+
   const filters = parseStationSearchParams(await searchParams);
 
   let data: Awaited<ReturnType<typeof getStationsData>> | { error: string };
@@ -102,157 +111,139 @@ const StationsPage = async ({
   try {
     data = await getStationsData(filters);
   } catch {
-    data = {
-      error:
-        "Charging station data is not available yet. Configure the database and run the EIPA import.",
-    };
+    data = { error: t("setupRequiredMessage") };
   }
 
   const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <span className="badge">Milestone 2 - Searchable MVP</span>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-            Charging Stations
-          </h1>
-          <p className="muted mt-2 max-w-2xl">
-            Search Polish charging infrastructure by place, connector, power,
-            and operator.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/insights"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            View insights
-          </Link>
-          <Link
-            href="/vehicles"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            Browse EV catalog
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <>
+            <Link
+              href="/insights"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("viewInsightsLink")}
+            </Link>
+            <Link
+              href="/vehicles"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("browseCatalogLink")}
+            </Link>
+          </>
+        }
+      />
 
       {"error" in data ? (
-        <section className="card border-amber-200 bg-amber-50 text-amber-900">
-          <h2 className="mb-2 text-lg font-medium">Setup required</h2>
+        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{data.error}</p>
-        </section>
+        </Notice>
       ) : (
         <>
-          <form className="card mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-            <label className="flex flex-col gap-1 text-sm lg:col-span-2">
-              <span className="font-medium text-slate-700">Search</span>
+          <Card
+            as="form"
+            className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-6"
+          >
+            <FilterField label={t("searchLabel")} className="lg:col-span-2">
               <input
                 type="search"
                 name="q"
                 defaultValue={filters.q}
-                placeholder="Station, code, city, address"
-                className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                placeholder={t("searchPlaceholder")}
+                className={filterInputClassName}
               />
-            </label>
+            </FilterField>
 
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Location</span>
+            <FilterField label={t("locationLabel")}>
               <input
                 type="search"
                 name="location"
                 defaultValue={filters.location}
-                placeholder="City or region"
-                className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                placeholder={t("locationPlaceholder")}
+                className={filterInputClassName}
               />
-            </label>
+            </FilterField>
 
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Connector</span>
+            <FilterField label={t("connectorLabel")}>
               <select
                 name="connector"
                 defaultValue={filters.connector ?? ""}
-                className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                className={filterInputClassName}
               >
-                <option value="">Any connector</option>
+                <option value="">{t("anyConnector")}</option>
                 {data.connectorOptions.map((option) => (
                   <option key={option.connectorType} value={option.connectorType}>
                     {option.connectorType}
                   </option>
                 ))}
               </select>
-            </label>
+            </FilterField>
 
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Minimum power</span>
+            <FilterField label={t("minPowerLabel")}>
               <select
                 name="minPowerKw"
                 defaultValue={filters.minPowerKw?.toString() ?? ""}
-                className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                className={filterInputClassName}
               >
-                <option value="">Any power</option>
+                <option value="">{t("anyPower")}</option>
                 <option value="22">22 kW+</option>
                 <option value="50">50 kW+</option>
                 <option value="100">100 kW+</option>
                 <option value="150">150 kW+</option>
                 <option value="250">250 kW+</option>
               </select>
-            </label>
+            </FilterField>
 
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Operator</span>
+            <FilterField label={t("operatorLabel")}>
               <input
                 list="station-operators"
                 name="operator"
                 defaultValue={filters.operator}
-                placeholder="Any operator"
-                className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                placeholder={t("operatorPlaceholder")}
+                className={filterInputClassName}
               />
               <datalist id="station-operators">
                 {data.operatorOptions.map((option) => (
                   <option key={option.key} value={option.value} />
                 ))}
               </datalist>
-            </label>
+            </FilterField>
 
             <div className="flex items-end gap-3 lg:col-span-6">
-              <button
-                type="submit"
-                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-              >
-                Search stations
-              </button>
-              <Link
-                href="/stations"
-                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                Clear
-              </Link>
+              <Button type="submit">{t("searchButton")}</Button>
+              <Button as={Link} href="/stations" variant="secondary">
+                {t("clearButton")}
+              </Button>
             </div>
-          </form>
+          </Card>
 
           <section className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
-              Showing {data.stations.length} of {data.total} stations
+              {t("showingCount", { shown: data.stations.length, total: data.total })}
             </p>
             {data.latestRuns.length > 0 && (
               <p className="text-sm text-slate-500">
-                Stacje: {data.latestRuns[0].source.label}, ostatni import{" "}
-                {formatDisplayDate(data.latestRuns[0].completedAt ?? data.latestRuns[0].startedAt)}
+                {t("freshness", {
+                  source: data.latestRuns[0].source.label,
+                  date: formatDisplayDate(
+                    data.latestRuns[0].completedAt ?? data.latestRuns[0].startedAt,
+                    locale,
+                  ),
+                })}
               </p>
             )}
           </section>
 
           {data.stations.length === 0 ? (
-            <section className="card text-center">
-              <h2 className="text-lg font-medium">No stations found</h2>
-              <p className="muted mt-2">
-                Try removing one filter or searching for a broader city,
-                operator, or connector.
-              </p>
-            </section>
+            <Notice title={t("noResultsTitle")}>
+              <p className="muted mt-2">{t("noResultsBody")}</p>
+            </Notice>
           ) : (
             <section className="grid gap-4 lg:grid-cols-2">
               {data.stations.map((station) => {
@@ -266,22 +257,27 @@ const StationsPage = async ({
                   station.connectors,
                 );
                 const quality = buildStationQuality(station);
+                const locationLine =
+                  [station.address, station.city, station.province]
+                    .filter(Boolean)
+                    .join(", ") || tCommon("locationUnavailable");
 
                 return (
-                  <article key={station.id} className="card">
+                  <Card key={station.id} as="article">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <p className="text-sm font-medium text-sky-700">
-                          {formatStationOperatorLabel(station.operator)}
+                        <p className="text-sm font-medium text-emerald-700">
+                          {localizeFallback(
+                            formatStationOperatorLabel(station.operator),
+                            tCommon,
+                          )}
                         </p>
                         <h2 className="mt-1 text-xl font-semibold text-slate-950">
-                          {station.name ?? station.externalCode ?? "Charging station"}
+                          {station.name ??
+                            station.externalCode ??
+                            tCommon("chargingStationFallback")}
                         </h2>
-                        <p className="muted mt-1 text-sm">
-                          {[station.address, station.city, station.province]
-                            .filter(Boolean)
-                            .join(", ") || "Location details unavailable"}
-                        </p>
+                        <p className="muted mt-1 text-sm">{locationLine}</p>
                         <div className="mt-3 flex flex-wrap items-center gap-3">
                           <StationCompletenessBadge
                             completeness={quality.completeness}
@@ -292,21 +288,21 @@ const StationsPage = async ({
                         </div>
                         <Link
                           href={`/stations/${station.id}`}
-                          className="mt-3 inline-flex text-sm font-medium text-sky-700 hover:text-sky-900"
+                          className="mt-3 inline-flex text-sm font-medium text-emerald-700 hover:text-emerald-900"
                         >
-                          View details
+                          {tStationDetail("viewDetailsLink")}
                         </Link>
                       </div>
                       {strongestConnector?.powerKw && (
-                        <span className="badge">
-                          up to {strongestConnector.powerKw} kW
-                        </span>
+                        <Badge>
+                          {t("upToPower", { power: strongestConnector.powerKw })}
+                        </Badge>
                       )}
                     </div>
 
                     <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <dt className="text-slate-500">Connectors</dt>
+                        <dt className="text-slate-500">{t("connectorsLabel")}</dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {connectorSummary.length > 0 ? (
                             <span className="flex flex-wrap gap-2">
@@ -316,7 +312,7 @@ const StationsPage = async ({
                                   title={connector.title}
                                   className="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full border border-slate-200 px-2 py-1 text-xs"
                                 >
-                                  {connector.label}
+                                  {localizeFallback(connector.label, tCommon)}
                                   {connector.currentType !== "Unknown" && (
                                     <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
                                       {connector.currentType}
@@ -326,15 +322,14 @@ const StationsPage = async ({
                               ))}
                             </span>
                           ) : (
-                            "No connector details"
+                            tCommon("noConnectorDetails")
                           )}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">Coordinates</dt>
+                        <dt className="text-slate-500">{t("coordinatesLabel")}</dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          {station.latitude.toFixed(4)},{" "}
-                          {station.longitude.toFixed(4)}
+                          {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
                           {mapHref && (
                             <>
                               {" / "}
@@ -342,16 +337,16 @@ const StationsPage = async ({
                                 href={mapHref}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sky-700 underline hover:text-sky-900"
+                                className="text-emerald-700 underline hover:text-emerald-900"
                               >
-                                map
+                                {t("mapLinkLabel")}
                               </a>
                             </>
                           )}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">Source</dt>
+                        <dt className="text-slate-500">{t("sourceLabel")}</dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {station.sourceName}
                           {safeSourceUrl && (
@@ -361,25 +356,32 @@ const StationsPage = async ({
                                 href={safeSourceUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sky-700 underline hover:text-sky-900"
+                                className="text-emerald-700 underline hover:text-emerald-900"
                               >
-                                original
+                                {t("originalLinkLabel")}
                               </a>
                             </>
                           )}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">Freshness</dt>
+                        <dt className="text-slate-500">{t("freshnessLabel")}</dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          Imported {formatDisplayDate(station.importedAt)}
                           {station.sourceUpdatedAt
-                            ? ` / source ${formatDisplayDate(station.sourceUpdatedAt)}`
-                            : ""}
+                            ? t("importedOnWithSource", {
+                                date: formatDisplayDate(station.importedAt, locale),
+                                sourceDate: formatDisplayDate(
+                                  station.sourceUpdatedAt,
+                                  locale,
+                                ),
+                              })
+                            : t("importedOn", {
+                                date: formatDisplayDate(station.importedAt, locale),
+                              })}
                         </dd>
                       </div>
                     </dl>
-                  </article>
+                  </Card>
                 );
               })}
             </section>
@@ -392,18 +394,18 @@ const StationsPage = async ({
                   href={buildStationSearchHref(filters, filters.page - 1)}
                   className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
                 >
-                  Previous
+                  {tCommon("previous")}
                 </Link>
               )}
               <span className="flex items-center px-4 text-sm text-slate-500">
-                Page {filters.page} of {totalPages}
+                {tCommon("pageOf", { page: filters.page, totalPages })}
               </span>
               {filters.page < totalPages && (
                 <Link
                   href={buildStationSearchHref(filters, filters.page + 1)}
                   className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
                 >
-                  Next
+                  {tCommon("next")}
                 </Link>
               )}
             </nav>

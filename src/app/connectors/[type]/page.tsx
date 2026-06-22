@@ -1,9 +1,12 @@
+import Image from "next/image";
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+
+import Badge from "@/components/ui/Badge";
 import {
   getConnectorPageEntries,
   getConnectorPageKnowledge,
 } from "@/features/charging/connector-pages";
-import Image from "next/image";
-import Link from "next/link";
 
 export const dynamic = "force-static";
 
@@ -23,8 +26,6 @@ const DetailRow = ({
   </div>
 );
 
-const formatList = (items: string[]) => items.join(", ");
-
 export default async function ConnectorDetailPage({
   params,
 }: {
@@ -34,76 +35,75 @@ export default async function ConnectorDetailPage({
   const connector = getConnectorPageKnowledge(type);
   const isUnknownConnector = connector.key === "unknown";
 
+  const t = await getTranslations("connectorDetail");
+  const tKnowledge = await getTranslations("connectorKnowledge");
+  const description = tKnowledge(`${connector.key}.description`);
+  const imageLabel = tKnowledge(`${connector.key}.imageLabel`);
+  const supportedRegionsText = tKnowledge(`${connector.key}.supportedRegionsText`);
+
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
       <div className="mb-8">
         <Link
           href="/connectors"
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
         >
-          &larr; Back to connectors
+          {t("backLink")}
         </Link>
       </div>
 
       <header className="mb-8">
-        <span className="badge">{connector.currentType}</span>
+        <Badge>{connector.currentType}</Badge>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
           {connector.label}
         </h1>
-        <p className="muted mt-3 max-w-2xl text-lg">{connector.description}</p>
+        <p className="muted mt-3 max-w-2xl text-lg">{description}</p>
       </header>
 
       {isUnknownConnector && (
         <section className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
-          <h2 className="text-lg font-medium">Incomplete source data</h2>
-          <p className="mt-2 text-sm">
-            Some imported records do not include a connector type that can be
-            classified confidently. This page keeps those records explainable
-            without inventing compatibility, power, or regional support.
-          </p>
+          <h2 className="text-lg font-medium">{t("incompleteDataTitle")}</h2>
+          <p className="mt-2 text-sm">{t("incompleteDataBody")}</p>
         </section>
       )}
 
       <div className="grid gap-8 md:grid-cols-[1fr_1.4fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Image label
+            {t("imageLabelCaption")}
           </p>
           <div className="mt-4 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
             <Image
               src={connector.imagePath}
-              alt={connector.imageLabel}
+              alt={imageLabel}
               width={720}
               height={560}
               className="aspect-[4/3] w-full object-contain p-4"
               priority
             />
           </div>
-          <p className="muted mt-4 text-sm">
-            Preview image only: the graphic above shows what this connector type
-            looks like.
-          </p>
+          <p className="muted mt-4 text-sm">{t("imageCaption")}</p>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="mb-5 text-xl font-medium text-slate-900">
-            Connector details
+            {t("detailsTitle")}
           </h2>
           <dl className="space-y-4">
-            <DetailRow label="Name" value={connector.label} />
-            <DetailRow label="Description" value={connector.description} />
-            <DetailRow label="AC/DC" value={connector.currentType} />
+            <DetailRow label={t("nameLabel")} value={connector.label} />
+            <DetailRow label={t("descriptionLabel")} value={description} />
+            <DetailRow label={t("currentTypeLabel")} value={connector.currentType} />
             <DetailRow
-              label="Typical power range"
+              label={t("typicalPowerLabel")}
               value={connector.typicalPowerRange}
             />
             <DetailRow
-              label="Supported regions"
-              value={formatList(connector.supportedRegions)}
+              label={t("supportedRegionsLabel")}
+              value={supportedRegionsText}
             />
             <DetailRow
-              label="Supported vehicle brands"
-              value={formatList(connector.supportedVehicleBrands)}
+              label={t("supportedBrandsLabel")}
+              value={connector.supportedVehicleBrands.join(", ")}
             />
           </dl>
         </section>

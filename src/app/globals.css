@@ -3,11 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f7faf7;
+  --foreground: #14201a;
   --card: #ffffff;
-  --muted: #64748b;
-  --accent: #0ea5e9;
+  --card-border: #eff5f0;
+  --muted: #5b6b62;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-soft-bg: #dcfce7;
+  --accent-soft-text: #15803d;
 }
 
 body {
@@ -18,9 +22,52 @@ body {
 
 .card {
   background: var(--card);
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
   padding: 1.25rem;
+  box-shadow:
+    0 1px 2px rgb(20 32 26 / 0.04),
+    0 4px 12px -4px rgb(20 32 26 / 0.1);
+  transition:
+    transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+a.card:hover,
+button.card:hover,
+.card[data-interactive="true"]:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 2px 4px rgb(20 32 26 / 0.05),
+    0 16px 32px -12px rgb(20 32 26 / 0.22);
+}
+
+a.card:active,
+button.card:active,
+.card[data-interactive="true"]:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 2px rgb(20 32 26 / 0.05),
+    0 8px 16px -8px rgb(20 32 26 / 0.18);
+  transition-duration: 100ms;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  a.card:hover,
+  button.card:hover,
+  .card[data-interactive="true"]:hover,
+  a.card:active,
+  button.card:active,
+  .card[data-interactive="true"]:active {
+    transition-property: box-shadow;
+    transform: none;
+  }
 }
 
 .muted {
@@ -33,8 +80,8 @@ body {
   padding: 0.15rem 0.65rem;
   font-size: 0.75rem;
   font-weight: 600;
-  background: #e0f2fe;
-  color: #0369a1;
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-text);
 }
 
 .station-map-marker-wrapper {
@@ -49,8 +96,8 @@ body {
   place-items: center;
   border: 3px solid #ffffff;
   border-radius: 999px;
-  background: #0284c7;
-  box-shadow: 0 8px 20px rgb(15 23 42 / 0.25);
+  background: var(--accent);
+  box-shadow: 0 8px 20px rgb(20 32 26 / 0.25);
   color: #ffffff;
   font-size: 0.8rem;
   font-weight: 800;
@@ -65,7 +112,7 @@ body {
 }
 
 .station-map-marker-cluster {
-  background: #0f172a;
+  background: var(--foreground);
 }
 
 .station-map-marker-cluster::after {
@@ -78,13 +125,13 @@ body {
 
 .station-map-popup p {
   margin: 0;
-  color: #64748b;
+  color: var(--muted);
   font-size: 0.8rem;
 }
 
 .station-map-popup h3 {
   margin: 0.25rem 0 0.75rem;
-  color: #0f172a;
+  color: var(--foreground);
   font-size: 1rem;
   font-weight: 700;
 }
@@ -96,7 +143,7 @@ body {
 }
 
 .station-map-popup dt {
-  color: #64748b;
+  color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -104,7 +151,7 @@ body {
 
 .station-map-popup dd {
   margin: 0.1rem 0 0;
-  color: #0f172a;
+  color: var(--foreground);
 }
 
 .station-map-popup ul {
@@ -113,7 +160,7 @@ body {
 }
 
 .station-map-popup a {
-  color: #0369a1;
+  color: var(--accent-soft-text);
   font-weight: 700;
   text-decoration: underline;
 }

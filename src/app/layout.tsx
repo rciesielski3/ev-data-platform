@@ -3,6 +3,13 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+
+import Footer from "@/components/ui/Footer";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import MobileNav from "@/components/ui/MobileNav";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -17,71 +24,78 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "EV Data Platform",
-  description: "Normalized EV and charging infrastructure data for Europe",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("home");
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 };
 
-const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const RootLayout = async ({
+  children,
+}: Readonly<{ children: React.ReactNode }>) => {
+  const locale = (await getLocale()) as SupportedLocale;
+  const messages = await getMessages();
+  const t = await getTranslations("nav");
+
+  const navLinks = [
+    { href: "/vehicles", label: t("vehicles") },
+    { href: "/stations", label: t("stations") },
+    { href: "/map", label: t("map") },
+    { href: "/insights", label: t("insights") },
+    { href: "/provinces", label: t("provinces") },
+    { href: "/operators", label: t("operators") },
+    { href: "/coverage", label: t("coverage") },
+  ];
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]`}
       >
-        <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
-          <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-            <Link href="/" className="font-semibold tracking-tight text-lg">
-              EV Data
-            </Link>
-            <nav className="flex items-center gap-6 text-sm font-medium">
-              <Link
-                href="/vehicles"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Vehicles
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+            <div className="relative mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+              <Link href="/" className="font-semibold tracking-tight text-lg">
+                {t("brand")}
               </Link>
-              <Link
-                href="/stations"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Stations
-              </Link>
-              <Link
-                href="/map"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Map
-              </Link>
-              <Link
-                href="/insights"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Insights
-              </Link>
-              <Link
-                href="/provinces"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Provinces
-              </Link>
-              <Link
-                href="/operators"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Operators
-              </Link>
-              <Link
-                href="/coverage"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Coverage
-              </Link>
-            </nav>
-          </div>
-        </header>
-        <div className="flex-1">{children}</div>
-        <Analytics />
-        <SpeedInsights />
+
+              <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-slate-600 transition-colors hover:text-emerald-700"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <LanguageSwitcher
+                  currentLocale={locale}
+                  ariaLabel={t("languageSwitcherLabel")}
+                />
+              </nav>
+
+              <div className="flex items-center gap-3 sm:hidden">
+                <LanguageSwitcher
+                  currentLocale={locale}
+                  ariaLabel={t("languageSwitcherLabel")}
+                />
+                <MobileNav
+                  links={navLinks}
+                  openLabel={t("openMenu")}
+                  closeLabel={t("closeMenu")}
+                />
+              </div>
+            </div>
+          </header>
+          <div className="flex-1">{children}</div>
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

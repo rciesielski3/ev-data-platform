@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
 import { prisma } from "@/lib/db/prisma";
+import { localizeFallback } from "@/lib/display/localize-fallback";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -20,12 +25,21 @@ const DetailRow = ({
   </div>
 );
 
+const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
+  "source timestamp": "freshnessSourceTimestamp",
+  "import date": "freshnessImportDate",
+  unknown: "freshnessUnknownSource",
+};
+
 export default async function StationDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const locale = (await getLocale()) as SupportedLocale;
+  const t = await getTranslations("stationDetail");
+  const tCommon = await getTranslations("common");
 
   const station = await prisma.chargingStation.findUnique({
     where: { id },
@@ -46,46 +60,74 @@ export default async function StationDetailPage({
     notFound();
   }
 
-  const details = buildStationDetails(station);
+  const details = buildStationDetails(station, locale);
+  const locationLine =
+    [details.address, details.city, details.province]
+      .filter((value) => value !== "Unknown")
+      .join(", ") || tCommon("locationUnavailable");
+
+  const freshnessSourceKey =
+    FRESHNESS_SOURCE_KEYS[details.quality.freshnessSourceLabel];
+
+  const missingFieldLabels = details.quality.completeness.missingFields.map(
+    (field) => t(`completenessFields.${field}` as Parameters<typeof t>[0]),
+  );
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <div className="mb-8">
         <Link
           href="/stations"
-          className="text-sm font-medium text-sky-700 hover:text-sky-900"
+          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
         >
-          &larr; Back to stations
+          {t("backLink")}
         </Link>
       </div>
 
       <header className="mb-10">
         <p className="text-lg font-medium text-slate-500">
-          {details.operatorName}
+          {localizeFallback(details.operatorName, tCommon)}
         </p>
         <h1 className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
-          {details.title}
+          {details.title === "Charging station"
+            ? tCommon("chargingStationFallback")
+            : details.title}
         </h1>
-        <p className="muted mt-3 max-w-3xl">
-          {[details.address, details.city, details.province]
-            .filter((value) => value !== "Unknown")
-            .join(", ") || "Location details unavailable"}
-        </p>
+        <p className="muted mt-3 max-w-3xl">{locationLine}</p>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.25fr]">
-        <section className="card">
+        <Card as="section">
           <h2 className="mb-5 text-xl font-medium text-slate-900">
-            Station Details
+            {t("stationDetailsTitle")}
           </h2>
           <dl className="space-y-3">
-            <DetailRow label="Station Name" value={details.title} />
-            <DetailRow label="Operator" value={details.operatorName} />
-            <DetailRow label="Address" value={details.address} />
-            <DetailRow label="City" value={details.city} />
-            <DetailRow label="Province" value={details.province} />
             <DetailRow
-              label="Coordinates"
+              label={t("stationNameLabel")}
+              value={
+                details.title === "Charging station"
+                  ? tCommon("chargingStationFallback")
+                  : details.title
+              }
+            />
+            <DetailRow
+              label={t("operatorLabel")}
+              value={localizeFallback(details.operatorName, tCommon)}
+            />
+            <DetailRow
+              label={t("addressLabel")}
+              value={localizeFallback(details.address, tCommon)}
+            />
+            <DetailRow
+              label={t("cityLabel")}
+              value={localizeFallback(details.city, tCommon)}
+            />
+            <DetailRow
+              label={t("provinceLabel")}
+              value={localizeFallback(details.province, tCommon)}
+            />
+            <DetailRow
+              label={t("coordinatesLabel")}
               value={
                 <>
                   {details.coordinates}
@@ -96,9 +138,9 @@ export default async function StationDetailPage({
                         href={details.mapHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sky-700 underline hover:text-sky-900"
+                        className="text-emerald-700 underline hover:text-emerald-900"
                       >
-                        OpenStreetMap
+                        {t("openStreetMapLink")}
                       </a>
                     </>
                   )}
@@ -106,7 +148,7 @@ export default async function StationDetailPage({
               }
             />
             <DetailRow
-              label="Source"
+              label={t("sourceLabel")}
               value={
                 <>
                   {details.sourceName}
@@ -117,38 +159,49 @@ export default async function StationDetailPage({
                         href={details.safeSourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sky-700 underline hover:text-sky-900"
+                        className="text-emerald-700 underline hover:text-emerald-900"
                       >
-                        original
+                        {t("originalLink")}
                       </a>
                     </>
                   )}
                 </>
               }
             />
-            <DetailRow label="Last Updated" value={details.lastUpdated} />
+            <DetailRow
+              label={t("lastUpdatedLabel")}
+              value={localizeFallback(details.lastUpdated, tCommon)}
+            />
           </dl>
-        </section>
+        </Card>
 
-        <section className="card">
+        <Card as="section">
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-medium text-slate-900">Connectors</h2>
-            <span className="badge">{details.connectorCount} connectors</span>
+            <h2 className="text-xl font-medium text-slate-900">
+              {t("connectorsTitle")}
+            </h2>
+            <Badge>{t("connectorsCount", { count: details.connectors.length })}</Badge>
           </div>
 
           {details.connectors.length === 0 ? (
-            <p className="muted text-sm">No connector details imported.</p>
+            <p className="muted text-sm">{t("noConnectorsImported")}</p>
           ) : (
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Connector Type</th>
-                    <th className="px-4 py-3 font-medium">Power</th>
-                    <th className="px-4 py-3 font-medium">AC/DC</th>
-                    <th className="px-4 py-3 font-medium">Import Date</th>
                     <th className="px-4 py-3 font-medium">
-                      Source Updated Date
+                      {t("connectorTypeHeader")}
+                    </th>
+                    <th className="px-4 py-3 font-medium">{t("powerHeader")}</th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("currentTypeHeader")}
+                    </th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("importDateHeader")}
+                    </th>
+                    <th className="px-4 py-3 font-medium">
+                      {t("sourceUpdatedHeader")}
                     </th>
                   </tr>
                 </thead>
@@ -156,19 +209,19 @@ export default async function StationDetailPage({
                   {details.connectors.map((connector) => (
                     <tr key={connector.id}>
                       <td className="px-4 py-3 font-medium text-slate-900">
-                        {connector.type}
+                        {localizeFallback(connector.type, tCommon)}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {connector.power}
+                        {localizeFallback(connector.power, tCommon)}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {connector.currentType}
+                        {localizeFallback(connector.currentType, tCommon)}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {connector.importedAt}
+                        {localizeFallback(connector.importedAt, tCommon)}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {connector.sourceUpdatedAt}
+                        {localizeFallback(connector.sourceUpdatedAt, tCommon)}
                       </td>
                     </tr>
                   ))}
@@ -176,68 +229,78 @@ export default async function StationDetailPage({
               </table>
             </div>
           )}
-        </section>
+        </Card>
       </div>
 
-      <section className="card mt-6">
+      <Card as="section" className="mt-6">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-xl font-medium text-slate-900">Data Quality</h2>
-          <span className="badge">
-            {details.quality.completeness.scorePercent}% complete
-          </span>
+          <h2 className="text-xl font-medium text-slate-900">
+            {t("dataQualityTitle")}
+          </h2>
+          <Badge>
+            {`${details.quality.completeness.scorePercent}%`}
+          </Badge>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <dt className="text-sm text-slate-500">Completeness</dt>
+            <dt className="text-sm text-slate-500">
+              {t("completenessLabel")}
+            </dt>
             <dd className="mt-1 font-medium text-slate-900">
-              {details.quality.completeness.presentFieldCount} of{" "}
-              {details.quality.completeness.totalFieldCount} fields present
+              {t("fieldsPresent", {
+                present: details.quality.completeness.presentFieldCount,
+                total: details.quality.completeness.totalFieldCount,
+              })}
             </dd>
             <dd className="muted mt-2 text-sm">
               {details.quality.completeness.missingFields.length === 0
-                ? "No missing fields."
-                : `Missing: ${details.quality.completeness.missingFields.join(", ")}`}
+                ? t("noMissingFields")
+                : t("missingFields", { list: missingFieldLabels.join(", ") })}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">Freshness</dt>
+            <dt className="text-sm text-slate-500">{t("freshnessLabel")}</dt>
             <dd className="mt-1">
               <StationFreshnessIndicator freshness={details.quality.freshness} />
             </dd>
             <dd className="muted mt-2 text-sm">
               {details.quality.freshness.bucket === "unknown"
-                ? "No source timestamp or import date is available for this station."
-                : `Based on ${details.quality.freshnessSourceLabel} (${details.quality.freshnessReferenceDate}).`}
+                ? t("freshnessNoTimestamp")
+                : t("freshnessBasedOn", {
+                    source: t(freshnessSourceKey),
+                    date: details.quality.freshnessReferenceDate ?? "",
+                  })}
             </dd>
           </div>
         </div>
-      </section>
+      </Card>
 
-      <section className="card mt-6">
+      <Card as="section" className="mt-6">
         <h2 className="mb-5 text-xl font-medium text-slate-900">
-          Operating Hours &amp; Accessibility
+          {t("hoursAccessibilityTitle")}
         </h2>
 
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <dt className="text-sm text-slate-500">Opening hours</dt>
+            <dt className="text-sm text-slate-500">{t("openingHoursLabel")}</dt>
             <dd className="mt-1 space-y-1 font-medium text-slate-900">
-              {details.operatingHours.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
+              {details.hasOperatingHoursInfo
+                ? details.operatingHours.map((line) => <p key={line}>{line}</p>)
+                : <p className="muted">{t("notProvidedBySource")}</p>}
             </dd>
             {details.closingPeriods && details.closingPeriods.length > 0 && (
               <dd className="muted mt-2 text-sm">
-                Scheduled closures:{" "}
-                {details.closingPeriods.join("; ")}
+                {t("scheduledClosures", {
+                  periods: details.closingPeriods.join("; "),
+                })}
               </dd>
             )}
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">Accessibility</dt>
+            <dt className="text-sm text-slate-500">{t("accessibilityLabel")}</dt>
             <dd
               className={
                 details.hasAccessibilityInfo
@@ -245,12 +308,16 @@ export default async function StationDetailPage({
                   : "muted mt-1"
               }
             >
-              {details.accessibility}
+              {details.hasAccessibilityInfo
+                ? details.accessibility
+                : t("notProvidedBySource")}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">Payment methods</dt>
+            <dt className="text-sm text-slate-500">
+              {t("paymentMethodsLabel")}
+            </dt>
             <dd
               className={
                 details.hasPaymentMethodsInfo
@@ -258,14 +325,14 @@ export default async function StationDetailPage({
                   : "muted mt-1"
               }
             >
-              {details.paymentMethods.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
+              {details.hasPaymentMethodsInfo
+                ? details.paymentMethods.map((line) => <p key={line}>{line}</p>)
+                : t("notProvidedBySource")}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">Authentication methods</dt>
+            <dt className="text-sm text-slate-500">{t("authMethodsLabel")}</dt>
             <dd
               className={
                 details.hasAuthMethodsInfo
@@ -273,18 +340,26 @@ export default async function StationDetailPage({
                   : "muted mt-1"
               }
             >
-              {details.authMethods.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
+              {details.hasAuthMethodsInfo
+                ? details.authMethods.map((line) => <p key={line}>{line}</p>)
+                : t("notProvidedBySource")}
             </dd>
           </div>
         </div>
-      </section>
+      </Card>
 
       <section className="mt-6 rounded-xl bg-slate-100 p-6 text-sm text-slate-600">
-        <p>Connector Count: {details.connectorCount}</p>
-        <p className="mt-1">Import Date: {details.importedAt}</p>
-        <p className="mt-1">Source Updated Date: {details.sourceUpdatedAt}</p>
+        <p>{t("connectorCountSummary", { count: details.connectorCount })}</p>
+        <p className="mt-1">
+          {t("importDateSummary", {
+            date: localizeFallback(details.importedAt, tCommon),
+          })}
+        </p>
+        <p className="mt-1">
+          {t("sourceUpdatedSummary", {
+            date: localizeFallback(details.sourceUpdatedAt, tCommon),
+          })}
+        </p>
       </section>
     </main>
   );

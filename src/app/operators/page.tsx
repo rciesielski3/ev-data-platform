@@ -1,7 +1,12 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
+import Card from "@/components/ui/Card";
+import Notice from "@/components/ui/Notice";
+import PageHeader from "@/components/ui/PageHeader";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
+import { localizeFallback } from "@/lib/display/localize-fallback";
 import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +17,7 @@ const formatInteger = (value: number) => numberFormatter.format(value);
 
 const formatPower = (value: number | null) => {
   if (value === null) {
-    return "Unknown";
+    return null;
   }
 
   return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)} kW`;
@@ -55,34 +60,55 @@ const getSummary = (rows: OperatorIntelligenceRow[]) => {
   };
 };
 
-const OperatorTable = ({ rows }: { rows: OperatorIntelligenceRow[] }) => (
+type OperatorTableHeaders = {
+  operator: string;
+  stations: string;
+  provinces: string;
+  connectors: string;
+  knownPower: string;
+  avgPower: string;
+  maxPower: string;
+  strongestStation: string;
+};
+
+const OperatorTable = ({
+  rows,
+  headers,
+  unknownLabel,
+  localizeOperatorLabel,
+}: {
+  rows: OperatorIntelligenceRow[];
+  headers: OperatorTableHeaders;
+  unknownLabel: string;
+  localizeOperatorLabel: (value: string) => string;
+}) => (
   <div className="overflow-x-auto">
     <table className="min-w-full divide-y divide-slate-200 text-sm">
       <thead>
         <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
           <th scope="col" className="py-3 pr-4">
-            Operator
+            {headers.operator}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Stations
+            {headers.stations}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Provinces
+            {headers.provinces}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Connectors
+            {headers.connectors}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Known power
+            {headers.knownPower}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Avg power
+            {headers.avgPower}
           </th>
           <th scope="col" className="px-4 py-3 text-right">
-            Max power
+            {headers.maxPower}
           </th>
           <th scope="col" className="py-3 pl-4">
-            Strongest station
+            {headers.strongestStation}
           </th>
         </tr>
       </thead>
@@ -90,7 +116,7 @@ const OperatorTable = ({ rows }: { rows: OperatorIntelligenceRow[] }) => (
         {rows.map((row) => (
           <tr key={row.operatorName}>
             <th scope="row" className="py-4 pr-4 text-left font-medium text-slate-950">
-              {row.operatorName}
+              {localizeOperatorLabel(row.operatorName)}
             </th>
             <td className="px-4 py-4 text-right text-slate-700">
               {formatInteger(row.stationCount)}
@@ -105,13 +131,15 @@ const OperatorTable = ({ rows }: { rows: OperatorIntelligenceRow[] }) => (
               {formatInteger(row.knownPowerConnectorCount)}
             </td>
             <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.averagePowerKw)}
+              {formatPower(row.averagePowerKw) ?? unknownLabel}
             </td>
             <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.maxPowerKw)}
+              {formatPower(row.maxPowerKw) ?? unknownLabel}
             </td>
             <td className="py-4 pl-4 text-slate-700">
-              {row.strongestStationName ?? "Unknown"}
+              {row.strongestStationName
+                ? localizeOperatorLabel(row.strongestStationName)
+                : unknownLabel}
             </td>
           </tr>
         ))}
@@ -121,104 +149,107 @@ const OperatorTable = ({ rows }: { rows: OperatorIntelligenceRow[] }) => (
 );
 
 export default async function OperatorsPage() {
+  const t = await getTranslations("operators");
+  const tCommon = await getTranslations("common");
+
   let rows: OperatorIntelligenceRow[] | { error: string };
 
   try {
     rows = await getOperatorIntelligenceRows();
   } catch {
-    rows = {
-      error:
-        "Operator intelligence is not available yet. Configure the database and run the charging station imports.",
-    };
+    rows = { error: t("setupRequiredMessage") };
   }
 
   const summary = Array.isArray(rows) ? getSummary(rows) : null;
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <span className="badge">Milestone 5 - Operator intelligence</span>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-            Operator Intelligence
-          </h1>
-          <p className="muted mt-2 max-w-2xl">
-            Compare charging operators by station footprint, province coverage,
-            connector volume, and reported power.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/insights"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            View insights
-          </Link>
-          <Link
-            href="/stations"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            Browse stations
-          </Link>
-          <a
-            href="/api/exports/operators?format=csv"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            Export CSV
-          </a>
-          <a
-            href="/api/exports/operators?format=json"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            Export JSON
-          </a>
-        </div>
-      </div>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <>
+            <Link
+              href="/insights"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("viewInsightsLink")}
+            </Link>
+            <Link
+              href="/stations"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("browseStationsLink")}
+            </Link>
+            <a
+              href="/api/exports/operators?format=csv"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("exportCsvLink")}
+            </a>
+            <a
+              href="/api/exports/operators?format=json"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("exportJsonLink")}
+            </a>
+          </>
+        }
+      />
 
       {"error" in rows ? (
-        <section className="card border-amber-200 bg-amber-50 text-amber-900">
-          <h2 className="mb-2 text-lg font-medium">Setup required</h2>
+        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{rows.error}</p>
-        </section>
+        </Notice>
       ) : rows.length === 0 || summary === null ? (
-        <section className="card text-center">
-          <h2 className="text-lg font-medium">No operator data yet</h2>
-          <p className="muted mx-auto mt-2 max-w-2xl">
-            Import EIPA or Open Charge Map station data to populate operator
-            comparisons.
-          </p>
-        </section>
+        <Notice title={t("emptyTitle")}>
+          <p className="muted mx-auto mt-2 max-w-2xl">{t("emptyBody")}</p>
+        </Notice>
       ) : (
         <>
           <section className="mb-8 grid gap-4 md:grid-cols-3">
             <MetricCard
-              label="Operators"
+              label={t("operatorsMetricLabel")}
               value={formatInteger(rows.length)}
-              helper={`${formatInteger(summary.totalStations)} stations grouped by visible operator name`}
+              helper={t("operatorsMetricHelper", {
+                count: formatInteger(summary.totalStations),
+              })}
             />
             <MetricCard
-              label="Connector coverage"
+              label={t("connectorCoverageMetricLabel")}
               value={formatInteger(summary.totalConnectors)}
-              helper={`${formatInteger(summary.knownPowerConnectors)} connectors report usable kW values`}
+              helper={t("connectorCoverageMetricHelper", {
+                count: formatInteger(summary.knownPowerConnectors),
+              })}
             />
             <MetricCard
-              label="Strongest connector"
-              value={formatPower(summary.strongestOperator?.maxPowerKw ?? null)}
+              label={t("strongestConnectorMetricLabel")}
+              value={formatPower(summary.strongestOperator?.maxPowerKw ?? null) ?? tCommon("unknown")}
               helper={
                 summary.strongestOperator
-                  ? `${summary.strongestOperator.operatorName} / ${summary.strongestOperator.strongestStationName}`
-                  : "No known power values"
+                  ? t("strongestConnectorMetricHelper", {
+                      operator: localizeFallback(
+                        summary.strongestOperator.operatorName,
+                        tCommon,
+                      ),
+                      station: summary.strongestOperator.strongestStationName
+                        ? localizeFallback(
+                            summary.strongestOperator.strongestStationName,
+                            tCommon,
+                          )
+                        : tCommon("unknown"),
+                    })
+                  : t("noKnownPowerValues")
               }
             />
           </section>
 
           <section className="grid gap-6 lg:grid-cols-[1fr_2fr]">
             <aside className="space-y-6">
-              <article className="card">
-                <h2 className="text-xl font-semibold">Largest footprint</h2>
-                <p className="muted mt-1 text-sm">
-                  Operators are ranked by distinct stations, not connectors.
-                </p>
+              <Card as="article">
+                <h2 className="text-xl font-semibold">{t("largestFootprintTitle")}</h2>
+                <p className="muted mt-1 text-sm">{t("largestFootprintSubtitle")}</p>
                 <div className="mt-5 space-y-4">
                   {rows.slice(0, 5).map((row) => (
                     <div
@@ -226,47 +257,56 @@ export default async function OperatorsPage() {
                       className="flex items-baseline justify-between gap-4"
                     >
                       <span className="font-medium text-slate-900">
-                        {row.operatorName}
+                        {localizeFallback(row.operatorName, tCommon)}
                       </span>
                       <span className="text-sm text-slate-500">
-                        {formatInteger(row.stationCount)} stations
+                        {formatInteger(row.stationCount)} {t("stationsUnit")}
                       </span>
                     </div>
                   ))}
                 </div>
-              </article>
+              </Card>
 
-              <article className="card">
-                <h2 className="text-xl font-semibold">Province reach</h2>
-                <p className="muted mt-1 text-sm">
-                  Broadest known regional coverage in the station data.
-                </p>
+              <Card as="article">
+                <h2 className="text-xl font-semibold">{t("provinceReachTitle")}</h2>
+                <p className="muted mt-1 text-sm">{t("provinceReachSubtitle")}</p>
                 {summary.broadestOperator ? (
                   <div className="mt-5">
                     <p className="text-2xl font-semibold text-slate-950">
-                      {summary.broadestOperator.operatorName}
+                      {localizeFallback(summary.broadestOperator.operatorName, tCommon)}
                     </p>
                     <p className="muted mt-1 text-sm">
-                      {formatInteger(summary.broadestOperator.provinceCount)}{" "}
-                      provinces across{" "}
-                      {formatInteger(summary.broadestOperator.stationCount)}{" "}
-                      stations.
+                      {t("provinceReachBody", {
+                        provinces: formatInteger(summary.broadestOperator.provinceCount),
+                        stations: formatInteger(summary.broadestOperator.stationCount),
+                      })}
                     </p>
                   </div>
                 ) : null}
-              </article>
+              </Card>
             </aside>
 
-            <section className="card">
+            <Card as="section">
               <div className="mb-4">
-                <h2 className="text-xl font-semibold">Operator comparison</h2>
-                <p className="muted mt-1 text-sm">
-                  Technical EIPA operator identifiers are grouped as Unknown
-                  operator.
-                </p>
+                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
+                <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
               </div>
-              <OperatorTable rows={rows} />
-            </section>
+              <OperatorTable
+                rows={rows}
+                headers={{
+                  operator: t("operatorHeader"),
+                  stations: t("stationsHeader"),
+                  provinces: t("provincesHeader"),
+                  connectors: t("connectorsHeader"),
+                  knownPower: t("knownPowerHeader"),
+                  avgPower: t("avgPowerHeader"),
+                  maxPower: t("maxPowerHeader"),
+                  strongestStation: t("strongestStationHeader"),
+                }}
+                unknownLabel={tCommon("unknown")}
+                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+              />
+            </Card>
           </section>
         </>
       )}

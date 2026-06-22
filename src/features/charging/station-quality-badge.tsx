@@ -1,13 +1,9 @@
+import { getTranslations } from "next-intl/server";
+
 import type {
   StationCompletenessScore,
   StationFreshness,
 } from "@/features/charging/data-quality";
-
-const FRESHNESS_LABEL: Record<StationFreshness["bucket"], string> = {
-  fresh: "Fresh",
-  stale: "Stale",
-  unknown: "Unknown",
-};
 
 const FRESHNESS_DOT_CLASS: Record<StationFreshness["bucket"], string> = {
   fresh: "bg-emerald-500",
@@ -21,44 +17,60 @@ const FRESHNESS_TEXT_CLASS: Record<StationFreshness["bucket"], string> = {
   unknown: "text-slate-500",
 };
 
-export const formatFreshnessAge = (freshness: StationFreshness) => {
+export const formatFreshnessAge = (
+  freshness: StationFreshness,
+  t: Awaited<ReturnType<typeof getTranslations<"stationQuality">>>,
+) => {
   if (freshness.bucket === "unknown" || freshness.ageDays === null) {
-    return "Age unknown";
+    return t("ageUnknown");
   }
 
   return freshness.ageDays === 0
-    ? "Updated today"
-    : `${freshness.ageDays} day${freshness.ageDays === 1 ? "" : "s"} old`;
+    ? t("updatedToday")
+    : t("daysOld", { count: freshness.ageDays });
 };
 
-export const StationFreshnessIndicator = ({
+export const StationFreshnessIndicator = async ({
   freshness,
   className,
 }: {
   freshness: StationFreshness;
   className?: string;
-}) => (
-  <span
-    className={`inline-flex items-center gap-1.5 text-xs font-medium ${FRESHNESS_TEXT_CLASS[freshness.bucket]} ${className ?? ""}`}
-  >
-    <span
-      aria-hidden
-      className={`h-2 w-2 rounded-full ${FRESHNESS_DOT_CLASS[freshness.bucket]}`}
-    />
-    {FRESHNESS_LABEL[freshness.bucket]}
-    {" / "}
-    {formatFreshnessAge(freshness)}
-  </span>
-);
+}) => {
+  const t = await getTranslations("stationQuality");
+  const freshnessLabel = {
+    fresh: t("freshLabel"),
+    stale: t("staleLabel"),
+    unknown: t("unknownLabel"),
+  }[freshness.bucket];
 
-export const StationCompletenessBadge = ({
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 text-xs font-medium ${FRESHNESS_TEXT_CLASS[freshness.bucket]} ${className ?? ""}`}
+    >
+      <span
+        aria-hidden
+        className={`h-2 w-2 rounded-full ${FRESHNESS_DOT_CLASS[freshness.bucket]}`}
+      />
+      {freshnessLabel}
+      {" / "}
+      {formatFreshnessAge(freshness, t)}
+    </span>
+  );
+};
+
+export const StationCompletenessBadge = async ({
   completeness,
   className,
 }: {
   completeness: StationCompletenessScore;
   className?: string;
-}) => (
-  <span className={`badge ${className ?? ""}`}>
-    {completeness.scorePercent}% complete
-  </span>
-);
+}) => {
+  const t = await getTranslations("stationQuality");
+
+  return (
+    <span className={`badge ${className ?? ""}`}>
+      {t("completePercent", { percent: completeness.scorePercent })}
+    </span>
+  );
+};
