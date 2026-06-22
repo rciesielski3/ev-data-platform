@@ -8,4 +8,7 @@ export const createLeadSubmission = (input: {
   company?: string;
   interest: LeadInterest;
   message?: string;
-}): Promise<LeadSubmission> => prisma.leadSubmission.create({ data: input });
+}): Promise<LeadSubmission> =>
+  prisma.leadSubmission.create({
+    data: { ...input, email: input.email.trim().toLowerCase() },
+  });
