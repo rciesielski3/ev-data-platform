@@ -163,13 +163,13 @@ export default async function CoveragePage() {
           <>
             <Link
               href="/provinces"
-              className="text-sm font-medium text-sky-700 hover:text-sky-900"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
             >
               {t("provinceIntelligenceLink")}
             </Link>
             <Link
               href="/insights"
-              className="text-sm font-medium text-sky-700 hover:text-sky-900"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
             >
               {t("viewInsightsLink")}
             </Link>
@@ -177,7 +177,7 @@ export default async function CoveragePage() {
         }
       />
 
-      <Card as="section" className="mb-8 border-sky-200 bg-sky-50 text-sky-900">
+      <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
         <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
         <p>
           {t("explainerBodyPrefix")} <strong>{t("explainerBodyStrong")}</strong>

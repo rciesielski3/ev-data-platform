@@ -181,9 +181,6 @@
     "paymentMethodsLabel": "Metody płatności",
     "authMethodsLabel": "Metody autoryzacji",
     "notProvidedBySource": "Brak danych od źródła",
-    "dayFallback": "Dzień {n}",
-    "closingPeriodRange": "{from}–{to}",
-    "weekdaysShort": ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Niedz"],
     "completenessFields": {
       "Coordinates": "Współrzędne",
       "Address/location": "Adres/lokalizacja",

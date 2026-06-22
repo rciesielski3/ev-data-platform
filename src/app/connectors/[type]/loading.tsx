@@ -4,7 +4,7 @@ export default function ConnectorDetailLoading() {
       <div className="mb-8 h-5 w-36 animate-pulse rounded bg-slate-100" />
 
       <header className="mb-8">
-        <div className="h-6 w-16 animate-pulse rounded-full bg-sky-100" />
+        <div className="h-6 w-16 animate-pulse rounded-full bg-emerald-100" />
         <div className="mt-4 h-10 w-64 animate-pulse rounded bg-slate-200" />
         <div className="mt-3 h-6 w-full max-w-xl animate-pulse rounded bg-slate-100" />
       </header>

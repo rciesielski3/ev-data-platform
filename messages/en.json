@@ -181,9 +181,6 @@
     "paymentMethodsLabel": "Payment methods",
     "authMethodsLabel": "Authentication methods",
     "notProvidedBySource": "Not provided by source",
-    "dayFallback": "Day {n}",
-    "closingPeriodRange": "{from} to {to}",
-    "weekdaysShort": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     "completenessFields": {
       "Coordinates": "Coordinates",
       "Address/location": "Address/location",
