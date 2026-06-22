@@ -77,6 +77,8 @@
     "batteryNetLabel": "Bateria netto",
     "dcChargeLabel": "Ładowanie DC",
     "drivetrainLabel": "Napęd",
+    "chargingCostLabel": "Koszt ładowania",
+    "chargingCostFromLabel": "od {price} zł",
     "sourceImported": "Źródło {source} / zaimportowano {date}"
   },
   "vehiclesError": {
@@ -96,6 +98,10 @@
     "drivetrainLabel": "Napęd",
     "systemPowerLabel": "Moc systemowa",
     "primaryConnectorLabel": "Główne złącze",
+    "winterRangeLabel": "Zasięg zimowy (szacunkowo)",
+    "chargingCostAcLabel": "Szacunkowy koszt ładowania (AC)",
+    "chargingCostDcLabel": "Szacunkowy koszt ładowania (DC)",
+    "chargingCostDisclaimer": "Szacunkowo, za pełne naładowanie od 0%. Ceny różnią się między operatorami.",
     "dataSourceLabel": "Źródło danych: {source}",
     "originalSourceLink": "Oryginalne źródło",
     "lastImportedLabel": "Ostatni import: {date}"

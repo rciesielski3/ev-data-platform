@@ -77,6 +77,8 @@
     "batteryNetLabel": "Battery Net",
     "dcChargeLabel": "DC Charge",
     "drivetrainLabel": "Drivetrain",
+    "chargingCostLabel": "Charging cost",
+    "chargingCostFromLabel": "from {price} zł",
     "sourceImported": "Source {source} / imported {date}"
   },
   "vehiclesError": {
@@ -96,6 +98,10 @@
     "drivetrainLabel": "Drivetrain",
     "systemPowerLabel": "System Power",
     "primaryConnectorLabel": "Primary Connector",
+    "winterRangeLabel": "Winter range (estimated)",
+    "chargingCostAcLabel": "Estimated charging cost (AC)",
+    "chargingCostDcLabel": "Estimated charging cost (DC)",
+    "chargingCostDisclaimer": "Estimated, for a full charge from 0%. Prices vary by operator.",
     "dataSourceLabel": "Data source: {source}",
     "originalSourceLink": "Original source",
     "lastImportedLabel": "Last imported: {date}"
