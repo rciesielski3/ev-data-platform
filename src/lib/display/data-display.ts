@@ -1,16 +1,17 @@
-const displayDateFormatter = new Intl.DateTimeFormat("en", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
-export const formatDisplayDate = (value: Date | null | undefined) => {
+export const formatDisplayDate = (
+  value: Date | null | undefined,
+  locale: string = "en",
+) => {
   if (!value) {
     return "unknown";
   }
 
-  return displayDateFormatter.format(value);
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(value);
 };
 
 export const getSafeHttpUrl = (value: string | null | undefined) => {
