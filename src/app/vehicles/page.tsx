@@ -1,4 +1,12 @@
-import { prisma } from "@/lib/db/prisma";
+import { Prisma } from "@prisma/client";
+import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
+
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import Notice from "@/components/ui/Notice";
+import PageHeader from "@/components/ui/PageHeader";
+import { filterInputClassName } from "@/components/ui/FilterField";
 import {
   buildBrandMark,
   buildVehicleSearchHref,
@@ -8,8 +16,10 @@ import {
   parseVehicleSearchParams,
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
-import Link from "next/link";
-import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate } from "@/lib/display/data-display";
+import { localizeFallback } from "@/lib/display/localize-fallback";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -21,18 +31,6 @@ type VehicleListItem = Prisma.EvModelGetPayload<{
     specs: true;
   };
 }>;
-
-const formatDate = (value: Date | null | undefined) => {
-  if (!value) {
-    return "unknown";
-  }
-
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(value);
-};
 
 const BrandLogo = ({
   brandMark,
@@ -76,6 +74,10 @@ export default async function VehiclesPage({
 }: {
   searchParams: Promise<VehicleSearchParams>;
 }) {
+  const locale = (await getLocale()) as SupportedLocale;
+  const t = await getTranslations("vehicles");
+  const tCommon = await getTranslations("common");
+
   const filters = parseVehicleSearchParams(await searchParams);
   const skip = (filters.page - 1) * PAGE_SIZE;
   const where = buildVehicleWhere(filters);
@@ -110,70 +112,67 @@ export default async function VehiclesPage({
     data = { vehicles, total };
     topBrands = brands;
   } catch {
-    data = {
-      error:
-        "EV catalog data is not available yet. Configure the database and run the OpenEV import.",
-    };
+    data = { error: t("setupRequiredMessage") };
   }
 
   const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Vehicles</h1>
-          <p className="muted mt-1 text-slate-500">
-            {"error" in data
-              ? "Browse electric vehicles after the catalog import is configured."
-              : `Browse ${data.total} electric vehicles in our database.`}
-          </p>
-        </div>
-        <form className="flex items-center gap-2">
-          <input
-            type="search"
-            name="q"
-            defaultValue={filters.q}
-            placeholder="Search vehicles..."
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-          >
-            Search
-          </button>
-        </form>
-      </div>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={
+          "error" in data
+            ? t("descriptionError")
+            : t("descriptionWithCount", { count: data.total })
+        }
+        actions={
+          <form className="flex items-center gap-2">
+            <input
+              type="search"
+              name="q"
+              defaultValue={filters.q}
+              placeholder={t("searchPlaceholder")}
+              className={filterInputClassName}
+            />
+            <Button type="submit">{t("searchButton")}</Button>
+          </form>
+        }
+      />
 
       {topBrands.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
-          <Link
+          <Button
+            as={Link}
             href={buildVehicleSearchHref({ ...filters, brand: undefined }, 1)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium ${
+            variant={filters.brand ? "secondary" : "primary"}
+            className={
               filters.brand
-                ? "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                : "border-slate-900 bg-slate-900 text-white"
-            }`}
+                ? "rounded-full"
+                : "rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
+            }
           >
-            All brands
-          </Link>
+            {t("allBrandsLabel")}
+          </Button>
           {topBrands.map((brand) => {
             const isSelected = filters.brand === brand.slug;
             const brandMark = buildBrandMark(brand.name);
 
             return (
-              <Link
+              <Button
                 key={brand.id}
+                as={Link}
                 href={buildVehicleSearchHref(
                   { ...filters, brand: brand.slug },
                   1,
                 )}
-                className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium ${
+                variant={isSelected ? "primary" : "secondary"}
+                className={
                   isSelected
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                }`}
+                    ? "rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
+                    : "rounded-full"
+                }
               >
                 <BrandLogo
                   brandMark={brandMark}
@@ -181,41 +180,39 @@ export default async function VehiclesPage({
                   size="sm"
                 />
                 {brand.name}
-              </Link>
+              </Button>
             );
           })}
         </div>
       )}
 
       {"error" in data ? (
-        <section className="card border-amber-200 bg-amber-50 text-amber-900">
-          <h2 className="mb-2 text-lg font-medium">Setup required</h2>
+        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{data.error}</p>
-        </section>
+        </Notice>
       ) : data.vehicles.length === 0 ? (
-        <section className="card text-center">
-          <h2 className="text-lg font-medium">No vehicles found</h2>
-          <p className="muted mt-2">
-            Try a broader brand or model search.
-          </p>
-        </section>
+        <Notice title={t("noResultsTitle")}>
+          <p className="muted mt-2">{t("noResultsBody")}</p>
+        </Notice>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.vehicles.map((vehicle) => {
             const brandMark = buildBrandMark(vehicle.brand.name);
 
             return (
-              <Link
+              <Card
                 key={vehicle.id}
+                as={Link}
                 href={`/vehicles/${vehicle.id}`}
-                className="group block rounded-xl border border-slate-200 bg-white p-5 transition-shadow hover:shadow-md"
+                interactive
+                className="group block"
               >
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div>
                     <div className="text-sm font-medium text-slate-500">
                       {vehicle.brand.name}
                     </div>
-                    <h2 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600">
+                    <h2 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700">
                       {vehicle.modelName}
                     </h2>
                     {vehicle.variantName && (
@@ -231,43 +228,48 @@ export default async function VehiclesPage({
                 </div>
 
                 <dl className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <dt className="text-slate-500">Range (WLTP)</dt>
-                  <dd className="font-medium text-slate-900">
-                    {vehicle.specs?.rangeWltpKm
-                      ? `${vehicle.specs.rangeWltpKm} km`
-                      : "N/A"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-slate-500">Battery Net</dt>
-                  <dd className="font-medium text-slate-900">
-                    {vehicle.specs?.batteryCapacityKwhNet
-                      ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
-                      : "N/A"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-slate-500">DC Charge</dt>
-                  <dd className="font-medium text-slate-900">
-                    {vehicle.specs?.dcMaxPowerKw
-                      ? `${vehicle.specs.dcMaxPowerKw} kW`
-                      : "N/A"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-slate-500">Drivetrain</dt>
-                  <dd className="font-medium text-slate-900">
-                    {formatDrivetrainLabel(vehicle.specs?.drivetrain)}
-                  </dd>
-                </div>
+                  <div>
+                    <dt className="text-slate-500">{t("rangeWltpLabel")}</dt>
+                    <dd className="font-medium text-slate-900">
+                      {vehicle.specs?.rangeWltpKm
+                        ? `${vehicle.specs.rangeWltpKm} km`
+                        : tCommon("notAvailable")}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-slate-500">{t("batteryNetLabel")}</dt>
+                    <dd className="font-medium text-slate-900">
+                      {vehicle.specs?.batteryCapacityKwhNet
+                        ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
+                        : tCommon("notAvailable")}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-slate-500">{t("dcChargeLabel")}</dt>
+                    <dd className="font-medium text-slate-900">
+                      {vehicle.specs?.dcMaxPowerKw
+                        ? `${vehicle.specs.dcMaxPowerKw} kW`
+                        : tCommon("notAvailable")}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-slate-500">{t("drivetrainLabel")}</dt>
+                    <dd className="font-medium text-slate-900">
+                      {localizeFallback(
+                        formatDrivetrainLabel(vehicle.specs?.drivetrain),
+                        tCommon,
+                      )}
+                    </dd>
+                  </div>
                 </dl>
 
                 <p className="mt-5 border-t border-slate-100 pt-3 text-xs text-slate-500">
-                  Source {vehicle.sourceName} / imported{" "}
-                  {formatDate(vehicle.importedAt)}
+                  {t("sourceImported", {
+                    source: vehicle.sourceName,
+                    date: formatDisplayDate(vehicle.importedAt, locale),
+                  })}
                 </p>
-              </Link>
+              </Card>
             );
           })}
         </div>
@@ -276,23 +278,25 @@ export default async function VehiclesPage({
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-2">
           {filters.page > 1 && (
-            <Link
+            <Button
+              as={Link}
               href={buildVehicleSearchHref(filters, filters.page - 1)}
-              className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+              variant="secondary"
             >
-              Previous
-            </Link>
+              {tCommon("previous")}
+            </Button>
           )}
           <div className="flex items-center px-4 text-sm text-slate-500">
-            Page {filters.page} of {totalPages}
+            {tCommon("pageOf", { page: filters.page, totalPages })}
           </div>
           {filters.page < totalPages && (
-            <Link
+            <Button
+              as={Link}
               href={buildVehicleSearchHref(filters, filters.page + 1)}
-              className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+              variant="secondary"
             >
-              Next
-            </Link>
+              {tCommon("next")}
+            </Button>
           )}
         </div>
       )}

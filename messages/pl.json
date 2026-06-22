@@ -67,6 +67,7 @@
     "title": "Pojazdy",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
+    "allBrandsLabel": "Wszystkie marki",
     "searchPlaceholder": "Szukaj pojazdów...",
     "searchButton": "Szukaj",
     "setupRequiredMessage": "Dane katalogu EV nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import OpenEV.",
