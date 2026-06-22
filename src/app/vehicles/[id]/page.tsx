@@ -3,6 +3,11 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
+import {
+  buildChargingCostEstimate,
+  buildWinterRangeNote,
+  formatPlnRange,
+} from "@/features/ev/charging-cost";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
@@ -48,6 +53,10 @@ export default async function VehicleDetailPage({
 
   const safeSourceUrl = getSafeHttpUrl(vehicle.sourceUrl);
   const notAvailable = tCommon("notAvailable");
+  const winterRange = buildWinterRangeNote(vehicle.specs?.rangeWltpKm ?? null);
+  const chargingCost = buildChargingCostEstimate(
+    vehicle.specs?.batteryCapacityKwhNet ?? null,
+  );
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
@@ -83,6 +92,14 @@ export default async function VehicleDetailPage({
               value={
                 vehicle.specs?.rangeWltpKm
                   ? `${vehicle.specs.rangeWltpKm} km`
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("winterRangeLabel")}
+              value={
+                winterRange
+                  ? `${winterRange.lowKm}–${winterRange.highKm} km`
                   : notAvailable
               }
             />
@@ -153,9 +170,31 @@ export default async function VehicleDetailPage({
               label={t("primaryConnectorLabel")}
               value={vehicle.specs?.primaryConnector || notAvailable}
             />
+            <DetailRow
+              label={t("chargingCostAcLabel")}
+              value={
+                chargingCost
+                  ? formatPlnRange(chargingCost.acCostRangePln!)
+                  : notAvailable
+              }
+            />
+            <DetailRow
+              label={t("chargingCostDcLabel")}
+              value={
+                chargingCost
+                  ? formatPlnRange(chargingCost.dcCostRangePln!)
+                  : notAvailable
+              }
+            />
           </dl>
         </Card>
       </div>
+
+      {chargingCost && (
+        <p className="mt-4 text-sm text-slate-500">
+          {t("chargingCostDisclaimer")}
+        </p>
+      )}
 
       <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
         <p>
