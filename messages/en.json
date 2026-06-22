@@ -16,7 +16,10 @@
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",
-    "dataAttribution": "Data: EIPA / UDT Poland (charging infrastructure), OpenEV Data (electric vehicles)."
+    "dataAttribution": "Data: EIPA / UDT Poland (charging infrastructure), OpenEV Data (electric vehicles).",
+    "privacyLink": "Privacy policy",
+    "termsLink": "Terms of use",
+    "contactLink": "Contact"
   },
   "nav": {
     "brand": "EV Data",
@@ -447,5 +450,45 @@
   "coverageError": {
     "title": "Coverage analysis could not load",
     "body": "Infrastructure coverage rankings are temporarily unavailable. Try again, or check that the charging imports have completed."
+  },
+  "privacy": {
+    "badge": "Legal",
+    "title": "Privacy policy",
+    "description": "What data evsource.pl collects, why, and how to reach us about it.",
+    "updatedLabel": "Last updated: {date}",
+    "controllerTitle": "Data controller",
+    "controllerBody": "The data controller for personal data processed through evsource.pl is Adateo Rafał Ciesielski [COMPANY NAME / NIP - to be completed]. For data-protection inquiries, contact kontakt@evsource.pl.",
+    "dataCollectedLeadTitle": "Contact form / lead submission",
+    "dataCollectedLeadBody": "If you use the lead submission form (for example, to report a station for the report or to inquire about a featured listing), we collect: name (optional), email address, company name (optional), and message (optional). This data is used only to respond to your submission.",
+    "dataCollectedCookieTitle": "Language cookie",
+    "dataCollectedCookieBody": "We use a single cookie, NEXT_LOCALE, to remember your chosen interface language (Polish or English). It is set when you change language, stored for 12 months, and is not used for tracking or profiling.",
+    "dataCollectedAnalyticsTitle": "Analytics and performance monitoring",
+    "dataCollectedAnalyticsBody": "We use Vercel Analytics and Vercel Speed Insights for anonymous traffic and load-performance measurement. Per the provider's (Vercel's) documentation, these products do not use cookies and do not collect data that identifies a specific individual - they process aggregated visit and performance data. We have not independently verified this beyond Vercel's published documentation.",
+    "legalBasisTitle": "Legal basis for processing",
+    "legalBasisBody": "We process lead-form data based on the controller's legitimate interest (GDPR Art. 6(1)(f)) - responding to inquiries and business contact. If we introduce a newsletter or other marketing communication in the future, it will require separate, explicit consent (GDPR Art. 6(1)(a)).",
+    "retentionTitle": "Data retention",
+    "retentionBody": "We retain lead-submission data until the data subject requests deletion, or until the contact/engagement the submission related to concludes - whichever comes later.",
+    "rightsTitle": "Your rights",
+    "rightsBody": "You have the right to access, rectify, erase, restrict processing of, and port your data, and to object to processing based on legitimate interest. You may also lodge a complaint with Poland's data protection authority (UODO).",
+    "contactTitle": "Contact",
+    "contactBody": "For questions about personal data, email kontakt@evsource.pl."
+  },
+  "terms": {
+    "badge": "Legal",
+    "title": "Terms of use",
+    "description": "The rules for using evsource.pl - kept short and free of boilerplate that doesn't apply.",
+    "updatedLabel": "Last updated: {date}",
+    "scopeTitle": "Scope",
+    "scopeBody": "These terms cover use of the evsource.pl website. The site currently requires no account registration and processes no payments - this covers browsing the data and using the contact/lead forms only.",
+    "dataTitle": "Nature of the data shown",
+    "dataBody": "Electric vehicle and charging infrastructure data is sourced from third parties (EIPA / UDT Poland and OpenEV Data) and presented in imported, normalized form. We do not guarantee its completeness, currency, or accuracy. The data is informational and should not be the sole basis for safety-critical decisions (for example, route planning without an energy buffer based solely on a station's status on this site).",
+    "noAccountsTitle": "No user accounts or payments",
+    "noAccountsBody": "The site does not currently offer account registration, login, or payment processing. If these features are introduced in the future, these terms will be updated accordingly.",
+    "offersTitle": "Submissions and partnership offers",
+    "offersBody": "Station report submissions, featured listing offers, or other forms of collaboration are not governed by this document - any such arrangement is agreed individually, in separate correspondence or a separate agreement.",
+    "liabilityTitle": "Limitation of liability",
+    "liabilityBody": "The site is provided \"as is,\" without warranty of uninterrupted operation. We are not liable for damages arising from use of the displayed data for purposes it is not intended for.",
+    "contactTitle": "Contact",
+    "contactBody": "Questions about these terms can be sent to kontakt@evsource.pl."
   }
 }
