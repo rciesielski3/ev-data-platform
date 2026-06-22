@@ -1,5 +1,13 @@
-import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
+
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import Notice from "@/components/ui/Notice";
+import PageHeader from "@/components/ui/PageHeader";
+import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate } from "@/lib/display/data-display";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -18,19 +26,11 @@ const getStatus = async () => {
   return { evCount, stationCount, connectorCount, latestRuns };
 };
 
-const formatDate = (value: Date | null | undefined) => {
-  if (!value) {
-    return "unknown";
-  }
-
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(value);
-};
-
 const HomePage = async () => {
+  const locale = (await getLocale()) as SupportedLocale;
+  const t = await getTranslations("home");
+  const tCommon = await getTranslations("common");
+
   let status:
     | Awaited<ReturnType<typeof getStatus>>
     | { error: string };
@@ -38,121 +38,88 @@ const HomePage = async () => {
   try {
     status = await getStatus();
   } catch {
-    status = {
-      error:
-        "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
-    };
+    status = { error: t("setupMessage") };
   }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-6 py-12">
-      <header className="space-y-3">
-        <span className="badge">Milestone 2 - Searchable MVP</span>
-        <h1 className="text-4xl font-semibold tracking-tight">EV Data Platform</h1>
-        <p className="muted max-w-2xl text-lg">
-          Search normalized EV models and Polish charging infrastructure with
-          source attribution, import freshness, and simple filters.
-        </p>
-      </header>
+      <PageHeader badge={t("badge")} title={t("title")} description={t("description")} />
 
       {"error" in status ? (
-        <section className="card border-amber-200 bg-amber-50 text-amber-900">
-          <h2 className="mb-2 text-lg font-medium">Setup required</h2>
+        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{status.error}</p>
-        </section>
+        </Notice>
       ) : (
         <>
           <section className="grid gap-4 md:grid-cols-3">
-            <div className="card">
-              <p className="muted text-sm">EV models</p>
+            <Card>
+              <p className="muted text-sm">{t("evModelsLabel")}</p>
               <p className="mt-2 text-3xl font-semibold">{status.evCount}</p>
-            </div>
-            <div className="card">
-              <p className="muted text-sm">Charging stations</p>
+            </Card>
+            <Card>
+              <p className="muted text-sm">{t("chargingStationsLabel")}</p>
               <p className="mt-2 text-3xl font-semibold">{status.stationCount}</p>
-            </div>
-            <div className="card">
-              <p className="muted text-sm">Connectors</p>
+            </Card>
+            <Card>
+              <p className="muted text-sm">{t("connectorsLabel")}</p>
               <p className="mt-2 text-3xl font-semibold">{status.connectorCount}</p>
-            </div>
+            </Card>
           </section>
 
           <section className="grid gap-4 md:grid-cols-2">
-            <Link
-              href="/vehicles"
-              className="card transition-shadow hover:shadow-md"
-            >
-              <p className="text-sm font-medium text-sky-700">EV catalog</p>
-              <h2 className="mt-2 text-xl font-semibold">Browse vehicle models</h2>
-              <p className="muted mt-2 text-sm">
-                Search brands and models, then open detail pages for battery,
-                range, charging, source, and freshness.
+            <Card as={Link} href="/vehicles" interactive>
+              <p className="text-sm font-medium text-emerald-700">
+                {t("evCatalogEyebrow")}
               </p>
-            </Link>
-            <Link
-              href="/stations"
-              className="card transition-shadow hover:shadow-md"
-            >
-              <p className="text-sm font-medium text-sky-700">Station search</p>
-              <h2 className="mt-2 text-xl font-semibold">
-                Find charging infrastructure
-              </h2>
-              <p className="muted mt-2 text-sm">
-                Filter stations by location, connector, minimum power, and
-                operator using imported EIPA data.
-              </p>
-            </Link>
-            <Link
-              href="/map"
-              className="card transition-shadow hover:shadow-md"
-            >
-              <p className="text-sm font-medium text-sky-700">Station map</p>
-              <h2 className="mt-2 text-xl font-semibold">
-                Explore chargers on a map
-              </h2>
-              <p className="muted mt-2 text-sm">
-                View grouped Polish charging stations with province, connector,
-                and minimum-power filters.
-              </p>
-            </Link>
-            <Link
-              href="/connectors"
-              className="card transition-shadow hover:shadow-md"
-            >
-              <p className="text-sm font-medium text-sky-700">
-                Connector knowledge
+              <h2 className="mt-2 text-xl font-semibold">{t("evCatalogTitle")}</h2>
+              <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+            </Card>
+            <Card as={Link} href="/stations" interactive>
+              <p className="text-sm font-medium text-emerald-700">
+                {t("stationSearchEyebrow")}
               </p>
               <h2 className="mt-2 text-xl font-semibold">
-                Understand connector types
+                {t("stationSearchTitle")}
               </h2>
-              <p className="muted mt-2 text-sm">
-                Review CCS2, Type 2, CHAdeMO, and unknown connector records with
-                AC/DC context and typical power ranges.
+              <p className="muted mt-2 text-sm">{t("stationSearchDescription")}</p>
+            </Card>
+            <Card as={Link} href="/map" interactive>
+              <p className="text-sm font-medium text-emerald-700">
+                {t("stationMapEyebrow")}
               </p>
-            </Link>
-            <Link
-              href="/insights"
-              className="card transition-shadow hover:shadow-md"
-            >
-              <p className="text-sm font-medium text-sky-700">
-                Charging insights
+              <h2 className="mt-2 text-xl font-semibold">{t("stationMapTitle")}</h2>
+              <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
+            </Card>
+            <Card as={Link} href="/connectors" interactive>
+              <p className="text-sm font-medium text-emerald-700">
+                {t("connectorKnowledgeEyebrow")}
               </p>
               <h2 className="mt-2 text-xl font-semibold">
-                Explore infrastructure metrics
+                {t("connectorKnowledgeTitle")}
               </h2>
               <p className="muted mt-2 text-sm">
-                See top operators, connector distribution, strongest stations,
-                and province coverage from imported station data.
+                {t("connectorKnowledgeDescription")}
               </p>
-            </Link>
+            </Card>
+            <Card as={Link} href="/insights" interactive>
+              <p className="text-sm font-medium text-emerald-700">
+                {t("chargingInsightsEyebrow")}
+              </p>
+              <h2 className="mt-2 text-xl font-semibold">
+                {t("chargingInsightsTitle")}
+              </h2>
+              <p className="muted mt-2 text-sm">
+                {t("chargingInsightsDescription")}
+              </p>
+            </Card>
           </section>
 
-          <section className="card">
-            <h2 className="mb-4 text-xl font-medium">Latest ingestion runs</h2>
+          <Card>
+            <h2 className="mb-4 text-xl font-medium">{t("latestRunsTitle")}</h2>
             {status.latestRuns.length === 0 ? (
               <p className="muted">
-                No imports yet. Run <code>npm run import:all</code> after configuring
-                the database.
+                {t("noImportsYetPrefix")} <code>npm run import:all</code>{" "}
+                {t("noImportsYetSuffix")}
               </p>
             ) : (
               <ul className="space-y-3">
@@ -163,35 +130,45 @@ const HomePage = async () => {
                   >
                     <div className="flex items-center justify-between gap-4">
                       <strong>{run.source.label}</strong>
-                      <span className="badge">{run.status}</span>
+                      <Badge>{run.status}</Badge>
                     </div>
                     <p className="muted text-sm">
-                      fetched {run.recordsFetched} · upserted {run.recordsUpserted} ·
-                      failed {run.recordsFailed}
+                      {t("runStats", {
+                        fetched: run.recordsFetched,
+                        upserted: run.recordsUpserted,
+                        failed: run.recordsFailed,
+                      })}
                     </p>
                     <p className="muted text-sm">
-                      started {formatDate(run.startedAt)}
                       {run.completedAt
-                        ? ` / completed ${formatDate(run.completedAt)}`
-                        : ""}
+                        ? t("runStartedCompleted", {
+                            date: formatDisplayDate(run.startedAt, locale),
+                            completedDate: formatDisplayDate(
+                              run.completedAt,
+                              locale,
+                            ),
+                          })
+                        : t("runStarted", {
+                            date: formatDisplayDate(run.startedAt, locale),
+                          })}
                     </p>
                   </li>
                 ))}
               </ul>
             )}
-          </section>
+          </Card>
         </>
       )}
 
-      <section className="card">
-        <h2 className="mb-3 text-xl font-medium">Local commands</h2>
+      <Card>
+        <h2 className="mb-3 text-xl font-medium">{t("localCommandsTitle")}</h2>
         <pre className="overflow-x-auto rounded-lg bg-slate-950 p-4 text-sm text-slate-100">
 {`cp .env.example .env
 npm run db:push
 npm run import:eipa
 npm run import:openev`}
         </pre>
-      </section>
+      </Card>
     </main>
   );
 };
