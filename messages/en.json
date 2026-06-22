@@ -24,6 +24,9 @@
     "stations": "Stations",
     "map": "Map",
     "insights": "Insights",
+    "provinces": "Provinces",
+    "operators": "Operators",
+    "coverage": "Coverage",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "languageSwitcherLabel": "Change language"

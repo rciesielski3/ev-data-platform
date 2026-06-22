@@ -24,6 +24,9 @@
     "stations": "Stacje",
     "map": "Mapa",
     "insights": "Statystyki",
+    "provinces": "Województwa",
+    "operators": "Operatorzy",
+    "coverage": "Pokrycie",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
     "languageSwitcherLabel": "Zmień język"
