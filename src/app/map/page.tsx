@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import Notice from "@/components/ui/Notice";
+import PageHeader from "@/components/ui/PageHeader";
 import StationMapFiltersClient from "@/app/map/station-map-filters-client";
 import StationMapClient from "@/app/map/station-map-client";
 import {
@@ -93,24 +96,23 @@ const MapPanelLoading = () => (
 );
 
 const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
+  const t = await getTranslations("map");
+  const tCommon = await getTranslations("common");
+
   const filters = parseStationMapFilters(params);
   let data: Awaited<ReturnType<typeof getMapData>> | { error: string };
 
   try {
     data = await getMapData(filters);
   } catch {
-    data = {
-      error:
-        "Charging station map data is not available yet. Configure the database and run the EIPA import.",
-    };
+    data = { error: t("setupRequiredMessage") };
   }
 
   if ("error" in data) {
     return (
-      <section className="card border-amber-200 bg-amber-50 text-amber-900">
-        <h2 className="mb-2 text-lg font-medium">Setup required</h2>
+      <Notice title={tCommon("setupRequiredTitle")} tone="warning">
         <p>{data.error}</p>
-      </section>
+      </Notice>
     );
   }
 
@@ -128,15 +130,14 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
 
       <section className="mb-4 flex flex-col gap-2 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
         <p>
-          Showing {data.stationDtos.length} of {data.total} station
-          {data.total === 1 ? "" : "s"} across {data.groups.length} map marker
-          {data.groups.length === 1 ? "" : "s"}.
+          {t("summary", {
+            shown: data.stationDtos.length,
+            total: data.total,
+            markers: data.groups.length,
+          })}
         </p>
         {data.isLimited && (
-          <p>
-            Results are capped at {MAP_STATION_LIMIT}; narrow the filters for a
-            more precise map.
-          </p>
+          <p>{t("limited", { limit: MAP_STATION_LIMIT })}</p>
         )}
       </section>
 
@@ -150,36 +151,32 @@ const StationMapPage = async ({
 }: {
   searchParams: Promise<StationMapParams>;
 }) => {
+  const t = await getTranslations("map");
   const params = await searchParams;
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
-      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <span className="badge">Milestone 4 - Map Experience</span>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-            Charging Station Map
-          </h1>
-          <p className="muted mt-2 max-w-2xl">
-            Explore Polish charging stations by province, connector type, and
-            minimum charging power.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/stations"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            Search list
-          </Link>
-          <Link
-            href="/insights"
-            className="text-sm font-medium text-sky-700 hover:text-sky-900"
-          >
-            View insights
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        badge={t("badge")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <>
+            <Link
+              href="/stations"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("searchListLink")}
+            </Link>
+            <Link
+              href="/insights"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("viewInsightsLink")}
+            </Link>
+          </>
+        }
+      />
 
       <Suspense fallback={<MapPanelLoading />}>
         <MapDataPanel params={params} />
