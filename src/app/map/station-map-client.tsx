@@ -17,7 +17,7 @@ type StationMapClientProps = {
 };
 
 const DEFAULT_CENTER: [number, number] = [51.7, 18.6];
-const DEFAULT_ZOOM = 6.3;
+const DEFAULT_ZOOM = 6;
 
 const escapeHtml = (value: string) =>
   value
@@ -222,7 +222,10 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     if (groups.length === 1) {
       map.setView([groups[0].latitude, groups[0].longitude], 12);
     } else {
-      map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+      map.fitBounds(bounds, {
+        padding: [28, 28],
+        maxZoom: 13,
+      });
     }
   }, [groups, mapSetupRevision, t]);
 
