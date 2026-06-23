@@ -9,6 +9,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import Footer from "@/components/ui/Footer";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
+import NavLinks from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 import "leaflet/dist/leaflet.css";
@@ -63,15 +64,7 @@ const RootLayout = async ({
               </Link>
 
               <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-slate-600 transition-colors hover:text-emerald-700"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                <NavLinks links={navLinks} />
                 <LanguageSwitcher
                   currentLocale={locale}
                   ariaLabel={t("languageSwitcherLabel")}

@@ -168,6 +168,7 @@
     "lastUpdatedLabel": "Last Updated",
     "openStreetMapLink": "OpenStreetMap",
     "originalLink": "original",
+    "locationMapTitle": "Location",
     "connectorsCount": "{count, plural, one {# connector} other {# connectors}}",
     "noConnectorsImported": "No connector details imported.",
     "connectorTypeHeader": "Connector Type",
@@ -239,7 +240,10 @@
     "ageUnknown": "Age unknown",
     "updatedToday": "Updated today",
     "daysOld": "{count, plural, one {# day old} other {# days old}}",
-    "completePercent": "{percent}% complete"
+    "completePercent": "{percent}% complete",
+    "freshExplanation": "Data confirmed within the last {days} days.",
+    "staleExplanation": "Data hasn't been confirmed in over {days} days — it may be out of date.",
+    "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
     "badge": "Charging map",

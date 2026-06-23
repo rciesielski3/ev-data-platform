@@ -328,12 +328,14 @@ const StationsPage = async ({
                             freshness={quality.freshness}
                           />
                         </div>
-                        <Link
+                        <Button
+                          as={Link}
                           href={`/stations/${station.id}`}
-                          className="mt-3 inline-flex text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                          variant="secondary"
+                          className="mt-3"
                         >
                           {tStationDetail("viewDetailsLink")}
-                        </Link>
+                        </Button>
                       </div>
                       {strongestConnector?.powerKw && (
                         <Badge>

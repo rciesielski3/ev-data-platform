@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
+import StationLocationMapClient from "@/app/stations/[id]/station-location-map-client";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
 import { prisma } from "@/lib/db/prisma";
@@ -231,6 +232,23 @@ export default async function StationDetailPage({
           )}
         </Card>
       </div>
+
+      {details.mapHref && (
+        <Card as="section" className="mt-6">
+          <h2 className="mb-5 text-xl font-medium text-slate-900">
+            {t("locationMapTitle")}
+          </h2>
+          <StationLocationMapClient
+            latitude={station.latitude}
+            longitude={station.longitude}
+            title={
+              details.title === "Charging station"
+                ? tCommon("chargingStationFallback")
+                : details.title
+            }
+          />
+        </Card>
+      )}
 
       <Card as="section" className="mt-6">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

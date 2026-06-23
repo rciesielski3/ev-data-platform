@@ -43,9 +43,15 @@ export const StationFreshnessIndicator = async ({
     stale: t("staleLabel"),
     unknown: t("unknownLabel"),
   }[freshness.bucket];
+  const freshnessExplanation = {
+    fresh: t("freshExplanation", { days: freshness.staleAfterDays }),
+    stale: t("staleExplanation", { days: freshness.staleAfterDays }),
+    unknown: t("unknownExplanation"),
+  }[freshness.bucket];
 
   return (
     <span
+      title={freshnessExplanation}
       className={`inline-flex items-center gap-1.5 text-xs font-medium ${FRESHNESS_TEXT_CLASS[freshness.bucket]} ${className ?? ""}`}
     >
       <span

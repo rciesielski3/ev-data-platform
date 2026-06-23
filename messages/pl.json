@@ -168,6 +168,7 @@
     "lastUpdatedLabel": "Ostatnia aktualizacja",
     "openStreetMapLink": "OpenStreetMap",
     "originalLink": "oryginał",
+    "locationMapTitle": "Lokalizacja",
     "connectorsCount": "{count, plural, one {# złącze} few {# złącza} many {# złączy} other {# złączy}}",
     "noConnectorsImported": "Brak zaimportowanych danych o złączach.",
     "connectorTypeHeader": "Typ złącza",
@@ -239,7 +240,10 @@
     "ageUnknown": "Nieznany wiek",
     "updatedToday": "Zaktualizowano dzisiaj",
     "daysOld": "{count, plural, one {# dzień temu} few {# dni temu} many {# dni temu} other {# dni temu}}",
-    "completePercent": "{percent}% kompletne"
+    "completePercent": "{percent}% kompletne",
+    "freshExplanation": "Dane potwierdzone w ciągu ostatnich {days} dni.",
+    "staleExplanation": "Dane nie były potwierdzane od ponad {days} dni — mogą być nieaktualne.",
+    "unknownExplanation": "Brak daty potwierdzenia danych dla tej stacji."
   },
   "map": {
     "badge": "Mapa ładowania",
