@@ -19,12 +19,12 @@ const TermsPage = async () => {
   const t = await getTranslations("terms");
 
   const sections = [
-    { title: t("scopeTitle"), body: t("scopeBody") },
-    { title: t("dataTitle"), body: t("dataBody") },
-    { title: t("noAccountsTitle"), body: t("noAccountsBody") },
-    { title: t("offersTitle"), body: t("offersBody") },
-    { title: t("liabilityTitle"), body: t("liabilityBody") },
-    { title: t("contactTitle"), body: t("contactBody") },
+    { key: "scope", title: t("scopeTitle"), body: t("scopeBody") },
+    { key: "data", title: t("dataTitle"), body: t("dataBody") },
+    { key: "noAccounts", title: t("noAccountsTitle"), body: t("noAccountsBody") },
+    { key: "offers", title: t("offersTitle"), body: t("offersBody") },
+    { key: "liability", title: t("liabilityTitle"), body: t("liabilityBody") },
+    { key: "contact", title: t("contactTitle"), body: t("contactBody") },
   ];
 
   return (
@@ -41,7 +41,7 @@ const TermsPage = async () => {
 
       <div className="space-y-6">
         {sections.map((section) => (
-          <Card as="section" key={section.title}>
+          <Card as="section" key={section.key}>
             <h2 className="mb-2 text-base font-semibold text-slate-950">
               {section.title}
             </h2>

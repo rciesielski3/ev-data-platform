@@ -19,14 +19,14 @@ const PrivacyPage = async () => {
   const t = await getTranslations("privacy");
 
   const sections = [
-    { title: t("controllerTitle"), body: t("controllerBody") },
-    { title: t("dataCollectedLeadTitle"), body: t("dataCollectedLeadBody") },
-    { title: t("dataCollectedCookieTitle"), body: t("dataCollectedCookieBody") },
-    { title: t("dataCollectedAnalyticsTitle"), body: t("dataCollectedAnalyticsBody") },
-    { title: t("legalBasisTitle"), body: t("legalBasisBody") },
-    { title: t("retentionTitle"), body: t("retentionBody") },
-    { title: t("rightsTitle"), body: t("rightsBody") },
-    { title: t("contactTitle"), body: t("contactBody") },
+    { key: "controller", title: t("controllerTitle"), body: t("controllerBody") },
+    { key: "dataCollectedLead", title: t("dataCollectedLeadTitle"), body: t("dataCollectedLeadBody") },
+    { key: "dataCollectedCookie", title: t("dataCollectedCookieTitle"), body: t("dataCollectedCookieBody") },
+    { key: "dataCollectedAnalytics", title: t("dataCollectedAnalyticsTitle"), body: t("dataCollectedAnalyticsBody") },
+    { key: "legalBasis", title: t("legalBasisTitle"), body: t("legalBasisBody") },
+    { key: "retention", title: t("retentionTitle"), body: t("retentionBody") },
+    { key: "rights", title: t("rightsTitle"), body: t("rightsBody") },
+    { key: "contact", title: t("contactTitle"), body: t("contactBody") },
   ];
 
   return (
@@ -43,7 +43,7 @@ const PrivacyPage = async () => {
 
       <div className="space-y-6">
         {sections.map((section) => (
-          <Card as="section" key={section.title}>
+          <Card as="section" key={section.key}>
             <h2 className="mb-2 text-base font-semibold text-slate-950">
               {section.title}
             </h2>
