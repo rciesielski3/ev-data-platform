@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type * as LeafletNamespace from "leaflet";
 
 type FakeElement = {
@@ -50,6 +50,12 @@ beforeAll(() => {
     document: fakeDocument,
     navigator: fakeWindow.navigator,
   });
+});
+
+afterAll(() => {
+  delete (globalThis as { window?: unknown }).window;
+  delete (globalThis as { document?: unknown }).document;
+  delete (globalThis as { navigator?: unknown }).navigator;
 });
 
 type DivIconOptions = {
