@@ -208,6 +208,27 @@
     "body": "The station detail record could not be loaded. Try again, or return to the station search.",
     "backLink": "Back to stations"
   },
+  "contact": {
+    "badge": "Contact",
+    "title": "Get in touch",
+    "description": "Interested in a custom report or a featured listing among operators? Reach out.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "companyLabel": "Company",
+    "interestLabel": "What are you interested in?",
+    "interestReportLabel": "Custom report",
+    "interestReportDescription": "A tailored charging infrastructure analysis for your company.",
+    "interestFeaturedListingLabel": "Featured operator listing",
+    "interestFeaturedListingDescription": "Highlighting your brand on the operator comparison pages.",
+    "interestBothLabel": "Both",
+    "interestBothDescription": "A custom report and a featured listing.",
+    "messageLabel": "Message",
+    "submitButton": "Send",
+    "privacyNote": "By submitting this form, you agree to be contacted about your inquiry. We do not share your data with third parties.",
+    "successTitle": "Thank you!",
+    "successBody": "We've received your submission and will be in touch soon.",
+    "validationErrorNotice": "Please check that you entered a valid email and selected one interest option."
+  },
   "stationQuality": {
     "freshLabel": "Fresh",
     "staleLabel": "Stale",
