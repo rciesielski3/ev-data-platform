@@ -202,6 +202,15 @@ describe("prioritizeTopVehicleBrands", () => {
       brand("MG", 8),
     ]);
   });
+
+  it("matches an allowlisted brand whose stored name has diacritics", () => {
+    const brands = [brand("Škoda", 8), brand("NIO", 40)];
+
+    expect(prioritizeTopVehicleBrands(brands, 2)).toEqual([
+      brand("Škoda", 8),
+      brand("NIO", 40),
+    ]);
+  });
 });
 
 describe("formatDrivetrainLabel", () => {

@@ -144,7 +144,7 @@ export type TopVehicleBrand = {
 const normalizeBrandName = (brandName: string) =>
   brandName
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toLowerCase()
     .replaceAll("&", "and");
