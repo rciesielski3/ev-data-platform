@@ -3,6 +3,7 @@ import { IngestionStatus, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 import {
+  checkForRecordCountRegression,
   ensureDataSource,
   finishIngestionRun,
   startIngestionRun,
@@ -128,12 +129,25 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
       }
     }
 
-    const status =
+    let status =
       invalid.length === 0
         ? IngestionStatus.SUCCESS
         : upserted > 0
           ? IngestionStatus.PARTIAL
           : IngestionStatus.FAILED;
+
+    let errorMessage =
+      invalid.length > 0
+        ? `${invalid.length} EV records failed validation or upsert`
+        : undefined;
+
+    if (status === IngestionStatus.SUCCESS) {
+      const isRegression = await checkForRecordCountRegression(source.id, upserted);
+      if (isRegression) {
+        status = IngestionStatus.PARTIAL;
+        errorMessage = `record count regression: ${upserted} upserted vs recent average`;
+      }
+    }
 
     await finishIngestionRun({
       runId: run.id,
@@ -146,10 +160,7 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
         generatedAt: dataset.generated_at ?? null,
         invalidSample: invalid.slice(0, 20),
       },
-      errorMessage:
-        invalid.length > 0
-          ? `${invalid.length} EV records failed validation or upsert`
-          : undefined,
+      errorMessage,
     });
 
     return {
