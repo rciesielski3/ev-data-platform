@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
@@ -33,67 +34,69 @@ import {
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const PAGE_SIZE = 20;
 
-const getStationsData = async (
-  filters: ReturnType<typeof parseStationSearchParams>,
-) => {
-  const geocodedLocation = await geocodeStationLocation(filters.location);
-  const where = buildStationWhere(
-    filters,
-    geocodedLocation
-      ? {
-          latitude: geocodedLocation.latitude,
-          longitude: geocodedLocation.longitude,
-          radiusKm: 10,
-        }
-      : null,
-  );
-  const skip = (filters.page - 1) * PAGE_SIZE;
+const getStationsData = unstable_cache(
+  async (filters: ReturnType<typeof parseStationSearchParams>) => {
+    const geocodedLocation = await geocodeStationLocation(filters.location);
+    const where = buildStationWhere(
+      filters,
+      geocodedLocation
+        ? {
+            latitude: geocodedLocation.latitude,
+            longitude: geocodedLocation.longitude,
+            radiusKm: 10,
+          }
+        : null,
+    );
+    const skip = (filters.page - 1) * PAGE_SIZE;
 
-  const [stations, total, connectorOptions, operatorOptions, latestRuns] =
-    await Promise.all([
-      prisma.chargingStation.findMany({
-        where,
-        include: {
-          operator: true,
-          connectors: {
-            orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+    const [stations, total, connectorOptions, operatorOptions, latestRuns] =
+      await Promise.all([
+        prisma.chargingStation.findMany({
+          where,
+          include: {
+            operator: true,
+            connectors: {
+              orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+            },
           },
-        },
-        orderBy: [{ city: "asc" }, { name: "asc" }, { updatedAt: "desc" }],
-        take: PAGE_SIZE,
-        skip,
-      }),
-      prisma.chargingStation.count({ where }),
-      prisma.chargingConnector.findMany({
-        distinct: ["connectorType"],
-        select: { connectorType: true },
-        orderBy: { connectorType: "asc" },
-      }),
-      prisma.chargingOperator.findMany({
-        select: { normalizedName: true, name: true },
-        orderBy: { normalizedName: "asc" },
-        take: 60,
-      }),
-      prisma.ingestionRun.findMany({
-        where: buildStationFreshnessRunWhere(),
-        orderBy: { startedAt: "desc" },
-        take: 3,
-        include: { source: true },
-      }),
-    ]);
+          orderBy: [{ city: "asc" }, { name: "asc" }, { updatedAt: "desc" }],
+          take: PAGE_SIZE,
+          skip,
+        }),
+        prisma.chargingStation.count({ where }),
+        prisma.chargingConnector.findMany({
+          distinct: ["connectorType"],
+          select: { connectorType: true },
+          orderBy: { connectorType: "asc" },
+        }),
+        prisma.chargingOperator.findMany({
+          select: { normalizedName: true, name: true },
+          orderBy: { normalizedName: "asc" },
+          take: 60,
+        }),
+        prisma.ingestionRun.findMany({
+          where: buildStationFreshnessRunWhere(),
+          orderBy: { startedAt: "desc" },
+          take: 3,
+          include: { source: true },
+        }),
+      ]);
 
-  return {
-    stations,
-    total,
-    connectorOptions,
-    operatorOptions: buildOperatorFilterOptions(operatorOptions),
-    latestRuns,
-  };
-};
+    return {
+      stations,
+      total,
+      connectorOptions,
+      operatorOptions: buildOperatorFilterOptions(operatorOptions),
+      latestRuns,
+    };
+  },
+  ["stations-page-data"],
+  { revalidate: 3600 },
+);
 
 const StationsPage = async ({
   searchParams,
