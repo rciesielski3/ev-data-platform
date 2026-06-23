@@ -24,6 +24,7 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
+import { buildStationSummaryParts } from "@/features/charging/station-summary";
 import { prisma } from "@/lib/db/prisma";
 import {
   formatDisplayDate,
@@ -103,6 +104,37 @@ const StationsPage = async ({
   const t = await getTranslations("stations");
   const tCommon = await getTranslations("common");
   const tStationDetail = await getTranslations("stationDetail");
+
+  const buildSummarySentence = (parts: ReturnType<typeof buildStationSummaryParts>) => {
+    const subject = parts.hasOperator
+      ? t("summarySubjectWithOperator", { operator: parts.operatorLabel })
+      : t("summarySubjectGeneric");
+
+    const connectorList =
+      parts.connectorLabels.length > 0
+        ? new Intl.ListFormat(locale, { style: "long", type: "conjunction" }).format(
+            parts.connectorLabels,
+          )
+        : null;
+
+    let connectorClause: string | null = null;
+    if (connectorList && parts.powerLabel) {
+      connectorClause = t("summaryWithConnectorsUpTo", {
+        connectors: connectorList,
+        power: parts.powerLabel,
+      });
+    } else if (connectorList) {
+      connectorClause = t("summaryWithConnectors", { connectors: connectorList });
+    } else if (parts.powerLabel) {
+      connectorClause = t("summaryWithPowerOnly", { power: parts.powerLabel });
+    }
+
+    const subjectWithCity = parts.city
+      ? `${subject} ${t("summaryInCity", { city: parts.city })}`
+      : subject;
+
+    return `${[subjectWithCity, connectorClause].filter(Boolean).join(", ")}.`;
+  };
 
   const filters = parseStationSearchParams(await searchParams);
 
@@ -257,6 +289,15 @@ const StationsPage = async ({
                   station.connectors,
                 );
                 const quality = buildStationQuality(station);
+                const summarySentence = buildSummarySentence(
+                  buildStationSummaryParts({
+                    operatorName:
+                      station.operator?.name ?? station.operator?.normalizedName ?? null,
+                    city: station.city,
+                    connectorTypes: station.connectors.map((c) => c.connectorType),
+                    maxPowerKw: strongestConnector?.powerKw ?? null,
+                  }),
+                );
                 const locationLine =
                   [station.address, station.city, station.province]
                     .filter(Boolean)
@@ -278,6 +319,7 @@ const StationsPage = async ({
                             tCommon("chargingStationFallback")}
                         </h2>
                         <p className="muted mt-1 text-sm">{locationLine}</p>
+                        <p className="muted mt-1 text-sm">{summarySentence}</p>
                         <div className="mt-3 flex flex-wrap items-center gap-3">
                           <StationCompletenessBadge
                             completeness={quality.completeness}

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildLastVerifiedNote,
-  buildStationSummarySentence,
+  buildStationSummaryParts,
   type StationSummaryInput,
 } from "@/features/charging/station-summary";
 
@@ -13,83 +13,78 @@ const fullStation: StationSummaryInput = {
   maxPowerKw: 150,
 };
 
-describe("buildStationSummarySentence", () => {
+describe("buildStationSummaryParts", () => {
   it("describes a station with full data", () => {
-    expect(buildStationSummarySentence(fullStation)).toBe(
-      "Operated by GreenWay Polska in Warszawa, with CCS2 connectors up to 150 kW.",
-    );
+    expect(buildStationSummaryParts(fullStation)).toEqual({
+      hasOperator: true,
+      operatorLabel: "GreenWay Polska",
+      city: "Warszawa",
+      connectorLabels: ["CCS2"],
+      powerLabel: "150 kW",
+    });
   });
 
-  it("omits the operator clause gracefully when missing", () => {
-    expect(
-      buildStationSummarySentence({ ...fullStation, operatorName: null }),
-    ).toBe("This charging station in Warszawa, with CCS2 connectors up to 150 kW.");
+  it("flags a missing operator instead of inventing one", () => {
+    const parts = buildStationSummaryParts({
+      ...fullStation,
+      operatorName: null,
+    });
+
+    expect(parts.hasOperator).toBe(false);
+    expect(parts.operatorLabel).toBe("Unknown operator");
   });
 
-  it("omits the connector clause gracefully when missing", () => {
+  it("returns an empty connector list when none are known", () => {
     expect(
-      buildStationSummarySentence({ ...fullStation, connectorTypes: [] }),
-    ).toBe("Operated by GreenWay Polska in Warszawa, with charging up to 150 kW.");
+      buildStationSummaryParts({ ...fullStation, connectorTypes: [] })
+        .connectorLabels,
+    ).toEqual([]);
   });
 
-  it("omits the power figure gracefully when missing", () => {
+  it("returns a null power label when power is unknown", () => {
     expect(
-      buildStationSummarySentence({ ...fullStation, maxPowerKw: null }),
-    ).toBe("Operated by GreenWay Polska in Warszawa, with CCS2 connectors.");
+      buildStationSummaryParts({ ...fullStation, maxPowerKw: null }).powerLabel,
+    ).toBeNull();
   });
 
-  it("produces a bare sentence when operator, connectors, and power are all missing", () => {
+  it("returns null city when missing or blank", () => {
+    expect(buildStationSummaryParts({ ...fullStation, city: null }).city).toBeNull();
+    expect(buildStationSummaryParts({ ...fullStation, city: "   " }).city).toBeNull();
+  });
+
+  it("filters out Unknown connector types while keeping known ones", () => {
     expect(
-      buildStationSummarySentence({
+      buildStationSummaryParts({
+        ...fullStation,
+        connectorTypes: ["CCS2", "some-unrecognized-type"],
+      }).connectorLabels,
+    ).toEqual(["CCS2"]);
+  });
+
+  it("de-duplicates repeated connector types and preserves formatted labels", () => {
+    expect(
+      buildStationSummaryParts({
+        ...fullStation,
+        connectorTypes: ["CCS2", "Type2", "CCS2"],
+      }).connectorLabels,
+    ).toEqual(["CCS2", "Type 2"]);
+  });
+
+  it("produces all-empty parts when everything is missing", () => {
+    expect(
+      buildStationSummaryParts({
         operatorName: null,
         city: null,
         connectorTypes: [],
         maxPowerKw: null,
       }),
-    ).toBe("This charging station.");
-  });
-
-  it("filters out Unknown connector types while keeping known ones", () => {
-    expect(
-      buildStationSummarySentence({
-        ...fullStation,
-        connectorTypes: ["CCS2", "some-unrecognized-type"],
-      }),
-    ).toBe(
-      "Operated by GreenWay Polska in Warszawa, with CCS2 connectors up to 150 kW.",
-    );
-  });
-
-  it("omits the connector clause when every connector type is Unknown", () => {
-    expect(
-      buildStationSummarySentence({
-        ...fullStation,
-        connectorTypes: ["some-unrecognized-type", "another-unrecognized-type"],
-      }),
-    ).toBe("Operated by GreenWay Polska in Warszawa, with charging up to 150 kW.");
-  });
-
-  it("lists multiple distinct connector types naturally", () => {
-    expect(
-      buildStationSummarySentence({
-        ...fullStation,
-        connectorTypes: ["CCS2", "Type2", "CCS2"],
-      }),
-    ).toBe(
-      "Operated by GreenWay Polska in Warszawa, with CCS2 and Type 2 connectors up to 150 kW.",
-    );
-  });
-
-  it("generates genuinely different sentences for different stations", () => {
-    const stationOne = buildStationSummarySentence(fullStation);
-    const stationTwo = buildStationSummarySentence({
-      operatorName: "Orlen Charge",
-      city: "Krakow",
-      connectorTypes: ["Type2"],
-      maxPowerKw: 22,
+    ).toEqual({
+      hasOperator: false,
+      operatorLabel: "Unknown operator",
+      city: null,
+      connectorLabels: [],
+      powerLabel: null,
     });
-
-    expect(stationOne).not.toBe(stationTwo);
   });
 });
 
