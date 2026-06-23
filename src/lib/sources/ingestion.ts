@@ -59,3 +59,30 @@ export const finishIngestionRun = async (input: FinishIngestionRunInput) => {
     },
   });
 };
+
+export const isRecordCountRegression = (
+  currentCount: number,
+  recentCounts: number[],
+): boolean => {
+  if (recentCounts.length < 3) return false;
+  const average = recentCounts.reduce((a, b) => a + b, 0) / recentCounts.length;
+  return currentCount < average * 0.7;
+};
+
+export const checkForRecordCountRegression = async (
+  sourceId: string,
+  currentCount: number,
+): Promise<boolean> => {
+  const recentRuns = await prisma.ingestionRun.findMany({
+    where: {
+      sourceId,
+      status: { in: [IngestionStatus.SUCCESS, IngestionStatus.PARTIAL] },
+    },
+    orderBy: { startedAt: "desc" },
+    take: 5,
+  });
+  return isRecordCountRegression(
+    currentCount,
+    recentRuns.map((run) => run.recordsUpserted),
+  );
+};
