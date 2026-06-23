@@ -1,3 +1,5 @@
+import { IngestionStatus } from "@prisma/client";
+
 import { runOpenEvImport } from "@/lib/sources/openev/importer";
 
 const main = async () => {
@@ -6,7 +8,10 @@ const main = async () => {
   console.log("OpenEV import finished");
   console.log(JSON.stringify(result, null, 2));
 
-  if (result.status === "FAILED") {
+  if (
+    result.status === IngestionStatus.FAILED ||
+    result.status === IngestionStatus.PARTIAL
+  ) {
     process.exitCode = 1;
   }
 };
