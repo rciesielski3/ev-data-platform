@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
+import {
+  formatDisplayDate,
+  formatDisplayNumber,
+  getSafeHttpUrl,
+} from "@/lib/display/data-display";
 
 describe("formatDisplayDate", () => {
   it("formats dates with a stable locale and UTC timezone", () => {
@@ -24,6 +28,20 @@ describe("formatDisplayDate", () => {
     expect(formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"))).toBe(
       "Jun 18, 2026",
     );
+  });
+});
+
+describe("formatDisplayNumber", () => {
+  it("formats large numbers with English thousands separators by default", () => {
+    expect(formatDisplayNumber(8071)).toBe("8,071");
+    expect(formatDisplayNumber(17787)).toBe("17,787");
+  });
+
+  it("formats with Polish grouping when a pl locale is requested", () => {
+    // Polish convention groups from 5 digits up; 4-digit numbers stay ungrouped.
+    // The separator is a non-breaking space (U+00A0), not a regular space.
+    expect(formatDisplayNumber(8071, "pl")).toBe("8071");
+    expect(formatDisplayNumber(17787, "pl")).toBe(`17 787`);
   });
 });
 
