@@ -9,7 +9,7 @@ import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const getStatus = async () => {
   const [evCount, stationCount, connectorCount, latestRuns] = await Promise.all([
