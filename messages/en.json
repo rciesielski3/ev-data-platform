@@ -22,7 +22,7 @@
     "contactLink": "Contact"
   },
   "nav": {
-    "brand": "EV Data",
+    "brand": "EVSource",
     "vehicles": "Vehicles",
     "stations": "Stations",
     "map": "Map",
@@ -36,7 +36,7 @@
   },
   "home": {
     "badge": "EV data platform",
-    "title": "EV Data Platform",
+    "title": "EVSource",
     "description": "Search normalized EV models and Polish charging infrastructure with source attribution, import freshness, and simple filters.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "evModelsLabel": "EV models",
@@ -107,7 +107,13 @@
     "chargingCostDisclaimer": "Estimated, for a full charge from 0%. Prices vary by operator.",
     "dataSourceLabel": "Data source: {source}",
     "originalSourceLink": "Original source",
-    "lastImportedLabel": "Last imported: {date}"
+    "lastImportedLabel": "Last imported: {date}",
+    "metaTitle": "{vehicleName} — {highlights} | EVSource",
+    "metaTitleFallback": "{vehicleName} — specs, range and charging | EVSource",
+    "metaDescription": "Check {vehicleName}: {highlights}. Full technical specs, battery and charging performance.",
+    "metaDescriptionFallback": "Check the full technical specs for {vehicleName}: range, battery, AC/DC charging power and more.",
+    "metaHighlightRange": "WLTP range {rangeKm} km",
+    "metaHighlightCost": "charging cost from {costFrom} zł"
   },
   "vehicleDetailError": {
     "title": "Vehicle details could not load",
