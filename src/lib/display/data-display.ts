@@ -14,6 +14,11 @@ export const formatDisplayDate = (
   }).format(value);
 };
 
+export const formatDisplayNumber = (
+  value: number,
+  locale: string = "en",
+) => new Intl.NumberFormat(locale).format(value);
+
 export const getSafeHttpUrl = (value: string | null | undefined) => {
   if (!value) {
     return null;
