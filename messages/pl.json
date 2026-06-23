@@ -107,7 +107,13 @@
     "chargingCostDisclaimer": "Szacunkowo, za pełne naładowanie od 0%. Ceny różnią się między operatorami.",
     "dataSourceLabel": "Źródło danych: {source}",
     "originalSourceLink": "Oryginalne źródło",
-    "lastImportedLabel": "Ostatni import: {date}"
+    "lastImportedLabel": "Ostatni import: {date}",
+    "metaTitle": "{vehicleName} — {highlights} | EVSource",
+    "metaTitleFallback": "{vehicleName} — dane techniczne, zasięg i ładowanie | EVSource",
+    "metaDescription": "Sprawdź {vehicleName}: {highlights}. Pełna specyfikacja techniczna, akumulator i osiągi ładowania.",
+    "metaDescriptionFallback": "Sprawdź pełną specyfikację techniczną {vehicleName}: zasięg, akumulator, moc ładowania AC/DC i więcej.",
+    "metaHighlightRange": "zasięg WLTP {rangeKm} km",
+    "metaHighlightCost": "koszt ładowania od {costFrom} zł"
   },
   "vehicleDetailError": {
     "title": "Nie udało się wczytać szczegółów pojazdu",

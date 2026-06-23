@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
+import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
 import {
@@ -8,6 +10,10 @@ import {
   buildWinterRangeNote,
   formatPlnRange,
 } from "@/features/ev/charging-cost";
+import {
+  buildVehicleProductJsonLd,
+  buildVehicleSeoHighlights,
+} from "@/features/ev/vehicle-seo";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
@@ -15,6 +21,71 @@ import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const dynamic = "force-dynamic";
+
+const getVehicleById = cache((id: string) =>
+  prisma.evModel.findUnique({
+    where: { id },
+    include: {
+      brand: true,
+      specs: true,
+    },
+  }),
+);
+
+const buildVehicleSeoName = (vehicle: {
+  brand: { name: string };
+  modelName: string;
+  variantName: string | null;
+}) =>
+  [vehicle.brand.name, vehicle.modelName, vehicle.variantName]
+    .filter(Boolean)
+    .join(" ");
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> => {
+  const { id } = await params;
+  const vehicle = await getVehicleById(id);
+
+  if (!vehicle) {
+    return {};
+  }
+
+  const t = await getTranslations("vehicleDetail");
+  const vehicleName = buildVehicleSeoName(vehicle);
+  const chargingCost = buildChargingCostEstimate(
+    vehicle.specs?.batteryCapacityKwhNet ?? null,
+  );
+  const highlights = buildVehicleSeoHighlights({
+    rangeWltpKm: vehicle.specs?.rangeWltpKm ?? null,
+    chargingCost,
+  });
+
+  if (highlights.length === 0) {
+    return {
+      title: t("metaTitleFallback", { vehicleName }),
+      description: t("metaDescriptionFallback", { vehicleName }),
+    };
+  }
+
+  const highlightText = highlights
+    .map((highlight) =>
+      highlight.kind === "range"
+        ? t("metaHighlightRange", { rangeKm: highlight.rangeKm })
+        : t("metaHighlightCost", { costFrom: highlight.costFromPln }),
+    )
+    .join(" · ");
+
+  return {
+    title: t("metaTitle", { vehicleName, highlights: highlightText }),
+    description: t("metaDescription", {
+      vehicleName,
+      highlights: highlightText,
+    }),
+  };
+};
 
 const DetailRow = ({
   label,
@@ -39,13 +110,7 @@ export default async function VehicleDetailPage({
   const t = await getTranslations("vehicleDetail");
   const tCommon = await getTranslations("common");
 
-  const vehicle = await prisma.evModel.findUnique({
-    where: { id },
-    include: {
-      brand: true,
-      specs: true,
-    },
-  });
+  const vehicle = await getVehicleById(id);
 
   if (!vehicle) {
     notFound();
@@ -57,9 +122,45 @@ export default async function VehicleDetailPage({
   const chargingCost = buildChargingCostEstimate(
     vehicle.specs?.batteryCapacityKwhNet ?? null,
   );
+  const productJsonLd = buildVehicleProductJsonLd({
+    name: buildVehicleSeoName(vehicle),
+    brandName: vehicle.brand.name,
+    properties: [
+      {
+        label: t("rangeWltpLabel"),
+        value: vehicle.specs?.rangeWltpKm
+          ? `${vehicle.specs.rangeWltpKm} km`
+          : null,
+      },
+      {
+        label: t("batteryNetLabel"),
+        value: vehicle.specs?.batteryCapacityKwhNet
+          ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
+          : null,
+      },
+      {
+        label: t("dcFastLabel"),
+        value: vehicle.specs?.dcMaxPowerKw
+          ? `${vehicle.specs.dcMaxPowerKw} kW`
+          : null,
+      },
+      {
+        label: t("acChargingLabel"),
+        value: vehicle.specs?.acMaxPowerKw
+          ? `${vehicle.specs.acMaxPowerKw} kW`
+          : null,
+      },
+    ],
+  });
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="mb-8">
         <Link
           href="/vehicles"
