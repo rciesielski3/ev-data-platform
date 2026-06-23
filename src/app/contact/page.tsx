@@ -42,7 +42,7 @@ export default async function ContactPage({
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-12">
-      <PageHeader badge={t("badge")} title={t("title")} description={t("description")} />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {submitted === "true" ? (
         <Notice title={t("successTitle")}>
