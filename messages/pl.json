@@ -22,7 +22,7 @@
     "contactLink": "Kontakt"
   },
   "nav": {
-    "brand": "EV Data",
+    "brand": "EVSource",
     "vehicles": "Pojazdy",
     "stations": "Stacje",
     "map": "Mapa",
@@ -36,7 +36,7 @@
   },
   "home": {
     "badge": "Platforma danych EV",
-    "title": "EV Data Platform",
+    "title": "EVSource",
     "description": "Przeszukuj znormalizowane modele pojazdów elektrycznych i polską infrastrukturę ładowania z podaniem źródła danych, świeżości importu i prostych filtrów.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
     "evModelsLabel": "Modele EV",
