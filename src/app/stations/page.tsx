@@ -154,7 +154,6 @@ const StationsPage = async ({
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <PageHeader
-        badge={t("badge")}
         title={t("title")}
         description={t("description")}
         actions={
@@ -341,7 +340,7 @@ const StationsPage = async ({
                         </Button>
                       </div>
                       {strongestConnector?.powerKw && (
-                        <Badge>
+                        <Badge className="shrink-0 whitespace-nowrap">
                           {t("upToPower", { power: strongestConnector.powerKw })}
                         </Badge>
                       )}

@@ -3,8 +3,13 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { DivIcon, LayerGroup, Map as LeafletMap } from "leaflet";
+import type { LayerGroup, Map as LeafletMap } from "leaflet";
 
+import {
+  OSM_TILE_LAYER_ATTRIBUTION,
+  OSM_TILE_LAYER_URL,
+  buildStationMarkerIcon,
+} from "@/features/charging/leaflet-tile-layer";
 import type { StationMapGroup } from "@/features/charging/station-map";
 
 type StationMapClientProps = {
@@ -101,20 +106,6 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     `;
   };
 
-  const createMarkerIcon = (
-    leaflet: typeof import("leaflet"),
-    group: StationMapGroup,
-  ): DivIcon =>
-    leaflet.divIcon({
-      className: "station-map-marker-wrapper",
-      html: `<span class="station-map-marker${
-        group.stationCount > 1 ? " station-map-marker-cluster" : ""
-      }">${group.stationCount > 1 ? group.stationCount : ""}</span>`,
-      iconSize: [34, 34],
-      iconAnchor: [17, 17],
-      popupAnchor: [0, -14],
-    });
-
   useEffect(() => {
     let cancelled = false;
 
@@ -139,9 +130,8 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
         .setView(DEFAULT_CENTER, DEFAULT_ZOOM);
 
       leaflet
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        .tileLayer(OSM_TILE_LAYER_URL, {
+          attribution: OSM_TILE_LAYER_ATTRIBUTION,
           maxZoom: 19,
         })
         .addTo(map);
@@ -187,7 +177,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
       leaflet
         .marker(coordinates, {
-          icon: createMarkerIcon(leaflet, group),
+          icon: buildStationMarkerIcon(leaflet, { count: group.stationCount }),
           title:
             group.stationCount === 1
               ? group.stations[0]?.name

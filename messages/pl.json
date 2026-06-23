@@ -35,7 +35,6 @@
     "languageSwitcherLabel": "Zmień język"
   },
   "home": {
-    "badge": "Platforma danych EV",
     "title": "EVSource",
     "description": "Znormalizowane dane o stacjach ładowania i pojazdach elektrycznych w Polsce — pełne pokrycie 16 województw, gotowe do analiz porównawczych dla operatorów sieci ładowania.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
@@ -76,7 +75,6 @@
     "b2bCtaButton": "Skontaktuj się"
   },
   "vehicles": {
-    "badge": "Katalog pojazdów",
     "title": "Pojazdy",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
@@ -131,7 +129,6 @@
     "backLink": "Wróć do pojazdów"
   },
   "stations": {
-    "badge": "Infrastruktura ładowania",
     "title": "Stacje ładowania",
     "description": "Przeszukuj polską infrastrukturę ładowania według miejsca, złącza, mocy i operatora.",
     "viewInsightsLink": "Zobacz statystyki",
@@ -229,7 +226,6 @@
     "backLink": "Wróć do stacji"
   },
   "contact": {
-    "badge": "Kontakt",
     "title": "Skontaktuj się z nami",
     "description": "Zainteresowany raportem niestandardowym lub wyróżnionym miejscem na liście operatorów? Napisz do nas.",
     "nameLabel": "Imię i nazwisko",
@@ -262,7 +258,6 @@
     "unknownExplanation": "Brak daty potwierdzenia danych dla tej stacji."
   },
   "map": {
-    "badge": "Mapa ładowania",
     "title": "Mapa stacji ładowania",
     "description": "Eksploruj polskie stacje ładowania według województwa, typu złącza i minimalnej mocy ładowania.",
     "searchListLink": "Lista wyszukiwania",
@@ -301,7 +296,6 @@
     "body": "Dane mapy stacji ładowania są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy danych o ładowaniu się zakończyły."
   },
   "connectors": {
-    "badge": "Baza wiedzy",
     "title": "Baza wiedzy o złączach",
     "description": "Statyczne notatki referencyjne do interpretowania nazw złączy w zaimportowanych danych stacji i pojazdów. Te strony nie deklarują rzeczywistej zgodności ani dostępności ładowarek.",
     "viewDetailsLink": "Zobacz szczegóły złącza"
@@ -348,7 +342,6 @@
     }
   },
   "insights": {
-    "badge": "Analityka ładowania",
     "title": "Statystyki ładowania",
     "description": "Zagregowane wskaźniki kondycji i pokrycia z bazy danych stacji ładowania.",
     "browseStationsLink": "Przeglądaj stacje",
@@ -378,7 +371,6 @@
     "body": "Zagregowane statystyki ładowania są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   },
   "operators": {
-    "badge": "Analiza operatorów",
     "title": "Analiza operatorów",
     "description": "Porównuj operatorów ładowania według liczby stacji, pokrycia województw, liczby złączy i zgłoszonej mocy.",
     "viewInsightsLink": "Zobacz statystyki",
@@ -417,7 +409,6 @@
     "body": "Wskaźniki porównania operatorów są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   },
   "provinces": {
-    "badge": "Jakość danych",
     "title": "Analiza województw",
     "description": "Porównuj pokrycie infrastrukturą ładowania, jakość mocy, dostępność HPC i zróżnicowanie operatorów w poszczególnych województwach.",
     "viewInsightsLink": "Zobacz statystyki",
@@ -458,7 +449,6 @@
     "body": "Wskaźniki porównania województw są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   },
   "coverage": {
-    "badge": "Analiza pokrycia",
     "title": "Pokrycie infrastrukturą",
     "description": "Identyfikuj województwa niedostatecznie obsłużone lub nasycone przez dzisiejszą infrastrukturę ładowania.",
     "provinceIntelligenceLink": "Analiza województw",
@@ -505,7 +495,6 @@
     "body": "Ranking pokrycia infrastrukturą jest tymczasowo niedostępny. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   },
   "privacy": {
-    "badge": "Prawne",
     "title": "Polityka prywatności",
     "description": "Jakie dane zbieramy na evsource.pl, w jakim celu i jak się z nami skontaktować w ich sprawie.",
     "updatedLabel": "Ostatnia aktualizacja: {date}",
@@ -527,7 +516,6 @@
     "contactBody": "W sprawach dotyczących danych osobowych pisz na kontakt@evsource.pl."
   },
   "terms": {
-    "badge": "Prawne",
     "title": "Regulamin",
     "description": "Zasady korzystania z evsource.pl - krótko i bez zbędnych klauzul.",
     "updatedLabel": "Ostatnia aktualizacja: {date}",

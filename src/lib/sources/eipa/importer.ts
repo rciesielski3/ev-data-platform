@@ -2,6 +2,7 @@ import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 import {
+  checkForRecordCountRegression,
   ensureDataSource,
   finishIngestionRun,
   startIngestionRun,
@@ -364,12 +365,32 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
 
     console.timeEnd("[EIPA] upsert");
 
-    const status =
+    let status =
       invalid.length === 0
         ? IngestionStatus.SUCCESS
         : upserted > 0
           ? IngestionStatus.PARTIAL
           : IngestionStatus.FAILED;
+
+    let errorMessage =
+      invalid.length > 0
+        ? `${invalid.length} station records failed validation or upsert`
+        : undefined;
+
+    if (status === IngestionStatus.SUCCESS) {
+      try {
+        const isRegression = await checkForRecordCountRegression(source.id, upserted);
+        if (isRegression) {
+          status = IngestionStatus.PARTIAL;
+          errorMessage = `record count regression: ${upserted} upserted vs recent average`;
+        }
+      } catch (error) {
+        console.warn(
+          "[EIPA] record count regression check failed; continuing without it:",
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
 
     await finishIngestionRun({
       runId: run.id,
@@ -384,10 +405,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
         validCount: valid.length,
         invalidSample: invalid.slice(0, 20),
       },
-      errorMessage:
-        invalid.length > 0
-          ? `${invalid.length} station records failed validation or upsert`
-          : undefined,
+      errorMessage,
     });
 
     console.timeEnd("[EIPA] total import");

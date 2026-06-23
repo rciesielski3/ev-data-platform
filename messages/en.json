@@ -35,7 +35,6 @@
     "languageSwitcherLabel": "Change language"
   },
   "home": {
-    "badge": "EV data platform",
     "title": "EVSource",
     "description": "Normalized data on charging stations and EV models in Poland — full coverage across all 16 provinces, ready for benchmarking by charging network operators.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
@@ -76,7 +75,6 @@
     "b2bCtaButton": "Get in touch"
   },
   "vehicles": {
-    "badge": "Vehicle catalog",
     "title": "Vehicles",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
@@ -131,7 +129,6 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "badge": "Charging infrastructure",
     "title": "Charging Stations",
     "description": "Search Polish charging infrastructure by place, connector, power, and operator.",
     "viewInsightsLink": "View insights",
@@ -229,7 +226,6 @@
     "backLink": "Back to stations"
   },
   "contact": {
-    "badge": "Contact",
     "title": "Get in touch",
     "description": "Interested in a custom report or a featured listing among operators? Reach out.",
     "nameLabel": "Name",
@@ -262,7 +258,6 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "badge": "Charging map",
     "title": "Charging Station Map",
     "description": "Explore Polish charging stations by province, connector type, and minimum charging power.",
     "searchListLink": "Search list",
@@ -301,7 +296,6 @@
     "body": "Charging station map data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "connectors": {
-    "badge": "Knowledge base",
     "title": "Connector knowledge base",
     "description": "Static reference notes for interpreting connector names in imported charging station and vehicle data. These pages do not claim live compatibility or charger availability.",
     "viewDetailsLink": "View connector details"
@@ -348,7 +342,6 @@
     }
   },
   "insights": {
-    "badge": "Charging analytics",
     "title": "Charging Insights",
     "description": "Aggregate health and coverage metrics from the charging station database.",
     "browseStationsLink": "Browse stations",
@@ -378,7 +371,6 @@
     "body": "Charging aggregate metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "operators": {
-    "badge": "Operator intelligence",
     "title": "Operator Intelligence",
     "description": "Compare charging operators by station footprint, province coverage, connector volume, and reported power.",
     "viewInsightsLink": "View insights",
@@ -417,7 +409,6 @@
     "body": "Operator comparison metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "provinces": {
-    "badge": "Data quality",
     "title": "Province Intelligence",
     "description": "Compare charging infrastructure coverage, power quality, HPC availability, and operator diversity across provinces.",
     "viewInsightsLink": "View insights",
@@ -458,7 +449,6 @@
     "body": "Province comparison metrics are temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "coverage": {
-    "badge": "Coverage analysis",
     "title": "Infrastructure Coverage",
     "description": "Identify provinces that are underserved or saturated by today's charging infrastructure.",
     "provinceIntelligenceLink": "Province intelligence",
@@ -505,7 +495,6 @@
     "body": "Infrastructure coverage rankings are temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "privacy": {
-    "badge": "Legal",
     "title": "Privacy policy",
     "description": "What data evsource.pl collects, why, and how to reach us about it.",
     "updatedLabel": "Last updated: {date}",
@@ -527,7 +516,6 @@
     "contactBody": "For questions about personal data, email kontakt@evsource.pl."
   },
   "terms": {
-    "badge": "Legal",
     "title": "Terms of use",
     "description": "The rules for using evsource.pl - kept short and free of boilerplate that doesn't apply.",
     "updatedLabel": "Last updated: {date}",
