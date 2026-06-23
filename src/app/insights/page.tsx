@@ -275,7 +275,7 @@ export default async function InsightsPage() {
                 {insights.highestPowerStations.map((station) => (
                   <div
                     key={station.stationId}
-                    className="grid gap-3 py-4 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto]"
+                    className="grid gap-3 py-4 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto] sm:items-center"
                   >
                     <div>
                       <h3 className="font-medium text-slate-950">
