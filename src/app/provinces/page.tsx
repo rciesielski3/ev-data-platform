@@ -14,7 +14,7 @@ import { MetricCard } from "@/features/charging/metric-card";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { getProvinceIntelligenceRows } from "@/lib/db/cached-queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const formatHpcShare = (row: ProvinceIntelligenceRow) =>
   formatPercent(row.hpcStationCount, row.stationCount);
