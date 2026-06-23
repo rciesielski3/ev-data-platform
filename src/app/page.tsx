@@ -20,10 +20,9 @@ const getStatus = async () => {
     prisma.evModel.count(),
     prisma.chargingStation.count(),
     prisma.chargingOperator.count(),
-    prisma.chargingStation.findMany({
+    prisma.chargingStation.groupBy({
+      by: ["province"],
       where: { province: { not: null } },
-      select: { province: true },
-      distinct: ["province"],
     }),
   ]);
 

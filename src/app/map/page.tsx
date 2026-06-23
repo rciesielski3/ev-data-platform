@@ -15,7 +15,7 @@ import {
 } from "@/features/charging/station-map";
 import { prisma } from "@/lib/db/prisma";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const MAP_STATION_LIMIT = 1000;
 

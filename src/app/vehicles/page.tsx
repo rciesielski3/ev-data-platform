@@ -22,7 +22,7 @@ import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 24;
 
