@@ -142,7 +142,7 @@ export default async function VehiclesPage({
       />
 
       {topBrands.length > 0 && (
-        <div className="mb-8 flex flex-nowrap gap-2 overflow-x-auto pb-1">
+        <div className="mb-8 -mx-6 flex flex-nowrap gap-2 overflow-x-auto px-6 pb-1">
           <Button
             as={Link}
             href={buildVehicleSearchHref({ ...filters, brand: undefined }, 1)}
