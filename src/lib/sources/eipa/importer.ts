@@ -378,10 +378,17 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
         : undefined;
 
     if (status === IngestionStatus.SUCCESS) {
-      const isRegression = await checkForRecordCountRegression(source.id, upserted);
-      if (isRegression) {
-        status = IngestionStatus.PARTIAL;
-        errorMessage = `record count regression: ${upserted} upserted vs recent average`;
+      try {
+        const isRegression = await checkForRecordCountRegression(source.id, upserted);
+        if (isRegression) {
+          status = IngestionStatus.PARTIAL;
+          errorMessage = `record count regression: ${upserted} upserted vs recent average`;
+        }
+      } catch (error) {
+        console.warn(
+          "[EIPA] record count regression check failed; continuing without it:",
+          error instanceof Error ? error.message : error,
+        );
       }
     }
 
