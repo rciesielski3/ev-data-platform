@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -32,6 +33,32 @@ type VehicleListItem = Prisma.EvModelGetPayload<{
     specs: true;
   };
 }>;
+
+const getVehiclesData = unstable_cache(
+  async (filters: ReturnType<typeof parseVehicleSearchParams>) => {
+    const skip = (filters.page - 1) * PAGE_SIZE;
+    const where = buildVehicleWhere(filters);
+
+    const [vehicles, total, brands] = await Promise.all([
+      prisma.evModel.findMany({
+        where,
+        include: {
+          brand: true,
+          specs: true,
+        },
+        orderBy: [{ brand: { name: "asc" } }, { modelName: "asc" }],
+        take: PAGE_SIZE,
+        skip,
+      }),
+      prisma.evModel.count({ where }),
+      getTopVehicleBrands(),
+    ]);
+
+    return { vehicles, total, brands };
+  },
+  ["vehicles-page-data"],
+  { revalidate: 3600 },
+);
 
 const BrandLogo = ({
   brandMark,
@@ -80,8 +107,6 @@ export default async function VehiclesPage({
   const tCommon = await getTranslations("common");
 
   const filters = parseVehicleSearchParams(await searchParams);
-  const skip = (filters.page - 1) * PAGE_SIZE;
-  const where = buildVehicleWhere(filters);
 
   let data:
     | {
@@ -92,24 +117,7 @@ export default async function VehiclesPage({
   let topBrands: Awaited<ReturnType<typeof getTopVehicleBrands>> = [];
 
   try {
-    const [vehicles, total, brands] = await Promise.all([
-      prisma.evModel.findMany({
-        where,
-        include: {
-          brand: true,
-          specs: true,
-        },
-        orderBy: [
-          { brand: { name: "asc" } },
-          { modelName: "asc" },
-        ],
-        take: PAGE_SIZE,
-        skip,
-      }),
-      prisma.evModel.count({ where }),
-      getTopVehicleBrands(),
-    ]);
-
+    const { vehicles, total, brands } = await getVehiclesData(filters);
     data = { vehicles, total };
     topBrands = brands;
   } catch {
