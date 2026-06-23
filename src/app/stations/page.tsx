@@ -337,7 +337,7 @@ const StationsPage = async ({
                         </Button>
                       </div>
                       {strongestConnector?.powerKw && (
-                        <Badge>
+                        <Badge className="shrink-0 whitespace-nowrap">
                           {t("upToPower", { power: strongestConnector.powerKw })}
                         </Badge>
                       )}
