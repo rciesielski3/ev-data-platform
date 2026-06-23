@@ -43,7 +43,7 @@ const HomePage = async () => {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-6 py-12">
-      <PageHeader badge={t("badge")} title={t("title")} description={t("description")} />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {"error" in status ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">

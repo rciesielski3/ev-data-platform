@@ -151,7 +151,6 @@ const StationsPage = async ({
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <PageHeader
-        badge={t("badge")}
         title={t("title")}
         description={t("description")}
         actions={
