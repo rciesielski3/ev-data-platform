@@ -142,15 +142,15 @@ export default async function VehiclesPage({
       />
 
       {topBrands.length > 0 && (
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex flex-nowrap gap-2 overflow-x-auto pb-1">
           <Button
             as={Link}
             href={buildVehicleSearchHref({ ...filters, brand: undefined }, 1)}
             variant={filters.brand ? "secondary" : "primary"}
             className={
               filters.brand
-                ? "rounded-full"
-                : "rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
+                ? "shrink-0 rounded-full"
+                : "shrink-0 rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
             }
           >
             {t("allBrandsLabel")}
@@ -170,8 +170,8 @@ export default async function VehiclesPage({
                 variant={isSelected ? "primary" : "secondary"}
                 className={
                   isSelected
-                    ? "rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
-                    : "rounded-full"
+                    ? "shrink-0 rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
+                    : "shrink-0 rounded-full"
                 }
               >
                 <BrandLogo
