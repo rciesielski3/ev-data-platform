@@ -16,7 +16,10 @@
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",
-    "dataAttribution": "Dane: EIPA / UDT Poland (infrastruktura ładowania), OpenEV Data (pojazdy elektryczne)."
+    "dataAttribution": "Dane: EIPA / UDT Poland (infrastruktura ładowania), OpenEV Data (pojazdy elektryczne).",
+    "privacyLink": "Polityka prywatności",
+    "termsLink": "Regulamin",
+    "contactLink": "Kontakt"
   },
   "nav": {
     "brand": "EV Data",
@@ -447,5 +450,45 @@
   "coverageError": {
     "title": "Nie udało się wczytać analizy pokrycia",
     "body": "Ranking pokrycia infrastrukturą jest tymczasowo niedostępny. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
+  },
+  "privacy": {
+    "badge": "Prawne",
+    "title": "Polityka prywatności",
+    "description": "Jakie dane zbieramy na evsource.pl, w jakim celu i jak się z nami skontaktować w ich sprawie.",
+    "updatedLabel": "Ostatnia aktualizacja: {date}",
+    "controllerTitle": "Administrator danych",
+    "controllerBody": "Administratorem danych osobowych przetwarzanych w ramach evsource.pl jest Adateo Rafał Ciesielski, NIP: 7781461342, ul. Polanowska 79, 60-454 Poznań. Kontakt w sprawach związanych z ochroną danych: kontakt@evsource.pl.",
+    "dataCollectedLeadTitle": "Formularz kontaktowy / zgłoszenie",
+    "dataCollectedLeadBody": "Jeśli skorzystasz z formularza zgłoszeniowego (np. zgłoszenie stacji do raportu lub oferty wyróżnionego wpisu), zbieramy: imię (opcjonalnie), adres e-mail, nazwę firmy (opcjonalnie) oraz treść wiadomości (opcjonalnie). Dane te są potrzebne wyłącznie do odpowiedzi na zgłoszenie.",
+    "dataCollectedCookieTitle": "Plik cookie językowy",
+    "dataCollectedCookieBody": "Używamy jednego pliku cookie, NEXT_LOCALE, aby zapamiętać wybrany przez Ciebie język interfejsu (polski lub angielski). Plik jest ustawiany po zmianie języka, przechowywany przez 12 miesięcy i nie jest wykorzystywany do śledzenia ani profilowania.",
+    "dataCollectedAnalyticsTitle": "Analityka i pomiar wydajności",
+    "dataCollectedAnalyticsBody": "Korzystamy z Vercel Analytics i Vercel Speed Insights do anonimowego pomiaru ruchu na stronie i wydajności ładowania. Według dokumentacji dostawcy (Vercel) usługi te nie wykorzystują plików cookie i nie zbierają danych pozwalających na identyfikację konkretnej osoby - przetwarzane są zagregowane dane o odwiedzinach i wydajności. Nie weryfikowaliśmy tego niezależnie poza dokumentacją Vercel.",
+    "legalBasisTitle": "Podstawa prawna przetwarzania",
+    "legalBasisBody": "Dane z formularza zgłoszeniowego przetwarzamy na podstawie prawnie uzasadnionego interesu administratora (art. 6 ust. 1 lit. f RODO) - odpowiedź na zgłoszenie i kontakt biznesowy. Jeśli w przyszłości wprowadzimy newsletter lub inną komunikację marketingową, będzie ona wymagać odrębnej, wyraźnej zgody (art. 6 ust. 1 lit. a RODO).",
+    "retentionTitle": "Okres przechowywania danych",
+    "retentionBody": "Dane ze zgłoszeń przechowujemy do momentu usunięcia na żądanie osoby, której dane dotyczą, lub do zakończenia współpracy / kontaktu, którego dotyczyło zgłoszenie - w zależności od tego, co nastąpi później.",
+    "rightsTitle": "Twoje prawa",
+    "rightsBody": "Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia oraz wniesienia sprzeciwu wobec przetwarzania opartego na uzasadnionym interesie. Możesz też wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (UODO).",
+    "contactTitle": "Kontakt",
+    "contactBody": "W sprawach dotyczących danych osobowych pisz na kontakt@evsource.pl."
+  },
+  "terms": {
+    "badge": "Prawne",
+    "title": "Regulamin",
+    "description": "Zasady korzystania z evsource.pl - krótko i bez zbędnych klauzul.",
+    "updatedLabel": "Ostatnia aktualizacja: {date}",
+    "scopeTitle": "Zakres",
+    "scopeBody": "Niniejszy regulamin dotyczy korzystania z serwisu evsource.pl. Serwis nie wymaga obecnie rejestracji konta i nie obsługuje płatności - dotyczy to wyłącznie przeglądania danych i korzystania z formularzy kontaktowych/zgłoszeniowych.",
+    "dataTitle": "Charakter prezentowanych danych",
+    "dataBody": "Dane o pojazdach elektrycznych i infrastrukturze ładowania pochodzą ze źródeł zewnętrznych (EIPA / UDT Poland oraz OpenEV Data) i są prezentowane w formie zaimportowanej i znormalizowanej. Nie gwarantujemy ich kompletności, aktualności ani dokładności. Dane mają charakter informacyjny i nie powinny być jedynym źródłem przy decyzjach związanych z bezpieczeństwem (np. planowaniu trasy bez zapasu energii w oparciu wyłącznie o status stacji w serwisie).",
+    "noAccountsTitle": "Brak kont użytkowników i płatności",
+    "noAccountsBody": "Serwis nie oferuje obecnie rejestracji, logowania ani przetwarzania płatności. Jeśli te funkcje zostaną wprowadzone w przyszłości, regulamin zostanie odpowiednio zaktualizowany.",
+    "offersTitle": "Zgłoszenia i oferty współpracy",
+    "offersBody": "Zgłoszenia stacji do raportu, oferty wyróżnionego wpisu lub inne formy współpracy nie są regulowane niniejszym dokumentem - każda taka współpraca jest ustalana indywidualnie, w odrębnej korespondencji lub umowie.",
+    "liabilityTitle": "Ograniczenie odpowiedzialności",
+    "liabilityBody": "Serwis udostępniany jest w stanie \"tak jak jest\" (as-is), bez gwarancji nieprzerwanego działania. Nie odpowiadamy za szkody wynikające z wykorzystania prezentowanych danych w celach, do których nie są one przeznaczone.",
+    "contactTitle": "Kontakt",
+    "contactBody": "Pytania dotyczące regulaminu możesz kierować na kontakt@evsource.pl."
   }
 }
