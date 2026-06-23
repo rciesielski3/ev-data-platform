@@ -60,7 +60,7 @@ const RootLayout = async ({
           <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
             <div className="relative mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
               <Link href="/" aria-label={t("brand")}>
-                <svg viewBox="0 0 220 48" className="h-8 w-auto" role="img">
+                <svg viewBox="0 0 220 48" className="h-8 w-auto" role="img" aria-hidden="true">
                   <rect x="0" y="4" width="40" height="40" rx="10" fill="#059669" />
                   <path
                     d="M25 17 L15.5 17 C11.5 17 11.5 24 15.5 24 L24.5 24 C28.5 24 28.5 31 24.5 31 L15 31"
