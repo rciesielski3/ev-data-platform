@@ -15,7 +15,7 @@ import { MetricCard } from "@/features/charging/metric-card";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { prisma } from "@/lib/db/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const INSIGHT_LIMIT = 10;
 const HIGHEST_POWER_CANDIDATE_LIMIT = 80;

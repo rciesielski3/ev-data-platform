@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
@@ -15,60 +16,62 @@ import {
 } from "@/features/charging/station-map";
 import { prisma } from "@/lib/db/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const MAP_STATION_LIMIT = 1000;
 
-const getMapData = async (
-  filters: ReturnType<typeof parseStationMapFilters>,
-) => {
-  const where = buildStationMapWhere(filters);
+const getMapData = unstable_cache(
+  async (filters: ReturnType<typeof parseStationMapFilters>) => {
+    const where = buildStationMapWhere(filters);
 
-  const [stations, total, provinceOptions, connectorOptions] =
-    await Promise.all([
-      prisma.chargingStation.findMany({
-        where,
-        include: {
-          operator: true,
-          connectors: {
-            orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+    const [stations, total, provinceOptions, connectorOptions] =
+      await Promise.all([
+        prisma.chargingStation.findMany({
+          where,
+          include: {
+            operator: true,
+            connectors: {
+              orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+            },
           },
-        },
-        orderBy: [
-          { province: "asc" },
-          { city: "asc" },
-          { name: "asc" },
-          { updatedAt: "desc" },
-        ],
-        take: MAP_STATION_LIMIT,
-      }),
-      prisma.chargingStation.count({ where }),
-      prisma.chargingStation.findMany({
-        distinct: ["province"],
-        select: { province: true },
-        where: { province: { not: null } },
-        orderBy: { province: "asc" },
-      }),
-      prisma.chargingConnector.findMany({
-        distinct: ["connectorType"],
-        select: { connectorType: true },
-        orderBy: { connectorType: "asc" },
-      }),
-    ]);
+          orderBy: [
+            { province: "asc" },
+            { city: "asc" },
+            { name: "asc" },
+            { updatedAt: "desc" },
+          ],
+          take: MAP_STATION_LIMIT,
+        }),
+        prisma.chargingStation.count({ where }),
+        prisma.chargingStation.findMany({
+          distinct: ["province"],
+          select: { province: true },
+          where: { province: { not: null } },
+          orderBy: { province: "asc" },
+        }),
+        prisma.chargingConnector.findMany({
+          distinct: ["connectorType"],
+          select: { connectorType: true },
+          orderBy: { connectorType: "asc" },
+        }),
+      ]);
 
-  const stationDtos = stations.map(formatStationMapDto);
+    const stationDtos = stations.map(formatStationMapDto);
 
-  return {
-    stationDtos,
-    groups: groupStationMapDtos(stationDtos),
-    total,
-    provinceOptions: provinceOptions
-      .map((option) => option.province)
-      .filter((province): province is string => Boolean(province)),
-  connectorOptions,
-    isLimited: total > stationDtos.length,
-  };
-};
+    return {
+      stationDtos,
+      groups: groupStationMapDtos(stationDtos),
+      total,
+      provinceOptions: provinceOptions
+        .map((option) => option.province)
+        .filter((province): province is string => Boolean(province)),
+      connectorOptions,
+      isLimited: total > stationDtos.length,
+    };
+  },
+  ["map-station-data"],
+  { revalidate: 3600 },
+);
 
 const MapPanelLoading = () => (
   <>
