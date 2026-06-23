@@ -141,14 +141,54 @@ export type TopVehicleBrand = {
   vehicleCount: number;
 };
 
+const normalizeBrandName = (brandName: string) =>
+  brandName.trim().toLowerCase().replaceAll("&", "and");
+
+// Hand-curated by real Poland EV-market relevance, ordered by priority. Maintained the
+// same way as BRAND_LOGO_ICONS below — revisit occasionally, no sales data in this schema.
+// "kia" has no catalog coverage yet; it's a harmless no-op until openev imports it.
+const POLAND_RELEVANT_BRAND_NAMES = [
+  "skoda",
+  "volkswagen",
+  "tesla",
+  "kia",
+  "hyundai",
+  "bmw",
+  "audi",
+  "volvo",
+  "byd",
+  "toyota",
+  "ford",
+  "mercedes-benz",
+];
+
+export const prioritizeTopVehicleBrands = (
+  brands: TopVehicleBrand[],
+  limit: number = TOP_BRANDS_LIMIT,
+): TopVehicleBrand[] => {
+  const byNormalizedName = new Map(
+    brands.map((brand) => [normalizeBrandName(brand.name), brand]),
+  );
+
+  const curated = POLAND_RELEVANT_BRAND_NAMES.flatMap((name) => {
+    const brand = byNormalizedName.get(name);
+    return brand ? [brand] : [];
+  });
+  const curatedIds = new Set(curated.map((brand) => brand.id));
+
+  const rest = brands
+    .filter((brand) => !curatedIds.has(brand.id))
+    .sort((a, b) => b.vehicleCount - a.vehicleCount);
+
+  return [...curated, ...rest].slice(0, limit);
+};
+
 export const getTopVehicleBrands = async (
   limit: number = TOP_BRANDS_LIMIT,
 ): Promise<TopVehicleBrand[]> => {
   const grouped = await prisma.evModel.groupBy({
     by: ["brandId"],
     _count: true,
-    orderBy: { _count: { brandId: "desc" } },
-    take: limit,
   });
 
   const brands = await prisma.evBrand.findMany({
@@ -157,7 +197,7 @@ export const getTopVehicleBrands = async (
 
   const brandById = new Map(brands.map((brand) => [brand.id, brand]));
 
-  return grouped.flatMap((group) => {
+  const allBrands = grouped.flatMap((group) => {
     const brand = brandById.get(group.brandId);
 
     if (!brand) {
@@ -173,10 +213,9 @@ export const getTopVehicleBrands = async (
       },
     ];
   });
-};
 
-const normalizeBrandName = (brandName: string) =>
-  brandName.trim().toLowerCase().replaceAll("&", "and");
+  return prioritizeTopVehicleBrands(allBrands, limit);
+};
 
 export const buildBrandMark = (brandName: string) => {
   const icon = BRAND_LOGO_ICONS[normalizeBrandName(brandName)];

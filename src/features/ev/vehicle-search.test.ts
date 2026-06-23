@@ -6,6 +6,8 @@ import {
   buildVehicleSearchHref,
   buildVehicleWhere,
   parseVehicleSearchParams,
+  prioritizeTopVehicleBrands,
+  type TopVehicleBrand,
 } from "@/features/ev/vehicle-search";
 
 describe("parseVehicleSearchParams", () => {
@@ -132,6 +134,73 @@ describe("buildBrandMark", () => {
       kind: "wordmark",
       title: "Mercedes-Benz",
     });
+  });
+});
+
+describe("prioritizeTopVehicleBrands", () => {
+  const brand = (
+    name: string,
+    vehicleCount: number,
+    slug = name.toLowerCase(),
+  ): TopVehicleBrand => ({ id: name, slug, name, vehicleCount });
+
+  it("ranks allowlisted Poland-relevant brands ahead of higher-count brands", () => {
+    const brands = [
+      brand("NIO", 40),
+      brand("VinFast", 35),
+      brand("Tesla", 10),
+      brand("Skoda", 8),
+    ];
+
+    expect(prioritizeTopVehicleBrands(brands, 4)).toEqual([
+      brand("Skoda", 8),
+      brand("Tesla", 10),
+      brand("NIO", 40),
+      brand("VinFast", 35),
+    ]);
+  });
+
+  it("orders the allowlist by curated priority, not vehicle count", () => {
+    const brands = [brand("Kia", 5), brand("Tesla", 20), brand("Volvo", 12)];
+
+    expect(prioritizeTopVehicleBrands(brands, 3)).toEqual([
+      brand("Tesla", 20),
+      brand("Kia", 5),
+      brand("Volvo", 12),
+    ]);
+  });
+
+  it("fills remaining slots with the next-highest-count non-allowlisted brands", () => {
+    const brands = [
+      brand("Tesla", 10),
+      brand("NIO", 40),
+      brand("VinFast", 35),
+      brand("Chevrolet", 5),
+    ];
+
+    expect(prioritizeTopVehicleBrands(brands, 2)).toEqual([
+      brand("Tesla", 10),
+      brand("NIO", 40),
+    ]);
+  });
+
+  it("matches allowlisted brands case-insensitively via brand name normalization", () => {
+    const brands = [brand("nio", 40), brand("MERCEDES-BENZ", 6)];
+
+    expect(prioritizeTopVehicleBrands(brands, 2)).toEqual([
+      brand("MERCEDES-BENZ", 6),
+      brand("nio", 40),
+    ]);
+  });
+
+  it("falls back entirely to count ordering when no allowlisted brands are present", () => {
+    const brands = [brand("NIO", 40), brand("VinFast", 35), brand("MG", 8)];
+
+    expect(prioritizeTopVehicleBrands(brands, 3)).toEqual([
+      brand("NIO", 40),
+      brand("VinFast", 35),
+      brand("MG", 8),
+    ]);
   });
 });
 
