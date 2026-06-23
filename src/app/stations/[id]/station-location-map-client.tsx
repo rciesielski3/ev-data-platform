@@ -3,6 +3,12 @@
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap } from "leaflet";
 
+import {
+  OSM_TILE_LAYER_ATTRIBUTION,
+  OSM_TILE_LAYER_URL,
+  buildStationMarkerIcon,
+} from "@/features/charging/leaflet-tile-layer";
+
 type StationLocationMapClientProps = {
   latitude: number;
   longitude: number;
@@ -41,21 +47,15 @@ const StationLocationMapClient = ({
         .setView([latitude, longitude], ZOOM);
 
       leaflet
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        .tileLayer(OSM_TILE_LAYER_URL, {
+          attribution: OSM_TILE_LAYER_ATTRIBUTION,
           maxZoom: 19,
         })
         .addTo(map);
 
       leaflet
         .marker([latitude, longitude], {
-          icon: leaflet.divIcon({
-            className: "station-map-marker-wrapper",
-            html: `<span class="station-map-marker"></span>`,
-            iconSize: [34, 34],
-            iconAnchor: [17, 17],
-          }),
+          icon: buildStationMarkerIcon(leaflet),
           title,
         })
         .addTo(map);
