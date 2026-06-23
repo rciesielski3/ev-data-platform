@@ -142,11 +142,15 @@ export type TopVehicleBrand = {
 };
 
 const normalizeBrandName = (brandName: string) =>
-  brandName.trim().toLowerCase().replaceAll("&", "and");
+  brandName
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim()
+    .toLowerCase()
+    .replaceAll("&", "and");
 
-// Hand-curated by real Poland EV-market relevance, ordered by priority. Maintained the
-// same way as BRAND_LOGO_ICONS below — revisit occasionally, no sales data in this schema.
-// "kia" has no catalog coverage yet; it's a harmless no-op until openev imports it.
+// Hand-curated by real Poland EV-market relevance, ordered by priority — no sales-volume
+// data exists in this schema. "kia" has no catalog coverage yet, so it's a no-op for now.
 const POLAND_RELEVANT_BRAND_NAMES = [
   "skoda",
   "volkswagen",
@@ -166,12 +170,8 @@ export const prioritizeTopVehicleBrands = (
   brands: TopVehicleBrand[],
   limit: number = TOP_BRANDS_LIMIT,
 ): TopVehicleBrand[] => {
-  const byNormalizedName = new Map(
-    brands.map((brand) => [normalizeBrandName(brand.name), brand]),
-  );
-
   const curated = POLAND_RELEVANT_BRAND_NAMES.flatMap((name) => {
-    const brand = byNormalizedName.get(name);
+    const brand = brands.find((b) => normalizeBrandName(b.name) === name);
     return brand ? [brand] : [];
   });
   const curatedIds = new Set(curated.map((brand) => brand.id));
