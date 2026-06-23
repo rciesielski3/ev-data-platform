@@ -140,15 +140,17 @@ export default async function VehicleDetailPage({
       },
       {
         label: t("dcFastLabel"),
-        value: vehicle.specs?.dcMaxPowerKw
-          ? `${vehicle.specs.dcMaxPowerKw} kW`
-          : null,
+        value:
+          typeof vehicle.specs?.dcMaxPowerKw === "number"
+            ? `${vehicle.specs.dcMaxPowerKw} kW`
+            : null,
       },
       {
         label: t("acChargingLabel"),
-        value: vehicle.specs?.acMaxPowerKw
-          ? `${vehicle.specs.acMaxPowerKw} kW`
-          : null,
+        value:
+          typeof vehicle.specs?.acMaxPowerKw === "number"
+            ? `${vehicle.specs.acMaxPowerKw} kW`
+            : null,
       },
     ],
   });
