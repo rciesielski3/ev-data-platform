@@ -23,6 +23,7 @@ const eslintConfig = [
       "*.config.js",
       "*.config.mjs",
       "*.config.ts",
+      ".claude/**",
     ],
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
