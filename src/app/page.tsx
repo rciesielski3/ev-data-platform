@@ -44,8 +44,11 @@ const getStatus = async () => {
 
   const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
   for (const run of ingestionRuns) {
-    if (!(run.source.key in latestBySource)) {
-      latestBySource[run.source.key] = run;
+    if (!run.source) continue;
+    const sourceKey = run.source.key?.toLowerCase() || "";
+    if (!sourceKey) continue;
+    if (!(sourceKey in latestBySource)) {
+      latestBySource[sourceKey] = run;
     }
   }
 
@@ -107,14 +110,36 @@ const HomePage = async () => {
                 <ImportStatusBadge
                   source="EIPA"
                   status={status.ingestionRuns.eipa.status}
-                  completedAt={status.ingestionRuns.eipa.completedAt}
+                  completedAt={status.ingestionRuns.eipa.completedAt?.toISOString() ?? null}
+                  translations={{
+                    success: t("importStatus.success"),
+                    partial: t("importStatus.partial"),
+                    failed: t("importStatus.failed"),
+                    running: t("importStatus.running"),
+                    never: tCommon("notAvailable"),
+                    justNow: t("justNow"),
+                    minutesAgo: (mins) => t("minutesAgo", { count: mins }),
+                    hoursAgo: (hours) => t("hoursAgo", { count: hours }),
+                    daysAgo: (days) => t("daysAgo", { count: days }),
+                  }}
                 />
               )}
-              {status.ingestionRuns.openev && (
+              {status.ingestionRuns["openev"] && (
                 <ImportStatusBadge
                   source="OpenEV"
-                  status={status.ingestionRuns.openev.status}
-                  completedAt={status.ingestionRuns.openev.completedAt}
+                  status={status.ingestionRuns["openev"].status}
+                  completedAt={status.ingestionRuns["openev"].completedAt?.toISOString() ?? null}
+                  translations={{
+                    success: t("importStatus.success"),
+                    partial: t("importStatus.partial"),
+                    failed: t("importStatus.failed"),
+                    running: t("importStatus.running"),
+                    never: tCommon("notAvailable"),
+                    justNow: t("justNow"),
+                    minutesAgo: (mins) => t("minutesAgo", { count: mins }),
+                    hoursAgo: (hours) => t("hoursAgo", { count: hours }),
+                    daysAgo: (days) => t("daysAgo", { count: days }),
+                  }}
                 />
               )}
             </div>

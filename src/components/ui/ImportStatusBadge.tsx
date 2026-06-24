@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 export type ImportStatus = "RUNNING" | "SUCCESS" | "PARTIAL" | "FAILED";
@@ -7,7 +8,18 @@ export type ImportStatus = "RUNNING" | "SUCCESS" | "PARTIAL" | "FAILED";
 export interface ImportStatusBadgeProps {
   source: string;
   status: ImportStatus;
-  completedAt: Date | null;
+  completedAt: string | null;
+  translations: {
+    success: string;
+    partial: string;
+    failed: string;
+    running: string;
+    never: string;
+    justNow: string;
+    minutesAgo: (mins: number) => string;
+    hoursAgo: (hours: number) => string;
+    daysAgo: (days: number) => string;
+  };
 }
 
 const getStatusColor = (status: ImportStatus): string => {
@@ -23,22 +35,23 @@ const getStatusColor = (status: ImportStatus): string => {
   }
 };
 
-const getStatusLabel = (status: ImportStatus): string => {
+const getStatusLabel = (status: ImportStatus, t: ImportStatusBadgeProps["translations"]): string => {
   switch (status) {
     case "SUCCESS":
-      return "Success";
+      return t.success;
     case "PARTIAL":
-      return "Partial";
+      return t.partial;
     case "FAILED":
-      return "Failed";
+      return t.failed;
     case "RUNNING":
-      return "Running";
+      return t.running;
   }
 };
 
-const getRelativeTime = (date: Date | null): string => {
-  if (!date) return "Never";
+const getRelativeTime = (isoDateString: string | null, t: ImportStatusBadgeProps["translations"]): string => {
+  if (!isoDateString) return t.never;
 
+  const date = new Date(isoDateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffSecs = Math.floor(diffMs / 1000);
@@ -46,17 +59,30 @@ const getRelativeTime = (date: Date | null): string => {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffSecs < 60) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return `${diffDays}d ago`;
+  if (diffSecs < 60) return t.justNow;
+  if (diffMins < 60) return t.minutesAgo(diffMins);
+  if (diffHours < 24) return t.hoursAgo(diffHours);
+  return t.daysAgo(diffDays);
 };
 
 export const ImportStatusBadge = ({
   source,
   status,
   completedAt,
+  translations,
 }: ImportStatusBadgeProps) => {
+  const [relativeTime, setRelativeTime] = useState<string>("");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    setRelativeTime(status === "RUNNING" ? "" : getRelativeTime(completedAt, translations));
+  }, [completedAt, status, translations]);
+
+  if (!isClient) {
+    return null;
+  }
+
   return (
     <div className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${getStatusColor(status)}`}>
       {status === "RUNNING" && (
@@ -64,7 +90,7 @@ export const ImportStatusBadge = ({
       )}
       <span>{source}</span>
       <span className="text-xs opacity-75">
-        {status === "RUNNING" ? getStatusLabel(status) : getRelativeTime(completedAt)}
+        {status === "RUNNING" ? getStatusLabel(status, translations) : relativeTime}
       </span>
     </div>
   );
