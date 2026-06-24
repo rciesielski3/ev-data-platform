@@ -164,3 +164,28 @@ button.card:active,
   font-weight: 700;
   text-decoration: underline;
 }
+
+@media print {
+  body:has(.report-print) header,
+  body:has(.report-print) footer {
+    display: none !important;
+  }
+
+  main.report-print {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .report-print .card {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .report-print table {
+    break-inside: avoid;
+  }
+
+  .report-print a {
+    text-decoration: none !important;
+  }
+}
