@@ -282,10 +282,58 @@ Status:
 - P0 Operator Cleanup: implemented for user-facing operator suggestions
 - P1 Insights Dashboard: implemented at `/insights`
 - P1 UX Improvements: implemented with normalized connector labels, AC/DC badges, tooltips and connector images
+- EV Vehicle Intelligence: charging cost calculator and winter range estimates implemented on `/vehicles/[id]` detail pages
 
 Assets:
 - Connector images are stored in `public/connectors`
 - `unknown.webp` is the fallback image for unknown or unsupported connector values
+
+## Vehicle Intelligence — Charging Cost & Winter Range (Milestone 5)
+
+**Feature**: Automated charging cost estimates and winter range derating for EV models.
+
+**Location**: `/vehicles/[id]` detail pages, charging performance section.
+
+**Implementation**:
+- `src/features/ev/charging-cost.ts`: Core calculators for cost and winter range
+  - `buildChargingCostEstimate(batteryCapacityKwhNet)` → AC/DC tariff ranges in PLN
+  - `buildWinterRangeNote(rangeWltpKm)` → low/high km estimates (15–30% derating)
+  - `formatPlnRange(range)` → human-readable "X–Y zł" output
+- `src/features/charging/station-summary.ts`: Station summary helpers
+- Translation keys in `messages/{en,pl}.json`:
+  - `vehicleDetail.winterRangeLabel`
+  - `vehicleDetail.chargingCostAcLabel`
+  - `vehicleDetail.chargingCostDcLabel`
+  - `vehicleDetail.chargingCostDisclaimer`
+
+**Tariff Bands** (as of 2026-06-24):
+- AC charging: 0.8–1.9 zł/kWh
+- DC fast/rapid: 2.0–3.5 zł/kWh
+
+**Winter Range Derating**:
+- Low estimate: 30% loss (70% of WLTP)
+- High estimate: 15% loss (85% of WLTP)
+
+**Edge Cases Handled**:
+- Null or missing battery capacity → no cost estimate displayed
+- Null or missing WLTP range → no winter range estimate displayed
+- Non-positive or non-finite values → safe null returns
+- Zero battery capacity → no estimate (invalid input)
+
+**Tests** (9 tests in `src/features/ev/charging-cost.test.ts`):
+- null/missing inputs return null
+- non-positive and non-finite values return null
+- realistic battery capacity (58 kWh) → AC [46–110 zł], DC [116–203 zł]
+- proportional scaling verified (40 vs 80 kWh)
+- winter range calculation for 400 km WLTP → [280–340 km]
+- PLN range formatting with en dash and currency suffix
+
+**Wiring** in `src/app/vehicles/[id]/page.tsx`:
+- Calls `buildChargingCostEstimate()` and `buildWinterRangeNote()` for vehicle specs
+- Renders cost ranges in two detail rows (AC/DC) when estimate available
+- Renders winter range estimate when WLTP range available
+- Shows disclaimer text when cost data is present
+- Includes in SEO metadata (meta title/description highlights charging cost when available)
 
 Validation requirement:
 - `npm run validate` must pass before push or PR creation
