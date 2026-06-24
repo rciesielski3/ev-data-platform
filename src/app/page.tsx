@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { ShieldCheck, Database, FileBarChart } from "lucide-react";
+import {
+  ShieldCheck,
+  Database,
+  FileBarChart,
+  CarFront,
+  Search,
+  MapPinned,
+  Plug,
+  BarChart3,
+} from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -126,22 +135,26 @@ const HomePage = async () => {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="mb-6 text-2xl font-semibold">{t("exploreTitle")}</h2>
+        <h2 className="font-display mb-6 text-2xl font-semibold">
+          {t("exploreTitle")}
+        </h2>
         <div className="grid gap-4 md:grid-cols-2">
           <Card as={Link} href="/vehicles" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+            <CarFront className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("evCatalogEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("evCatalogTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
           </Card>
           <Card as={Link} href="/stations" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+            <Search className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationSearchEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("stationSearchTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
@@ -149,19 +162,21 @@ const HomePage = async () => {
             </p>
           </Card>
           <Card as={Link} href="/map" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationMapEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("stationMapTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
           <Card as={Link} href="/connectors" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+            <Plug className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("connectorKnowledgeEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("connectorKnowledgeTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
@@ -169,10 +184,11 @@ const HomePage = async () => {
             </p>
           </Card>
           <Card as={Link} href="/insights" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+            <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("chargingInsightsEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("chargingInsightsTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
@@ -184,7 +200,7 @@ const HomePage = async () => {
 
       <section className="bg-[var(--accent-soft-bg)] py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 px-6 text-center">
-          <h2 className="text-2xl font-semibold text-[var(--accent-soft-text)]">
+          <h2 className="font-display text-2xl font-semibold text-[var(--accent-soft-text)]">
             {t("b2bCtaTitle")}
           </h2>
           <p className="muted max-w-xl">{t("b2bCtaBody")}</p>
