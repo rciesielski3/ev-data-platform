@@ -234,7 +234,7 @@ export default async function SampleReportPage() {
   if ("error" in data) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-12">
-        <PageHeader badge={t("badge")} title={t("title")} description={t("description")} />
+        <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{data.error}</p>
         </Notice>
@@ -285,7 +285,6 @@ export default async function SampleReportPage() {
   return (
     <main className="report-print mx-auto max-w-6xl px-6 py-12 print:max-w-none print:px-0">
       <PageHeader
-        badge={t("badge")}
         title={t("title")}
         description={t("description")}
         actions={
