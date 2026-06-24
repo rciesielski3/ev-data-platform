@@ -151,7 +151,7 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="mx-auto max-w-5xl px-6 py-16">
+      <section className="section-accent mx-auto max-w-5xl px-6 py-16">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
