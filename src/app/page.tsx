@@ -189,7 +189,7 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Card as={Link} href="/vehicles" interactive className="group relative bg-white">
+          <Card as={Link} href="/vehicles" interactive className="group relative">
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
