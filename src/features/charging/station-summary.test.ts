@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildLastVerifiedNote,
   buildStationSummaryParts,
+  buildSummarySentence,
   type StationSummaryInput,
 } from "@/features/charging/station-summary";
 
@@ -103,5 +104,72 @@ describe("buildLastVerifiedNote", () => {
 
   it("falls back to a graceful unknown note when both are missing", () => {
     expect(buildLastVerifiedNote(null, null)).toBe("Data last verified: unknown");
+  });
+});
+
+describe("buildSummarySentence", () => {
+  const fakeT = (key: string, params?: Record<string, string | number>) => {
+    if (key === "summarySubjectWithOperator") return `[op:${params?.operator}]`;
+    if (key === "summarySubjectGeneric") return "[generic]";
+    if (key === "summaryInCity") return `in ${params?.city}`;
+    if (key === "summaryWithConnectorsUpTo")
+      return `with ${params?.connectors} up to ${params?.power}`;
+    if (key === "summaryWithConnectors") return `with ${params?.connectors}`;
+    if (key === "summaryWithPowerOnly") return `up to ${params?.power}`;
+    throw new Error(`unexpected key: ${key}`);
+  };
+
+  it("builds a sentence with operator, city, connectors and power", () => {
+    const parts = buildStationSummaryParts({
+      operatorName: "GreenWay",
+      city: "Warszawa",
+      connectorTypes: ["CCS2", "Type 2"],
+      maxPowerKw: 120,
+    });
+
+    const sentence = buildSummarySentence(parts, fakeT, "en");
+
+    expect(sentence).toBe(
+      "[op:GreenWay] in Warszawa, with CCS2 and Type 2 up to 120 kW.",
+    );
+  });
+
+  it("falls back to the generic subject when there is no operator", () => {
+    const parts = buildStationSummaryParts({
+      operatorName: null,
+      city: null,
+      connectorTypes: [],
+      maxPowerKw: null,
+    });
+
+    const sentence = buildSummarySentence(parts, fakeT, "en");
+
+    expect(sentence).toBe("[generic].");
+  });
+
+  it("omits the connector clause when there are no connectors or power", () => {
+    const parts = buildStationSummaryParts({
+      operatorName: "GreenWay",
+      city: "Warszawa",
+      connectorTypes: [],
+      maxPowerKw: null,
+    });
+
+    const sentence = buildSummarySentence(parts, fakeT, "en");
+
+    expect(sentence).toBe("[op:GreenWay] in Warszawa.");
+  });
+
+  it("uses the power-only clause when connectors are unknown but power is known", () => {
+    const parts = buildStationSummaryParts({
+      operatorName: null,
+      city: null,
+      connectorTypes: [],
+      maxPowerKw: 50,
+    });
+
+    const sentence = buildSummarySentence(parts, fakeT, "en");
+
+    expect(sentence).toBe("[generic], up to 50 kW.");
   });
 });

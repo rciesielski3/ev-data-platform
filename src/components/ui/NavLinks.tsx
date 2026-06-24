@@ -22,9 +22,9 @@ const NavLinks = ({ links }: { links: NavLink[] }) => {
             key={link.href}
             href={link.href}
             aria-current={isActive ? "page" : undefined}
-            className={`transition-colors ${
+            className={`rounded-full px-3 py-1 transition-colors ${
               isActive
-                ? "font-semibold text-emerald-700"
+                ? "bg-emerald-600 text-white"
                 : "text-slate-600 hover:text-emerald-700"
             }`}
           >

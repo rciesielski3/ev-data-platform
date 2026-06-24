@@ -145,7 +145,6 @@ const HomePage = async () => {
             {
               value: t("statProvincesValue", {
                 count: status.provinceCount,
-                total: TOTAL_PROVINCES_IN_POLAND,
               }),
               label: t("statProvinces"),
             },
@@ -153,42 +152,23 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="section-accent mx-auto max-w-5xl px-6 py-16">
-        <div className="mx-auto mb-10 max-w-xl text-center">
-          <h2 className="font-display text-2xl font-bold">
-            {t("valuePropsTitle")}
-          </h2>
-          <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
-            <ShieldCheck className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
-              {t("valueQualityTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueQualityBody")}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
-            <Database className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
-              {t("valueNormalizedTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueNormalizedBody")}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
-            <FileBarChart className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
-              {t("valueBenchmarkTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueBenchmarkBody")}
-            </p>
-          </div>
-        </div>
+      <section className="mx-auto grid max-w-5xl gap-6 px-6 py-16 sm:grid-cols-3">
+        <Card className="bg-emerald-50">
+          <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
+          <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
+          <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
+        </Card>
+        <Card className="bg-emerald-50">
+          <Database className="h-6 w-6 text-[var(--accent)]" />
+          <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
+          <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
+        </Card>
+        <Card className="bg-emerald-50">
+          <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+          <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
+          <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
+        </Card>
+      </section>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
