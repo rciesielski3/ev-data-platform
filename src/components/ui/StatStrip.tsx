@@ -12,7 +12,7 @@ const StatStrip = ({ stats }: { stats: Stat[] }) => (
           className="stat-card text-center"
           style={{ animationDelay: `${index * 90}ms` }}
         >
-          <p className="stat-card-value font-display text-3xl font-semibold text-[var(--foreground)] sm:text-4xl">
+          <p className={`stat-card-value font-display font-semibold text-[var(--foreground)] ${index === 3 ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl"}`}>
             {stat.value}
           </p>
           <p className="muted mt-1 text-sm">{stat.label}</p>

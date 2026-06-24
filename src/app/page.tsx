@@ -69,7 +69,7 @@ const HomePage = async () => {
               as={Link}
               href="/map"
               variant="primary"
-              className="px-6 py-3 text-base"
+              className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px] px-6 py-3 text-base"
             >
               {t("heroPrimaryCta")}
             </Button>
@@ -77,7 +77,7 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               variant="ghost"
-              className="hero-cta-secondary px-6 py-3 text-base"
+              className="hero-cta-secondary transition-transform hover:translate-y-[-4px] active:translate-y-[2px] px-6 py-3 text-base"
             >
               {t("heroSecondaryCta")}
             </Button>
@@ -125,7 +125,7 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
             <ShieldCheck className="h-6 w-6 text-[var(--accent-deep)]" />
             <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
               {t("valueQualityTitle")}
@@ -134,7 +134,7 @@ const HomePage = async () => {
               {t("valueQualityBody")}
             </p>
           </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
             <Database className="h-6 w-6 text-[var(--accent-deep)]" />
             <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
               {t("valueNormalizedTitle")}
@@ -143,7 +143,7 @@ const HomePage = async () => {
               {t("valueNormalizedBody")}
             </p>
           </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
             <FileBarChart className="h-6 w-6 text-[var(--accent-deep)]" />
             <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
               {t("valueBenchmarkTitle")}
