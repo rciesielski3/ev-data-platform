@@ -125,33 +125,23 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
-            <ShieldCheck className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
-              {t("valueQualityTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueQualityBody")}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
-            <Database className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
+          <Card>
+            <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
+            <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
+          </Card>
+          <Card>
+            <Database className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">
               {t("valueNormalizedTitle")}
             </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueNormalizedBody")}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6 opacity-60">
-            <FileBarChart className="h-6 w-6 text-[var(--accent-deep)]" />
-            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
-              {t("valueBenchmarkTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
-              {t("valueBenchmarkBody")}
-            </p>
-          </div>
+            <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
+          </Card>
+          <Card>
+            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
+            <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
+          </Card>
         </div>
       </section>
 
