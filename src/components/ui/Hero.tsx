@@ -43,7 +43,7 @@ const Hero = ({
       {actions}
     </div>
     {importStatusBadges && (
-      <div className="flex flex-wrap gap-3 justify-center py-4">
+      <div className="flex flex-wrap items-center justify-center gap-3 py-3">
         {importStatusBadges}
       </div>
     )}
