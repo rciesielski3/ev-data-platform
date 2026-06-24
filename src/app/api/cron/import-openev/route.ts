@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { runOpenEvImport } from "@/lib/sources/openev/importer";
+import { notifyImportFailure } from "@/lib/slack/notify";
 
 const isAuthorized = (request: NextRequest) => {
   const cronSecret = process.env.CRON_SECRET;
@@ -19,8 +20,24 @@ export const GET = async (request: NextRequest) => {
 
   try {
     const result = await runOpenEvImport();
+
+    if (result.status === "FAILED" || result.status === "PARTIAL") {
+      await notifyImportFailure(
+        "OpenEV",
+        result.status,
+        undefined,
+        result.failed,
+      );
+    }
+
     return NextResponse.json(result);
   } catch (error) {
+    await notifyImportFailure(
+      "OpenEV",
+      "FAILED",
+      error instanceof Error ? error.message : "Import failed",
+    );
+
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Import failed",
