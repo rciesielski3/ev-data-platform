@@ -151,12 +151,19 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="mx-auto grid max-w-5xl gap-6 px-6 py-16 sm:grid-cols-3">
-        <Card className="bg-emerald-50">
-          <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
-          <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
-          <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
-        </Card>
+      <section className="mx-auto max-w-5xl px-6 py-16">
+        <div className="mx-auto mb-10 max-w-xl text-center">
+          <h2 className="font-display text-2xl font-bold">
+            {t("valuePropsTitle")}
+          </h2>
+          <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-3">
+          <Card className="bg-emerald-50">
+            <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
+            <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
+          </Card>
         <Card className="bg-emerald-50">
           <Database className="h-6 w-6 text-[var(--accent)]" />
           <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
@@ -167,6 +174,7 @@ const HomePage = async () => {
           <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
           <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
         </Card>
+        </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
