@@ -164,3 +164,28 @@ button.card:active,
   font-weight: 700;
   text-decoration: underline;
 }
+
+@media print {
+  header,
+  footer {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  table {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}
