@@ -124,8 +124,8 @@ button.card:active,
       #eef9f1 45%,
       var(--background) 100%
     );
-  background-size: 180% 180%, 180% 180%, 180% 180%, 100% 100%;
-  animation: hero-marble-drift 22s ease-in-out infinite;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: hero-marble-drift 11s ease-in-out infinite;
 }
 
 .hero-surface::after {
@@ -155,7 +155,7 @@ button.card:active,
     background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
   }
   50% {
-    background-position: 8% 12%, 92% 10%, 52% 92%, 0% 0%;
+    background-position: 22% 26%, 78% 24%, 58% 80%, 0% 0%;
   }
 }
 
@@ -163,8 +163,8 @@ button.card:active,
   position: absolute;
   z-index: -1;
   border-radius: 999px;
-  filter: blur(36px);
-  opacity: 0.55;
+  filter: blur(28px);
+  opacity: 0.75;
   pointer-events: none;
 }
 
@@ -174,7 +174,7 @@ button.card:active,
   width: 220px;
   height: 220px;
   background: radial-gradient(circle, var(--accent-glow), transparent 70%);
-  animation: hero-float-a 14s ease-in-out infinite;
+  animation: hero-float-a 8s ease-in-out infinite;
 }
 
 .hero-orb-2 {
@@ -183,7 +183,7 @@ button.card:active,
   width: 260px;
   height: 260px;
   background: radial-gradient(circle, var(--accent), transparent 70%);
-  animation: hero-float-b 18s ease-in-out infinite;
+  animation: hero-float-b 10s ease-in-out infinite;
 }
 
 .hero-orb-3 {
@@ -196,7 +196,7 @@ button.card:active,
     var(--accent-soft-text),
     transparent 70%
   );
-  animation: hero-float-a 16s ease-in-out infinite reverse;
+  animation: hero-float-a 9s ease-in-out infinite reverse;
 }
 
 @keyframes hero-float-a {
@@ -205,7 +205,7 @@ button.card:active,
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(18px, -22px) scale(1.08);
+    transform: translate(34px, -42px) scale(1.18);
   }
 }
 
@@ -215,19 +215,32 @@ button.card:active,
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(-22px, 16px) scale(0.94);
+    transform: translate(-42px, 30px) scale(0.86);
   }
 }
 
 .hero-bolt-path {
   stroke-dasharray: 14 10;
-  animation: hero-bolt-flow 5s linear infinite;
+  animation: hero-bolt-flow 2.4s linear infinite;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 70%, transparent));
 }
 
 @keyframes hero-bolt-flow {
   to {
     stroke-dashoffset: -96;
   }
+}
+
+.hero-cta-secondary {
+  background: color-mix(in srgb, var(--card) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 20%, transparent);
+  color: var(--accent-deep);
+  backdrop-filter: blur(6px);
+}
+
+.hero-cta-secondary:hover {
+  background: var(--card);
+  color: var(--accent-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -254,7 +267,7 @@ button.card:active,
   content: "";
   position: absolute;
   left: 0;
-  bottom: -0.3em;
+  bottom: 0.05em;
   width: 100%;
   height: 3px;
   border-radius: 999px;

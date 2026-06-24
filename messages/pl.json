@@ -48,6 +48,8 @@
     "statEvModels": "Modeli EV",
     "statProvinces": "Pełne pokrycie Polski",
     "statProvincesValue": "{count}/{total} województw",
+    "valuePropsTitle": "Dlaczego EVSource",
+    "valuePropsSubtitle": "Trzy rzeczy, które wyróżniają nasze dane na tle innych źródeł.",
     "valueQualityTitle": "Dane ocenione pod względem jakości",
     "valueQualityBody": "Każda stacja i model pojazdu mają ocenę kompletności i świeżości — wiesz, na czym możesz polegać.",
     "valueNormalizedTitle": "Jedna, znormalizowana struktura",
