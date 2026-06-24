@@ -97,12 +97,10 @@ const HomePage = async () => {
             </Button>
           </>
         }
-      />
-
-      {!("error" in status) &&
-        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
-          <div className="mx-auto w-full max-w-5xl px-6 py-4">
-            <div className="flex flex-wrap gap-3 justify-center">
+        importStatusBadges={
+          !("error" in status) &&
+          (status.ingestionRuns.eipa || status.ingestionRuns.openev) ? (
+            <>
               {status.ingestionRuns.eipa && (
                 <ImportStatusBadge
                   source="EIPA"
@@ -117,9 +115,10 @@ const HomePage = async () => {
                   completedAt={status.ingestionRuns.openev.completedAt}
                 />
               )}
-            </div>
-          </div>
-        )}
+            </>
+          ) : undefined
+        }
+      />
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
