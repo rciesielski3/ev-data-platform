@@ -28,7 +28,6 @@ body {
 }
 
 .card {
-  background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 18px;
   padding: 1.25rem;
