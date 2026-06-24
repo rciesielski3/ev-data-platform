@@ -442,7 +442,8 @@
     "hpcStationsHeader": "Stacje HPC",
     "maxPowerHeader": "Maks. moc",
     "avgPowerHeader": "Śr. moc",
-    "operatorsHeader": "Operatorzy"
+    "operatorsHeader": "Operatorzy",
+    "stationsPer100kHeader": "Stacje / 100 tys. mieszkańców"
   },
   "provincesError": {
     "title": "Nie udało się wczytać analizy województw",

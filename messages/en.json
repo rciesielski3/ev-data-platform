@@ -442,7 +442,8 @@
     "hpcStationsHeader": "HPC stations",
     "maxPowerHeader": "Max power",
     "avgPowerHeader": "Avg power",
-    "operatorsHeader": "Operators"
+    "operatorsHeader": "Operators",
+    "stationsPer100kHeader": "Stations / 100k residents"
   },
   "provincesError": {
     "title": "Province intelligence could not load",

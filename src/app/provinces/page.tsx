@@ -19,6 +19,11 @@ export const revalidate = 3600;
 const formatHpcShare = (row: ProvinceIntelligenceRow) =>
   formatPercent(row.hpcStationCount, row.stationCount);
 
+const formatPerCapita = (row: ProvinceIntelligenceRow, unknownLabel: string) =>
+  row.stationsPer100k === null
+    ? unknownLabel
+    : row.stationsPer100k.toFixed(2);
+
 type ProvinceTableHeaders = {
   province: string;
   stations: string;
@@ -28,6 +33,7 @@ type ProvinceTableHeaders = {
   maxPower: string;
   avgPower: string;
   operators: string;
+  stationsPer100k: string;
 };
 
 const ProvinceTable = ({
@@ -71,6 +77,9 @@ const ProvinceTable = ({
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.operators}
           </th>
+          <th scope="col" className="px-4 py-3 font-medium">
+            {headers.stationsPer100k}
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y divide-slate-100">
@@ -102,6 +111,9 @@ const ProvinceTable = ({
             </td>
             <td className="px-4 py-4 text-slate-700">
               {formatInteger(row.operatorCount)}
+            </td>
+            <td className="px-4 py-4 text-slate-700">
+              {formatPerCapita(row, unknownLabel)}
             </td>
           </tr>
         ))}
@@ -296,6 +308,7 @@ export default async function ProvincesPage() {
                 maxPower: t("maxPowerHeader"),
                 avgPower: t("avgPowerHeader"),
                 operators: t("operatorsHeader"),
+                stationsPer100k: t("stationsPer100kHeader"),
               }}
               unknownLabel={tCommon("unknown")}
               formatPowerMetric={formatPowerMetric}
