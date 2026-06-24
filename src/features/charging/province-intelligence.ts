@@ -1,4 +1,5 @@
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
+import { getProvincePopulationAndArea } from "@/features/charging/province-population";
 
 export const UNKNOWN_PROVINCE = "Unknown province";
 export const HPC_POWER_KW = 150;
@@ -28,6 +29,8 @@ export type ProvinceIntelligenceRow = {
   maxPowerKw: number | null;
   averagePowerKw: number | null;
   operatorCount: number;
+  stationsPer100k: number | null;
+  stationsPer1000Km2: number | null;
 };
 
 type ProvinceAccumulator = {
@@ -124,18 +127,35 @@ export const buildProvinceIntelligenceRows = (
   }
 
   return Array.from(provinceRows.values())
-    .map((row) => ({
-      province: row.province,
-      stationCount: row.stationCount,
-      connectorCount: row.connectorCount,
-      knownPowerConnectorCount: row.knownPowerConnectorCount,
-      hpcStationCount: row.hpcStationCount,
-      maxPowerKw: row.maxPowerKw,
-      averagePowerKw:
-        row.knownPowerConnectorCount > 0
-          ? roundToOneDecimal(row.totalPowerKw / row.knownPowerConnectorCount)
-          : null,
-      operatorCount: row.operators.size,
-    }))
+    .map((row) => {
+      const stationCount = row.stationCount;
+      const populationAndArea = getProvincePopulationAndArea(
+        row.province
+      );
+      const stationsPer100k =
+        populationAndArea !== null
+          ? (stationCount / populationAndArea.population) * 100_000
+          : null;
+      const stationsPer1000Km2 =
+        populationAndArea !== null
+          ? (stationCount / populationAndArea.areaKm2) * 1000
+          : null;
+
+      return {
+        province: row.province,
+        stationCount: row.stationCount,
+        connectorCount: row.connectorCount,
+        knownPowerConnectorCount: row.knownPowerConnectorCount,
+        hpcStationCount: row.hpcStationCount,
+        maxPowerKw: row.maxPowerKw,
+        averagePowerKw:
+          row.knownPowerConnectorCount > 0
+            ? roundToOneDecimal(row.totalPowerKw / row.knownPowerConnectorCount)
+            : null,
+        operatorCount: row.operators.size,
+        stationsPer100k,
+        stationsPer1000Km2,
+      };
+    })
     .sort(compareProvinceRows);
 };
