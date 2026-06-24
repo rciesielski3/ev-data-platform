@@ -10,6 +10,95 @@ import { leadSubmissionSchema } from "@/lib/validators/lead-submission";
 
 export const dynamic = "force-dynamic";
 
+const notifySlackFeaturedLead = async (
+  leadId: string,
+  name: string | null,
+  email: string,
+  company: string | null,
+  interest: string,
+  message: string | null,
+  submittedAt: Date
+) => {
+  if (!process.env.SLACK_WEBHOOK_FEATURED_LEADS) {
+    console.log(
+      "SLACK_WEBHOOK_FEATURED_LEADS not configured, skipping Slack notification"
+    );
+    return;
+  }
+
+  const slackMessage = {
+    text: "Featured Listing Lead Submitted",
+    blocks: [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: "🔗 Featured Listing Lead Submitted",
+        },
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: `*Operator:*\n${name || "(not provided)"}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Email:*\n${email}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Company:*\n${company || "(not provided)"}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Interest:*\n${interest}`,
+          },
+        ],
+      },
+      ...(message
+        ? [
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: `*Message:*\n${message}`,
+              },
+            },
+          ]
+        : []),
+      {
+        type: "context",
+        elements: [
+          {
+            type: "mrkdwn",
+            text: `Lead ID: ${leadId} | Submitted: ${new Date(submittedAt).toLocaleString()}`,
+          },
+        ],
+      },
+    ],
+  };
+
+  try {
+    const slackResponse = await fetch(
+      process.env.SLACK_WEBHOOK_FEATURED_LEADS,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(slackMessage),
+      }
+    );
+
+    if (!slackResponse.ok) {
+      const slackError = await slackResponse.text();
+      console.error("Slack webhook error:", slackError);
+    }
+  } catch (error) {
+    console.error("Failed to notify Slack:", error);
+  }
+};
+
 const submitLead = async (formData: FormData) => {
   "use server";
 
@@ -28,23 +117,15 @@ const submitLead = async (formData: FormData) => {
   const lead = await createLeadSubmission(parsed.data);
 
   if (parsed.data.interest === "FEATURED_LISTING" || parsed.data.interest === "BOTH") {
-    try {
-      await fetch("/api/webhooks/lead-submitted", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          leadId: lead.id,
-          name: lead.name,
-          email: lead.email,
-          company: lead.company,
-          interest: lead.interest,
-          message: lead.message,
-          submittedAt: lead.createdAt,
-        }),
-      });
-    } catch (error) {
-      console.error("Failed to post lead to webhook:", error);
-    }
+    await notifySlackFeaturedLead(
+      lead.id,
+      lead.name,
+      lead.email,
+      lead.company,
+      lead.interest,
+      lead.message,
+      lead.createdAt
+    );
   }
 
   redirect("/contact?submitted=true");
