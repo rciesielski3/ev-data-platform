@@ -109,7 +109,6 @@ const HomePage = async () => {
             {
               value: t("statProvincesValue", {
                 count: status.provinceCount,
-                total: TOTAL_PROVINCES_IN_POLAND,
               }),
               label: t("statProvinces"),
             },
@@ -125,19 +124,19 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <Card>
+          <Card className="bg-emerald-50">
             <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
             <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
           </Card>
-          <Card>
+          <Card className="bg-emerald-50">
             <Database className="h-6 w-6 text-[var(--accent)]" />
             <h3 className="mt-4 font-semibold">
               {t("valueNormalizedTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
           </Card>
-          <Card>
+          <Card className="bg-emerald-50">
             <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
             <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>

@@ -47,7 +47,7 @@
     "statOperators": "Operatorów",
     "statEvModels": "Modeli EV",
     "statProvinces": "Pełne pokrycie Polski",
-    "statProvincesValue": "{count}/{total} województw",
+    "statProvincesValue": "{count} województw",
     "valuePropsTitle": "Dlaczego EVSource",
     "valuePropsSubtitle": "Trzy rzeczy, które wyróżniają nasze dane na tle innych źródeł.",
     "valueQualityTitle": "Dane ocenione pod względem jakości",
