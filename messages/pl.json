@@ -47,7 +47,7 @@
     "statOperators": "Operatorów",
     "statEvModels": "Modeli EV",
     "statProvinces": "Pełne pokrycie Polski",
-    "statProvincesValue": "{count}/{total} województw",
+    "statProvincesValue": "{count} województw",
     "valueQualityTitle": "Dane ocenione pod względem jakości",
     "valueQualityBody": "Każda stacja i model pojazdu mają ocenę kompletności i świeżości — wiesz, na czym możesz polegać.",
     "valueNormalizedTitle": "Jedna, znormalizowana struktura",

@@ -47,7 +47,7 @@
     "statOperators": "Operators",
     "statEvModels": "EV models",
     "statProvinces": "Full coverage of Poland",
-    "statProvincesValue": "{count}/{total} provinces",
+    "statProvincesValue": "{count} provinces",
     "valueQualityTitle": "Quality-scored data",
     "valueQualityBody": "Every station and vehicle record carries a completeness and freshness score — you know what you can rely on.",
     "valueNormalizedTitle": "One normalized structure",
