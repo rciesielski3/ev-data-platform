@@ -84,149 +84,101 @@ Additional data providers may be integrated in the future.
 
 ---
 
-## Getting Started
-
-### 1. Install dependencies
+## Local Development
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### 2. Configure environment variables
-
-```bash
+# Set up environment (copy .env.example and configure DATABASE_URL at minimum)
 cp .env.example .env
-```
 
-Required:
-
-```env
-DATABASE_URL=
-```
-
-Optional:
-
-```env
-CRON_SECRET=
-EIPA_EXPORT_KEY=
-EIPA_IMPORT_LIMIT=
-OPENEV_DATA_URL=
-```
-
----
-
-### 3. Synchronize database schema
-
-```bash
+# Set up database and seed with data
 npm run db:push
-```
+npm run import:all
 
----
-
-### 4. Import EV models
-
-```bash
-npm run import:openev
-```
-
----
-
-### 5. Import charging stations
-
-```bash
-npm run import:eipa
-```
-
----
-
-### 6. Start development server
-
-```bash
+# Start development server
 npm run dev
 ```
 
-Application will be available at:
+Application will be available at `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
+### Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | Run TypeScript check |
+| `npm run test` | Run Vitest suite |
+| `npm run validate` | Full validation: lint + typecheck + test + build |
+| `npm run db:push` | Sync database schema |
+| `npm run db:studio` | Open Prisma Studio |
+| `npm run import:all` | Import all data sources |
+| `npm run import:eipa` | Import EIPA charging stations |
+| `npm run import:eipa:test` | Import EIPA with limit (for testing) |
+| `npm run import:openev` | Import OpenEV models |
 
 ---
 
-## Available Commands
+## API Endpoints
 
-### Development
+### Data & Status
+
+| Endpoint | Method | Purpose | Query Params |
+|----------|--------|---------|--------------|
+| `/api/status` | GET | Platform status: EV model count, charging station count, latest 5 ingestion runs | None |
+| `/api/exports/provinces` | GET | Province comparison table (station/connector counts, HPC coverage, power stats, top operators) | `format` = `csv` (default) or `json` |
+| `/api/exports/operators` | GET | Operator comparison table (station count, province coverage, average/max power) | `format` = `csv` (default) or `json` |
+
+### Protected (Cron/Manual Imports)
+
+| Endpoint | Method | Purpose | Auth |
+|----------|--------|---------|------|
+| `/api/cron/import-eipa` | GET | Trigger EIPA charging station import | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
+| `/api/cron/import-openev` | GET | Trigger OpenEV model import | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
+
+**Note:** Imports run via GitHub Actions on a schedule. These endpoints support manual/on-demand triggering (EIPA imports may take 60–75 minutes and exceed typical serverless function limits).
+
+### Web Pages
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Status homepage with dataset counts and ingestion freshness |
+| `/vehicles` | Searchable EV catalog with paginated cards |
+| `/vehicles/[id]` | EV battery, range, charging and source details |
+| `/stations` | Searchable Polish charging infrastructure |
+| `/stations/[id]` | Charging station source, freshness and connector details |
+| `/map` | OpenStreetMap charging station map with grouped markers |
+| `/connectors` | Connector knowledge base |
+| `/connectors/[type]` | Connector details (CCS2, Type 2, CHAdeMO, Unknown) |
+| `/insights` | Charging infrastructure insights dashboard |
+| `/provinces` | Province comparison: station/connector counts, HPC coverage, power stats, top operators |
+| `/operators` | Operator comparison: station count, province coverage, average/max power |
+| `/coverage` | Infrastructure coverage rankings (lowest/highest station counts, HPC coverage, power availability) |
+
+---
+
+## Deployment & Configuration
+
+Set environment variables before deployment:
+
+- `DATABASE_URL` (required): PostGIS-enabled PostgreSQL connection (e.g., Neon)
+- `CRON_SECRET` (production): Bearer token for import endpoints when `NODE_ENV=production`
+- `EIPA_EXPORT_KEY` (optional): EIPA API export key
+- `EIPA_IMPORT_LIMIT` (optional): Limit EIPA records fetched (useful for testing)
+- `OPENEV_DATA_URL` (optional): Custom OpenEV Data source URL
+
+**Pre-deployment checks:**
 
 ```bash
-npm run dev
-npm run build
-npm run lint
-npm run typecheck
-npm run test
 npm run validate
-```
-
-### Database
-
-```bash
 npm run db:push
-```
-
-### Data Imports
-
-```bash
-npm run import:openev
-npm run import:eipa
-npm run import:eipa:test
 npm run import:all
 ```
 
----
-
-## Public Routes
-
-```text
-/                         Status homepage with dataset counts and ingestion freshness
-/vehicles                 Searchable EV catalog
-/vehicles/[id]            EV battery, range, charging and source details
-/stations                 Searchable Polish charging infrastructure
-/stations/[id]            Charging station source, freshness and connector details
-/map                      OpenStreetMap-powered charging station map with grouped markers
-/connectors               Connector knowledge base
-/connectors/[type]        Connector details for CCS2, Type 2, CHAdeMO and Unknown
-/insights                 Charging infrastructure insights dashboard
-/provinces                Province comparison: station/connector counts, HPC coverage, power stats, top operators
-/operators                Operator comparison: station count, province coverage, average/max power
-/coverage                 Infrastructure coverage rankings (lowest/highest station counts, HPC coverage, power availability)
-/api/status               JSON status endpoint for deployment smoke checks
-/api/cron/import-eipa     Protected EIPA import endpoint
-/api/cron/import-openev   Protected OpenEV import endpoint
-/api/exports/provinces    CSV/JSON export of province comparison data (?format=csv|json)
-/api/exports/operators    CSV/JSON export of operator comparison data (?format=csv|json)
-```
-
----
-
-## Deployment Readiness
-
-Recommended validation before deployment:
-
-```bash
-npm run validate
-```
-
-For Vercel deployment:
-
-- Set `DATABASE_URL` to a PostGIS-enabled PostgreSQL database.
-- Set `CRON_SECRET` in production before enabling cron-triggered imports.
-- Add optional import variables only when needed: `EIPA_EXPORT_KEY`, `EIPA_IMPORT_LIMIT`, `OPENEV_DATA_URL`.
-- Basic station geocoding uses OpenStreetMap Nominatim for user-provided location searches, does not require an API key, and uses a small in-memory cache to avoid repeated lookups for the same location.
-- The `/map` experience uses Leaflet with public OpenStreetMap tiles; it does not add live availability, routing or turn-by-turn navigation.
-- Run `npm run db:push`, then seed data with `npm run import:all` or the protected cron endpoints.
-- Smoke check `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/provinces`, `/operators`, `/coverage`, `/api/status`, and one `/vehicles/[id]` plus one `/stations/[id]` page after deployment.
-- Smoke check the export links from `/provinces` and `/operators` (`/api/exports/provinces` and `/api/exports/operators`, both `csv` and `json` formats).
-- Trigger `/api/cron/import-eipa` and `/api/cron/import-openev` with `Authorization: Bearer <CRON_SECRET>` and confirm `/api/status` shows successful ingestion runs.
-- Scheduled EIPA/OpenEV imports now run via GitHub Actions (`.github/workflows/import-eipa.yml`, `import-openev.yml`) rather than Vercel cron, since a full EIPA import (60-75 min) exceeds Vercel's function-duration limit. The `/api/cron/*` routes above remain available for manual/on-demand triggering.
+Then verify: `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, `/provinces`, `/operators`, `/coverage`, `/api/status`, plus sample `/vehicles/[id]` and `/stations/[id]` pages. Confirm `/api/exports/provinces?format=csv`, `/api/exports/operators?format=json`, and import endpoints with `Authorization: Bearer <CRON_SECRET>`.
 
 ---
 
