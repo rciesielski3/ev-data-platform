@@ -227,7 +227,7 @@ export default async function ProvincesPage() {
               <Card as="article" key={row.province}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-950">
+                    <h2 className="font-display text-xl font-semibold text-slate-950">
                       {localizeFallback(row.province, tCommon)}
                     </h2>
                     <p className="muted mt-1 text-sm">
@@ -274,7 +274,7 @@ export default async function ProvincesPage() {
           <section>
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
+                <h2 className="font-display text-xl font-semibold">{t("comparisonTitle")}</h2>
                 <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
               </div>
               <p className="text-sm text-slate-500">

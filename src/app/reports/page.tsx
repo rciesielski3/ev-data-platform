@@ -15,7 +15,7 @@ export default async function ReportsPage() {
 
       <section className="grid gap-6 sm:grid-cols-3">
         <Card as="article" className="flex flex-col">
-          <h2 className="text-xl font-semibold">{t("starterName")}</h2>
+          <h2 className="font-display text-xl font-semibold">{t("starterName")}</h2>
           <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
             {t("starterPrice")}
           </p>
@@ -35,7 +35,7 @@ export default async function ReportsPage() {
 
         <Card as="article" className="flex flex-col border-emerald-200 ring-1 ring-emerald-100">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-xl font-semibold">{t("professionalName")}</h2>
+            <h2 className="font-display text-xl font-semibold">{t("professionalName")}</h2>
             <Badge>{t("professionalBadge")}</Badge>
           </div>
           <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
@@ -56,7 +56,7 @@ export default async function ReportsPage() {
         </Card>
 
         <Card as="article" className="flex flex-col">
-          <h2 className="text-xl font-semibold">{t("enterpriseName")}</h2>
+          <h2 className="font-display text-xl font-semibold">{t("enterpriseName")}</h2>
           <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
             {t("enterprisePriceNote")}
           </p>
@@ -70,7 +70,7 @@ export default async function ReportsPage() {
       <section className="mt-10">
         <Card as="article" className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold">{t("listingTitle")}</h2>
+            <h2 className="font-display text-xl font-semibold">{t("listingTitle")}</h2>
             <p className="muted mt-1 max-w-2xl text-sm">{t("listingDescription")}</p>
             <p className="mt-3 text-lg font-semibold text-[var(--foreground)]">
               {t("listingPrice")}
@@ -85,7 +85,7 @@ export default async function ReportsPage() {
 
       <section className="mt-10">
         <Card as="article" className="flex flex-col items-center gap-3 text-center">
-          <h2 className="text-xl font-semibold">{t("sampleTitle")}</h2>
+          <h2 className="font-display text-xl font-semibold">{t("sampleTitle")}</h2>
           <p className="muted max-w-2xl text-sm">{t("sampleDescription")}</p>
           <Button as={Link} href="/reports/sample" variant="secondary" className="mt-2">
             {t("sampleCta")}
@@ -94,7 +94,7 @@ export default async function ReportsPage() {
       </section>
 
       <section className="mt-10 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-[var(--foreground)]">
           {t("closingTitle")}
         </h2>
         <p className="muted mx-auto mt-2 max-w-xl">{t("closingBody")}</p>

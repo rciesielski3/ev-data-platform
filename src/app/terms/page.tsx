@@ -41,7 +41,7 @@ const TermsPage = async () => {
       <div className="space-y-6">
         {sections.map((section) => (
           <Card as="section" key={section.key}>
-            <h2 className="mb-2 text-base font-semibold text-slate-950">
+            <h2 className="font-display mb-2 text-base font-semibold text-slate-950">
               {section.title}
             </h2>
             <p className="text-sm text-slate-700">{section.body}</p>

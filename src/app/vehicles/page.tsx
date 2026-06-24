@@ -216,14 +216,14 @@ export default async function VehiclesPage({
                 as={Link}
                 href={`/vehicles/${vehicle.id}`}
                 interactive
-                className="group block"
+                className="group relative block"
               >
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div>
-                    <div className="text-sm font-medium text-slate-500">
+                    <div className="text-sm font-medium text-emerald-700">
                       {vehicle.brand.name}
                     </div>
-                    <h2 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700">
+                    <h2 className="font-display mt-1 text-lg font-semibold text-slate-900 group-hover:text-emerald-700">
                       {vehicle.modelName}
                     </h2>
                     {vehicle.variantName && (

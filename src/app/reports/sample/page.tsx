@@ -329,7 +329,7 @@ export default async function SampleReportPage() {
 
       <section className="mb-8 print:break-inside-avoid">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("marketShareTitle")}</h2>
+          <h2 className="font-display text-xl font-semibold">{t("marketShareTitle")}</h2>
           <p className="muted mt-1 text-sm">{t("marketShareSubtitle")}</p>
           {leadingOperator && (
             <p className="mt-2 text-sm text-slate-600">
@@ -408,7 +408,7 @@ export default async function SampleReportPage() {
 
       <section className="map-section mb-8 print:hidden">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("mapSectionTitle")}</h2>
+          <h2 className="font-display text-xl font-semibold">{t("mapSectionTitle")}</h2>
           <p className="muted mt-1 text-sm">
             {t("mapSectionSubtitle", { count: SAMPLE_MAP_STATION_LIMIT })}
           </p>
@@ -417,7 +417,7 @@ export default async function SampleReportPage() {
       </section>
 
       <Card as="section" className="mb-8 print:break-inside-avoid">
-        <h2 className="text-lg font-semibold text-slate-950">{t("methodologyTitle")}</h2>
+        <h2 className="font-display text-lg font-semibold text-slate-950">{t("methodologyTitle")}</h2>
         <p className="muted mt-2 text-sm">{t("methodologyBody")}</p>
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
           <div>
@@ -443,7 +443,7 @@ export default async function SampleReportPage() {
         as="section"
         className="cta-section border-emerald-200 bg-emerald-50 text-emerald-900 print:hidden"
       >
-        <h2 className="text-lg font-semibold">{t("ctaTitle")}</h2>
+        <h2 className="font-display text-lg font-semibold">{t("ctaTitle")}</h2>
         <p className="mt-2">{t("ctaBody")}</p>
         <Link
           href="/contact"

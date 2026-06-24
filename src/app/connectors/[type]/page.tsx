@@ -54,7 +54,7 @@ export default async function ConnectorDetailPage({
 
       <header className="mb-8">
         <Badge>{connector.currentType}</Badge>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
+        <h1 className="font-display mt-3 text-4xl font-bold tracking-tight text-slate-900">
           {connector.label}
         </h1>
         <p className="muted mt-3 max-w-2xl text-lg">{description}</p>
@@ -62,7 +62,7 @@ export default async function ConnectorDetailPage({
 
       {isUnknownConnector && (
         <section className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
-          <h2 className="text-lg font-medium">{t("incompleteDataTitle")}</h2>
+          <h2 className="font-display text-lg font-semibold">{t("incompleteDataTitle")}</h2>
           <p className="mt-2 text-sm">{t("incompleteDataBody")}</p>
         </section>
       )}
@@ -86,7 +86,7 @@ export default async function ConnectorDetailPage({
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-5 text-xl font-medium text-slate-900">
+          <h2 className="font-display mb-5 text-xl font-semibold text-slate-900">
             {t("detailsTitle")}
           </h2>
           <dl className="space-y-4">

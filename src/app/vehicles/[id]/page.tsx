@@ -173,10 +173,10 @@ export default async function VehicleDetailPage({
       </div>
 
       <header className="mb-10">
-        <div className="text-lg font-medium text-slate-500">
+        <div className="text-lg font-medium text-emerald-700">
           {vehicle.brand.name}
         </div>
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900">
           {vehicle.modelName}
         </h1>
         {vehicle.variantName && (
@@ -186,7 +186,7 @@ export default async function VehicleDetailPage({
 
       <div className="grid gap-8 md:grid-cols-2">
         <Card as="section">
-          <h2 className="mb-4 text-xl font-medium text-slate-900">
+          <h2 className="font-display mb-4 text-xl font-semibold text-slate-900">
             {t("batteryRangeTitle")}
           </h2>
           <dl className="space-y-4 text-sm">

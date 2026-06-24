@@ -247,7 +247,7 @@ export default async function OperatorsPage() {
           <section className="grid gap-6 lg:grid-cols-[1fr_2fr]">
             <aside className="space-y-6">
               <Card as="article">
-                <h2 className="text-xl font-semibold">{t("largestFootprintTitle")}</h2>
+                <h2 className="font-display text-xl font-semibold">{t("largestFootprintTitle")}</h2>
                 <p className="muted mt-1 text-sm">{t("largestFootprintSubtitle")}</p>
                 <div className="mt-5 space-y-4">
                   {rows.slice(0, 5).map((row) => (
@@ -287,7 +287,7 @@ export default async function OperatorsPage() {
 
             <Card as="section">
               <div className="mb-4">
-                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
+                <h2 className="font-display text-xl font-semibold">{t("comparisonTitle")}</h2>
                 <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
               </div>
               <OperatorTable

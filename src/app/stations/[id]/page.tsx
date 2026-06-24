@@ -86,10 +86,10 @@ export default async function StationDetailPage({
       </div>
 
       <header className="mb-10">
-        <p className="text-lg font-medium text-slate-500">
+        <p className="text-lg font-medium text-emerald-700">
           {localizeFallback(details.operatorName, tCommon)}
         </p>
-        <h1 className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
+        <h1 className="font-display mt-1 text-4xl font-bold tracking-tight text-slate-950">
           {details.title === "Charging station"
             ? tCommon("chargingStationFallback")
             : details.title}
@@ -99,7 +99,7 @@ export default async function StationDetailPage({
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.25fr]">
         <Card as="section">
-          <h2 className="mb-5 text-xl font-medium text-slate-900">
+          <h2 className="font-display mb-5 text-xl font-semibold text-slate-900">
             {t("stationDetailsTitle")}
           </h2>
           <dl className="space-y-3">

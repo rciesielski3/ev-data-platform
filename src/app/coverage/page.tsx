@@ -177,7 +177,7 @@ export default async function CoveragePage() {
       />
 
       <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
-        <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
+        <h2 className="font-display mb-2 text-lg font-semibold">{t("explainerTitle")}</h2>
         <p>
           {t("explainerBodyPrefix")} <strong>{t("explainerBodyStrong")}</strong>
           {t("explainerBodySuffix")}
@@ -226,7 +226,7 @@ export default async function CoveragePage() {
 
           <section className="mb-8 grid gap-4 lg:grid-cols-3">
             <Card as="article">
-              <h2 className="text-lg font-semibold text-slate-950">
+              <h2 className="font-display text-lg font-semibold text-slate-950">
                 {t("lowestStationCountTitle")}
               </h2>
               <p className="muted mt-1 text-sm">
@@ -288,7 +288,7 @@ export default async function CoveragePage() {
           <section>
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
+                <h2 className="font-display text-xl font-semibold">{t("comparisonTitle")}</h2>
                 <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
               </div>
             </div>

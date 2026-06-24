@@ -315,7 +315,7 @@ const StationsPage = async ({
                             tCommon,
                           )}
                         </p>
-                        <h2 className="mt-1 text-xl font-semibold text-slate-950">
+                        <h2 className="font-display mt-1 text-xl font-semibold text-slate-950">
                           {station.name ??
                             station.externalCode ??
                             tCommon("chargingStationFallback")}

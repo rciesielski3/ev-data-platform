@@ -11,7 +11,7 @@ const PageHeader = ({
 }) => (
   <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--foreground)]">
+      <h1 className="font-display text-3xl font-bold tracking-tight text-[var(--foreground)]">
         {title}
       </h1>
       {description && <p className="muted mt-2 max-w-2xl">{description}</p>}

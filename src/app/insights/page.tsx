@@ -223,7 +223,7 @@ export default async function InsightsPage() {
 
           <section className="grid gap-6 lg:grid-cols-2">
             <Card as="article">
-              <h2 className="text-xl font-semibold">{t("topOperatorsTitle")}</h2>
+              <h2 className="font-display text-xl font-semibold">{t("topOperatorsTitle")}</h2>
               <p className="muted mt-1 text-sm">{t("topOperatorsSubtitle")}</p>
               <div className="mt-5 space-y-4">
                 {insights.topOperators.map((operator) => (
