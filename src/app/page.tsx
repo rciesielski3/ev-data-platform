@@ -1,5 +1,15 @@
 import Link from "next/link";
-import { ShieldCheck, Database, FileBarChart } from "lucide-react";
+import {
+  ShieldCheck,
+  Database,
+  FileBarChart,
+  CarFront,
+  Search,
+  MapPinned,
+  Plug,
+  BarChart3,
+  ArrowRight,
+} from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -7,6 +17,7 @@ import Card from "@/components/ui/Card";
 import Hero from "@/components/ui/Hero";
 import Notice from "@/components/ui/Notice";
 import StatStrip from "@/components/ui/StatStrip";
+import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -16,7 +27,7 @@ export const revalidate = 3600;
 const TOTAL_PROVINCES_IN_POLAND = 16;
 
 const getStatus = async () => {
-  const [evCount, stationCount, operatorCount, provinces] = await Promise.all([
+  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] = await Promise.all([
     prisma.evModel.count(),
     prisma.chargingStation.count(),
     prisma.chargingOperator.count(),
@@ -24,13 +35,26 @@ const getStatus = async () => {
       by: ["province"],
       where: { province: { not: null } },
     }),
+    prisma.ingestionRun.findMany({
+      include: { source: true },
+      orderBy: { completedAt: "desc" },
+      take: 10,
+    }),
   ]);
+
+  const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
+  for (const run of ingestionRuns) {
+    if (!(run.source.key in latestBySource)) {
+      latestBySource[run.source.key] = run;
+    }
+  }
 
   return {
     evCount,
     stationCount,
     operatorCount,
     provinceCount: provinces.length,
+    ingestionRuns: latestBySource,
   };
 };
 
@@ -67,13 +91,35 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               variant="ghost"
-              className="px-6 py-3 text-base"
+              className="hero-cta-secondary px-6 py-3 text-base"
             >
               {t("heroSecondaryCta")}
             </Button>
           </>
         }
       />
+
+      {!("error" in status) &&
+        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
+          <div className="mx-auto w-full max-w-5xl px-6 py-4">
+            <div className="flex flex-wrap gap-3 justify-center">
+              {status.ingestionRuns.eipa && (
+                <ImportStatusBadge
+                  source="EIPA"
+                  status={status.ingestionRuns.eipa.status}
+                  completedAt={status.ingestionRuns.eipa.completedAt}
+                />
+              )}
+              {status.ingestionRuns.openev && (
+                <ImportStatusBadge
+                  source="OpenEV"
+                  status={status.ingestionRuns.openev.status}
+                  completedAt={status.ingestionRuns.openev.completedAt}
+                />
+              )}
+            </div>
+          </div>
+        )}
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
@@ -124,54 +170,69 @@ const HomePage = async () => {
         </Card>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="mb-6 text-2xl font-semibold">{t("exploreTitle")}</h2>
+      <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
+        <div className="mx-auto mb-10 max-w-xl text-center">
+          <h2 className="font-display text-2xl font-bold">
+            {t("exploreTitle")}
+          </h2>
+          <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Card as={Link} href="/vehicles" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+          <Card as={Link} href="/vehicles" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <CarFront className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("evCatalogEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("evCatalogTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
           </Card>
-          <Card as={Link} href="/stations" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+          <Card as={Link} href="/stations" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Search className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationSearchEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("stationSearchTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
               {t("stationSearchDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/map" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+          <Card as={Link} href="/map" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationMapEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("stationMapTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
-          <Card as={Link} href="/connectors" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+          <Card as={Link} href="/connectors" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Plug className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("connectorKnowledgeEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("connectorKnowledgeTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
               {t("connectorKnowledgeDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/insights" interactive>
-            <p className="text-sm font-medium text-emerald-700">
+          <Card as={Link} href="/insights" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("chargingInsightsEyebrow")}
             </p>
-            <h3 className="mt-2 text-xl font-semibold">
+            <h3 className="font-display mt-2 text-xl font-semibold">
               {t("chargingInsightsTitle")}
             </h3>
             <p className="muted mt-2 text-sm">
@@ -183,7 +244,7 @@ const HomePage = async () => {
 
       <section className="bg-[var(--accent-soft-bg)] py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 px-6 text-center">
-          <h2 className="text-2xl font-semibold text-[var(--accent-soft-text)]">
+          <h2 className="font-display text-2xl font-semibold text-[var(--accent-soft-text)]">
             {t("b2bCtaTitle")}
           </h2>
           <p className="muted max-w-xl">{t("b2bCtaBody")}</p>
