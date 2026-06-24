@@ -83,7 +83,7 @@ const HomePage = async () => {
               as={Link}
               href="/map"
               variant="primary"
-              className="px-6 py-3 text-base"
+              className="px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroPrimaryCta")}
             </Button>
@@ -91,7 +91,7 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               variant="ghost"
-              className="hero-cta-secondary px-6 py-3 text-base"
+              className="hero-cta-secondary px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroSecondaryCta")}
             </Button>
