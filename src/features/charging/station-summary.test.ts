@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildLastVerifiedNote,
+  buildSummarySentence,
   buildStationSummaryParts,
   buildSummarySentence,
   type StationSummaryInput,

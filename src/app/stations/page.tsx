@@ -25,6 +25,10 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
+import {
+  buildStationSummaryParts,
+  buildSummarySentence,
+} from "@/features/charging/station-summary";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -103,6 +107,7 @@ const StationsPage = async ({
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stations");
   const tCommon = await getTranslations("common");
+  const tStationDetail = await getTranslations("stationDetail");
 
   const filters = parseStationSearchParams(await searchParams);
 
@@ -264,6 +269,7 @@ const StationsPage = async ({
                   station.connectors,
                 );
                 const quality = buildStationQuality(station);
+<<<<<<< HEAD
 
                 const normalizedAddress = station.address?.trim() ?? "";
 
@@ -273,6 +279,19 @@ const StationsPage = async ({
                   .toLowerCase()
                   .includes(normalizedCity.toLowerCase());
 
+=======
+                const summarySentence = buildSummarySentence(
+                  buildStationSummaryParts({
+                    operatorName:
+                      station.operator?.name ?? station.operator?.normalizedName ?? null,
+                    city: station.city,
+                    connectorTypes: station.connectors.map((c) => c.connectorType),
+                    maxPowerKw: strongestConnector?.powerKw ?? null,
+                  }),
+                  t,
+                  locale,
+                );
+>>>>>>> fe4eb57 (refactor: extract station summary sentence builder into a shared, exported function)
                 const locationLine =
                   [
                     normalizedAddress,
