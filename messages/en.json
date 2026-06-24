@@ -57,6 +57,7 @@
     "valueBenchmarkTitle": "Built for benchmarking",
     "valueBenchmarkBody": "Province coverage, operator share, and connector mix — a reference point for network planning.",
     "exploreTitle": "Explore the data",
+    "exploreSubtitle": "Five ways to dive into the data — from the vehicle catalog to infrastructure analytics.",
     "evCatalogEyebrow": "EV catalog",
     "evCatalogTitle": "Browse vehicle models",
     "evCatalogDescription": "Search brands and models, then open detail pages for battery, range, charging, source, and freshness.",

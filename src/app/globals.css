@@ -231,6 +231,23 @@ button.card:active,
   }
 }
 
+.section-accent {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-accent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 0%,
+    color-mix(in srgb, var(--accent) 12%, transparent),
+    transparent 70%
+  );
+}
+
 .hero-cta-secondary {
   background: color-mix(in srgb, var(--card) 75%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-deep) 20%, transparent);

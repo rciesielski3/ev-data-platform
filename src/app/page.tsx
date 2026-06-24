@@ -8,6 +8,7 @@ import {
   MapPinned,
   Plug,
   BarChart3,
+  ArrowRight,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -116,7 +117,7 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="mx-auto max-w-5xl px-6 py-16">
+      <section className="section-accent mx-auto max-w-5xl px-6 py-16">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
@@ -124,32 +125,46 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <Card>
-            <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
-            <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
-            <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
-          </Card>
-          <Card>
-            <Database className="h-6 w-6 text-[var(--accent)]" />
-            <h3 className="mt-4 font-semibold">
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+            <ShieldCheck className="h-6 w-6 text-[var(--accent-deep)]" />
+            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
+              {t("valueQualityTitle")}
+            </h3>
+            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
+              {t("valueQualityBody")}
+            </p>
+          </div>
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+            <Database className="h-6 w-6 text-[var(--accent-deep)]" />
+            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
               {t("valueNormalizedTitle")}
             </h3>
-            <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
-          </Card>
-          <Card>
-            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
-            <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
-            <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
-          </Card>
+            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
+              {t("valueNormalizedBody")}
+            </p>
+          </div>
+          <div className="rounded-2xl bg-[var(--accent-soft-bg)] p-6">
+            <FileBarChart className="h-6 w-6 text-[var(--accent-deep)]" />
+            <h3 className="mt-4 font-semibold text-[var(--accent-deep)]">
+              {t("valueBenchmarkTitle")}
+            </h3>
+            <p className="mt-2 text-sm text-[var(--accent-soft-text)]">
+              {t("valueBenchmarkBody")}
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="font-display mb-6 text-2xl font-semibold">
-          {t("exploreTitle")}
-        </h2>
+      <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
+        <div className="mx-auto mb-10 max-w-xl text-center">
+          <h2 className="font-display text-2xl font-bold">
+            {t("exploreTitle")}
+          </h2>
+          <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Card as={Link} href="/vehicles" interactive>
+          <Card as={Link} href="/vehicles" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("evCatalogEyebrow")}
@@ -159,7 +174,8 @@ const HomePage = async () => {
             </h3>
             <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
           </Card>
-          <Card as={Link} href="/stations" interactive>
+          <Card as={Link} href="/stations" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationSearchEyebrow")}
@@ -171,7 +187,8 @@ const HomePage = async () => {
               {t("stationSearchDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/map" interactive>
+          <Card as={Link} href="/map" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <MapPinned className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("stationMapEyebrow")}
@@ -181,7 +198,8 @@ const HomePage = async () => {
             </h3>
             <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
-          <Card as={Link} href="/connectors" interactive>
+          <Card as={Link} href="/connectors" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Plug className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("connectorKnowledgeEyebrow")}
@@ -193,7 +211,8 @@ const HomePage = async () => {
               {t("connectorKnowledgeDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/insights" interactive>
+          <Card as={Link} href="/insights" interactive className="group relative">
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
               {t("chargingInsightsEyebrow")}

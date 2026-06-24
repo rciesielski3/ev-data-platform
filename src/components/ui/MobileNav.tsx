@@ -47,9 +47,9 @@ const MobileNav = ({
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`rounded-md px-2 py-2 transition-colors ${
+                  className={`rounded-full px-3 py-2 transition-colors ${
                     isActive
-                      ? "bg-emerald-50 font-semibold text-emerald-700"
+                      ? "bg-emerald-600 text-white"
                       : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
                   }`}
                 >

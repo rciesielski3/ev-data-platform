@@ -5,7 +5,7 @@ type Stat = {
 
 const StatStrip = ({ stats }: { stats: Stat[] }) => (
   <section className="border-y border-[var(--card-border)] bg-white py-10">
-    <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 px-6 sm:grid-cols-4">
+    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-6 sm:grid-cols-4">
       {stats.map((stat, index) => (
         <div
           key={stat.label}
