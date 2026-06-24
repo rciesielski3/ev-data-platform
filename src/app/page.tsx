@@ -17,6 +17,7 @@ import Card from "@/components/ui/Card";
 import Hero from "@/components/ui/Hero";
 import Notice from "@/components/ui/Notice";
 import StatStrip from "@/components/ui/StatStrip";
+import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -26,7 +27,7 @@ export const revalidate = 3600;
 const TOTAL_PROVINCES_IN_POLAND = 16;
 
 const getStatus = async () => {
-  const [evCount, stationCount, operatorCount, provinces] = await Promise.all([
+  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] = await Promise.all([
     prisma.evModel.count(),
     prisma.chargingStation.count(),
     prisma.chargingOperator.count(),
@@ -34,13 +35,26 @@ const getStatus = async () => {
       by: ["province"],
       where: { province: { not: null } },
     }),
+    prisma.ingestionRun.findMany({
+      include: { source: true },
+      orderBy: { completedAt: "desc" },
+      take: 10,
+    }),
   ]);
+
+  const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
+  for (const run of ingestionRuns) {
+    if (!(run.source.key in latestBySource)) {
+      latestBySource[run.source.key] = run;
+    }
+  }
 
   return {
     evCount,
     stationCount,
     operatorCount,
     provinceCount: provinces.length,
+    ingestionRuns: latestBySource,
   };
 };
 
@@ -84,6 +98,28 @@ const HomePage = async () => {
           </>
         }
       />
+
+      {!("error" in status) &&
+        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
+          <div className="mx-auto w-full max-w-5xl px-6 py-4">
+            <div className="flex flex-wrap gap-3 justify-center">
+              {status.ingestionRuns.eipa && (
+                <ImportStatusBadge
+                  source="EIPA"
+                  status={status.ingestionRuns.eipa.status}
+                  completedAt={status.ingestionRuns.eipa.completedAt}
+                />
+              )}
+              {status.ingestionRuns.openev && (
+                <ImportStatusBadge
+                  source="OpenEV"
+                  status={status.ingestionRuns.openev.status}
+                  completedAt={status.ingestionRuns.openev.completedAt}
+                />
+              )}
+            </div>
+          </div>
+        )}
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
