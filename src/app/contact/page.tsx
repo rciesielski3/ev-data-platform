@@ -25,7 +25,28 @@ const submitLead = async (formData: FormData) => {
     redirect("/contact?error=invalid");
   }
 
-  await createLeadSubmission(parsed.data);
+  const lead = await createLeadSubmission(parsed.data);
+
+  if (parsed.data.interest === "FEATURED_LISTING" || parsed.data.interest === "BOTH") {
+    try {
+      await fetch("/api/webhooks/lead-submitted", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          leadId: lead.id,
+          name: lead.name,
+          email: lead.email,
+          company: lead.company,
+          interest: lead.interest,
+          message: lead.message,
+          submittedAt: lead.createdAt,
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to post lead to webhook:", error);
+    }
+  }
+
   redirect("/contact?submitted=true");
 };
 
@@ -35,9 +56,13 @@ const inputClassName =
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: Promise<{ submitted?: string; error?: string }>;
+  searchParams: Promise<{
+    submitted?: string;
+    error?: string;
+    interest?: string;
+  }>;
 }) {
-  const { submitted, error } = await searchParams;
+  const { submitted, error, interest } = await searchParams;
   const t = await getTranslations("contact");
 
   return (
@@ -74,7 +99,14 @@ export default async function ContactPage({
           <fieldset className="flex flex-col gap-2 text-sm">
             <legend className="font-medium text-slate-700">{t("interestLabel")}</legend>
             <label className="flex items-start gap-2">
-              <input type="radio" name="interest" value="REPORT" required className="mt-1" />
+              <input
+                type="radio"
+                name="interest"
+                value="REPORT"
+                required
+                defaultChecked={interest === "REPORT" || !interest}
+                className="mt-1"
+              />
               <span>
                 <span className="block font-medium text-slate-900">
                   {t("interestReportLabel")}
@@ -85,7 +117,13 @@ export default async function ContactPage({
               </span>
             </label>
             <label className="flex items-start gap-2">
-              <input type="radio" name="interest" value="FEATURED_LISTING" className="mt-1" />
+              <input
+                type="radio"
+                name="interest"
+                value="FEATURED_LISTING"
+                defaultChecked={interest === "FEATURED_LISTING"}
+                className="mt-1"
+              />
               <span>
                 <span className="block font-medium text-slate-900">
                   {t("interestFeaturedListingLabel")}
@@ -96,7 +134,13 @@ export default async function ContactPage({
               </span>
             </label>
             <label className="flex items-start gap-2">
-              <input type="radio" name="interest" value="BOTH" className="mt-1" />
+              <input
+                type="radio"
+                name="interest"
+                value="BOTH"
+                defaultChecked={interest === "BOTH"}
+                className="mt-1"
+              />
               <span>
                 <span className="block font-medium text-slate-900">
                   {t("interestBothLabel")}

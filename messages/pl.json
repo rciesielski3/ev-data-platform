@@ -245,6 +245,27 @@
     "successBody": "Otrzymaliśmy Twoje zgłoszenie i skontaktujemy się wkrótce.",
     "validationErrorNotice": "Sprawdź, czy podano prawidłowy adres e-mail i wybrano jedną z opcji zainteresowania."
   },
+  "operatorFeatured": {
+    "heroBadge": "Oferta B2B",
+    "heroTitle": "Wyróżnij Twoją sieć ładowania na EVSource",
+    "heroSubtitle": "Od 290 zł/rok. Dotrzyj do tysięcy kierowców co miesiąc dzięki wyróżnionej liście operatorów.",
+    "heroStats": "Wymieniona w {stations} stacjach ładowania wśród {operators} operatorów w {provinces} województwach",
+    "ctaButton": "Powiedz nam o swojej sieci",
+    "valuePropsTitle": "Dlaczego wyróżnione listy są ważne",
+    "visibilityTitle": "Widoczność",
+    "visibilityBody": "Bezpośredni dostęp do wyszukiwarki EVSource i odkrywania lokalizacji. Twoja sieć pojawia się w czołówce list operatorów.",
+    "trustTitle": "Zaufanie",
+    "trustBody": "Certyfikowane, rządowe dane zwiększają wiarygodność. Twoja infrastruktura wspierana jest oficjalnymi rejestrami EIPA/UDT Polska.",
+    "simpleTitle": "Proste",
+    "simpleBody": "Żadna integracja nie jest wymagana—zajmujemy się listą i aktualizacjami. Wystarczy, że nam powiesz o swojej sieci.",
+    "pricingTitle": "Cennik i zobowiązanie",
+    "pricingPeriod": "rocznie",
+    "pricingFeature1": "Roczne zobowiązanie",
+    "pricingFeature2": "Nieograniczone stacje",
+    "pricingFeature3": "Aktualne dane",
+    "nextStepsTitle": "Gotów do rozpoczęcia?",
+    "nextStepsBody": "Kliknij przycisk powyżej, aby wysłać informacje o Twoim operatorze. Nasz zespół przejrzy Twoją prośbę i skontaktuje się w ciągu 2 dni roboczych, aby omówić cennik, warunki i następne kroki."
+  },
   "stationQuality": {
     "freshLabel": "Świeże",
     "staleLabel": "Nieaktualne",
