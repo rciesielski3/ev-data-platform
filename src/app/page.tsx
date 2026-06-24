@@ -169,7 +169,6 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
         </Card>
       </section>
-      </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
         <div className="mx-auto mb-10 max-w-xl text-center">
