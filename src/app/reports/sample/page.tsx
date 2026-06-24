@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { unstable_cache } from "next/cache";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
@@ -17,6 +18,7 @@ import {
   formatStationMapDto,
   groupStationMapDtos,
 } from "@/features/charging/station-map";
+import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import {
   getOperatorIntelligenceRows,
@@ -29,39 +31,37 @@ export const revalidate = 3600;
 const TOP_OPERATOR_LIMIT = 10;
 const SAMPLE_MAP_STATION_LIMIT = 150;
 
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
-
-const getSampleMapGroups = async () => {
-  const stations = await prisma.chargingStation.findMany({
-    select: {
-      id: true,
-      name: true,
-      latitude: true,
-      longitude: true,
-      province: true,
-      operator: {
-        select: {
-          name: true,
-          normalizedName: true,
+const getSampleMapGroups = unstable_cache(
+  async () => {
+    const stations = await prisma.chargingStation.findMany({
+      select: {
+        id: true,
+        name: true,
+        latitude: true,
+        longitude: true,
+        province: true,
+        operator: {
+          select: {
+            name: true,
+            normalizedName: true,
+          },
+        },
+        connectors: {
+          select: {
+            connectorType: true,
+            powerKw: true,
+          },
         },
       },
-      connectors: {
-        select: {
-          connectorType: true,
-          powerKw: true,
-        },
-      },
-    },
-    orderBy: [{ updatedAt: "desc" }],
-    take: SAMPLE_MAP_STATION_LIMIT,
-  });
+      orderBy: [{ updatedAt: "desc" }],
+      take: SAMPLE_MAP_STATION_LIMIT,
+    });
 
-  return groupStationMapDtos(stations.map(formatStationMapDto));
-};
+    return groupStationMapDtos(stations.map(formatStationMapDto));
+  },
+  ["reports-sample-map-groups"],
+  { revalidate: 3600 },
+);
 
 const getReportData = async () => {
   const [provinceRows, operatorRows, mapGroups] = await Promise.all([
@@ -215,6 +215,7 @@ const ProvinceCoverageTable = ({
 );
 
 export default async function SampleReportPage() {
+  const locale = await getLocale();
   const t = await getTranslations("reportsSample");
   const tOperators = await getTranslations("operators");
   const tProvinces = await getTranslations("provinces");
@@ -282,7 +283,7 @@ export default async function SampleReportPage() {
       : null;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12 print:max-w-none print:px-0">
+    <main className="report-print mx-auto max-w-6xl px-6 py-12 print:max-w-none print:px-0">
       <PageHeader
         badge={t("badge")}
         title={t("title")}
@@ -427,7 +428,7 @@ export default async function SampleReportPage() {
           <div>
             <dt className="text-slate-500">{t("snapshotDateLabel")}</dt>
             <dd className="mt-1 font-medium text-slate-950">
-              {dateFormatter.format(new Date())}
+              {formatDisplayDate(new Date(), locale)}
             </dd>
           </div>
           <div>

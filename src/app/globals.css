@@ -166,26 +166,26 @@ button.card:active,
 }
 
 @media print {
-  header,
-  footer {
+  body:has(.report-print) header,
+  body:has(.report-print) footer {
     display: none !important;
   }
 
-  main {
+  main.report-print {
     padding: 0 !important;
     max-width: none !important;
   }
 
-  .card {
+  .report-print .card {
     box-shadow: none !important;
     break-inside: avoid;
   }
 
-  table {
+  .report-print table {
     break-inside: avoid;
   }
 
-  a {
+  .report-print a {
     text-decoration: none !important;
   }
 }
