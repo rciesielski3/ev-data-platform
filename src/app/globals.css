@@ -12,12 +12,19 @@
   --accent-hover: #047857;
   --accent-soft-bg: #dcfce7;
   --accent-soft-text: #15803d;
+  --accent-glow: #34d399;
+  --accent-deep: #064e3b;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), Arial, Helvetica,
+    sans-serif;
 }
 
 .card {
