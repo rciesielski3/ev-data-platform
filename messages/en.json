@@ -489,7 +489,12 @@
     "hpcShareHeader": "HPC share",
     "connectorsHeader": "Connectors",
     "knownPowerHeader": "Known power",
-    "powerAvailabilityHeader": "Power availability"
+    "powerAvailabilityHeader": "Power availability",
+    "lowestPerCapitaCoverageTitle": "Weakest access per resident",
+    "lowestPerCapitaCoverageSubtitle": "Stations per 100k residents — accounts for population density, not just raw station counts. Population source: GUS (Statistics Poland), estimated figures.",
+    "perCapitaMetric": "{value} / 100k",
+    "stationsPer100kHeader": "Stations / 100k",
+    "stateOfChargingLink": "View full snapshot"
   },
   "coverageError": {
     "title": "Coverage analysis could not load",

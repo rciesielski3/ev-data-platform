@@ -66,6 +66,7 @@ type CoverageTableHeaders = {
   connectors: string;
   knownPower: string;
   powerAvailability: string;
+  stationsPer100k: string;
 };
 
 const CoverageTable = ({
@@ -102,6 +103,9 @@ const CoverageTable = ({
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.powerAvailability}
           </th>
+          <th scope="col" className="px-4 py-3 font-medium">
+            {headers.stationsPer100k}
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y divide-slate-100">
@@ -127,6 +131,9 @@ const CoverageTable = ({
             </td>
             <td className="px-4 py-4 text-slate-700">
               {formatRatio(row.powerAvailabilityRatio)}
+            </td>
+            <td className="px-4 py-4 text-slate-700">
+              {row.stationsPer100k === null ? "" : row.stationsPer100k.toFixed(2)}
             </td>
           </tr>
         ))}
@@ -171,6 +178,12 @@ export default async function CoveragePage() {
               className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
             >
               {t("viewInsightsLink")}
+            </Link>
+            <Link
+              href="/state-of-charging"
+              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            >
+              {t("stateOfChargingLink")}
             </Link>
           </>
         }
@@ -285,6 +298,28 @@ export default async function CoveragePage() {
             </Card>
           </section>
 
+          <section className="mb-8">
+            <Card as="article" className="border-emerald-200 bg-emerald-50">
+              <h2 className="text-lg font-semibold text-slate-950">
+                {t("lowestPerCapitaCoverageTitle")}
+              </h2>
+              <p className="muted mt-1 text-sm">
+                {t("lowestPerCapitaCoverageSubtitle")}
+              </p>
+              <RankingList
+                rows={coverage.lowestPerCapitaCoverageProvinces}
+                emptyLabel={t("rankingEmptyLabel")}
+                metric={(row) =>
+                  t("perCapitaMetric", {
+                    value:
+                      row.stationsPer100k === null ? "" : row.stationsPer100k.toFixed(2),
+                  })
+                }
+                localizeProvinceLabel={localizeProvinceLabel}
+              />
+            </Card>
+          </section>
+
           <section>
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -302,6 +337,7 @@ export default async function CoveragePage() {
                 connectors: t("connectorsHeader"),
                 knownPower: t("knownPowerHeader"),
                 powerAvailability: t("powerAvailabilityHeader"),
+                stationsPer100k: t("stationsPer100kHeader"),
               }}
               localizeProvinceLabel={localizeProvinceLabel}
             />

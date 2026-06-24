@@ -489,7 +489,12 @@
     "hpcShareHeader": "Udział HPC",
     "connectorsHeader": "Złącza",
     "knownPowerHeader": "Znana moc",
-    "powerAvailabilityHeader": "Dostępność mocy"
+    "powerAvailabilityHeader": "Dostępność mocy",
+    "lowestPerCapitaCoverageTitle": "Najsłabszy dostęp na mieszkańca",
+    "lowestPerCapitaCoverageSubtitle": "Stacje na 100 tys. mieszkańców — uwzględnia gęstość zaludnienia, nie tylko liczbę stacji. Źródło danych o ludności: GUS, dane szacunkowe.",
+    "perCapitaMetric": "{value} / 100 tys.",
+    "stationsPer100kHeader": "Stacje / 100 tys.",
+    "stateOfChargingLink": "Zobacz pełny raport"
   },
   "coverageError": {
     "title": "Nie udało się wczytać analizy pokrycia",
