@@ -156,28 +156,32 @@ export default async function ContactPage({
       <section className="mb-8 grid gap-4 sm:grid-cols-3">
         <Card className="border border-[var(--card-border)] bg-emerald-50">
           <FileBarChart className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">Custom Reports</h3>
+          <h3 className="font-medium mt-3">
+            {t("overviewCustomReportsTitle")}
+          </h3>
 
           <p className="muted mt-1 text-sm">
-            Benchmark charging infrastructure and competitors.
+            {t("overviewCustomReportsDescription")}
           </p>
         </Card>
 
         <Card className="border border-[var(--card-border)] bg-emerald-50">
           <Link2 className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">Featured Listings</h3>
+          <h3 className="font-medium mt-3">
+            {t("overviewFeaturedListingsTitle")}
+          </h3>
 
           <p className="muted mt-1 text-sm">
-            Increase visibility for your charging network.
+            {t("overviewFeaturedListingsDescription")}
           </p>
         </Card>
 
         <Card className="border border-[var(--card-border)] bg-emerald-50">
           <MessageSquare className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">Fast Response</h3>
+          <h3 className="font-medium mt-3">{t("overviewFastResponseTitle")}</h3>
 
           <p className="muted mt-1 text-sm">
-            We typically respond within one business day.
+            {t("overviewFastResponseDescription")}
           </p>
         </Card>
       </section>
@@ -271,7 +275,7 @@ export default async function ContactPage({
               <span className="flex-1">
                 <span className="flex items-center gap-2 font-medium text-slate-900">
                   <Package className="h-4 w-4 text-emerald-600" />
-                  {t("interestReportLabel")}
+                  {t("interestBothLabel")}
                 </span>
                 <span className="block text-slate-500">
                   {t("interestBothDescription")}

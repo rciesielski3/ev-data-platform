@@ -257,7 +257,13 @@
     "privacyNote": "Wysyłając formularz, zgadzasz się na kontakt w sprawie Twojego zapytania. Nie udostępniamy danych stronom trzecim.",
     "successTitle": "Dziękujemy!",
     "successBody": "Otrzymaliśmy Twoje zgłoszenie i skontaktujemy się wkrótce.",
-    "validationErrorNotice": "Sprawdź, czy podano prawidłowy adres e-mail i wybrano jedną z opcji zainteresowania."
+    "validationErrorNotice": "Sprawdź, czy podano prawidłowy adres e-mail i wybrano jedną z opcji zainteresowania.",
+    "overviewCustomReportsTitle": "Raporty na zamówienie",
+    "overviewCustomReportsDescription": "Porównuj infrastrukturę ładowania, operatorów i potencjał rynku.",
+    "overviewFeaturedListingsTitle": "Wyróżnione wpisy",
+    "overviewFeaturedListingsDescription": "Zwiększ widoczność swojej sieci ładowania i usług.",
+    "overviewFastResponseTitle": "Szybka odpowiedź",
+    "overviewFastResponseDescription": "Zwykle odpowiadamy w ciągu jednego dnia roboczego."
   },
   "operatorFeatured": {
     "heroBadge": "Oferta B2B",
