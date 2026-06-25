@@ -39,7 +39,7 @@ export default async function ReportsPage() {
 
         <Card
           as="article"
-          className="flex flex-col border-emerald-200 ring-1 ring-emerald-100 shadow-lg scale-[1.02] transition-all duration-300 hover:-translate-y-2b hover:shadow-2xl"
+          className="flex flex-col border-emerald-200 ring-1 ring-emerald-100 shadow-lg scale-[1.02] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
         >
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xl font-semibold">{t("professionalName")}</h2>
