@@ -30,6 +30,7 @@
     "provinces": "Provinces",
     "operators": "Operators",
     "coverage": "Coverage",
+    "reports": "Reports",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "languageSwitcherLabel": "Change language"
@@ -80,6 +81,9 @@
     "chargingInsightsEyebrow": "Charging insights",
     "chargingInsightsTitle": "Explore infrastructure metrics",
     "chargingInsightsDescription": "See top operators, connector distribution, strongest stations, and province coverage from imported station data.",
+    "reportsEyebrow": "Benchmark reports",
+    "reportsTitle": "Infrastructure reports",
+    "reportsDescription": "Explore sample benchmarking reports and discover custom infrastructure analysis for charging network operators.",
     "b2bCtaTitle": "Analytics and reports for charging network operators",
     "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing — let's talk about what you need.",
     "b2bCtaButton": "Get in touch"
@@ -352,7 +356,26 @@
       "Quarterly updates delivered by email as new data arrives",
       "Optional follow-up support call to discuss strategy implications"
     ],
-    "ctaLabel": "Commission your report"
+    "ctaLabel": "Commission your report",
+    "powerStructureTitle": "Power structure",
+    "powerStructureSubtitle": "Overview of charging power availability across the network.",
+    "hpcShareLabel": "HPC share",
+    "hpcShareHelper": "Stations with at least one connector rated at {threshold} kW or higher.",
+    "averagePowerLabel": "Average connector power",
+    "averagePowerHelper": "Average power across connectors with known kW values.",
+    "maxPowerLabel": "Maximum observed power",
+    "maxPowerHelper": "Highest connector power observed in the dataset.",
+    "mapSectionTitle": "Sample infrastructure map",
+    "mapSectionSubtitle": "Preview based on up to {count} recently imported charging stations.",
+    "methodologyTitle": "Methodology",
+    "methodologyBody": "This report is generated from imported charging infrastructure data. Metrics are aggregated across operators, provinces, stations, and connectors available at the time of report generation.",
+    "dataSourceLabel": "Data source",
+    "dataSourceLine": "EIPA / UDT Poland charging infrastructure data",
+    "snapshotDateLabel": "Snapshot date",
+    "hpcDefinitionLabel": "HPC definition",
+    "hpcDefinitionLine": "Stations with at least one connector rated at {threshold} kW or higher.",
+    "ctaTitle": "Need a report tailored to your business?",
+    "ctaBody": "Get a custom benchmarking report focused on your market segment, competitors, infrastructure footprint, and expansion opportunities."
   },
   "reportsSampleError": {
     "title": "Sample report unavailable",

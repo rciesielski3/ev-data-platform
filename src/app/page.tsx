@@ -89,7 +89,8 @@ const HomePage = async () => {
               as={Link}
               href="/map"
               variant="primary"
-              className="px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+              size="lg"
+              className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroPrimaryCta")}
             </Button>
@@ -97,7 +98,8 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               variant="ghost"
-              className="hero-cta-secondary px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+              size="lg"
+              className="hero-cta-secondary transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroSecondaryCta")}
             </Button>
@@ -170,18 +172,18 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <Card className="bg-emerald-50">
-            <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="border border-[var(--card-border)] bg-emerald-50">
+            <ShieldCheck className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
           </Card>
-          <Card className="bg-emerald-50">
-            <Database className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="border border-[var(--card-border)] bg-emerald-50">
+            <Database className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
           </Card>
-          <Card className="bg-emerald-50">
-            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="border border-[var(--card-border)] bg-emerald-50">
+            <FileBarChart className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
           </Card>
@@ -200,7 +202,7 @@ const HomePage = async () => {
             as={Link}
             href="/vehicles"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
@@ -216,7 +218,7 @@ const HomePage = async () => {
             as={Link}
             href="/stations"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
@@ -234,7 +236,7 @@ const HomePage = async () => {
             as={Link}
             href="/map"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <MapPinned className="h-6 w-6 text-[var(--accent)]" />
@@ -250,7 +252,7 @@ const HomePage = async () => {
             as={Link}
             href="/connectors"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Plug className="h-6 w-6 text-[var(--accent)]" />
@@ -268,7 +270,7 @@ const HomePage = async () => {
             as={Link}
             href="/insights"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
@@ -282,6 +284,24 @@ const HomePage = async () => {
               {t("chargingInsightsDescription")}
             </p>
           </Card>
+          <Card
+            as={Link}
+            href="/reports"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
+              {t("reportsEyebrow")}
+            </p>
+
+            <h3 className="font-display mt-2 text-xl font-semibold">
+              {t("reportsTitle")}
+            </h3>
+
+            <p className="muted mt-2 text-sm">{t("reportsDescription")}</p>
+          </Card>
         </div>
       </section>
 
@@ -291,12 +311,7 @@ const HomePage = async () => {
             {t("b2bCtaTitle")}
           </h2>
           <p className="muted max-w-xl">{t("b2bCtaBody")}</p>
-          <Button
-            as={Link}
-            href="/contact"
-            variant="primary"
-            className="px-6 py-3 text-base"
-          >
+          <Button as={Link} href="/contact" variant="primary" size="lg">
             {t("b2bCtaButton")}
           </Button>
         </div>

@@ -1,6 +1,11 @@
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "warning";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "warning"
+  | "cta";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary:
@@ -11,11 +16,19 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
     "text-emerald-700 hover:text-emerald-900 focus-visible:outline-emerald-600",
   warning:
     "bg-amber-900 text-white hover:bg-amber-800 focus-visible:outline-amber-900",
+  cta: "bg-emerald-600 text-white shadow-md hover:bg-emerald-700 hover:shadow-lg focus-visible:outline-emerald-600",
+};
+
+const SIZE_CLASSES = {
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-sm",
+  lg: "px-6 py-3 text-base",
 };
 
 type ButtonOwnProps<T extends ElementType> = {
   as?: T;
   variant?: ButtonVariant;
+  size?: "sm" | "md" | "lg";
 };
 
 type ButtonProps<T extends ElementType> = ButtonOwnProps<T> &
@@ -24,17 +37,18 @@ type ButtonProps<T extends ElementType> = ButtonOwnProps<T> &
 const Button = <T extends ElementType = "button">({
   as,
   variant = "primary",
+  size = "md",
   className,
   ...rest
 }: ButtonProps<T>) => {
   const Component = (as ?? "button") as ElementType;
   const classNameValue = (className ?? "") as string;
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+    "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
     <Component
-      className={`${base} ${VARIANT_CLASSES[variant]} ${classNameValue}`.trim()}
+      className={`${base} ${SIZE_CLASSES[size]} ${VARIANT_CLASSES[variant]} ${classNameValue}`.trim()}
       {...rest}
     />
   );

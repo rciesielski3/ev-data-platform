@@ -30,6 +30,7 @@
     "provinces": "Województwa",
     "operators": "Operatorzy",
     "coverage": "Pokrycie",
+    "reports": "Raporty",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
     "languageSwitcherLabel": "Zmień język"
@@ -80,6 +81,9 @@
     "chargingInsightsEyebrow": "Statystyki ładowania",
     "chargingInsightsTitle": "Poznaj wskaźniki infrastruktury",
     "chargingInsightsDescription": "Zobacz najlepszych operatorów, rozkład złączy, najmocniejsze stacje i pokrycie województw na podstawie zaimportowanych danych.",
+    "reportsEyebrow": "Raporty benchmarkowe",
+    "reportsTitle": "Raporty infrastruktury",
+    "reportsDescription": "Zobacz przykładowy raport benchmarkingowy i poznaj możliwości dedykowanej analizy infrastruktury dla operatorów sieci ładowania.",
     "b2bCtaTitle": "Analizy i raporty dla operatorów sieci ładowania",
     "b2bCtaBody": "Raport porównawczy oparty na pełnym pokryciu rynku albo wyróżnione miejsce na liście operatorów — porozmawiajmy o Twoich potrzebach.",
     "b2bCtaButton": "Skontaktuj się"
@@ -352,7 +356,26 @@
       "Aktualizacje kwartalne dostarczane e-mailem w miarę napływu nowych danych",
       "Opcjonalna rozmowa wsparcia w celu omówienia implikacji strategicznych"
     ],
-    "ctaLabel": "Zamów swój raport"
+    "ctaLabel": "Zamów swój raport",
+    "powerStructureTitle": "Struktura mocy",
+    "powerStructureSubtitle": "Przegląd dostępności mocy ładowania w sieci.",
+    "hpcShareLabel": "Udział stacji HPC",
+    "hpcShareHelper": "Stacje posiadające co najmniej jedno złącze o mocy {threshold} kW lub wyższej.",
+    "averagePowerLabel": "Średnia moc złączy",
+    "averagePowerHelper": "Średnia moc dla złączy posiadających znaną wartość kW.",
+    "maxPowerLabel": "Maksymalna zaobserwowana moc",
+    "maxPowerHelper": "Najwyższa moc złącza odnotowana w zbiorze danych.",
+    "mapSectionTitle": "Przykładowa mapa infrastruktury",
+    "mapSectionSubtitle": "Podgląd oparty na maksymalnie {count} ostatnio zaimportowanych stacjach ładowania.",
+    "methodologyTitle": "Metodologia",
+    "methodologyBody": "Raport został wygenerowany na podstawie zaimportowanych danych o infrastrukturze ładowania. Metryki agregowane są dla operatorów, województw, stacji oraz złączy dostępnych w momencie generowania raportu.",
+    "dataSourceLabel": "Źródło danych",
+    "dataSourceLine": "Dane infrastruktury ładowania EIPA / UDT Polska",
+    "snapshotDateLabel": "Data raportu",
+    "hpcDefinitionLabel": "Definicja HPC",
+    "hpcDefinitionLine": "Stacje posiadające co najmniej jedno złącze o mocy {threshold} kW lub wyższej.",
+    "ctaTitle": "Potrzebujesz raportu dopasowanego do swojej firmy?",
+    "ctaBody": "Zamów dedykowany raport benchmarkingowy uwzględniający Twój segment rynku, konkurencję, zasięg infrastruktury oraz potencjalne kierunki rozwoju."
   },
   "reportsSampleError": {
     "title": "Przykładowy raport niedostępny",
