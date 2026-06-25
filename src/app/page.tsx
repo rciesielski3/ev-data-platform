@@ -46,7 +46,9 @@ const getStatus = async () => {
       include: { source: true },
       where: {
         completedAt: { not: null },
-        status: { in: ["SUCCESS", "PARTIAL"] },
+        status: {
+          in: ["RUNNING", "SUCCESS", "PARTIAL"],
+        },
         source: {
           key: "eipa",
         },
