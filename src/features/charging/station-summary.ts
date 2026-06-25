@@ -50,3 +50,38 @@ export const buildLastVerifiedNote = (
 
   return `Data last verified: ${formatDisplayDate(reference)}`;
 };
+
+export const buildSummarySentence = (
+  parts: StationSummaryParts,
+  t: (key: string, params?: Record<string, string | number>) => string,
+  locale: string,
+): string => {
+  const subject = parts.hasOperator
+    ? t("summarySubjectWithOperator", { operator: parts.operatorLabel })
+    : t("summarySubjectGeneric");
+
+  const connectorList =
+    parts.connectorLabels.length > 0
+      ? new Intl.ListFormat(locale, { style: "long", type: "conjunction" }).format(
+          parts.connectorLabels,
+        )
+      : null;
+
+  let connectorClause: string | null = null;
+  if (connectorList && parts.powerLabel) {
+    connectorClause = t("summaryWithConnectorsUpTo", {
+      connectors: connectorList,
+      power: parts.powerLabel,
+    });
+  } else if (connectorList) {
+    connectorClause = t("summaryWithConnectors", { connectors: connectorList });
+  } else if (parts.powerLabel) {
+    connectorClause = t("summaryWithPowerOnly", { power: parts.powerLabel });
+  }
+
+  const subjectWithCity = parts.city
+    ? `${subject} ${t("summaryInCity", { city: parts.city })}`
+    : subject;
+
+  return `${[subjectWithCity, connectorClause].filter(Boolean).join(", ")}.`;
+};
