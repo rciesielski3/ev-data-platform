@@ -48,7 +48,7 @@ const Button = <T extends ElementType = "button">({
 
   return (
     <Component
-      className={`${base} ${VARIANT_CLASSES[variant]} ${classNameValue}`.trim()}
+      className={`${base} ${SIZE_CLASSES[size]} ${VARIANT_CLASSES[variant]} ${classNameValue}`.trim()}
       {...rest}
     />
   );
