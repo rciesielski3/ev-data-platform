@@ -257,7 +257,13 @@
     "privacyNote": "By submitting this form, you agree to be contacted about your inquiry. We do not share your data with third parties.",
     "successTitle": "Thank you!",
     "successBody": "We've received your submission and will be in touch soon.",
-    "validationErrorNotice": "Please check that you entered a valid email and selected one interest option."
+    "validationErrorNotice": "Please check that you entered a valid email and selected one interest option.",
+    "overviewCustomReportsTitle": "Custom Reports",
+    "overviewCustomReportsDescription": "Benchmark charging infrastructure, operators, and market opportunities.",
+    "overviewFeaturedListingsTitle": "Featured Listings",
+    "overviewFeaturedListingsDescription": "Increase visibility for your charging network and services.",
+    "overviewFastResponseTitle": "Fast Response",
+    "overviewFastResponseDescription": "We typically respond within one business day."
   },
   "operatorFeatured": {
     "heroBadge": "B2B offering",
