@@ -14,7 +14,9 @@ export const notifyImportFailure = async (
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhookUrl) {
-    console.log(`[Slack] No webhook URL configured; skipping notification for ${source} import`);
+    console.log(
+      `[Slack] No webhook URL configured; skipping notification for ${source} import`,
+    );
     return;
   }
 
@@ -63,7 +65,9 @@ export const notifyImportFailure = async (
         `[Slack] Failed to send notification: ${response.status} ${response.statusText}`,
       );
     } else {
-      console.log(`[Slack] Notification sent for ${source} import ${statusText}`);
+      console.log(
+        `[Slack] Notification sent for ${source} import ${statusText}`,
+      );
     }
   } catch (error) {
     console.error(

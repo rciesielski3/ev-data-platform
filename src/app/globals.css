@@ -27,17 +27,16 @@ body {
     sans-serif;
 }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 18px;
-  padding: 1.25rem;
-  box-shadow:
-    0 1px 2px rgb(20 32 26 / 0.04),
-    0 4px 12px -4px rgb(20 32 26 / 0.1);
-  transition:
-    transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+@layer components {
+  .card {
+    @apply border border-[var(--card-border)] rounded-[18px] p-5 bg-white;
+    box-shadow:
+      0 1px 2px rgb(20 32 26 / 0.04),
+      0 4px 12px -4px rgb(20 32 26 / 0.1);
+    transition:
+      transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
 }
 
 a.card:hover,

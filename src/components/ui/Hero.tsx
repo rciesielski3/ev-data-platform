@@ -7,11 +7,13 @@ const Hero = ({
   title,
   subhead,
   actions,
+  importStatusBadges,
 }: {
   badge: string;
   title: string;
   subhead: string;
   actions: ReactNode;
+  importStatusBadges?: ReactNode;
 }) => (
   <section className="hero-surface flex flex-col items-center gap-6 py-16 text-center sm:py-24">
     <span className="hero-orb hero-orb-1" aria-hidden="true" />
@@ -40,6 +42,11 @@ const Hero = ({
     <div className="flex flex-wrap items-center justify-center gap-4">
       {actions}
     </div>
+    {importStatusBadges && (
+      <div className="flex flex-wrap items-center justify-center gap-3 py-3">
+        {importStatusBadges}
+      </div>
+    )}
   </section>
 );
 
