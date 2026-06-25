@@ -25,42 +25,63 @@ import type { SupportedLocale } from "@/lib/i18n/constants";
 export const revalidate = 3600;
 
 const getStatus = async () => {
-  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] =
-    await Promise.all([
-      prisma.evModel.count(),
-      prisma.chargingStation.count(),
-      prisma.chargingOperator.count(),
-      prisma.chargingStation.groupBy({
-        by: ["province"],
-        where: { province: { not: null } },
-      }),
-      prisma.ingestionRun.findMany({
-        include: { source: true },
-        where: {
-          completedAt: { not: null },
-          status: { in: ["SUCCESS", "PARTIAL"] },
-        },
-        orderBy: { completedAt: "desc" },
-        take: 10,
-      }),
-    ]);
+  const [
+    evCount,
+    stationCount,
+    operatorCount,
+    provinces,
+    latestEipaRun,
+    latestOpenEvRun,
+  ] = await Promise.all([
+    prisma.evModel.count(),
+    prisma.chargingStation.count(),
+    prisma.chargingOperator.count(),
+    prisma.chargingStation.groupBy({
+      by: ["province"],
 
-  const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
-  for (const run of ingestionRuns) {
-    if (!run.source) continue;
-    const sourceKey = run.source.key?.toLowerCase() || "";
-    if (!sourceKey) continue;
-    if (!(sourceKey in latestBySource)) {
-      latestBySource[sourceKey] = run;
-    }
-  }
+      where: { province: { not: null } },
+    }),
+
+    prisma.ingestionRun.findFirst({
+      include: { source: true },
+      where: {
+        completedAt: { not: null },
+        status: {
+          in: ["RUNNING", "SUCCESS", "PARTIAL"],
+        },
+        source: {
+          key: "eipa",
+        },
+      },
+      orderBy: {
+        completedAt: "desc",
+      },
+    }),
+
+    prisma.ingestionRun.findFirst({
+      include: { source: true },
+      where: {
+        completedAt: { not: null },
+        status: { in: ["SUCCESS", "PARTIAL"] },
+        source: {
+          key: "openev",
+        },
+      },
+      orderBy: {
+        completedAt: "desc",
+      },
+    }),
+  ]);
 
   return {
     evCount,
     stationCount,
     operatorCount,
     provinceCount: provinces.length,
-    ingestionRuns: latestBySource,
+    ingestionRuns: {
+      eipa: latestEipaRun,
+      openev: latestOpenEvRun,
+    },
   };
 };
 
@@ -118,6 +139,7 @@ const HomePage = async () => {
                   }
                 />
               )}
+
               {status.ingestionRuns.openev && (
                 <ImportStatusBadge
                   source="OpenEV"
@@ -172,17 +194,17 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
             <ShieldCheck className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
           </Card>
-          <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
             <Database className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
           </Card>
-          <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
             <FileBarChart className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>

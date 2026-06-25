@@ -42,10 +42,9 @@
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
     "importStatus": {
-      "success": "Success",
-      "partial": "Partial",
-      "failed": "Failed",
-      "running": "Running"
+      "running": "Updating",
+      "stationData": "Station Data",
+      "evCatalog": "EV Catalog"
     },
     "heroHeadline": "The complete picture of Poland's charging infrastructure, in one place",
     "heroSubhead": "Normalized, quality-scored data on charging stations and EV models — collected across all 16 provinces, ready to analyze.",

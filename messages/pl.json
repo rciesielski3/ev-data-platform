@@ -42,10 +42,9 @@
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
     "importStatus": {
-      "success": "Sukces",
-      "partial": "Częściowy",
-      "failed": "Błąd",
-      "running": "Trwający"
+      "running": "Aktualizacja",
+      "stationData": "Dane stacji",
+      "evCatalog": "Katalog EV"
     },
     "heroHeadline": "Pełny obraz polskiej infrastruktury ładowania, w jednym miejscu",
     "heroSubhead": "Znormalizowane, ocenione pod względem jakości dane o stacjach ładowania i pojazdach elektrycznych — zebrane z 16 województw, gotowe do analizy.",
