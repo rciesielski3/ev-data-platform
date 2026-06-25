@@ -131,33 +131,6 @@ const HomePage = async () => {
         }
       />
 
-      {!("error" in status) &&
-        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
-          <div className="mx-auto w-full max-w-5xl px-6 py-4">
-            <div className="flex flex-wrap gap-3 justify-center">
-              {status.ingestionRuns.eipa && (
-                <ImportStatusBadge
-                  source="EIPA"
-                  status={status.ingestionRuns.eipa.status}
-                  completedAt={
-                    status.ingestionRuns.eipa.completedAt?.toISOString() ?? null
-                  }
-                />
-              )}
-              {status.ingestionRuns["openev"] && (
-                <ImportStatusBadge
-                  source="OpenEV"
-                  status={status.ingestionRuns.openev.status}
-                  completedAt={
-                    status.ingestionRuns.openev.completedAt?.toISOString() ??
-                    null
-                  }
-                />
-              )}
-            </div>
-          </div>
-        )}
-
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
           <Notice title={tCommon("setupRequiredTitle")} tone="warning">
