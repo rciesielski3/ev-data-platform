@@ -94,7 +94,7 @@ export const ImportStatusBadge = ({
   );
 
   return (
-    <div className="flex items-center gap-2 rounded-full bg-white/50 px-3 py-2 text-xs backdrop-blur-sm">
+    <div className="flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-xs backdrop-blur-sm">
       {status === "RUNNING" ? (
         <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
       ) : (

@@ -120,7 +120,7 @@ const HomePage = async () => {
               href="/contact"
               variant="ghost"
               size="lg"
-              className="hero-cta-secondary transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+              className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroSecondaryCta")}
             </Button>
@@ -191,7 +191,8 @@ const HomePage = async () => {
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
           </h2>
-          <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
           <Card className="group border border-[var(--card-border)] bg-emerald-50">
@@ -217,7 +218,8 @@ const HomePage = async () => {
           <h2 className="font-display text-2xl font-bold">
             {t("exploreTitle")}
           </h2>
-          <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">{t("exploreSubtitle")}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card

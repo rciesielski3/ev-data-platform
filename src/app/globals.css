@@ -23,8 +23,8 @@ body {
 }
 
 .font-display {
-  font-family: var(--font-display), var(--font-geist-sans), Arial, Helvetica,
-    sans-serif;
+  font-family:
+    var(--font-display), var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
 @layer components {
@@ -123,7 +123,11 @@ button.card:active,
       #eef9f1 45%,
       var(--background) 100%
     );
-  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  background-size:
+    200% 200%,
+    200% 200%,
+    200% 200%,
+    100% 100%;
   animation: hero-marble-drift 11s ease-in-out infinite;
 }
 
@@ -151,10 +155,18 @@ button.card:active,
 @keyframes hero-marble-drift {
   0%,
   100% {
-    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+    background-position:
+      0% 0%,
+      100% 0%,
+      50% 100%,
+      0% 0%;
   }
   50% {
-    background-position: 22% 26%, 78% 24%, 58% 80%, 0% 0%;
+    background-position:
+      22% 26%,
+      78% 24%,
+      58% 80%,
+      0% 0%;
   }
 }
 
@@ -190,11 +202,7 @@ button.card:active,
   left: 38%;
   width: 180px;
   height: 180px;
-  background: radial-gradient(
-    circle,
-    var(--accent-soft-text),
-    transparent 70%
-  );
+  background: radial-gradient(circle, var(--accent-soft-text), transparent 70%);
   animation: hero-float-a 9s ease-in-out infinite reverse;
 }
 
@@ -221,7 +229,9 @@ button.card:active,
 .hero-bolt-path {
   stroke-dasharray: 14 10;
   animation: hero-bolt-flow 2.4s linear infinite;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 70%, transparent));
+  filter: drop-shadow(
+    0 0 6px color-mix(in srgb, var(--accent) 70%, transparent)
+  );
 }
 
 @keyframes hero-bolt-flow {
@@ -245,18 +255,6 @@ button.card:active,
     color-mix(in srgb, var(--accent) 12%, transparent),
     transparent 70%
   );
-}
-
-.hero-cta-secondary {
-  background: color-mix(in srgb, var(--card) 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-deep) 20%, transparent);
-  color: var(--accent-deep);
-  backdrop-filter: blur(6px);
-}
-
-.hero-cta-secondary:hover {
-  background: var(--card);
-  color: var(--accent-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {
