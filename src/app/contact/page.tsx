@@ -7,6 +7,7 @@ import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { createLeadSubmission } from "@/lib/db/lead-submissions";
 import { leadSubmissionSchema } from "@/lib/validators/lead-submission";
+import { FileBarChart, Link2, MessageSquare, Package } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +18,11 @@ const notifySlackFeaturedLead = async (
   company: string | null,
   interest: string,
   message: string | null,
-  submittedAt: Date
+  submittedAt: Date,
 ) => {
   if (!process.env.SLACK_WEBHOOK_FEATURED_LEADS) {
     console.log(
-      "SLACK_WEBHOOK_FEATURED_LEADS not configured, skipping Slack notification"
+      "SLACK_WEBHOOK_FEATURED_LEADS not configured, skipping Slack notification",
     );
     return;
   }
@@ -87,7 +88,7 @@ const notifySlackFeaturedLead = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(slackMessage),
-      }
+      },
     );
 
     if (!slackResponse.ok) {
@@ -116,7 +117,10 @@ const submitLead = async (formData: FormData) => {
 
   const lead = await createLeadSubmission(parsed.data);
 
-  if (parsed.data.interest === "FEATURED_LISTING" || parsed.data.interest === "BOTH") {
+  if (
+    parsed.data.interest === "FEATURED_LISTING" ||
+    parsed.data.interest === "BOTH"
+  ) {
     await notifySlackFeaturedLead(
       lead.id,
       lead.name,
@@ -124,7 +128,7 @@ const submitLead = async (formData: FormData) => {
       lead.company,
       lead.interest,
       lead.message,
-      lead.createdAt
+      lead.createdAt,
     );
   }
 
@@ -149,9 +153,37 @@ export default async function ContactPage({
   return (
     <main className="mx-auto max-w-2xl px-6 py-12">
       <PageHeader title={t("title")} description={t("description")} />
+      <section className="mb-8 grid gap-4 sm:grid-cols-3">
+        <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <FileBarChart className="h-5 w-5 text-[var(--accent)]" />
+          <h3 className="font-medium mt-3">Custom Reports</h3>
+
+          <p className="muted mt-1 text-sm">
+            Benchmark charging infrastructure and competitors.
+          </p>
+        </Card>
+
+        <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <Link2 className="h-5 w-5 text-[var(--accent)]" />
+          <h3 className="font-medium mt-3">Featured Listings</h3>
+
+          <p className="muted mt-1 text-sm">
+            Increase visibility for your charging network.
+          </p>
+        </Card>
+
+        <Card className="border border-[var(--card-border)] bg-emerald-50">
+          <MessageSquare className="h-5 w-5 text-[var(--accent)]" />
+          <h3 className="font-medium mt-3">Fast Response</h3>
+
+          <p className="muted mt-1 text-sm">
+            We typically respond within one business day.
+          </p>
+        </Card>
+      </section>
 
       {submitted === "true" ? (
-        <Notice title={t("successTitle")}>
+        <Notice title={t("successTitle")} tone="success">
           <p className="muted mt-2">{t("successBody")}</p>
         </Notice>
       ) : (
@@ -168,18 +200,29 @@ export default async function ContactPage({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">{t("emailLabel")}</span>
-            <input type="email" name="email" required className={inputClassName} />
+            <span className="font-medium text-slate-700">
+              {t("emailLabel")}
+            </span>
+            <input
+              type="email"
+              name="email"
+              required
+              className={inputClassName}
+            />
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">{t("companyLabel")}</span>
+            <span className="font-medium text-slate-700">
+              {t("companyLabel")}
+            </span>
             <input type="text" name="company" className={inputClassName} />
           </label>
 
-          <fieldset className="flex flex-col gap-2 text-sm">
-            <legend className="font-medium text-slate-700">{t("interestLabel")}</legend>
-            <label className="flex items-start gap-2">
+          <fieldset className="flex flex-col space-y-3 text-sm">
+            <legend className="font-medium text-slate-700">
+              {t("interestLabel")}
+            </legend>
+            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
               <input
                 type="radio"
                 name="interest"
@@ -188,16 +231,18 @@ export default async function ContactPage({
                 defaultChecked={interest === "REPORT" || !interest}
                 className="mt-1"
               />
-              <span>
-                <span className="block font-medium text-slate-900">
+              <span className="flex-1">
+                <span className="flex items-center gap-2 font-medium text-slate-900">
+                  <FileBarChart className="h-4 w-4 text-emerald-600" />
                   {t("interestReportLabel")}
                 </span>
+
                 <span className="block text-slate-500">
                   {t("interestReportDescription")}
                 </span>
               </span>
             </label>
-            <label className="flex items-start gap-2">
+            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
               <input
                 type="radio"
                 name="interest"
@@ -205,8 +250,9 @@ export default async function ContactPage({
                 defaultChecked={interest === "FEATURED_LISTING"}
                 className="mt-1"
               />
-              <span>
-                <span className="block font-medium text-slate-900">
+              <span className="flex-1">
+                <span className="flex items-center gap-2 font-medium text-slate-900">
+                  <Link2 className="h-4 w-4 text-emerald-600" />
                   {t("interestFeaturedListingLabel")}
                 </span>
                 <span className="block text-slate-500">
@@ -214,7 +260,7 @@ export default async function ContactPage({
                 </span>
               </span>
             </label>
-            <label className="flex items-start gap-2">
+            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
               <input
                 type="radio"
                 name="interest"
@@ -222,9 +268,10 @@ export default async function ContactPage({
                 defaultChecked={interest === "BOTH"}
                 className="mt-1"
               />
-              <span>
-                <span className="block font-medium text-slate-900">
-                  {t("interestBothLabel")}
+              <span className="flex-1">
+                <span className="flex items-center gap-2 font-medium text-slate-900">
+                  <Package className="h-4 w-4 text-emerald-600" />
+                  {t("interestReportLabel")}
                 </span>
                 <span className="block text-slate-500">
                   {t("interestBothDescription")}
@@ -234,11 +281,15 @@ export default async function ContactPage({
           </fieldset>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">{t("messageLabel")}</span>
+            <span className="font-medium text-slate-700">
+              {t("messageLabel")}
+            </span>
             <textarea name="message" rows={4} className={inputClassName} />
           </label>
 
-          <Button type="submit">{t("submitButton")}</Button>
+          <Button type="submit" variant="cta" size="lg">
+            {t("submitButton")}
+          </Button>
 
           <p className="muted text-xs">{t("privacyNote")}</p>
         </Card>
