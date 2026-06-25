@@ -1,5 +1,10 @@
 import { IngestionStatus } from "@prisma/client";
 
+const truncateString = (str: string, maxLength: number): string => {
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength - 3) + "...";
+};
+
 export const notifyImportFailure = async (
   source: string,
   status: IngestionStatus,
@@ -9,7 +14,9 @@ export const notifyImportFailure = async (
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhookUrl) {
-    console.log(`[Slack] No webhook URL configured; skipping notification for ${source} import`);
+    console.log(
+      `[Slack] No webhook URL configured; skipping notification for ${source} import`,
+    );
     return;
   }
 
@@ -20,13 +27,16 @@ export const notifyImportFailure = async (
   const statusText = status === IngestionStatus.FAILED ? "FAILED" : "PARTIAL";
   const color = status === IngestionStatus.FAILED ? "danger" : "warning";
 
-  let failureDetails = "";
+  const parts: string[] = [];
   if (recordsFailed !== undefined && recordsFailed > 0) {
-    failureDetails += `${recordsFailed} records failed | `;
+    parts.push(`${recordsFailed} records failed`);
   }
   if (errorMessage) {
-    failureDetails += `Error: ${errorMessage}`;
+    const truncatedError = truncateString(errorMessage, 500);
+    parts.push(`Error: ${truncatedError}`);
   }
+
+  const failureDetails = parts.join(" | ") || "No additional details";
 
   const message = {
     attachments: [
@@ -34,7 +44,7 @@ export const notifyImportFailure = async (
         fallback: `${source} import ${statusText}`,
         color,
         title: `${source} import ${statusText}`,
-        text: failureDetails.trim() || "No additional details",
+        text: failureDetails,
         footer: "EVSource Import Pipeline",
         ts: Math.floor(Date.now() / 1000),
       },
@@ -55,7 +65,9 @@ export const notifyImportFailure = async (
         `[Slack] Failed to send notification: ${response.status} ${response.statusText}`,
       );
     } else {
-      console.log(`[Slack] Notification sent for ${source} import ${statusText}`);
+      console.log(
+        `[Slack] Notification sent for ${source} import ${statusText}`,
+      );
     }
   } catch (error) {
     console.error(

@@ -24,32 +24,34 @@ import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const revalidate = 3600;
 
-const TOTAL_PROVINCES_IN_POLAND = 16;
-
 const getStatus = async () => {
-  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] = await Promise.all([
-    prisma.evModel.count(),
-    prisma.chargingStation.count(),
-    prisma.chargingOperator.count(),
-    prisma.chargingStation.groupBy({
-      by: ["province"],
-      where: { province: { not: null } },
-    }),
-    prisma.ingestionRun.findMany({
-      include: { source: true },
-      where: {
-        completedAt: { not: null },
-        status: { in: ["SUCCESS", "PARTIAL"] },
-      },
-      orderBy: { completedAt: "desc" },
-      take: 10,
-    }),
-  ]);
+  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] =
+    await Promise.all([
+      prisma.evModel.count(),
+      prisma.chargingStation.count(),
+      prisma.chargingOperator.count(),
+      prisma.chargingStation.groupBy({
+        by: ["province"],
+        where: { province: { not: null } },
+      }),
+      prisma.ingestionRun.findMany({
+        include: { source: true },
+        where: {
+          completedAt: { not: null },
+          status: { in: ["SUCCESS", "PARTIAL"] },
+        },
+        orderBy: { completedAt: "desc" },
+        take: 10,
+      }),
+    ]);
 
   const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
   for (const run of ingestionRuns) {
-    if (!(run.source.key in latestBySource)) {
-      latestBySource[run.source.key] = run;
+    if (!run.source) continue;
+    const sourceKey = run.source.key?.toLowerCase() || "";
+    if (!sourceKey) continue;
+    if (!(sourceKey in latestBySource)) {
+      latestBySource[sourceKey] = run;
     }
   }
 
@@ -109,20 +111,52 @@ const HomePage = async () => {
                 <ImportStatusBadge
                   source="EIPA"
                   status={status.ingestionRuns.eipa.status}
-                  completedAt={status.ingestionRuns.eipa.completedAt}
+                  completedAt={
+                    status.ingestionRuns.eipa.completedAt?.toISOString() ?? null
+                  }
                 />
               )}
               {status.ingestionRuns.openev && (
                 <ImportStatusBadge
                   source="OpenEV"
                   status={status.ingestionRuns.openev.status}
-                  completedAt={status.ingestionRuns.openev.completedAt}
+                  completedAt={
+                    status.ingestionRuns.openev.completedAt?.toISOString() ??
+                    null
+                  }
                 />
               )}
             </>
           ) : undefined
         }
       />
+
+      {!("error" in status) &&
+        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
+          <div className="mx-auto w-full max-w-5xl px-6 py-4">
+            <div className="flex flex-wrap gap-3 justify-center">
+              {status.ingestionRuns.eipa && (
+                <ImportStatusBadge
+                  source="EIPA"
+                  status={status.ingestionRuns.eipa.status}
+                  completedAt={
+                    status.ingestionRuns.eipa.completedAt?.toISOString() ?? null
+                  }
+                />
+              )}
+              {status.ingestionRuns["openev"] && (
+                <ImportStatusBadge
+                  source="OpenEV"
+                  status={status.ingestionRuns.openev.status}
+                  completedAt={
+                    status.ingestionRuns.openev.completedAt?.toISOString() ??
+                    null
+                  }
+                />
+              )}
+            </div>
+          </div>
+        )}
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
@@ -168,16 +202,16 @@ const HomePage = async () => {
             <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
           </Card>
-        <Card className="bg-emerald-50">
-          <Database className="h-6 w-6 text-[var(--accent)]" />
-          <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
-          <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
-        </Card>
-        <Card className="bg-emerald-50">
-          <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
-          <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
-          <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
-        </Card>
+          <Card className="bg-emerald-50">
+            <Database className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
+            <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
+          </Card>
+          <Card className="bg-emerald-50">
+            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
+            <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
+          </Card>
         </div>
       </section>
 
@@ -189,7 +223,12 @@ const HomePage = async () => {
           <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Card as={Link} href="/vehicles" interactive className="group relative bg-white">
+          <Card
+            as={Link}
+            href="/vehicles"
+            interactive
+            className="group relative bg-white"
+          >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
@@ -200,7 +239,12 @@ const HomePage = async () => {
             </h3>
             <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
           </Card>
-          <Card as={Link} href="/stations" interactive className="group relative bg-white">
+          <Card
+            as={Link}
+            href="/stations"
+            interactive
+            className="group relative bg-white"
+          >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
@@ -213,7 +257,12 @@ const HomePage = async () => {
               {t("stationSearchDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/map" interactive className="group relative bg-white">
+          <Card
+            as={Link}
+            href="/map"
+            interactive
+            className="group relative bg-white"
+          >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <MapPinned className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
@@ -224,7 +273,12 @@ const HomePage = async () => {
             </h3>
             <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
-          <Card as={Link} href="/connectors" interactive className="group relative bg-white">
+          <Card
+            as={Link}
+            href="/connectors"
+            interactive
+            className="group relative bg-white"
+          >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Plug className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
@@ -237,7 +291,12 @@ const HomePage = async () => {
               {t("connectorKnowledgeDescription")}
             </p>
           </Card>
-          <Card as={Link} href="/insights" interactive className="group relative bg-white">
+          <Card
+            as={Link}
+            href="/insights"
+            interactive
+            className="group relative bg-white"
+          >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">

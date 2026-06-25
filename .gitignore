@@ -45,3 +45,6 @@ docs
 
 # superpowers brainstorming companion
 .superpowers/
+
+# claude settings
+.claude/
