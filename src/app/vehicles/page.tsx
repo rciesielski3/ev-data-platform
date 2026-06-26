@@ -19,7 +19,10 @@ import {
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
-import { formatDisplayDate } from "@/lib/display/data-display";
+import {
+  formatDisplayDate,
+  formatDisplayNumber,
+} from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
@@ -85,12 +88,20 @@ const BrandLogo = ({
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className={size === "sm" ? "h-3.5 w-3.5 text-slate-800" : "h-5 w-5 text-slate-800"}
+        className={
+          size === "sm"
+            ? "h-3.5 w-3.5 text-slate-800"
+            : "h-5 w-5 text-slate-800"
+        }
       >
         <path fill="currentColor" d={brandMark.path} />
       </svg>
     ) : (
-      <span className={size === "sm" ? "max-w-5 truncate px-0.5" : "max-w-9 truncate px-1"}>
+      <span
+        className={
+          size === "sm" ? "max-w-5 truncate px-0.5" : "max-w-9 truncate px-1"
+        }
+      >
         {brandMark.title}
       </span>
     )}
@@ -125,6 +136,7 @@ export default async function VehiclesPage({
   }
 
   const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
+  const vehicleCount = "error" in data ? 0 : data.total;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
@@ -136,18 +148,42 @@ export default async function VehiclesPage({
             : t("descriptionWithCount", { count: data.total })
         }
         actions={
-          <form className="flex items-center gap-2">
+          <form className="flex w-full max-w-xl items-center gap-2">
             <input
               type="search"
               name="q"
               defaultValue={filters.q}
               placeholder={t("searchPlaceholder")}
-              className={filterInputClassName}
+              className={`${filterInputClassName} flex-1`}
             />
             <Button type="submit">{t("searchButton")}</Button>
           </form>
         }
       />
+
+      <div className="mb-8 grid gap-4 sm:grid-cols-2">
+        <Card className="text-center">
+          <p className="text-3xl font-bold text-[var(--accent)]">
+            {formatDisplayNumber(vehicleCount, locale)}
+          </p>
+          <p className="muted text-sm">{t("availableVehicles")}</p>
+        </Card>
+
+        <Card className="text-center">
+          <p className="text-3xl font-bold text-[var(--accent)]">
+            {filters.brand
+              ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
+              : t("allBrandsLabel")}
+          </p>
+          <p className="muted text-sm">{t("activeFilter")}</p>
+        </Card>
+      </div>
+
+      <div className="mb-3">
+        <h2 className="text-sm font-semibold text-slate-700">
+          {t("browseByBrand")}
+        </h2>
+      </div>
 
       {topBrands.length > 0 && (
         <div className="mb-8 -mx-6 flex flex-nowrap gap-2 overflow-x-auto px-6 pb-1">
@@ -223,14 +259,32 @@ export default async function VehiclesPage({
                     <div className="text-sm font-medium text-slate-500">
                       {vehicle.brand.name}
                     </div>
-                    <h2 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700">
+
+                    <h2 className="text-xl font-bold text-slate-900 transition-colors group-hover:text-[var(--accent)]">
                       {vehicle.modelName}
                     </h2>
+
                     {vehicle.variantName && (
                       <p className="text-sm text-slate-600">
                         {vehicle.variantName}
                       </p>
                     )}
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {vehicle.specs?.rangeWltpKm && (
+                        <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+                          {vehicle.specs.rangeWltpKm} km WLTP
+                        </span>
+                      )}
+
+                      {(vehicle.specs?.batteryCapacityKwhNet ||
+                        vehicle.specs?.dcMaxPowerKw) && (
+                        <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+                          {vehicle.specs?.batteryCapacityKwhNet} kWh ·{" "}
+                          {vehicle.specs?.dcMaxPowerKw} kW
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <BrandLogo
                     brandMark={brandMark}
@@ -238,31 +292,7 @@ export default async function VehiclesPage({
                   />
                 </div>
 
-                <dl className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <dt className="text-slate-500">{t("rangeWltpLabel")}</dt>
-                    <dd className="font-medium text-slate-900">
-                      {vehicle.specs?.rangeWltpKm
-                        ? `${vehicle.specs.rangeWltpKm} km`
-                        : tCommon("notAvailable")}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-slate-500">{t("batteryNetLabel")}</dt>
-                    <dd className="font-medium text-slate-900">
-                      {vehicle.specs?.batteryCapacityKwhNet
-                        ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
-                        : tCommon("notAvailable")}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-slate-500">{t("dcChargeLabel")}</dt>
-                    <dd className="font-medium text-slate-900">
-                      {vehicle.specs?.dcMaxPowerKw
-                        ? `${vehicle.specs.dcMaxPowerKw} kW`
-                        : tCommon("notAvailable")}
-                    </dd>
-                  </div>
+                <dl className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 text-sm">
                   <div>
                     <dt className="text-slate-500">{t("drivetrainLabel")}</dt>
                     <dd className="font-medium text-slate-900">
@@ -272,6 +302,7 @@ export default async function VehiclesPage({
                       )}
                     </dd>
                   </div>
+
                   <div>
                     <dt className="text-slate-500">{t("chargingCostLabel")}</dt>
                     <dd className="font-medium text-slate-900">

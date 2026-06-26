@@ -27,10 +27,7 @@ import {
 } from "@/features/charging/station-quality-badge";
 import { buildStationSummaryParts } from "@/features/charging/station-summary";
 import { prisma } from "@/lib/db/prisma";
-import {
-  formatDisplayDate,
-  getSafeHttpUrl,
-} from "@/lib/display/data-display";
+import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
@@ -108,16 +105,19 @@ const StationsPage = async ({
   const tCommon = await getTranslations("common");
   const tStationDetail = await getTranslations("stationDetail");
 
-  const buildSummarySentence = (parts: ReturnType<typeof buildStationSummaryParts>) => {
+  const buildSummarySentence = (
+    parts: ReturnType<typeof buildStationSummaryParts>,
+  ) => {
     const subject = parts.hasOperator
       ? t("summarySubjectWithOperator", { operator: parts.operatorLabel })
       : t("summarySubjectGeneric");
 
     const connectorList =
       parts.connectorLabels.length > 0
-        ? new Intl.ListFormat(locale, { style: "long", type: "conjunction" }).format(
-            parts.connectorLabels,
-          )
+        ? new Intl.ListFormat(locale, {
+            style: "long",
+            type: "conjunction",
+          }).format(parts.connectorLabels)
         : null;
 
     let connectorClause: string | null = null;
@@ -127,7 +127,9 @@ const StationsPage = async ({
         power: parts.powerLabel,
       });
     } else if (connectorList) {
-      connectorClause = t("summaryWithConnectors", { connectors: connectorList });
+      connectorClause = t("summaryWithConnectors", {
+        connectors: connectorList,
+      });
     } else if (parts.powerLabel) {
       connectorClause = t("summaryWithPowerOnly", { power: parts.powerLabel });
     }
@@ -212,7 +214,10 @@ const StationsPage = async ({
               >
                 <option value="">{t("anyConnector")}</option>
                 {data.connectorOptions.map((option) => (
-                  <option key={option.connectorType} value={option.connectorType}>
+                  <option
+                    key={option.connectorType}
+                    value={option.connectorType}
+                  >
                     {option.connectorType}
                   </option>
                 ))}
@@ -259,14 +264,18 @@ const StationsPage = async ({
 
           <section className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
-              {t("showingCount", { shown: data.stations.length, total: data.total })}
+              {t("showingCount", {
+                shown: data.stations.length,
+                total: data.total,
+              })}
             </p>
             {data.latestRuns.length > 0 && (
               <p className="text-sm text-slate-500">
                 {t("freshness", {
                   source: data.latestRuns[0].source.label,
                   date: formatDisplayDate(
-                    data.latestRuns[0].completedAt ?? data.latestRuns[0].startedAt,
+                    data.latestRuns[0].completedAt ??
+                      data.latestRuns[0].startedAt,
                     locale,
                   ),
                 })}
@@ -294,9 +303,13 @@ const StationsPage = async ({
                 const summarySentence = buildSummarySentence(
                   buildStationSummaryParts({
                     operatorName:
-                      station.operator?.name ?? station.operator?.normalizedName ?? null,
+                      station.operator?.name ??
+                      station.operator?.normalizedName ??
+                      null,
                     city: station.city,
-                    connectorTypes: station.connectors.map((c) => c.connectorType),
+                    connectorTypes: station.connectors.map(
+                      (c) => c.connectorType,
+                    ),
                     maxPowerKw: strongestConnector?.powerKw ?? null,
                   }),
                 );
@@ -341,14 +354,18 @@ const StationsPage = async ({
                       </div>
                       {strongestConnector?.powerKw && (
                         <Badge className="shrink-0 whitespace-nowrap">
-                          {t("upToPower", { power: strongestConnector.powerKw })}
+                          {t("upToPower", {
+                            power: strongestConnector.powerKw,
+                          })}
                         </Badge>
                       )}
                     </div>
 
                     <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <dt className="text-slate-500">{t("connectorsLabel")}</dt>
+                        <dt className="text-slate-500">
+                          {t("connectorsLabel")}
+                        </dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {connectorSummary.length > 0 ? (
                             <span className="flex flex-wrap gap-2">
@@ -373,9 +390,12 @@ const StationsPage = async ({
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">{t("coordinatesLabel")}</dt>
+                        <dt className="text-slate-500">
+                          {t("coordinatesLabel")}
+                        </dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
+                          {station.latitude.toFixed(4)},{" "}
+                          {station.longitude.toFixed(4)}
                           {mapHref && (
                             <>
                               {" / "}
@@ -411,18 +431,26 @@ const StationsPage = async ({
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">{t("freshnessLabel")}</dt>
+                        <dt className="text-slate-500">
+                          {t("freshnessLabel")}
+                        </dt>
                         <dd className="mt-1 font-medium text-slate-900">
                           {station.sourceUpdatedAt
                             ? t("importedOnWithSource", {
-                                date: formatDisplayDate(station.importedAt, locale),
+                                date: formatDisplayDate(
+                                  station.importedAt,
+                                  locale,
+                                ),
                                 sourceDate: formatDisplayDate(
                                   station.sourceUpdatedAt,
                                   locale,
                                 ),
                               })
                             : t("importedOn", {
-                                date: formatDisplayDate(station.importedAt, locale),
+                                date: formatDisplayDate(
+                                  station.importedAt,
+                                  locale,
+                                ),
                               })}
                         </dd>
                       </div>

@@ -180,7 +180,24 @@ export default async function VehicleDetailPage({
           {vehicle.modelName}
         </h1>
         {vehicle.variantName && (
-          <p className="mt-2 text-xl text-slate-600">{vehicle.variantName}</p>
+          <p className="my-2 text-xl text-slate-600">{vehicle.variantName}</p>
+        )}
+        {vehicle.specs?.batteryCapacityKwhNet && (
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+            {vehicle.specs.batteryCapacityKwhNet} kWh
+          </span>
+        )}
+
+        {vehicle.specs?.dcMaxPowerKw && (
+          <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-medium text-orange-700">
+            {vehicle.specs.dcMaxPowerKw} kW DC
+          </span>
+        )}
+
+        {vehicle.specs?.systemPowerKw && (
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+            {vehicle.specs.systemPowerKw} kW
+          </span>
         )}
       </header>
 
