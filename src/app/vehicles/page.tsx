@@ -246,6 +246,16 @@ export default async function VehiclesPage({
               vehicle.specs?.batteryCapacityKwhNet ?? null,
             );
 
+            const specChips = [
+              typeof vehicle.specs?.batteryCapacityKwhNet === "number"
+                ? `${vehicle.specs.batteryCapacityKwhNet} kWh`
+                : null,
+
+              typeof vehicle.specs?.dcMaxPowerKw === "number"
+                ? `${vehicle.specs.dcMaxPowerKw} kW`
+                : null,
+            ].filter(Boolean);
+
             return (
               <Card
                 key={vehicle.id}
@@ -277,11 +287,9 @@ export default async function VehiclesPage({
                         </span>
                       )}
 
-                      {(vehicle.specs?.batteryCapacityKwhNet ||
-                        vehicle.specs?.dcMaxPowerKw) && (
+                      {specChips.length > 0 && (
                         <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                          {vehicle.specs?.batteryCapacityKwhNet} kWh ·{" "}
-                          {vehicle.specs?.dcMaxPowerKw} kW
+                          {specChips.join(" · ")}
                         </span>
                       )}
                     </div>
@@ -316,10 +324,8 @@ export default async function VehiclesPage({
                 </dl>
 
                 <p className="mt-5 border-t border-slate-100 pt-3 text-xs text-slate-500">
-                  {t("sourceImported", {
-                    source: vehicle.sourceName,
-                    date: formatDisplayDate(vehicle.importedAt, locale),
-                  })}
+                  {vehicle.sourceName.toUpperCase()} •{" "}
+                  {formatDisplayDate(vehicle.importedAt, locale)}
                 </p>
               </Card>
             );
