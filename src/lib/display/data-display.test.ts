@@ -18,10 +18,18 @@ describe("formatDisplayDate", () => {
     expect(formatDisplayDate(undefined)).toBe("unknown");
   });
 
+  it("formats ISO date strings", () => {
+    expect(formatDisplayDate("2026-06-18T11:15:15.986Z")).toBe("Jun 18, 2026");
+  });
+
+  it("returns unknown for invalid date strings", () => {
+    expect(formatDisplayDate("abc")).toBe("unknown");
+  });
+
   it("formats dates in Polish when a pl locale is requested", () => {
-    expect(
-      formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"), "pl"),
-    ).toBe("18 cze 2026");
+    expect(formatDisplayDate(new Date("2026-06-18T00:30:00.000Z"), "pl")).toBe(
+      "18 cze 2026",
+    );
   });
 
   it("defaults to English when no locale is passed", () => {

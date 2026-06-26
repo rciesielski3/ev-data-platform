@@ -1,8 +1,14 @@
 export const formatDisplayDate = (
-  value: Date | null | undefined,
-  locale: string = "en",
+  value: Date | string | null | undefined,
+  locale = "en",
 ) => {
   if (!value) {
+    return "unknown";
+  }
+
+  const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
     return "unknown";
   }
 
@@ -11,13 +17,11 @@ export const formatDisplayDate = (
     month: "short",
     day: "numeric",
     timeZone: "UTC",
-  }).format(value);
+  }).format(date);
 };
 
-export const formatDisplayNumber = (
-  value: number,
-  locale: string = "en",
-) => new Intl.NumberFormat(locale).format(value);
+export const formatDisplayNumber = (value: number, locale: string = "en") =>
+  new Intl.NumberFormat(locale).format(value);
 
 export const getSafeHttpUrl = (value: string | null | undefined) => {
   if (!value) {
