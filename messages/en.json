@@ -24,6 +24,7 @@
   "nav": {
     "brand": "EVSource",
     "vehicles": "Vehicles",
+    "viewDetailsLink": "View details",
     "stations": "Stations",
     "map": "Map",
     "insights": "Insights",
@@ -113,7 +114,7 @@
     "body": "The EV catalog is temporarily unavailable. Try again, or check that the OpenEV import has completed."
   },
   "vehicleDetail": {
-    "backLink": "← Back to vehicles",
+    "backLink": "Back to vehicles",
     "batteryRangeTitle": "Battery & Range",
     "rangeWltpLabel": "Range (WLTP)",
     "rangeEpaLabel": "Range (EPA)",
@@ -173,18 +174,17 @@
     "noResultsTitle": "No stations found",
     "noResultsBody": "Try removing one filter or searching for a broader city, operator, or connector.",
     "connectorsLabel": "Connectors",
-    "coordinatesLabel": "Coordinates",
+    "localizationLabel": "Localization",
     "sourceLabel": "Source",
     "freshnessLabel": "Freshness",
-    "mapLinkLabel": "map",
+    "mapLinkLabel": "Show on the map",
     "originalLinkLabel": "original",
     "upToPower": "up to {power} kW",
     "importedOn": "Imported {date}",
     "importedOnWithSource": "Imported {date} / source {sourceDate}"
   },
   "stationDetail": {
-    "backLink": "← Back to stations",
-    "viewDetailsLink": "View details",
+    "backLink": "Back to stations",
     "stationDetailsTitle": "Station Details",
     "connectorsTitle": "Connectors",
     "stationNameLabel": "Station Name",
@@ -194,8 +194,8 @@
     "provinceLabel": "Province",
     "coordinatesLabel": "Coordinates",
     "sourceLabel": "Source",
-    "lastUpdatedLabel": "Last Updated",
-    "openStreetMapLink": "OpenStreetMap",
+    "updatedLabel": "Updated",
+    "mapLinkLabel": "Show on the map",
     "originalLink": "original",
     "locationMapTitle": "Location",
     "connectorsCount": "{count, plural, one {# connector} other {# connectors}}",
@@ -226,6 +226,10 @@
     "paymentMethodsLabel": "Payment methods",
     "authMethodsLabel": "Authentication methods",
     "notProvidedBySource": "Not provided by source",
+    "upToPower": "up to {power} kW",
+    "dataSourceLabel": "Data source: {source}",
+    "lastImportedLabel": "Last imported: {date}",
+    "originalSourceLink": "Original source",
     "completenessFields": {
       "Coordinates": "Coordinates",
       "Address/location": "Address/location",
@@ -445,7 +449,7 @@
     "viewDetailsLink": "View connector details"
   },
   "connectorDetail": {
-    "backLink": "← Back to connectors",
+    "backLink": "Back to connectors",
     "incompleteDataTitle": "Incomplete source data",
     "incompleteDataBody": "Some imported records do not include a connector type that can be classified confidently. This page keeps those records explainable without inventing compatibility, power, or regional support.",
     "imageLabelCaption": "Image label",
@@ -675,5 +679,13 @@
     "liabilityBody": "The site is provided \"as is,\" without warranty of uninterrupted operation. We are not liable for damages arising from use of the displayed data for purposes it is not intended for.",
     "contactTitle": "Contact",
     "contactBody": "Questions about these terms can be sent to kontakt@evsource.pl."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "home": "Home",
+    "stations": "Stations",
+    "vehicles": "Vehicles",
+    "reports": "Reports"
   }
 }

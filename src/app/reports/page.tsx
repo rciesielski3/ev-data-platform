@@ -56,7 +56,7 @@ export default async function ReportsPage() {
           as="article"
           className="flex flex-col border-emerald-200 ring-1 ring-emerald-100 shadow-lg scale-[1.02] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
         >
-          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">
+          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-200 text-emerald-700">
             {t("professionalBadge")}
           </Badge>
           <TrendingUp className="mb-3 h-6 w-6 text-[var(--accent)]" />

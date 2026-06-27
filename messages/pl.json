@@ -113,7 +113,7 @@
     "body": "Katalog EV jest tymczasowo niedostępny. Spróbuj ponownie lub sprawdź, czy import OpenEV się zakończył."
   },
   "vehicleDetail": {
-    "backLink": "← Wróć do pojazdów",
+    "backLink": "Wróć do pojazdów",
     "batteryRangeTitle": "Bateria i zasięg",
     "rangeWltpLabel": "Zasięg (WLTP)",
     "rangeEpaLabel": "Zasięg (EPA)",
@@ -173,17 +173,17 @@
     "noResultsTitle": "Nie znaleziono stacji",
     "noResultsBody": "Usuń jeden filtr lub wyszukaj szersze miasto, operatora albo złącze.",
     "connectorsLabel": "Złącza",
-    "coordinatesLabel": "Współrzędne",
+    "localizationLabel": "Lokalizacja",
     "sourceLabel": "Źródło",
     "freshnessLabel": "Świeżość danych",
-    "mapLinkLabel": "mapa",
+    "mapLinkLabel": "Pokaż na mapie",
     "originalLinkLabel": "oryginał",
     "upToPower": "do {power} kW",
     "importedOn": "Zaimportowano {date}",
     "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}"
   },
   "stationDetail": {
-    "backLink": "← Wróć do stacji",
+    "backLink": "Wróć do stacji",
     "viewDetailsLink": "Zobacz szczegóły",
     "stationDetailsTitle": "Szczegóły stacji",
     "connectorsTitle": "Złącza",
@@ -194,8 +194,8 @@
     "provinceLabel": "Województwo",
     "coordinatesLabel": "Współrzędne",
     "sourceLabel": "Źródło",
-    "lastUpdatedLabel": "Ostatnia aktualizacja",
-    "openStreetMapLink": "OpenStreetMap",
+    "updatedLabel": "Aktualizacja",
+    "mapLinkLabel": "Pokaż na mapie",
     "originalLink": "oryginał",
     "locationMapTitle": "Lokalizacja",
     "connectorsCount": "{count, plural, one {# złącze} few {# złącza} many {# złączy} other {# złączy}}",
@@ -226,6 +226,10 @@
     "paymentMethodsLabel": "Metody płatności",
     "authMethodsLabel": "Metody autoryzacji",
     "notProvidedBySource": "Brak danych od źródła",
+    "upToPower": "do {power} kW",
+    "dataSourceLabel": "Źródło danych: {source}",
+    "lastImportedLabel": "Ostatnio zaimportowane: {date}",
+    "originalSourceLink": "Oryginalne źródło",
     "completenessFields": {
       "Coordinates": "Współrzędne",
       "Address/location": "Adres/lokalizacja",
@@ -445,7 +449,7 @@
     "viewDetailsLink": "Zobacz szczegóły złącza"
   },
   "connectorDetail": {
-    "backLink": "← Wróć do złączy",
+    "backLink": "Wróć do złączy",
     "incompleteDataTitle": "Niepełne dane źródłowe",
     "incompleteDataBody": "Niektóre zaimportowane rekordy nie zawierają typu złącza, który można jednoznacznie zaklasyfikować. Ta strona pozwala wyjaśnić te rekordy bez wymyślania zgodności, mocy czy zasięgu regionalnego.",
     "imageLabelCaption": "Etykieta obrazu",
@@ -675,5 +679,13 @@
     "liabilityBody": "Serwis udostępniany jest w stanie \"tak jak jest\" (as-is), bez gwarancji nieprzerwanego działania. Nie odpowiadamy za szkody wynikające z wykorzystania prezentowanych danych w celach, do których nie są one przeznaczone.",
     "contactTitle": "Kontakt",
     "contactBody": "Pytania dotyczące regulaminu możesz kierować na kontakt@evsource.pl."
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "home": "Strona główna",
+    "stations": "Stacje",
+    "vehicles": "Pojazdy",
+    "reports": "Raporty"
   }
 }

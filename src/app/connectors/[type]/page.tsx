@@ -7,6 +7,8 @@ import {
   getConnectorPageEntries,
   getConnectorPageKnowledge,
 } from "@/features/charging/connector-pages";
+import { ArrowLeft } from "lucide-react";
+import BackLink from "@/components/ui/BackLink";
 
 export const dynamic = "force-static";
 
@@ -39,18 +41,13 @@ export default async function ConnectorDetailPage({
   const tKnowledge = await getTranslations("connectorKnowledge");
   const description = tKnowledge(`${connector.key}.description`);
   const imageLabel = tKnowledge(`${connector.key}.imageLabel`);
-  const supportedRegionsText = tKnowledge(`${connector.key}.supportedRegionsText`);
+  const supportedRegionsText = tKnowledge(
+    `${connector.key}.supportedRegionsText`,
+  );
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
-      <div className="mb-8">
-        <Link
-          href="/connectors"
-          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-        >
-          {t("backLink")}
-        </Link>
-      </div>
+      <BackLink href="/connectors" label={t("backLink")} />
 
       <header className="mb-8">
         <Badge>{connector.currentType}</Badge>
@@ -92,7 +89,10 @@ export default async function ConnectorDetailPage({
           <dl className="space-y-4">
             <DetailRow label={t("nameLabel")} value={connector.label} />
             <DetailRow label={t("descriptionLabel")} value={description} />
-            <DetailRow label={t("currentTypeLabel")} value={connector.currentType} />
+            <DetailRow
+              label={t("currentTypeLabel")}
+              value={connector.currentType}
+            />
             <DetailRow
               label={t("typicalPowerLabel")}
               value={connector.typicalPowerRange}

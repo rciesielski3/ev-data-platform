@@ -25,6 +25,7 @@ import {
 } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { ArrowRightIcon } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -322,11 +323,14 @@ export default async function VehiclesPage({
                     </dd>
                   </div>
                 </dl>
+                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-3">
+                  <p className="text-xs text-slate-500">
+                    {vehicle.sourceName.toUpperCase()} •{" "}
+                    {formatDisplayDate(vehicle.importedAt, locale)}
+                  </p>
 
-                <p className="mt-5 border-t border-slate-100 pt-3 text-xs text-slate-500">
-                  {vehicle.sourceName.toUpperCase()} •{" "}
-                  {formatDisplayDate(vehicle.importedAt, locale)}
-                </p>
+                  <ArrowRightIcon className="h-5 w-5 text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                </div>
               </Card>
             );
           })}
