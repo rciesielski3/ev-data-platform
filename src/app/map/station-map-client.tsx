@@ -42,7 +42,10 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       ? t("client.powerUnknown")
       : t("client.upToPower", { power: powerKw });
 
-  const buildPopupHtml = (group: StationMapGroup) => {
+  const buildPopupHtml = (
+    group: StationMapGroup,
+    t: ReturnType<typeof useTranslations>,
+  ) => {
     const primaryStation = group.stations[0];
     const connectorText =
       group.connectorLabels.length > 0
@@ -183,7 +186,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
               ? group.stations[0]?.name
               : t("client.markerTitleMultiple", { count: group.stationCount }),
         })
-        .bindPopup(buildPopupHtml(group), { maxWidth: 320 })
+        .bindPopup(buildPopupHtml(group, t), { maxWidth: 320 })
         .addTo(markerLayer);
       bounds.extend(coordinates);
     }

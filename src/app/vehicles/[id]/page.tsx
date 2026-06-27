@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cache } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 
@@ -20,7 +19,6 @@ import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import Badge from "@/components/ui/Badge";
-import { ArrowLeft } from "lucide-react";
 import BackLink from "@/components/ui/BackLink";
 
 export const dynamic = "force-dynamic";

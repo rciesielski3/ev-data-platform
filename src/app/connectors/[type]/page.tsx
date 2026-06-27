@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
@@ -7,7 +6,6 @@ import {
   getConnectorPageEntries,
   getConnectorPageKnowledge,
 } from "@/features/charging/connector-pages";
-import { ArrowLeft } from "lucide-react";
 import BackLink from "@/components/ui/BackLink";
 
 export const dynamic = "force-static";

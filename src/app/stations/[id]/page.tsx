@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -11,7 +10,6 @@ import { prisma } from "@/lib/db/prisma";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import BackLink from "@/components/ui/BackLink";
-import { formatDisplayDate } from "@/lib/display/data-display";
 
 export const dynamic = "force-dynamic";
 

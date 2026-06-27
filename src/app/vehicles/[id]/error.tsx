@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 import ErrorState from "@/components/ui/ErrorState";
-import { ArrowLeft } from "lucide-react";
 import BackLink from "@/components/ui/BackLink";
 
 export default function VehicleDetailError({

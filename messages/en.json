@@ -24,7 +24,6 @@
   "nav": {
     "brand": "EVSource",
     "vehicles": "Vehicles",
-    "viewDetailsLink": "View details",
     "stations": "Stations",
     "map": "Map",
     "insights": "Insights",
@@ -185,6 +184,7 @@
   },
   "stationDetail": {
     "backLink": "Back to stations",
+    "viewDetailsLink": "View details",
     "stationDetailsTitle": "Station Details",
     "connectorsTitle": "Connectors",
     "stationNameLabel": "Station Name",
