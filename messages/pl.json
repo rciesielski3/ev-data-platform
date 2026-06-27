@@ -180,7 +180,8 @@
     "originalLinkLabel": "oryginał",
     "upToPower": "do {power} kW",
     "importedOn": "Zaimportowano {date}",
-    "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}"
+    "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}",
+    "locationUnavailable": "Brak danych o lokalizacji"
   },
   "stationDetail": {
     "backLink": "Wróć do stacji",

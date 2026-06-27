@@ -273,13 +273,14 @@ const StationsPage = async ({
                   .toLowerCase()
                   .includes(normalizedCity.toLowerCase());
 
-                const locationLine = [
-                  normalizedAddress,
-                  addressContainsCity ? null : normalizedCity,
-                  station.province,
-                ]
-                  .filter(Boolean)
-                  .join(", ");
+                const locationLine =
+                  [
+                    normalizedAddress,
+                    addressContainsCity ? null : normalizedCity,
+                    station.province,
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || tCommon("locationUnavailable");
 
                 return (
                   <Card
