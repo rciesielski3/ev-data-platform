@@ -92,7 +92,8 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
           )}</a></li>`,
       )
       .join("");
-    const extraCount = group.stationCount > 4 ? group.stationCount - 4 : 0;
+    const extraCount =
+      group.stations.length > 3 ? group.stations.length - 3 : 0;
 
     return `
   <article class="station-map-popup">
@@ -192,8 +193,6 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     const map = mapRef.current;
     const markerLayer = markerLayerRef.current;
     const leaflet = leafletRef.current;
-    const DEFAULT_CENTER: [number, number] = [52.1, 19.4];
-    const DEFAULT_ZOOM = 6;
 
     if (mapSetupRevision === 0 || !map || !markerLayer || !leaflet) {
       return;

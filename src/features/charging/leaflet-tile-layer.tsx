@@ -48,20 +48,6 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
       ? t("client.powerUnknown")
       : t("client.upToPower", { power: powerKw });
 
-  const visibleStations = Array.from(
-    new Map(
-      group.stations.map((station) => [
-        [
-          station.name,
-          station.operatorName,
-          station.maxPowerKw,
-          station.connectorLabels.join(","),
-        ].join("|"),
-        station,
-      ]),
-    ).values(),
-  );
-
   return (
     <Card className="group transition-shadow hover:shadow-md bg-slate-50">
       <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
@@ -126,7 +112,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
 
           {expanded && (
             <ul className="mt-3 space-y-2">
-              {visibleStations.slice(0, 5).map((station) => (
+              {group.stations.slice(0, 5).map((station) => (
                 <li
                   key={station.id}
                   className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-100 px-3 py-2"
