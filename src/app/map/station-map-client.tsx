@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap } from "leaflet";
@@ -8,6 +7,7 @@ import type { LayerGroup, Map as LeafletMap } from "leaflet";
 import {
   OSM_TILE_LAYER_ATTRIBUTION,
   OSM_TILE_LAYER_URL,
+  StationGroupCard,
   buildStationMarkerIcon,
 } from "@/features/charging/leaflet-tile-layer";
 import type { StationMapGroup } from "@/features/charging/station-map";
@@ -16,8 +16,8 @@ type StationMapClientProps = {
   groups: StationMapGroup[];
 };
 
-const DEFAULT_CENTER: [number, number] = [52.1, 19.4];
-const DEFAULT_ZOOM = 6;
+const DEFAULT_CENTER: [number, number] = [51.7, 18.6];
+const DEFAULT_ZOOM = 6.3;
 
 const escapeHtml = (value: string) =>
   value
@@ -44,33 +44,43 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
   const buildPopupHtml = (group: StationMapGroup) => {
     const primaryStation = group.stations[0];
-    const connectorText =
-      group.connectorLabels.length > 0
-        ? group.connectorLabels.join(", ")
-        : t("client.connectorsUnavailable");
 
     if (group.stationCount === 1 && primaryStation) {
       return `
-        <article class="station-map-popup">
-          <p>${escapeHtml(primaryStation.operatorName)}</p>
-          <h3>${escapeHtml(primaryStation.name)}</h3>
-          <dl>
-            <div><dt>${escapeHtml(t("client.powerDt"))}</dt><dd>${escapeHtml(
-              formatPower(primaryStation.maxPowerKw),
-            )}</dd></div>
-            <div><dt>${escapeHtml(t("client.connectorsDt"))}</dt><dd>${escapeHtml(
-              connectorText,
-            )}</dd></div>
-          </dl>
-          <a href="${escapeHtml(primaryStation.detailsHref)}">${escapeHtml(
-            t("client.viewStationDetailsLink"),
-          )}</a>
-        </article>
-      `;
+  <article class="station-map-popup">
+    <p>${escapeHtml(primaryStation.operatorName)}</p>
+
+    <h3>${escapeHtml(primaryStation.name)}</h3>
+
+    <div class="station-map-popup-chips">
+      <span class="station-map-popup-chip station-map-popup-chip-power">
+        ${escapeHtml(formatPower(primaryStation.maxPowerKw))}
+      </span>
+
+      ${group.connectorLabels
+        .slice(0, 3)
+        .map(
+          (connector) => `
+            <span class="station-map-popup-chip">
+              ${escapeHtml(connector)}
+            </span>
+          `,
+        )
+        .join("")}
+    </div>
+
+    <a
+      class="station-map-popup-link"
+      href="${escapeHtml(primaryStation.detailsHref)}"
+    >
+      ${escapeHtml(t("client.viewStationDetailsLink"))}
+    </a>
+  </article>
+`;
     }
 
     const stationLinks = group.stations
-      .slice(0, 4)
+      .slice(0, 3)
       .map(
         (station) =>
           `<li><a href="${escapeHtml(station.detailsHref)}">${escapeHtml(
@@ -78,32 +88,53 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
           )}</a></li>`,
       )
       .join("");
-    const extraCount = group.stationCount > 4 ? group.stationCount - 4 : 0;
+    const extraCount =
+      group.stations.length > 3 ? group.stations.length - 3 : 0;
 
     return `
-      <article class="station-map-popup">
-        <p>${escapeHtml(group.operatorNames.slice(0, 3).join(", "))}</p>
-        <h3>${escapeHtml(
-          t("client.stationsNearbyPopup", { count: group.stationCount }),
-        )}</h3>
-        <dl>
-          <div><dt>${escapeHtml(t("client.powerDt"))}</dt><dd>${escapeHtml(
-            formatPower(group.maxPowerKw),
-          )}</dd></div>
-          <div><dt>${escapeHtml(t("client.connectorsDt"))}</dt><dd>${escapeHtml(
-            connectorText,
-          )}</dd></div>
-        </dl>
-        <ul>${stationLinks}</ul>
-        ${
-          extraCount > 0
-            ? `<p>${escapeHtml(
-                t("client.moreStationsInArea", { count: extraCount }),
-              )}</p>`
-            : ""
-        }
-      </article>
-    `;
+  <article class="station-map-popup">
+    <p>${escapeHtml(group.operatorNames.slice(0, 3).join(", "))}</p>
+
+    <h3>${escapeHtml(
+      t("client.stationsNearbyPopup", {
+        count: group.stationCount,
+      }),
+    )}</h3>
+
+    <div class="station-map-popup-chips">
+      <span class="station-map-popup-chip station-map-popup-chip-power">
+        ${escapeHtml(formatPower(group.maxPowerKw))}
+      </span>
+
+      ${group.connectorLabels
+        .slice(0, 3)
+        .map(
+          (connector) => `
+            <span class="station-map-popup-chip">
+              ${escapeHtml(connector)}
+            </span>
+          `,
+        )
+        .join("")}
+    </div>
+
+    <ul class="station-map-popup-list">
+      ${stationLinks}
+    </ul>
+
+    ${
+      extraCount > 0
+        ? `<p class="station-map-popup-more">
+             ${escapeHtml(
+               t("client.moreStationsInArea", {
+                 count: extraCount,
+               }),
+             )}
+           </p>`
+        : ""
+    }
+  </article>
+`;
   };
 
   useEffect(() => {
@@ -191,31 +222,25 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     if (groups.length === 1) {
       map.setView([groups[0].latitude, groups[0].longitude], 12);
     } else {
-      map.fitBounds(bounds, {
-        padding: [28, 28],
-        maxZoom: 13,
-      });
+      map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
     }
   }, [groups, mapSetupRevision, t]);
 
   return (
-    <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+    <section className="grid gap-6 lg:grid-cols-[3fr_1fr]">
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <div
           ref={mapElementRef}
-          className="h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
+          className="relative z-0 h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
           aria-label="Charging station map"
         />
       </div>
 
-      <aside className="space-y-3">
+      <aside className="h-[42rem] overflow-y-auto pr-1 space-y-3">
         <div>
           <h2 className="text-lg font-semibold text-slate-950">
             {t("client.mapResultsTitle")}
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            {t("client.markersAfterGrouping", { count: groups.length })}
-          </p>
         </div>
 
         {featuredGroups.length === 0 ? (
@@ -223,41 +248,9 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
             {t("client.noStationsMatch")}
           </div>
         ) : (
-          featuredGroups.map((group) => {
-            const primaryStation = group.stations[0];
-
-            return (
-              <article key={group.id} className="card">
-                <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
-                  {group.stationCount === 1
-                    ? primaryStation?.operatorName
-                    : t("client.stationsNearbyPopup", {
-                        count: group.stationCount,
-                      })}
-                </p>
-                <h3 className="mt-1 font-semibold text-slate-950">
-                  {group.stationCount === 1
-                    ? primaryStation?.name
-                    : group.operatorNames.slice(0, 2).join(", ") ||
-                      t("client.chargingStationGroup")}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  {formatPower(group.maxPowerKw)}
-                  {group.connectorLabels.length > 0
-                    ? ` / ${group.connectorLabels.slice(0, 3).join(", ")}`
-                    : ""}
-                </p>
-                {primaryStation && (
-                  <Link
-                    href={primaryStation.detailsHref}
-                    className="mt-3 inline-flex text-sm font-medium text-emerald-700 hover:text-emerald-900"
-                  >
-                    {t("client.viewDetailsLink")}
-                  </Link>
-                )}
-              </article>
-            );
-          })
+          featuredGroups.map((group) => (
+            <StationGroupCard key={group.id} group={group} />
+          ))
         )}
       </aside>
     </section>

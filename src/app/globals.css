@@ -404,6 +404,52 @@ button.card:active,
   text-decoration: underline;
 }
 
+.station-map-popup-list {
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.station-map-popup-list li {
+  margin-bottom: 8px;
+}
+
+.station-map-popup-list a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.station-map-popup-list a:hover {
+  background: #ecfdf5;
+}
+
+.station-map-popup-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 18px;
+}
+
+.station-map-popup-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgb(241 245 249);
+  color: rgb(51 65 85);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.station-map-popup-chip-power {
+  background: rgb(220 252 231);
+  color: rgb(4 120 87);
+}
+
 @media print {
   body:has(.report-print) header,
   body:has(.report-print) footer {
