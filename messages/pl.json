@@ -422,7 +422,12 @@
     "updatingButton": "Aktualizowanie...",
     "clearButton": "Wyczyść",
     "summary": "Wyświetlono {shown} z {total} stacji. Liczba znaczników na mapie: {markers}.",
-    "limited": "Wyniki są ograniczone do {limit}; zawęź filtry, aby uzyskać bardziej precyzyjną mapę.",
+    "viewDetailsLink": "Zobacz szczegóły",
+    "limitedTitle": "Limit wyników",
+    "limitedDescription": "Mapa pokazuje maksymalnie {limit} stacji. Zawęź filtry, aby uzyskać bardziej precyzyjne wyniki.",
+    "totalStations": "Łącznie stacji",
+    "displayedStations": "Wyświetlone stacje",
+    "mapMarkers": "Znaczniki na mapie",
     "client": {
       "powerUnknown": "Moc nieznana",
       "upToPower": "do {power} kW",
@@ -433,11 +438,11 @@
       "markerTitleMultiple": "{count, plural, one {# stacja ładowania} few {# stacje ładowania} many {# stacji ładowania} other {# stacji ładowania}}",
       "moreStationsInArea": "{count, plural, one {+ # stacja w tym miejscu} few {+ # stacje w tym miejscu} many {+ # stacji w tym miejscu} other {+ # stacji w tym miejscu}}",
       "viewStationDetailsLink": "Zobacz szczegóły stacji",
-      "viewDetailsLink": "Zobacz szczegóły",
       "mapResultsTitle": "Wyniki na mapie",
-      "markersAfterGrouping": "{count, plural, one {# znacznik mapy po pogrupowaniu pobliskich stacji.} few {# znaczniki mapy po pogrupowaniu pobliskich stacji.} many {# znaczników mapy po pogrupowaniu pobliskich stacji.} other {# znaczników mapy po pogrupowaniu pobliskich stacji.}}",
       "noStationsMatch": "Brak stacji spełniających te filtry mapy.",
-      "chargingStationGroup": "Grupa stacji ładowania"
+      "chargingStationGroup": "Grupa stacji ładowania",
+      "chooseStation": "Pokaż stacje",
+      "hideStations": "Ukryj stacje"
     }
   },
   "mapError": {

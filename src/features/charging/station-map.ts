@@ -56,7 +56,8 @@ const parsePositiveNumber = (value: string | undefined) => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 };
 
-const displayValue = (value: string | null | undefined) => value?.trim() || UNKNOWN;
+const displayValue = (value: string | null | undefined) =>
+  value?.trim() || UNKNOWN;
 
 const uniqueConnectorLabels = (
   connectors: StationMapInput["connectors"],
@@ -92,7 +93,11 @@ const roundToPrecision = (value: number, precision: number) => {
   return Math.round(value * factor) / factor;
 };
 
-const coordinateBucket = (latitude: number, longitude: number, precision: number) =>
+const coordinateBucket = (
+  latitude: number,
+  longitude: number,
+  precision: number,
+) =>
   `${roundToPrecision(latitude, precision).toFixed(precision)}:${roundToPrecision(
     longitude,
     precision,
@@ -176,6 +181,21 @@ export const groupStationMapDtos = (
     }
   >();
 
+  const deduplicateStations = (stations: StationMapDto[]) =>
+    Array.from(
+      new Map(
+        stations.map((station) => [
+          [
+            station.name,
+            station.operatorName,
+            station.maxPowerKw,
+            station.connectorLabels.join(","),
+          ].join("|"),
+          station,
+        ]),
+      ).values(),
+    );
+
   for (const station of stations) {
     const groupId = coordinateBucket(
       station.latitude,
@@ -203,20 +223,26 @@ export const groupStationMapDtos = (
   }
 
   return Array.from(groupsByCoordinate.entries()).map(([id, group]) => {
-    const stationCount = group.stations.length;
-    const powers = group.stations
+    const stations = deduplicateStations(group.stations);
+    const powers = stations
       .map((station) => station.maxPowerKw)
       .filter((power): power is number => typeof power === "number");
 
     return {
       id,
-      latitude: roundToPrecision(group.latitudeTotal / stationCount, 5),
-      longitude: roundToPrecision(group.longitudeTotal / stationCount, 5),
-      stationCount,
+      latitude: roundToPrecision(
+        group.latitudeTotal / group.stations.length,
+        5,
+      ),
+      longitude: roundToPrecision(
+        group.longitudeTotal / group.stations.length,
+        5,
+      ),
+      stationCount: group.stations.length,
       maxPowerKw: powers.length > 0 ? Math.max(...powers) : null,
       connectorLabels: group.connectorLabels,
       operatorNames: group.operatorNames,
-      stations: group.stations,
+      stations,
     };
   });
 };

@@ -422,7 +422,12 @@
     "updatingButton": "Updating...",
     "clearButton": "Clear",
     "summary": "Showing {shown} of {total} {total, plural, one {station} other {stations}} across {markers} {markers, plural, one {map marker} other {map markers}}.",
-    "limited": "Results are capped at {limit}; narrow the filters for a more precise map.",
+    "viewDetailsLink": "View details",
+    "limitedTitle": "Result limit reached",
+    "limitedDescription": "The map displays up to {limit} stations. Narrow the filters to see more precise results.",
+    "totalStations": "Total stations",
+    "displayedStations": "Displayed stations",
+    "mapMarkers": "Map markers",
     "client": {
       "powerUnknown": "Power unknown",
       "upToPower": "up to {power} kW",
@@ -433,11 +438,11 @@
       "markerTitleMultiple": "{count, plural, one {# charging station} other {# charging stations}}",
       "moreStationsInArea": "{count, plural, one {+ # more station in this area} other {+ # more stations in this area}}",
       "viewStationDetailsLink": "View station details",
-      "viewDetailsLink": "View details",
       "mapResultsTitle": "Map results",
-      "markersAfterGrouping": "{count, plural, one {# map marker after nearby stations are grouped.} other {# map markers after nearby stations are grouped.}}",
       "noStationsMatch": "No stations match these map filters.",
-      "chargingStationGroup": "Charging station group"
+      "chargingStationGroup": "Charging station group",
+      "chooseStation": "Choose station",
+      "hideStations": "Hide stations"
     }
   },
   "mapError": {

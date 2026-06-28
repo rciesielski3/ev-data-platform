@@ -10,23 +10,34 @@ const TONE_CLASSES: Record<NoticeTone, string> = {
   success: "border-emerald-200 bg-emerald-50 text-emerald-900",
 };
 
-const Notice = ({
-  title,
-  tone = "neutral",
-  children,
-}: {
-  title: string;
+type NoticeProps = {
+  title?: string;
+  description?: ReactNode;
   tone?: NoticeTone;
   children?: ReactNode;
-}) => (
+};
+
+const Notice = ({
+  title,
+  description,
+  tone = "neutral",
+  children,
+}: NoticeProps) => (
   <Card as="section" className={TONE_CLASSES[tone]}>
-    <h2
-      className={
-        tone === "warning" ? "mb-2 text-lg font-medium" : "text-lg font-medium"
-      }
-    >
-      {title}
-    </h2>
+    {title && (
+      <h2
+        className={
+          tone === "warning"
+            ? "mb-2 text-lg font-medium"
+            : "text-lg font-medium"
+        }
+      >
+        {title}
+      </h2>
+    )}
+
+    {description}
+
     {children}
   </Card>
 );

@@ -105,20 +105,20 @@ Application will be available at `http://localhost:3000`.
 
 ### Commands
 
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run lint` | Run ESLint |
-| `npm run typecheck` | Run TypeScript check |
-| `npm run test` | Run Vitest suite |
-| `npm run validate` | Full validation: lint + typecheck + test + build |
-| `npm run db:push` | Sync database schema |
-| `npm run db:studio` | Open Prisma Studio |
-| `npm run import:all` | Import all data sources |
-| `npm run import:eipa` | Import EIPA charging stations |
-| `npm run import:eipa:test` | Import EIPA with limit (for testing) |
-| `npm run import:openev` | Import OpenEV models |
+| Command                    | Purpose                                          |
+| -------------------------- | ------------------------------------------------ |
+| `npm run dev`              | Start development server                         |
+| `npm run build`            | Build for production                             |
+| `npm run lint`             | Run ESLint                                       |
+| `npm run typecheck`        | Run TypeScript check                             |
+| `npm run test`             | Run Vitest suite                                 |
+| `npm run validate`         | Full validation: lint + typecheck + test + build |
+| `npm run db:push`          | Sync database schema                             |
+| `npm run db:studio`        | Open Prisma Studio                               |
+| `npm run import:all`       | Import all data sources                          |
+| `npm run import:eipa`      | Import EIPA charging stations                    |
+| `npm run import:eipa:test` | Import EIPA with limit (for testing)             |
+| `npm run import:openev`    | Import OpenEV models                             |
 
 ---
 
@@ -126,37 +126,37 @@ Application will be available at `http://localhost:3000`.
 
 ### Data & Status
 
-| Endpoint | Method | Purpose | Query Params |
-|----------|--------|---------|--------------|
-| `/api/status` | GET | Platform status: EV model count, charging station count, latest 5 ingestion runs | None |
-| `/api/exports/provinces` | GET | Province comparison table (station/connector counts, HPC coverage, power stats, top operators) | `format` = `csv` (default) or `json` |
-| `/api/exports/operators` | GET | Operator comparison table (station count, province coverage, average/max power) | `format` = `csv` (default) or `json` |
+| Endpoint                 | Method | Purpose                                                                                        | Query Params                         |
+| ------------------------ | ------ | ---------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `/api/status`            | GET    | Platform status: EV model count, charging station count, latest 5 ingestion runs               | None                                 |
+| `/api/exports/provinces` | GET    | Province comparison table (station/connector counts, HPC coverage, power stats, top operators) | `format` = `csv` (default) or `json` |
+| `/api/exports/operators` | GET    | Operator comparison table (station count, province coverage, average/max power)                | `format` = `csv` (default) or `json` |
 
 ### Protected (Cron/Manual Imports)
 
-| Endpoint | Method | Purpose | Auth |
-|----------|--------|---------|------|
-| `/api/cron/import-eipa` | GET | Trigger EIPA charging station import | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
-| `/api/cron/import-openev` | GET | Trigger OpenEV model import | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
+| Endpoint                  | Method | Purpose                              | Auth                                                                                |
+| ------------------------- | ------ | ------------------------------------ | ----------------------------------------------------------------------------------- |
+| `/api/cron/import-eipa`   | GET    | Trigger EIPA charging station import | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
+| `/api/cron/import-openev` | GET    | Trigger OpenEV model import          | `Authorization: Bearer <CRON_SECRET>` (production) or unauthenticated (development) |
 
 **Note:** Imports run via GitHub Actions on a schedule. These endpoints support manual/on-demand triggering (EIPA imports may take 60–75 minutes and exceed typical serverless function limits).
 
 ### Web Pages
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Status homepage with dataset counts and ingestion freshness |
-| `/vehicles` | Searchable EV catalog with paginated cards |
-| `/vehicles/[id]` | EV battery, range, charging and source details |
-| `/stations` | Searchable Polish charging infrastructure |
-| `/stations/[id]` | Charging station source, freshness and connector details |
-| `/map` | OpenStreetMap charging station map with grouped markers |
-| `/connectors` | Connector knowledge base |
-| `/connectors/[type]` | Connector details (CCS2, Type 2, CHAdeMO, Unknown) |
-| `/insights` | Charging infrastructure insights dashboard |
-| `/provinces` | Province comparison: station/connector counts, HPC coverage, power stats, top operators |
-| `/operators` | Operator comparison: station count, province coverage, average/max power |
-| `/coverage` | Infrastructure coverage rankings (lowest/highest station counts, HPC coverage, power availability) |
+| Route                | Purpose                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------- |
+| `/`                  | Status homepage with dataset counts and ingestion freshness                                        |
+| `/vehicles`          | Searchable EV catalog with paginated cards                                                         |
+| `/vehicles/[id]`     | EV battery, range, charging and source details                                                     |
+| `/stations`          | Searchable Polish charging infrastructure                                                          |
+| `/stations/[id]`     | Charging station source, freshness and connector details                                           |
+| `/map`               | OpenStreetMap charging station map with grouped markers                                            |
+| `/connectors`        | Connector knowledge base                                                                           |
+| `/connectors/[type]` | Connector details (CCS2, Type 2, CHAdeMO, Unknown)                                                 |
+| `/insights`          | Charging infrastructure insights dashboard                                                         |
+| `/provinces`         | Province comparison: station/connector counts, HPC coverage, power stats, top operators            |
+| `/operators`         | Operator comparison: station count, province coverage, average/max power                           |
+| `/coverage`          | Infrastructure coverage rankings (lowest/highest station counts, HPC coverage, power availability) |
 
 ---
 
@@ -274,3 +274,25 @@ This project depends on third-party data providers.
 Data accuracy, completeness and update frequency depend on the underlying sources.
 
 Always verify licensing and usage requirements before using imported datasets in commercial products.
+
+---
+
+## 🧑‍💻 Author
+
+Created with 💡 by [**Rafał Ciesielski**](https://github.com/rciesielski3)
+
+- [LinkedIn](https://www.linkedin.com/in/rafa%C5%82-ciesielski-820309100/)
+- [GitHub](https://github.com/rciesielski3)
+- [Portfolio](https://rciesielski3.dev)
+
+---
+
+## License
+
+MIT
+
+---
+
+Please credit if you reuse it in your own work 🙌
+
+[☕ Buy Me a Coffee](https://buycoffee.to/adateo)

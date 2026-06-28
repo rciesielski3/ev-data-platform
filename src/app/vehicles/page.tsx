@@ -26,6 +26,7 @@ import {
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { ArrowRightIcon } from "lucide-react";
+import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 3600;
 
@@ -163,14 +164,14 @@ export default async function VehiclesPage({
       />
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        <Card className="text-center">
+        <Card className="bg-slate-50 text-center shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
-            {formatDisplayNumber(vehicleCount, locale)}
+            <AnimatedCount end={vehicleCount} />
           </p>
           <p className="muted text-sm">{t("availableVehicles")}</p>
         </Card>
 
-        <Card className="text-center">
+        <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
               ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
