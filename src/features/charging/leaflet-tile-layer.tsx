@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { DivIcon } from "leaflet";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 import { StationMapGroup } from "./station-map";
@@ -85,7 +85,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
           <Link
             href={primaryStation.detailsHref}
             aria-label={t("viewDetailsLink")}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all hover:translate-x-1 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:translate-x-1 group-hover:border-[var(--accent)] group-hover:text-[var(--accent)]"
           >
             <ArrowRightIcon className="h-5 w-5" />
           </Link>
@@ -97,17 +97,17 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
-            className="mt-4 flex w-full items-center justify-between border-t border-slate-200 pt-3 text-sm font-medium text-emerald-700 transition-colors hover:text-emerald-900"
+            className=" mt-4 flex w-full items-center justify-between border-t border-slate-200 pt-3 text-sm font-medium text-slate-600 transition-colors hover:text-[var(--accent)]"
           >
             <span>
               {expanded ? t("client.hideStations") : t("client.chooseStation")}
             </span>
 
-            {expanded ? (
-              <ChevronUpIcon className="h-4 w-4" />
-            ) : (
-              <ChevronDownIcon className="h-4 w-4" />
-            )}
+            <ChevronDownIcon
+              className={`h-4 w-4 transition-transform duration-200 ${
+                expanded ? "rotate-180" : ""
+              }`}
+            />
           </button>
 
           {expanded && (

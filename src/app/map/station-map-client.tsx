@@ -44,10 +44,6 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
   const buildPopupHtml = (group: StationMapGroup) => {
     const primaryStation = group.stations[0];
-    const connectorText =
-      group.connectorLabels.length > 0
-        ? group.connectorLabels.join(", ")
-        : t("client.connectorsUnavailable");
 
     if (group.stationCount === 1 && primaryStation) {
       return `
