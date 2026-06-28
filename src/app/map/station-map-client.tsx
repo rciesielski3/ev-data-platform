@@ -203,7 +203,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <div
           ref={mapElementRef}
-          className="h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
+          className="relative z-0 h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
           aria-label="Charging station map"
         />
       </div>
