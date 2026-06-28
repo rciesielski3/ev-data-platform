@@ -5,6 +5,12 @@ import type {
   StationFreshness,
 } from "@/features/charging/data-quality";
 
+const FRESHNESS_BG_CLASS: Record<StationFreshness["bucket"], string> = {
+  fresh: "bg-emerald-100",
+  stale: "bg-amber-100",
+  unknown: "bg-slate-100",
+};
+
 const FRESHNESS_DOT_CLASS: Record<StationFreshness["bucket"], string> = {
   fresh: "bg-emerald-500",
   stale: "bg-amber-500",
@@ -15,6 +21,12 @@ const FRESHNESS_TEXT_CLASS: Record<StationFreshness["bucket"], string> = {
   fresh: "text-emerald-700",
   stale: "text-amber-700",
   unknown: "text-slate-500",
+};
+
+const COMPLETENESS_CLASS = {
+  complete: "bg-emerald-100 text-emerald-800",
+  partial: "bg-amber-100 text-amber-800",
+  poor: "bg-red-100 text-red-800",
 };
 
 export const formatFreshnessAge = (
@@ -52,7 +64,7 @@ export const StationFreshnessIndicator = async ({
   return (
     <span
       title={freshnessExplanation}
-      className={`inline-flex items-center gap-1.5 text-xs font-medium ${FRESHNESS_TEXT_CLASS[freshness.bucket]} ${className ?? ""}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${FRESHNESS_BG_CLASS[freshness.bucket]} ${FRESHNESS_TEXT_CLASS[freshness.bucket]} ${className ?? ""}`}
     >
       <span
         aria-hidden
@@ -74,9 +86,21 @@ export const StationCompletenessBadge = async ({
 }) => {
   const t = await getTranslations("stationQuality");
 
+  const variant =
+    completeness.scorePercent >= 90
+      ? "complete"
+      : completeness.scorePercent >= 60
+        ? "partial"
+        : "poor";
+
   return (
-    <span className={`badge ${className ?? ""}`}>
-      {t("completePercent", { percent: completeness.scorePercent })}
+    <span
+      className={`
+      inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${COMPLETENESS_CLASS[variant]} ${className ?? ""}`}
+    >
+      {t("completePercent", {
+        percent: completeness.scorePercent,
+      })}
     </span>
   );
 };

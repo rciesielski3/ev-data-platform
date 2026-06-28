@@ -25,11 +25,11 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
-import { buildStationSummaryParts } from "@/features/charging/station-summary";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { ArrowRightIcon, MapPin } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -103,43 +103,6 @@ const StationsPage = async ({
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stations");
   const tCommon = await getTranslations("common");
-  const tStationDetail = await getTranslations("stationDetail");
-
-  const buildSummarySentence = (
-    parts: ReturnType<typeof buildStationSummaryParts>,
-  ) => {
-    const subject = parts.hasOperator
-      ? t("summarySubjectWithOperator", { operator: parts.operatorLabel })
-      : t("summarySubjectGeneric");
-
-    const connectorList =
-      parts.connectorLabels.length > 0
-        ? new Intl.ListFormat(locale, {
-            style: "long",
-            type: "conjunction",
-          }).format(parts.connectorLabels)
-        : null;
-
-    let connectorClause: string | null = null;
-    if (connectorList && parts.powerLabel) {
-      connectorClause = t("summaryWithConnectorsUpTo", {
-        connectors: connectorList,
-        power: parts.powerLabel,
-      });
-    } else if (connectorList) {
-      connectorClause = t("summaryWithConnectors", {
-        connectors: connectorList,
-      });
-    } else if (parts.powerLabel) {
-      connectorClause = t("summaryWithPowerOnly", { power: parts.powerLabel });
-    }
-
-    const subjectWithCity = parts.city
-      ? `${subject} ${t("summaryInCity", { city: parts.city })}`
-      : subject;
-
-    return `${[subjectWithCity, connectorClause].filter(Boolean).join(", ")}.`;
-  };
 
   const filters = parseStationSearchParams(await searchParams);
 
@@ -269,8 +232,9 @@ const StationsPage = async ({
                 total: data.total,
               })}
             </p>
+
             {data.latestRuns.length > 0 && (
-              <p className="text-sm text-slate-500">
+              <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
                 {t("freshness", {
                   source: data.latestRuns[0].source.label,
                   date: formatDisplayDate(
@@ -279,7 +243,7 @@ const StationsPage = async ({
                     locale,
                   ),
                 })}
-              </p>
+              </span>
             )}
           </section>
 
@@ -300,26 +264,30 @@ const StationsPage = async ({
                   station.connectors,
                 );
                 const quality = buildStationQuality(station);
-                const summarySentence = buildSummarySentence(
-                  buildStationSummaryParts({
-                    operatorName:
-                      station.operator?.name ??
-                      station.operator?.normalizedName ??
-                      null,
-                    city: station.city,
-                    connectorTypes: station.connectors.map(
-                      (c) => c.connectorType,
-                    ),
-                    maxPowerKw: strongestConnector?.powerKw ?? null,
-                  }),
-                );
+
+                const normalizedAddress = station.address?.trim() ?? "";
+
+                const normalizedCity = station.city?.trim() ?? "";
+
+                const addressContainsCity = normalizedAddress
+                  .toLowerCase()
+                  .includes(normalizedCity.toLowerCase());
+
                 const locationLine =
-                  [station.address, station.city, station.province]
+                  [
+                    normalizedAddress,
+                    addressContainsCity ? null : normalizedCity,
+                    station.province,
+                  ]
                     .filter(Boolean)
                     .join(", ") || tCommon("locationUnavailable");
 
                 return (
-                  <Card key={station.id} as="article">
+                  <Card
+                    key={station.id}
+                    as="article"
+                    className="group flex h-full flex-col"
+                  >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="text-sm font-medium text-emerald-700">
@@ -333,8 +301,10 @@ const StationsPage = async ({
                             station.externalCode ??
                             tCommon("chargingStationFallback")}
                         </h2>
-                        <p className="muted mt-1 text-sm">{locationLine}</p>
-                        <p className="muted mt-1 text-sm">{summarySentence}</p>
+                        <p className="muted mt-1 flex items-center gap-2 text-sm">
+                          <MapPin className="h-4 w-4 text-slate-400" />
+                          {locationLine}
+                        </p>
                         <div className="mt-3 flex flex-wrap items-center gap-3">
                           <StationCompletenessBadge
                             completeness={quality.completeness}
@@ -343,17 +313,9 @@ const StationsPage = async ({
                             freshness={quality.freshness}
                           />
                         </div>
-                        <Button
-                          as={Link}
-                          href={`/stations/${station.id}`}
-                          variant="secondary"
-                          className="mt-3"
-                        >
-                          {tStationDetail("viewDetailsLink")}
-                        </Button>
                       </div>
                       {strongestConnector?.powerKw && (
-                        <Badge className="shrink-0 whitespace-nowrap">
+                        <Badge className="shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
                           {t("upToPower", {
                             power: strongestConnector.powerKw,
                           })}
@@ -361,7 +323,7 @@ const StationsPage = async ({
                       )}
                     </div>
 
-                    <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                    <dl className="my-5 grid gap-3 text-sm sm:grid-cols-2">
                       <div className="sm:col-span-2">
                         <dt className="text-slate-500">
                           {t("connectorsLabel")}
@@ -373,11 +335,11 @@ const StationsPage = async ({
                                 <span
                                   key={connector.key}
                                   title={connector.title}
-                                  className="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full border border-slate-200 px-2 py-1 text-xs"
+                                  className="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs"
                                 >
                                   {localizeFallback(connector.label, tCommon)}
                                   {connector.currentType !== "Unknown" && (
-                                    <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                                    <span className="shrink-0 rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
                                       {connector.currentType}
                                     </span>
                                   )}
@@ -391,14 +353,11 @@ const StationsPage = async ({
                       </div>
                       <div>
                         <dt className="text-slate-500">
-                          {t("coordinatesLabel")}
+                          {t("localizationLabel")}
                         </dt>
                         <dd className="mt-1 font-medium text-slate-900">
-                          {station.latitude.toFixed(4)},{" "}
-                          {station.longitude.toFixed(4)}
                           {mapHref && (
                             <>
-                              {" / "}
                               <a
                                 href={mapHref}
                                 target="_blank"
@@ -430,31 +389,34 @@ const StationsPage = async ({
                           )}
                         </dd>
                       </div>
-                      <div>
-                        <dt className="text-slate-500">
-                          {t("freshnessLabel")}
-                        </dt>
-                        <dd className="mt-1 font-medium text-slate-900">
-                          {station.sourceUpdatedAt
-                            ? t("importedOnWithSource", {
-                                date: formatDisplayDate(
-                                  station.importedAt,
-                                  locale,
-                                ),
-                                sourceDate: formatDisplayDate(
-                                  station.sourceUpdatedAt,
-                                  locale,
-                                ),
-                              })
-                            : t("importedOn", {
-                                date: formatDisplayDate(
-                                  station.importedAt,
-                                  locale,
-                                ),
-                              })}
-                        </dd>
-                      </div>
                     </dl>
+                    <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-3">
+                      <div className="text-xs text-slate-500">
+                        {station.sourceUpdatedAt
+                          ? t("importedOnWithSource", {
+                              date: formatDisplayDate(
+                                station.importedAt,
+                                locale,
+                              ),
+                              sourceDate: formatDisplayDate(
+                                station.sourceUpdatedAt,
+                                locale,
+                              ),
+                            })
+                          : t("importedOn", {
+                              date: formatDisplayDate(
+                                station.importedAt,
+                                locale,
+                              ),
+                            })}
+                      </div>
+                      <Link
+                        href={`/stations/${station.id}`}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:scale-105 group-hover:border-[var(--accent)] group-hover:text-[var(--accent)] group-hover:translate-x-1"
+                      >
+                        <ArrowRightIcon className="h-5 w-5" />
+                      </Link>
+                    </div>
                   </Card>
                 );
               })}
