@@ -19,6 +19,7 @@
     "import:eipa:test": "EIPA_IMPORT_LIMIT=100 npm run import:eipa",
     "import:openev": "tsx src/server/jobs/run-openev-import.ts",
     "import:all": "npm run import:eipa && npm run import:openev",
+    "snapshot:backfill": "tsx src/server/jobs/backfill-snapshot.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky"
@@ -34,6 +35,7 @@
     "react": "^19.1.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.1.0",
+    "recharts": "^3.9.0",
     "simple-icons": "^16.24.0",
     "zod": "^3.25.67"
   },

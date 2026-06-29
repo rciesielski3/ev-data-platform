@@ -57,6 +57,7 @@ const RootLayout = async ({
     { href: "/provinces", label: t("provinces") },
     { href: "/operators", label: t("operators") },
     { href: "/coverage", label: t("coverage") },
+    { href: "/trends", label: t("trends") },
     { href: "/reports", label: t("reports") },
   ];
 
