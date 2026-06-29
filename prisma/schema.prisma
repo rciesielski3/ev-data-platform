@@ -199,3 +199,21 @@ model LeadSubmission {
 
   @@index([status, createdAt])
 }
+
+model DailySnapshot {
+  id                         String           @id @default(cuid())
+  snapshotDate               DateTime         @unique
+  totalStationCount          Int
+  totalConnectorCount        Int
+  totalHpcStationCount       Int
+  knownPowerConnectorCount   Int
+  provinceMetrics            Json
+  operatorStats              Json
+  latestImportStatus         IngestionStatus?
+  lastSuccessfulImportRunId  String?
+  error                      String?
+  capturedAt                 DateTime         @default(now())
+
+  @@index([snapshotDate])
+  @@index([capturedAt])
+}
