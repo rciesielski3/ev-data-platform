@@ -239,7 +239,9 @@
       "Source timestamp": "Source timestamp",
       "Connector type": "Connector type",
       "Connector power": "Connector power"
-    }
+    },
+    "metaTitle": "{name} – {city} | EVSource",
+    "metaTitleFallback": "{name} | EVSource"
   },
   "stationDetailError": {
     "title": "Station details unavailable",

@@ -239,7 +239,9 @@
       "Source timestamp": "Znacznik czasu źródła",
       "Connector type": "Typ złącza",
       "Connector power": "Moc złącza"
-    }
+    },
+    "metaTitle": "{name} – {city} | EVSource",
+    "metaTitleFallback": "{name} | EVSource"
   },
   "stationDetailError": {
     "title": "Szczegóły stacji niedostępne",
