@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -36,6 +37,41 @@ import type { SupportedLocale } from "@/lib/i18n/constants";
 import { ArrowRightIcon, MapPin } from "lucide-react";
 
 export const revalidate = 3600;
+
+const isFilteredView = (
+  filters: ReturnType<typeof parseStationSearchParams>,
+): boolean =>
+  Boolean(
+    filters.q ||
+      filters.connector ||
+      filters.minPowerKw ||
+      filters.operator ||
+      filters.location,
+  ) || filters.page > 1;
+
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<StationSearchParams>;
+}): Promise<Metadata> => {
+  const t = await getTranslations("stations");
+  const filters = parseStationSearchParams(await searchParams);
+
+  if (isFilteredView(filters)) {
+    return {
+      title: t("title"),
+      description: t("description"),
+      alternates: { canonical: "/stations" },
+      robots: { index: false, follow: true },
+    };
+  }
+
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates: { canonical: "/stations" },
+  };
+};
 
 const PAGE_SIZE = 20;
 
