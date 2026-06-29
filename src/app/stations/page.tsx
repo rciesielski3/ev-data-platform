@@ -305,7 +305,6 @@ const StationsPage = async ({
                   station.connectors,
                 );
                 const quality = buildStationQuality(station);
-<<<<<<< HEAD
 
                 const normalizedAddress = station.address?.trim() ?? "";
 
@@ -315,7 +314,6 @@ const StationsPage = async ({
                   .toLowerCase()
                   .includes(normalizedCity.toLowerCase());
 
-=======
                 const summarySentence = buildSummarySentence(
                   buildStationSummaryParts({
                     operatorName:
@@ -327,7 +325,6 @@ const StationsPage = async ({
                   t,
                   locale,
                 );
->>>>>>> fe4eb57 (refactor: extract station summary sentence builder into a shared, exported function)
                 const locationLine =
                   [
                     normalizedAddress,
