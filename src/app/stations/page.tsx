@@ -75,73 +75,74 @@ export const generateMetadata = async ({
 
 const PAGE_SIZE = 20;
 
-const getStationsData = unstable_cache(
-  async (filters: ReturnType<typeof parseStationSearchParams>) => {
-    const geocodedLocation = await geocodeStationLocation(filters.location);
-    const where = buildStationWhere(
-      filters,
-      geocodedLocation
-        ? {
-            latitude: geocodedLocation.latitude,
-            longitude: geocodedLocation.longitude,
-            radiusKm: 10,
-          }
-        : null,
-    );
-    const skip = (filters.page - 1) * PAGE_SIZE;
+const getStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =>
+  unstable_cache(
+    async () => {
+      const geocodedLocation = await geocodeStationLocation(filters.location);
+      const where = buildStationWhere(
+        filters,
+        geocodedLocation
+          ? {
+              latitude: geocodedLocation.latitude,
+              longitude: geocodedLocation.longitude,
+              radiusKm: 10,
+            }
+          : null,
+      );
+      const skip = (filters.page - 1) * PAGE_SIZE;
 
-    const [stations, total, connectorOptions, operatorOptions, latestRuns] =
-      await Promise.all([
-        prisma.chargingStation.findMany({
-          where,
-          include: {
-            operator: true,
-            connectors: {
-              orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+      const [stations, total, connectorOptions, operatorOptions, latestRuns] =
+        await Promise.all([
+          prisma.chargingStation.findMany({
+            where,
+            include: {
+              operator: true,
+              connectors: {
+                orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+              },
             },
-          },
-          orderBy: [{ city: "asc" }, { name: "asc" }, { updatedAt: "desc" }],
-          take: PAGE_SIZE,
-          skip,
-        }),
-        prisma.chargingStation.count({ where }),
-        prisma.chargingConnector.findMany({
-          distinct: ["connectorType"],
-          select: { connectorType: true },
-          orderBy: { connectorType: "asc" },
-        }),
-        prisma.chargingOperator.findMany({
-          select: { normalizedName: true, name: true },
-          orderBy: { normalizedName: "asc" },
-          take: 60,
-        }),
-        prisma.ingestionRun.findMany({
-          where: buildStationFreshnessRunWhere(),
-          orderBy: { startedAt: "desc" },
-          take: 3,
-          include: { source: true },
-        }),
-      ]);
+            orderBy: [{ city: "asc" }, { name: "asc" }, { updatedAt: "desc" }],
+            take: PAGE_SIZE,
+            skip,
+          }),
+          prisma.chargingStation.count({ where }),
+          prisma.chargingConnector.findMany({
+            distinct: ["connectorType"],
+            select: { connectorType: true },
+            orderBy: { connectorType: "asc" },
+          }),
+          prisma.chargingOperator.findMany({
+            select: { normalizedName: true, name: true },
+            orderBy: { normalizedName: "asc" },
+            take: 60,
+          }),
+          prisma.ingestionRun.findMany({
+            where: buildStationFreshnessRunWhere(),
+            orderBy: { startedAt: "desc" },
+            take: 3,
+            include: { source: true },
+          }),
+        ]);
 
-    return {
-      stations,
-      total,
-      connectorOptions,
-      operatorOptions: buildOperatorFilterOptions(operatorOptions),
-      latestRuns,
-    };
-  },
-  (filters: ReturnType<typeof parseStationSearchParams>) => [
-    "stations-page-data",
-    filters.q || "",
-    filters.connector || "",
-    filters.minPowerKw?.toString() || "",
-    filters.operator || "",
-    filters.location || "",
-    filters.page.toString(),
-  ],
-  { revalidate: 3600 },
-);
+      return {
+        stations,
+        total,
+        connectorOptions,
+        operatorOptions: buildOperatorFilterOptions(operatorOptions),
+        latestRuns,
+      };
+    },
+    [
+      "stations-page-data",
+      filters.q || "",
+      filters.connector || "",
+      filters.minPowerKw?.toString() || "",
+      filters.operator || "",
+      filters.location || "",
+      filters.page.toString(),
+    ],
+    { revalidate: 3600 },
+  )();
 
 const StationsPage = async ({
   searchParams,

@@ -44,36 +44,37 @@ type VehicleListItem = Prisma.EvModelGetPayload<{
   };
 }>;
 
-const getVehiclesData = unstable_cache(
-  async (filters: ReturnType<typeof parseVehicleSearchParams>) => {
-    const skip = (filters.page - 1) * PAGE_SIZE;
-    const where = buildVehicleWhere(filters);
+const getVehiclesData = (filters: ReturnType<typeof parseVehicleSearchParams>) =>
+  unstable_cache(
+    async () => {
+      const skip = (filters.page - 1) * PAGE_SIZE;
+      const where = buildVehicleWhere(filters);
 
-    const [vehicles, total, brands] = await Promise.all([
-      prisma.evModel.findMany({
-        where,
-        include: {
-          brand: true,
-          specs: true,
-        },
-        orderBy: [{ brand: { name: "asc" } }, { modelName: "asc" }],
-        take: PAGE_SIZE,
-        skip,
-      }),
-      prisma.evModel.count({ where }),
-      getTopVehicleBrands(),
-    ]);
+      const [vehicles, total, brands] = await Promise.all([
+        prisma.evModel.findMany({
+          where,
+          include: {
+            brand: true,
+            specs: true,
+          },
+          orderBy: [{ brand: { name: "asc" } }, { modelName: "asc" }],
+          take: PAGE_SIZE,
+          skip,
+        }),
+        prisma.evModel.count({ where }),
+        getTopVehicleBrands(),
+      ]);
 
-    return { vehicles, total, brands };
-  },
-  (filters: ReturnType<typeof parseVehicleSearchParams>) => [
-    "vehicles-page-data",
-    filters.q || "",
-    filters.brand || "",
-    filters.page.toString(),
-  ],
-  { revalidate: 3600 },
-);
+      return { vehicles, total, brands };
+    },
+    [
+      "vehicles-page-data",
+      filters.q || "",
+      filters.brand || "",
+      filters.page.toString(),
+    ],
+    { revalidate: 3600 },
+  )();
 
 export const generateMetadata = async ({
   searchParams,
