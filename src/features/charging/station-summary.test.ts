@@ -4,7 +4,6 @@ import {
   buildLastVerifiedNote,
   buildSummarySentence,
   buildStationSummaryParts,
-  buildSummarySentence,
   type StationSummaryInput,
 } from "@/features/charging/station-summary";
 

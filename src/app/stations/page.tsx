@@ -143,7 +143,6 @@ const StationsPage = async ({
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stations");
   const tCommon = await getTranslations("common");
-  const tStationDetail = await getTranslations("stationDetail");
 
   const filters = parseStationSearchParams(await searchParams);
 
@@ -314,17 +313,6 @@ const StationsPage = async ({
                   .toLowerCase()
                   .includes(normalizedCity.toLowerCase());
 
-                const summarySentence = buildSummarySentence(
-                  buildStationSummaryParts({
-                    operatorName:
-                      station.operator?.name ?? station.operator?.normalizedName ?? null,
-                    city: station.city,
-                    connectorTypes: station.connectors.map((c) => c.connectorType),
-                    maxPowerKw: strongestConnector?.powerKw ?? null,
-                  }),
-                  t,
-                  locale,
-                );
                 const locationLine =
                   [
                     normalizedAddress,
