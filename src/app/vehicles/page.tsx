@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
@@ -29,6 +30,10 @@ import { ArrowRightIcon } from "lucide-react";
 import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 3600;
+
+const isFilteredView = (
+  filters: ReturnType<typeof parseVehicleSearchParams>,
+): boolean => Boolean(filters.q || filters.brand) || filters.page > 1;
 
 const PAGE_SIZE = 24;
 
@@ -64,6 +69,38 @@ const getVehiclesData = unstable_cache(
   ["vehicles-page-data"],
   { revalidate: 3600 },
 );
+
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<VehicleSearchParams>;
+}): Promise<Metadata> => {
+  const t = await getTranslations("vehicles");
+  const filters = parseVehicleSearchParams(await searchParams);
+
+  let description: string;
+  try {
+    const { total } = await getVehiclesData(filters);
+    description = t("descriptionWithCount", { count: total });
+  } catch {
+    description = t("descriptionError");
+  }
+
+  if (isFilteredView(filters)) {
+    return {
+      title: t("title"),
+      description,
+      alternates: { canonical: "/vehicles" },
+      robots: { index: false, follow: true },
+    };
+  }
+
+  return {
+    title: t("title"),
+    description,
+    alternates: { canonical: "/vehicles" },
+  };
+};
 
 const BrandLogo = ({
   brandMark,
