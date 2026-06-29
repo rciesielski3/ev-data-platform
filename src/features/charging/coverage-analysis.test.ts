@@ -207,6 +207,73 @@ describe("buildCoverageAnalysisFromRows", () => {
   });
 });
 
+describe("lowestPerCapitaCoverageProvinces", () => {
+  it("ranks ascending by stations per 100k, excluding provinces with no population data", () => {
+    const analysis = buildCoverageAnalysisFromRows([
+      {
+        province: "mazowieckie",
+        stationCount: 10,
+        connectorCount: 10,
+        knownPowerConnectorCount: 10,
+        hpcStationCount: 1,
+        maxPowerKw: 150,
+        averagePowerKw: 50,
+        operatorCount: 3,
+        stationsPer100k: 0.5,
+        stationsPer1000Km2: 1,
+      },
+      {
+        province: "opolskie",
+        stationCount: 10,
+        connectorCount: 10,
+        knownPowerConnectorCount: 10,
+        hpcStationCount: 1,
+        maxPowerKw: 150,
+        averagePowerKw: 50,
+        operatorCount: 1,
+        stationsPer100k: 0.2,
+        stationsPer1000Km2: 2,
+      },
+      {
+        province: "Unknown province",
+        stationCount: 5,
+        connectorCount: 5,
+        knownPowerConnectorCount: 5,
+        hpcStationCount: 0,
+        maxPowerKw: 50,
+        averagePowerKw: 50,
+        operatorCount: 1,
+        stationsPer100k: null,
+        stationsPer1000Km2: null,
+      },
+    ]);
+
+    expect(analysis.lowestPerCapitaCoverageProvinces.map((row) => row.province)).toEqual([
+      "opolskie",
+      "mazowieckie",
+    ]);
+  });
+
+  it("returns an empty list when no province has population data", () => {
+    const analysis = buildCoverageAnalysisFromRows([
+      {
+        province: "Unknown province",
+        stationCount: 5,
+        connectorCount: 5,
+        knownPowerConnectorCount: 5,
+        hpcStationCount: 0,
+        maxPowerKw: 50,
+        averagePowerKw: 50,
+        operatorCount: 1,
+        stationsPer100k: null,
+        stationsPer1000Km2: null,
+      },
+    ]);
+
+    expect(analysis.lowestPerCapitaCoverageProvinces).toEqual([]);
+  });
+});
+
 describe("buildCoverageAnalysis", () => {
   it("derives the same analysis as buildCoverageAnalysisFromRows when given raw station input", () => {
     const stations = [

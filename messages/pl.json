@@ -596,7 +596,8 @@
     "hpcStationsHeader": "Stacje HPC",
     "maxPowerHeader": "Maks. moc",
     "avgPowerHeader": "Śr. moc",
-    "operatorsHeader": "Operatorzy"
+    "operatorsHeader": "Operatorzy",
+    "stationsPer100kHeader": "Stacje / 100 tys. mieszkańców"
   },
   "provincesError": {
     "title": "Nie udało się wczytać analizy województw",
@@ -642,7 +643,34 @@
     "hpcShareHeader": "Udział HPC",
     "connectorsHeader": "Złącza",
     "knownPowerHeader": "Znana moc",
-    "powerAvailabilityHeader": "Dostępność mocy"
+    "powerAvailabilityHeader": "Dostępność mocy",
+    "lowestPerCapitaCoverageTitle": "Najsłabszy dostęp na mieszkańca",
+    "lowestPerCapitaCoverageSubtitle": "Stacje na 100 tys. mieszkańców — uwzględnia gęstość zaludnienia, nie tylko liczbę stacji. Źródło danych o ludności: GUS, dane szacunkowe.",
+    "perCapitaMetric": "{value} / 100 tys.",
+    "stationsPer100kHeader": "Stacje / 100 tys.",
+    "stateOfChargingLink": "Zobacz pełny raport"
+  },
+  "stateOfCharging": {
+    "badge": "Stan polskiej infrastruktury",
+    "title": "Stan ładowania w Polsce",
+    "description": "Krajowy obraz infrastruktury ładowania pojazdów elektrycznych w Polsce — liczba stacji, udział szybkiego ładowania i dostęp na mieszkańca, na podstawie danych EIPA/UDT.",
+    "asOfDate": "Stan na {date}, źródło: EIPA/UDT Poland.",
+    "totalStationsLabel": "Stacje ładowania",
+    "totalStationsHelper": "Łączna liczba stacji w bazie EIPA/UDT.",
+    "totalConnectorsLabel": "Złącza",
+    "totalConnectorsHelper": "Łączna liczba portów ładowania we wszystkich stacjach.",
+    "hpcShareLabel": "Udział szybkiego ładowania (≥150 kW)",
+    "hpcShareHelper": "Udział stacji z co najmniej jednym złączem ≥150 kW.",
+    "provinceCoverageLabel": "Województwa z infrastrukturą",
+    "provinceCoverageHelper": "Liczba województw z co najmniej jedną stacją (z 16 ogółem).",
+    "topOperatorsTitle": "Najwięksi operatorzy",
+    "topOperatorsSubtitle": "Według liczby stacji w sieci.",
+    "operatorStationCount": "{count} stacji",
+    "perCapitaLeadersTitle": "Najlepszy dostęp na mieszkańca",
+    "perCapitaLaggardsTitle": "Najsłabszy dostęp na mieszkańca",
+    "perCapitaMetric": "{value} stacji / 100 tys. mieszkańców",
+    "populationSourceNote": "Dane o ludności i powierzchni województw: GUS, dane szacunkowe. Nie jest to dynamiczny wskaźnik.",
+    "setupRequiredMessage": "Dane nie są jeszcze dostępne. Skonfiguruj połączenie z bazą danych i uruchom import."
   },
   "coverageError": {
     "title": "Nie udało się wczytać analizy pokrycia",

@@ -596,7 +596,8 @@
     "hpcStationsHeader": "HPC stations",
     "maxPowerHeader": "Max power",
     "avgPowerHeader": "Avg power",
-    "operatorsHeader": "Operators"
+    "operatorsHeader": "Operators",
+    "stationsPer100kHeader": "Stations / 100k residents"
   },
   "provincesError": {
     "title": "Province intelligence could not load",
@@ -642,7 +643,34 @@
     "hpcShareHeader": "HPC share",
     "connectorsHeader": "Connectors",
     "knownPowerHeader": "Known power",
-    "powerAvailabilityHeader": "Power availability"
+    "powerAvailabilityHeader": "Power availability",
+    "lowestPerCapitaCoverageTitle": "Weakest access per resident",
+    "lowestPerCapitaCoverageSubtitle": "Stations per 100k residents — accounts for population density, not just raw station counts. Population source: GUS (Statistics Poland), estimated figures.",
+    "perCapitaMetric": "{value} / 100k",
+    "stationsPer100kHeader": "Stations / 100k",
+    "stateOfChargingLink": "View full snapshot"
+  },
+  "stateOfCharging": {
+    "badge": "State of Polish infrastructure",
+    "title": "State of EV Charging in Poland",
+    "description": "A national snapshot of Poland's EV charging infrastructure — station count, fast-charging share, and per-resident access, based on EIPA/UDT data.",
+    "asOfDate": "As of {date}, source: EIPA/UDT Poland.",
+    "totalStationsLabel": "Charging stations",
+    "totalStationsHelper": "Total stations in the EIPA/UDT database.",
+    "totalConnectorsLabel": "Connectors",
+    "totalConnectorsHelper": "Total charging ports across every station.",
+    "hpcShareLabel": "Fast-charging share (≥150 kW)",
+    "hpcShareHelper": "Share of stations with at least one ≥150 kW connector.",
+    "provinceCoverageLabel": "Provinces with infrastructure",
+    "provinceCoverageHelper": "Provinces with at least one station (of 16 total).",
+    "topOperatorsTitle": "Largest operators",
+    "topOperatorsSubtitle": "By number of stations in their network.",
+    "operatorStationCount": "{count} stations",
+    "perCapitaLeadersTitle": "Best access per resident",
+    "perCapitaLaggardsTitle": "Weakest access per resident",
+    "perCapitaMetric": "{value} stations / 100k residents",
+    "populationSourceNote": "Population/area source: GUS (Statistics Poland), estimated figures. Not a live feed.",
+    "setupRequiredMessage": "Data isn't available yet. Configure the database connection and run an import."
   },
   "coverageError": {
     "title": "Coverage analysis could not load",

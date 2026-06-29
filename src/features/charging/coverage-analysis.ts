@@ -14,6 +14,7 @@ export type CoverageRankingRow = {
   connectorCount: number;
   knownPowerConnectorCount: number;
   powerAvailabilityRatio: number;
+  stationsPer100k: number | null;
 };
 
 export type CoverageAnalysis = {
@@ -23,6 +24,8 @@ export type CoverageAnalysis = {
   lowestHpcCoverageProvinces: CoverageRankingRow[];
   /** Provinces with the most stations, descending by station count. */
   highestStationCountProvinces: CoverageRankingRow[];
+  /** Provinces with the lowest per-capita station coverage (stations per 100k), ascending. */
+  lowestPerCapitaCoverageProvinces: CoverageRankingRow[];
   /** All province rows ordered for table display (descending station count). */
   provinceRows: CoverageRankingRow[];
   totals: {
@@ -51,6 +54,7 @@ const toCoverageRankingRow = (row: ProvinceIntelligenceRow): CoverageRankingRow 
     row.knownPowerConnectorCount,
     row.connectorCount,
   ),
+  stationsPer100k: row.stationsPer100k,
 });
 
 const compareByLabel = (left: string, right: string) =>
@@ -74,14 +78,28 @@ const ascendingByHpcShare = (
   left.stationCount - right.stationCount ||
   compareByLabel(left.province, right.province);
 
+const ascendingByPerCapitaCoverage = (
+  left: CoverageRankingRow,
+  right: CoverageRankingRow,
+) => {
+  if (left.stationsPer100k === null || right.stationsPer100k === null) {
+    return 0;
+  }
+
+  return (
+    left.stationsPer100k - right.stationsPer100k ||
+    compareByLabel(left.province, right.province)
+  );
+};
+
 /**
  * Builds infrastructure coverage rankings (underserved vs. saturated provinces)
  * directly from pre-aggregated province intelligence rows.
  *
  * This is descriptive infrastructure analysis only: it reports where stations,
  * HPC stations and known-power connectors are concentrated today. It is not a
- * demand forecast, does not perform route planning, and makes no
- * population-normalized claims.
+ * demand forecast, does not perform route planning.
+ * It includes per-capita view normalized against static, GUS-derived population/area figures (see `province-population.ts`).
  */
 export const buildCoverageAnalysisFromRows = (
   rows: ProvinceIntelligenceRow[],
@@ -98,6 +116,10 @@ export const buildCoverageAnalysisFromRows = (
     .slice(0, listSize);
   const lowestHpcCoverageProvinces = [...rankingRows]
     .sort(ascendingByHpcShare)
+    .slice(0, listSize);
+  const lowestPerCapitaCoverageProvinces = [...rankingRows]
+    .filter((row) => row.stationsPer100k !== null)
+    .sort(ascendingByPerCapitaCoverage)
     .slice(0, listSize);
 
   const totals = rows.reduce(
@@ -122,6 +144,7 @@ export const buildCoverageAnalysisFromRows = (
     lowestStationCountProvinces,
     lowestHpcCoverageProvinces,
     highestStationCountProvinces,
+    lowestPerCapitaCoverageProvinces,
     provinceRows,
     totals: {
       ...totals,

@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
+import {
+  buildProvinceIntelligenceRows,
+  UNKNOWN_PROVINCE,
+} from "@/features/charging/province-intelligence";
 
 describe("buildProvinceIntelligenceRows", () => {
   it("aggregates station and connector counts by province", () => {
@@ -32,6 +35,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 50,
         averagePowerKw: 36,
         operatorCount: 2,
+        stationsPer100k: expect.closeTo((2 / 5_505_857) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((2 / 35_560) * 1000, 5),
       },
       {
         province: "Slaskie",
@@ -42,6 +47,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 11,
         averagePowerKw: 11,
         operatorCount: 1,
+        stationsPer100k: expect.closeTo((1 / 4_261_792) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 12_331) * 1000, 5),
       },
     ]);
   });
@@ -69,6 +76,8 @@ describe("buildProvinceIntelligenceRows", () => {
       province: "Pomorskie",
       hpcStationCount: 2,
       maxPowerKw: 350,
+      stationsPer100k: expect.closeTo((3 / 2_358_409) * 100_000, 5),
+      stationsPer1000Km2: expect.closeTo((3 / 18_293) * 1000, 5),
     });
   });
 
@@ -96,6 +105,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 100,
         averagePowerKw: 75,
         operatorCount: 2,
+        stationsPer100k: null,
+        stationsPer1000Km2: null,
       },
     ]);
   });
@@ -128,6 +139,8 @@ describe("buildProvinceIntelligenceRows", () => {
       province: "Malopolskie",
       stationCount: 4,
       operatorCount: 1,
+      stationsPer100k: expect.closeTo((4 / 3_429_342) * 100_000, 5),
+      stationsPer1000Km2: expect.closeTo((4 / 15_190) * 1000, 5),
     });
   });
 
@@ -155,6 +168,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 75.5,
         averagePowerKw: 62.8,
         operatorCount: 1,
+        stationsPer100k: expect.closeTo((1 / 963_601) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 13_989) * 1000, 5),
       },
       {
         province: "Opolskie",
@@ -165,7 +180,36 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: null,
         averagePowerKw: null,
         operatorCount: 1,
+        stationsPer100k: expect.closeTo((1 / 923_536) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 9_412) * 1000, 5),
       },
     ]);
+  });
+
+  describe("per-capita and per-area fields", () => {
+    it("computes stations per 100k residents and per 1000 km² for a known province", () => {
+      const rows = buildProvinceIntelligenceRows([
+        { province: "opolskie", connectors: [], operator: { id: "1", name: "Op1", normalizedName: "op1" } },
+        { province: "opolskie", connectors: [], operator: { id: "2", name: "Op2", normalizedName: "op2" } },
+      ]);
+
+      const opolskie = rows.find((row) => row.province === "opolskie");
+
+      // opolskie: population 923,536, area 9,412 km² (from Task 1)
+      // 2 stations -> 2 / 923,536 * 100,000 ≈ 0.2165855...
+      expect(opolskie?.stationsPer100k).toBeCloseTo((2 / 923_536) * 100_000, 5);
+      expect(opolskie?.stationsPer1000Km2).toBeCloseTo((2 / 9_412) * 1000, 5);
+    });
+
+    it("returns null per-capita fields for the Unknown province bucket", () => {
+      const rows = buildProvinceIntelligenceRows([
+        { province: null, connectors: [], operator: { id: "1", name: "Op1", normalizedName: "op1" } },
+      ]);
+
+      const unknown = rows.find((row) => row.province === UNKNOWN_PROVINCE);
+
+      expect(unknown?.stationsPer100k).toBeNull();
+      expect(unknown?.stationsPer1000Km2).toBeNull();
+    });
   });
 });
