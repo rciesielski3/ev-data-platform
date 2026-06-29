@@ -25,42 +25,63 @@ import type { SupportedLocale } from "@/lib/i18n/constants";
 export const revalidate = 3600;
 
 const getStatus = async () => {
-  const [evCount, stationCount, operatorCount, provinces, ingestionRuns] =
-    await Promise.all([
-      prisma.evModel.count(),
-      prisma.chargingStation.count(),
-      prisma.chargingOperator.count(),
-      prisma.chargingStation.groupBy({
-        by: ["province"],
-        where: { province: { not: null } },
-      }),
-      prisma.ingestionRun.findMany({
-        include: { source: true },
-        where: {
-          completedAt: { not: null },
-          status: { in: ["SUCCESS", "PARTIAL"] },
-        },
-        orderBy: { completedAt: "desc" },
-        take: 10,
-      }),
-    ]);
+  const [
+    evCount,
+    stationCount,
+    operatorCount,
+    provinces,
+    latestEipaRun,
+    latestOpenEvRun,
+  ] = await Promise.all([
+    prisma.evModel.count(),
+    prisma.chargingStation.count(),
+    prisma.chargingOperator.count(),
+    prisma.chargingStation.groupBy({
+      by: ["province"],
 
-  const latestBySource: Record<string, (typeof ingestionRuns)[0]> = {};
-  for (const run of ingestionRuns) {
-    if (!run.source) continue;
-    const sourceKey = run.source.key?.toLowerCase() || "";
-    if (!sourceKey) continue;
-    if (!(sourceKey in latestBySource)) {
-      latestBySource[sourceKey] = run;
-    }
-  }
+      where: { province: { not: null } },
+    }),
+
+    prisma.ingestionRun.findFirst({
+      include: { source: true },
+      where: {
+        completedAt: { not: null },
+        status: {
+          in: ["RUNNING", "SUCCESS", "PARTIAL"],
+        },
+        source: {
+          key: "eipa",
+        },
+      },
+      orderBy: {
+        completedAt: "desc",
+      },
+    }),
+
+    prisma.ingestionRun.findFirst({
+      include: { source: true },
+      where: {
+        completedAt: { not: null },
+        status: { in: ["SUCCESS", "PARTIAL"] },
+        source: {
+          key: "openev",
+        },
+      },
+      orderBy: {
+        completedAt: "desc",
+      },
+    }),
+  ]);
 
   return {
     evCount,
     stationCount,
     operatorCount,
     provinceCount: provinces.length,
-    ingestionRuns: latestBySource,
+    ingestionRuns: {
+      eipa: latestEipaRun,
+      openev: latestOpenEvRun,
+    },
   };
 };
 
@@ -89,7 +110,8 @@ const HomePage = async () => {
               as={Link}
               href="/map"
               variant="primary"
-              className="px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+              size="lg"
+              className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroPrimaryCta")}
             </Button>
@@ -97,7 +119,8 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               variant="ghost"
-              className="hero-cta-secondary px-6 py-3 text-base transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+              size="lg"
+              className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
               {t("heroSecondaryCta")}
             </Button>
@@ -116,6 +139,7 @@ const HomePage = async () => {
                   }
                 />
               )}
+
               {status.ingestionRuns.openev && (
                 <ImportStatusBadge
                   source="OpenEV"
@@ -130,33 +154,6 @@ const HomePage = async () => {
           ) : undefined
         }
       />
-
-      {!("error" in status) &&
-        (status.ingestionRuns.eipa || status.ingestionRuns.openev) && (
-          <div className="mx-auto w-full max-w-5xl px-6 py-4">
-            <div className="flex flex-wrap gap-3 justify-center">
-              {status.ingestionRuns.eipa && (
-                <ImportStatusBadge
-                  source="EIPA"
-                  status={status.ingestionRuns.eipa.status}
-                  completedAt={
-                    status.ingestionRuns.eipa.completedAt?.toISOString() ?? null
-                  }
-                />
-              )}
-              {status.ingestionRuns["openev"] && (
-                <ImportStatusBadge
-                  source="OpenEV"
-                  status={status.ingestionRuns.openev.status}
-                  completedAt={
-                    status.ingestionRuns.openev.completedAt?.toISOString() ??
-                    null
-                  }
-                />
-              )}
-            </div>
-          </div>
-        )}
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-5xl px-6 pb-16">
@@ -194,21 +191,22 @@ const HomePage = async () => {
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
           </h2>
-          <p className="muted mt-2 text-sm">{t("valuePropsSubtitle")}</p>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">{t("valuePropsSubtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
-          <Card className="bg-emerald-50">
-            <ShieldCheck className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
+            <ShieldCheck className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueQualityTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueQualityBody")}</p>
           </Card>
-          <Card className="bg-emerald-50">
-            <Database className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
+            <Database className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueNormalizedTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueNormalizedBody")}</p>
           </Card>
-          <Card className="bg-emerald-50">
-            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+          <Card className="group border border-[var(--card-border)] bg-emerald-50">
+            <FileBarChart className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
           </Card>
@@ -220,14 +218,15 @@ const HomePage = async () => {
           <h2 className="font-display text-2xl font-bold">
             {t("exploreTitle")}
           </h2>
-          <p className="muted mt-2 text-sm">{t("exploreSubtitle")}</p>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">{t("exploreSubtitle")}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card
             as={Link}
             href="/vehicles"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
@@ -243,7 +242,7 @@ const HomePage = async () => {
             as={Link}
             href="/stations"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
@@ -261,7 +260,7 @@ const HomePage = async () => {
             as={Link}
             href="/map"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <MapPinned className="h-6 w-6 text-[var(--accent)]" />
@@ -277,7 +276,7 @@ const HomePage = async () => {
             as={Link}
             href="/connectors"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Plug className="h-6 w-6 text-[var(--accent)]" />
@@ -295,7 +294,7 @@ const HomePage = async () => {
             as={Link}
             href="/insights"
             interactive
-            className="group relative bg-white"
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
@@ -309,6 +308,24 @@ const HomePage = async () => {
               {t("chargingInsightsDescription")}
             </p>
           </Card>
+          <Card
+            as={Link}
+            href="/reports"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <p className="mt-4 text-sm font-medium text-emerald-700">
+              {t("reportsEyebrow")}
+            </p>
+
+            <h3 className="font-display mt-2 text-xl font-semibold">
+              {t("reportsTitle")}
+            </h3>
+
+            <p className="muted mt-2 text-sm">{t("reportsDescription")}</p>
+          </Card>
         </div>
       </section>
 
@@ -318,12 +335,7 @@ const HomePage = async () => {
             {t("b2bCtaTitle")}
           </h2>
           <p className="muted max-w-xl">{t("b2bCtaBody")}</p>
-          <Button
-            as={Link}
-            href="/contact"
-            variant="primary"
-            className="px-6 py-3 text-base"
-          >
+          <Button as={Link} href="/contact" variant="primary" size="lg">
             {t("b2bCtaButton")}
           </Button>
         </div>

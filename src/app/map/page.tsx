@@ -15,6 +15,9 @@ import {
   type StationMapParams,
 } from "@/features/charging/station-map";
 import { prisma } from "@/lib/db/prisma";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 3600;
 
@@ -131,20 +134,43 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
           )}
       />
 
-      <section className="mb-4 flex flex-col gap-2 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          {t("summary", {
-            shown: data.stationDtos.length,
-            total: data.total,
-            markers: data.groups.length,
-          })}
-        </p>
-        {data.isLimited && (
-          <p>{t("limited", { limit: MAP_STATION_LIMIT })}</p>
-        )}
-      </section>
+      <Card>
+        <div className="mb-6 grid gap-4 sm:grid-cols-3">
+          <Card className="text-center bg-slate-50 shadow-xl">
+            <p className="text-3xl font-bold text-[var(--accent)]">
+              <AnimatedCount end={data.total} />
+            </p>
+            <p className="muted text-sm">{t("totalStations")}</p>
+          </Card>
 
-      <StationMapClient groups={data.groups} />
+          <Card className="text-center bg-slate-50 shadow-xl">
+            <p className="text-3xl font-bold text-[var(--accent)]">
+              <AnimatedCount end={data.stationDtos.length} />
+            </p>
+            <p className="muted text-sm">{t("displayedStations")}</p>
+          </Card>
+
+          <Card className="text-center bg-slate-50 shadow-xl">
+            <p className="text-3xl font-bold text-[var(--accent)]">
+              <AnimatedCount end={data.groups.length} />
+            </p>
+            <p className="muted text-sm">{t("mapMarkers")}</p>
+          </Card>
+        </div>
+
+        {data.isLimited && (
+          <div className="mb-4 text-xs">
+            <Notice
+              description={t("limitedDescription", {
+                limit: MAP_STATION_LIMIT,
+              })}
+              tone="warning"
+            ></Notice>
+          </div>
+        )}
+
+        <StationMapClient groups={data.groups} />
+      </Card>
     </>
   );
 };
@@ -164,18 +190,12 @@ const StationMapPage = async ({
         description={t("description")}
         actions={
           <>
-            <Link
-              href="/stations"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
+            <Button as={Link} href="/stations" variant="secondary">
               {t("searchListLink")}
-            </Link>
-            <Link
-              href="/insights"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
+            </Button>
+            <Button as={Link} href="/insights" variant="secondary">
               {t("viewInsightsLink")}
-            </Link>
+            </Button>
           </>
         }
       />

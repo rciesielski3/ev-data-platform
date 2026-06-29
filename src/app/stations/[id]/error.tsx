@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 import ErrorState from "@/components/ui/ErrorState";
+import BackLink from "@/components/ui/BackLink";
 
 const StationDetailsError = ({
   reset,
@@ -22,12 +22,7 @@ const StationDetailsError = ({
         retryLabel={tCommon("retry")}
         onRetry={reset}
       >
-        <Link
-          href="/stations"
-          className="rounded-md border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
-        >
-          {t("backLink")}
-        </Link>
+        <BackLink href="/stations" label={t("backLink")} variant="amber" />
       </ErrorState>
     </main>
   );

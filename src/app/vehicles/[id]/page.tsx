@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cache } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 
@@ -19,6 +18,8 @@ import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import Badge from "@/components/ui/Badge";
+import BackLink from "@/components/ui/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -163,14 +164,7 @@ export default async function VehicleDetailPage({
           __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <div className="mb-8">
-        <Link
-          href="/vehicles"
-          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-        >
-          {t("backLink")}
-        </Link>
-      </div>
+      <BackLink href="/vehicles" label={t("backLink")} />
 
       <header className="mb-10">
         <div className="text-lg font-medium text-slate-500">
@@ -180,8 +174,27 @@ export default async function VehicleDetailPage({
           {vehicle.modelName}
         </h1>
         {vehicle.variantName && (
-          <p className="mt-2 text-xl text-slate-600">{vehicle.variantName}</p>
+          <p className="my-2 text-xl text-slate-600">{vehicle.variantName}</p>
         )}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {vehicle.specs?.batteryCapacityKwhNet && (
+            <Badge className="rounded-full bg-blue-200 px-3 py-1 text-sm font-medium text-blue-700">
+              {vehicle.specs.batteryCapacityKwhNet} kWh
+            </Badge>
+          )}
+
+          {vehicle.specs?.dcMaxPowerKw && (
+            <Badge className="rounded-full bg-emerald-200 px-3 py-1 text-sm font-medium text-emerald-700">
+              {vehicle.specs.dcMaxPowerKw} kW
+            </Badge>
+          )}
+
+          {vehicle.specs?.systemPowerKw && (
+            <Badge className="rounded-full bg-orange-200 px-3 py-1 text-sm font-medium text-orange-700">
+              {vehicle.specs.systemPowerKw} kW
+            </Badge>
+          )}
+        </div>
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -301,7 +314,7 @@ export default async function VehicleDetailPage({
 
       <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
         <p>
-          {t("dataSourceLabel", { source: vehicle.sourceName })}
+          {t("dataSourceLabel", { source: vehicle.sourceName.toUpperCase() })}
           {safeSourceUrl && (
             <>
               {" · "}

@@ -15,7 +15,7 @@ const Hero = ({
   actions: ReactNode;
   importStatusBadges?: ReactNode;
 }) => (
-  <section className="hero-surface flex flex-col items-center gap-6 py-16 text-center sm:py-24">
+  <section className="hero-surface flex flex-col items-center gap-6 py-14 text-center sm:py-20">
     <span className="hero-orb hero-orb-1" aria-hidden="true" />
     <span className="hero-orb hero-orb-2" aria-hidden="true" />
     <span className="hero-orb hero-orb-3" aria-hidden="true" />
@@ -39,14 +39,15 @@ const Hero = ({
       {title}
     </h1>
     <p className="muted max-w-xl text-lg">{subhead}</p>
-    <div className="flex flex-wrap items-center justify-center gap-4">
-      {actions}
-    </div>
     {importStatusBadges && (
-      <div className="flex flex-wrap items-center justify-center gap-3 py-3">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         {importStatusBadges}
       </div>
     )}
+
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+      {actions}
+    </div>
   </section>
 );
 

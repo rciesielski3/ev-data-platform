@@ -30,6 +30,7 @@
     "provinces": "Provinces",
     "operators": "Operators",
     "coverage": "Coverage",
+    "reports": "Reports",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "languageSwitcherLabel": "Change language"
@@ -41,10 +42,9 @@
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
     "importStatus": {
-      "success": "Success",
-      "partial": "Partial",
-      "failed": "Failed",
-      "running": "Running"
+      "running": "Updating",
+      "stationData": "Station Data",
+      "evCatalog": "EV Catalog"
     },
     "heroHeadline": "The complete picture of Poland's charging infrastructure, in one place",
     "heroSubhead": "Normalized, quality-scored data on charging stations and EV models — collected across all 16 provinces, ready to analyze.",
@@ -80,6 +80,9 @@
     "chargingInsightsEyebrow": "Charging insights",
     "chargingInsightsTitle": "Explore infrastructure metrics",
     "chargingInsightsDescription": "See top operators, connector distribution, strongest stations, and province coverage from imported station data.",
+    "reportsEyebrow": "Benchmark reports",
+    "reportsTitle": "Infrastructure reports",
+    "reportsDescription": "Explore sample benchmarking reports and discover custom infrastructure analysis for charging network operators.",
     "b2bCtaTitle": "Analytics and reports for charging network operators",
     "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing — let's talk about what you need.",
     "b2bCtaButton": "Get in touch"
@@ -88,7 +91,10 @@
     "title": "Vehicles",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
+    "activeFilter": "Active filter",
+    "availableVehicles": "Available vehicles",
     "allBrandsLabel": "All brands",
+    "browseByBrand": "Browse by brand",
     "searchPlaceholder": "Search vehicles...",
     "searchButton": "Search",
     "setupRequiredMessage": "EV catalog data is not available yet. Configure the database and run the OpenEV import.",
@@ -107,7 +113,7 @@
     "body": "The EV catalog is temporarily unavailable. Try again, or check that the OpenEV import has completed."
   },
   "vehicleDetail": {
-    "backLink": "← Back to vehicles",
+    "backLink": "Back to vehicles",
     "batteryRangeTitle": "Battery & Range",
     "rangeWltpLabel": "Range (WLTP)",
     "rangeEpaLabel": "Range (EPA)",
@@ -167,17 +173,18 @@
     "noResultsTitle": "No stations found",
     "noResultsBody": "Try removing one filter or searching for a broader city, operator, or connector.",
     "connectorsLabel": "Connectors",
-    "coordinatesLabel": "Coordinates",
+    "localizationLabel": "Localization",
     "sourceLabel": "Source",
     "freshnessLabel": "Freshness",
-    "mapLinkLabel": "map",
+    "mapLinkLabel": "Show on the map",
     "originalLinkLabel": "original",
     "upToPower": "up to {power} kW",
     "importedOn": "Imported {date}",
-    "importedOnWithSource": "Imported {date} / source {sourceDate}"
+    "importedOnWithSource": "Imported {date} / source {sourceDate}",
+    "locationUnavailable": "Location details unavailable"
   },
   "stationDetail": {
-    "backLink": "← Back to stations",
+    "backLink": "Back to stations",
     "viewDetailsLink": "View details",
     "stationDetailsTitle": "Station Details",
     "connectorsTitle": "Connectors",
@@ -188,8 +195,8 @@
     "provinceLabel": "Province",
     "coordinatesLabel": "Coordinates",
     "sourceLabel": "Source",
-    "lastUpdatedLabel": "Last Updated",
-    "openStreetMapLink": "OpenStreetMap",
+    "updatedLabel": "Updated",
+    "mapLinkLabel": "Show on the map",
     "originalLink": "original",
     "locationMapTitle": "Location",
     "connectorsCount": "{count, plural, one {# connector} other {# connectors}}",
@@ -220,6 +227,10 @@
     "paymentMethodsLabel": "Payment methods",
     "authMethodsLabel": "Authentication methods",
     "notProvidedBySource": "Not provided by source",
+    "upToPower": "up to {power} kW",
+    "dataSourceLabel": "Data source: {source}",
+    "lastImportedLabel": "Last imported: {date}",
+    "originalSourceLink": "Original source",
     "completenessFields": {
       "Coordinates": "Coordinates",
       "Address/location": "Address/location",
@@ -253,7 +264,13 @@
     "privacyNote": "By submitting this form, you agree to be contacted about your inquiry. We do not share your data with third parties.",
     "successTitle": "Thank you!",
     "successBody": "We've received your submission and will be in touch soon.",
-    "validationErrorNotice": "Please check that you entered a valid email and selected one interest option."
+    "validationErrorNotice": "Please check that you entered a valid email and selected one interest option.",
+    "overviewCustomReportsTitle": "Custom Reports",
+    "overviewCustomReportsDescription": "Benchmark charging infrastructure, operators, and market opportunities.",
+    "overviewFeaturedListingsTitle": "Featured Listings",
+    "overviewFeaturedListingsDescription": "Increase visibility for your charging network and services.",
+    "overviewFastResponseTitle": "Fast Response",
+    "overviewFastResponseDescription": "We typically respond within one business day."
   },
   "operatorFeatured": {
     "heroBadge": "B2B offering",
@@ -352,7 +369,26 @@
       "Quarterly updates delivered by email as new data arrives",
       "Optional follow-up support call to discuss strategy implications"
     ],
-    "ctaLabel": "Commission your report"
+    "ctaLabel": "Commission your report",
+    "powerStructureTitle": "Power structure",
+    "powerStructureSubtitle": "Overview of charging power availability across the network.",
+    "hpcShareLabel": "HPC share",
+    "hpcShareHelper": "Stations with at least one connector rated at {threshold} kW or higher.",
+    "averagePowerLabel": "Average connector power",
+    "averagePowerHelper": "Average power across connectors with known kW values.",
+    "maxPowerLabel": "Maximum observed power",
+    "maxPowerHelper": "Highest connector power observed in the dataset.",
+    "mapSectionTitle": "Sample infrastructure map",
+    "mapSectionSubtitle": "Preview based on up to {count} recently imported charging stations.",
+    "methodologyTitle": "Methodology",
+    "methodologyBody": "This report is generated from imported charging infrastructure data. Metrics are aggregated across operators, provinces, stations, and connectors available at the time of report generation.",
+    "dataSourceLabel": "Data source",
+    "dataSourceLine": "EIPA / UDT Poland charging infrastructure data",
+    "snapshotDateLabel": "Snapshot date",
+    "hpcDefinitionLabel": "HPC definition",
+    "hpcDefinitionLine": "Stations with at least one connector rated at {threshold} kW or higher.",
+    "ctaTitle": "Need a report tailored to your business?",
+    "ctaBody": "Get a custom benchmarking report focused on your market segment, competitors, infrastructure footprint, and expansion opportunities."
   },
   "reportsSampleError": {
     "title": "Sample report unavailable",
@@ -386,7 +422,12 @@
     "updatingButton": "Updating...",
     "clearButton": "Clear",
     "summary": "Showing {shown} of {total} {total, plural, one {station} other {stations}} across {markers} {markers, plural, one {map marker} other {map markers}}.",
-    "limited": "Results are capped at {limit}; narrow the filters for a more precise map.",
+    "viewDetailsLink": "View details",
+    "limitedTitle": "Result limit reached",
+    "limitedDescription": "The map displays up to {limit} stations. Narrow the filters to see more precise results.",
+    "totalStations": "Total stations",
+    "displayedStations": "Displayed stations",
+    "mapMarkers": "Map markers",
     "client": {
       "powerUnknown": "Power unknown",
       "upToPower": "up to {power} kW",
@@ -397,11 +438,11 @@
       "markerTitleMultiple": "{count, plural, one {# charging station} other {# charging stations}}",
       "moreStationsInArea": "{count, plural, one {+ # more station in this area} other {+ # more stations in this area}}",
       "viewStationDetailsLink": "View station details",
-      "viewDetailsLink": "View details",
       "mapResultsTitle": "Map results",
-      "markersAfterGrouping": "{count, plural, one {# map marker after nearby stations are grouped.} other {# map markers after nearby stations are grouped.}}",
       "noStationsMatch": "No stations match these map filters.",
-      "chargingStationGroup": "Charging station group"
+      "chargingStationGroup": "Charging station group",
+      "chooseStation": "Choose station",
+      "hideStations": "Hide stations"
     }
   },
   "mapError": {
@@ -414,7 +455,7 @@
     "viewDetailsLink": "View connector details"
   },
   "connectorDetail": {
-    "backLink": "← Back to connectors",
+    "backLink": "Back to connectors",
     "incompleteDataTitle": "Incomplete source data",
     "incompleteDataBody": "Some imported records do not include a connector type that can be classified confidently. This page keeps those records explainable without inventing compatibility, power, or regional support.",
     "imageLabelCaption": "Image label",
@@ -672,5 +713,13 @@
     "liabilityBody": "The site is provided \"as is,\" without warranty of uninterrupted operation. We are not liable for damages arising from use of the displayed data for purposes it is not intended for.",
     "contactTitle": "Contact",
     "contactBody": "Questions about these terms can be sent to kontakt@evsource.pl."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "home": "Home",
+    "stations": "Stations",
+    "vehicles": "Vehicles",
+    "reports": "Reports"
   }
 }

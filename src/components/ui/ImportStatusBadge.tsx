@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Loader2 } from "lucide-react";
+import { CarFront, Loader2, MapPinned } from "lucide-react";
 
 export type ImportStatus = "RUNNING" | "SUCCESS" | "PARTIAL" | "FAILED";
 
@@ -11,17 +11,22 @@ export interface ImportStatusBadgeProps {
   completedAt: string | null;
 }
 
-const getStatusColor = (status: ImportStatus): string => {
-  switch (status) {
-    case "SUCCESS":
-      return "bg-emerald-100 text-emerald-800 border-emerald-400 shadow-sm";
-    case "PARTIAL":
-      return "bg-amber-100 text-amber-800 border-amber-400 shadow-sm";
-    case "FAILED":
-      return "bg-red-100 text-red-800 border-red-400 shadow-sm";
-    case "RUNNING":
-      return "bg-blue-100 text-blue-800 border-blue-400 shadow-sm";
-  }
+const SOURCE_CONFIG = {
+  eipa: {
+    translationKey: "stationData",
+    icon: MapPinned,
+  },
+  openev: {
+    translationKey: "evCatalog",
+    icon: CarFront,
+  },
+} as const;
+
+const STATUS_DOT_CLASSES: Record<ImportStatus, string> = {
+  SUCCESS: "bg-emerald-500",
+  PARTIAL: "bg-amber-500",
+  FAILED: "bg-red-500",
+  RUNNING: "bg-blue-500 animate-pulse",
 };
 
 const getRelativeTime = (
@@ -73,6 +78,15 @@ export const ImportStatusBadge = ({
   const tCommon = useTranslations("common");
   const locale = useLocale();
 
+  const config =
+    SOURCE_CONFIG[source.toLowerCase() as keyof typeof SOURCE_CONFIG];
+
+  if (!config) {
+    return null;
+  }
+
+  const Icon = config.icon;
+
   const relativeTime = getRelativeTime(
     completedAt,
     locale,
@@ -80,17 +94,21 @@ export const ImportStatusBadge = ({
   );
 
   return (
-    <div
-      className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${getStatusColor(status)}`}
-    >
-      {status === "RUNNING" && <Loader2 className="h-4 w-4 animate-spin" />}
+    <div className="flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-xs backdrop-blur-sm">
+      {status === "RUNNING" ? (
+        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+      ) : (
+        <Icon className="h-4 w-4 text-[var(--accent)]" />
+      )}
 
-      <span>{source}</span>
+      <span className="font-medium text-slate-800">
+        {t(`importStatus.${config.translationKey}`)}
+      </span>
 
-      <span className="text-xs opacity-75">
-        {status === "RUNNING"
-          ? t(`importStatus.${status.toLowerCase()}`)
-          : relativeTime}
+      <span className={`h-2 w-2 rounded-full ${STATUS_DOT_CLASSES[status]}`} />
+
+      <span className="text-xs text-slate-500">
+        {status === "RUNNING" ? t("importStatus.running") : relativeTime}
       </span>
     </div>
   );

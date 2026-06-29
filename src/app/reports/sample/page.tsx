@@ -6,7 +6,10 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import StationMapClient from "@/app/map/station-map-client";
-import { HPC_POWER_KW, type ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
+import {
+  HPC_POWER_KW,
+  type ProvinceIntelligenceRow,
+} from "@/features/charging/province-intelligence";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import {
   formatConnectorPower,
@@ -118,7 +121,10 @@ const OperatorBenchmarkTable = ({
       <tbody className="divide-y divide-slate-100">
         {rows.map((row) => (
           <tr key={row.operatorName} className="align-top">
-            <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+            <th
+              scope="row"
+              className="px-4 py-4 text-left font-medium text-slate-950"
+            >
               {localizeOperatorLabel(row.operatorName)}
             </th>
             <td className="px-4 py-4 text-slate-700">
@@ -185,7 +191,10 @@ const ProvinceCoverageTable = ({
       <tbody className="divide-y divide-slate-100">
         {rows.map((row) => (
           <tr key={row.province} className="align-top">
-            <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+            <th
+              scope="row"
+              className="px-4 py-4 text-left font-medium text-slate-950"
+            >
               {localizeProvinceLabel(row.province)}
             </th>
             <td className="px-4 py-4 text-slate-700">
@@ -244,8 +253,14 @@ export default async function SampleReportPage() {
 
   const { provinceRows, operatorRows, mapGroups } = data;
 
-  const totalStations = provinceRows.reduce((total, row) => total + row.stationCount, 0);
-  const totalConnectors = provinceRows.reduce((total, row) => total + row.connectorCount, 0);
+  const totalStations = provinceRows.reduce(
+    (total, row) => total + row.stationCount,
+    0,
+  );
+  const totalConnectors = provinceRows.reduce(
+    (total, row) => total + row.connectorCount,
+    0,
+  );
   const totalOperators = operatorRows.length;
   const totalProvinces = provinceRows.length;
 
@@ -267,14 +282,19 @@ export default async function SampleReportPage() {
   );
   const networkMaxPowerKw = provinceRows.reduce<number | null>(
     (max, row) =>
-      row.maxPowerKw === null ? max : max === null ? row.maxPowerKw : Math.max(max, row.maxPowerKw),
+      row.maxPowerKw === null
+        ? max
+        : max === null
+          ? row.maxPowerKw
+          : Math.max(max, row.maxPowerKw),
     null,
   );
   const networkAveragePowerKw =
     totalKnownPowerConnectors > 0
       ? Math.round(
           (provinceRows.reduce(
-            (total, row) => total + (row.averagePowerKw ?? 0) * row.knownPowerConnectorCount,
+            (total, row) =>
+              total + (row.averagePowerKw ?? 0) * row.knownPowerConnectorCount,
             0,
           ) /
             totalKnownPowerConnectors) *
@@ -300,7 +320,9 @@ export default async function SampleReportPage() {
       <div className="sample-banner mb-8 print:break-inside-avoid">
         <Notice title={t("sampleBannerTitle")} tone="warning">
           <p>{t("sampleBannerBody")}</p>
-          <span className="badge mt-3 inline-block">{t("badge")}</span>
+          <span className="mt-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+            {t("badge")}
+          </span>
         </Notice>
       </div>
 
@@ -335,7 +357,10 @@ export default async function SampleReportPage() {
             <p className="mt-2 text-sm text-slate-600">
               {t("marketShareLeaderLine", {
                 operator: localizeLabel(leadingOperator.operatorName),
-                share: formatPercent(leadingOperator.stationCount, totalStations),
+                share: formatPercent(
+                  leadingOperator.stationCount,
+                  totalStations,
+                ),
               })}
             </p>
           )}
@@ -357,7 +382,9 @@ export default async function SampleReportPage() {
 
       <section className="mb-8 print:break-inside-avoid">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("provinceCoverageTitle")}</h2>
+          <h2 className="text-xl font-semibold">
+            {t("provinceCoverageTitle")}
+          </h2>
           <p className="muted mt-1 text-sm">{t("provinceCoverageSubtitle")}</p>
         </div>
         <ProvinceCoverageTable
@@ -417,12 +444,16 @@ export default async function SampleReportPage() {
       </section>
 
       <Card as="section" className="mb-8 print:break-inside-avoid">
-        <h2 className="text-lg font-semibold text-slate-950">{t("methodologyTitle")}</h2>
+        <h2 className="text-lg font-semibold text-slate-950">
+          {t("methodologyTitle")}
+        </h2>
         <p className="muted mt-2 text-sm">{t("methodologyBody")}</p>
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-slate-500">{t("dataSourceLabel")}</dt>
-            <dd className="mt-1 font-medium text-slate-950">{t("dataSourceLine")}</dd>
+            <dd className="mt-1 font-medium text-slate-950">
+              {t("dataSourceLine")}
+            </dd>
           </div>
           <div>
             <dt className="text-slate-500">{t("snapshotDateLabel")}</dt>
@@ -453,7 +484,9 @@ export default async function SampleReportPage() {
         </Link>
       </Card>
 
-      <p className="muted mt-6 text-center text-xs print:hidden">{t("badge")}</p>
+      <p className="muted mt-6 text-center text-xs print:hidden">
+        {t("badge")}
+      </p>
     </main>
   );
 }

@@ -30,6 +30,7 @@
     "provinces": "Województwa",
     "operators": "Operatorzy",
     "coverage": "Pokrycie",
+    "reports": "Raporty",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
     "languageSwitcherLabel": "Zmień język"
@@ -41,10 +42,9 @@
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
     "importStatus": {
-      "success": "Sukces",
-      "partial": "Częściowy",
-      "failed": "Błąd",
-      "running": "Trwający"
+      "running": "Aktualizacja",
+      "stationData": "Dane stacji",
+      "evCatalog": "Katalog EV"
     },
     "heroHeadline": "Pełny obraz polskiej infrastruktury ładowania, w jednym miejscu",
     "heroSubhead": "Znormalizowane, ocenione pod względem jakości dane o stacjach ładowania i pojazdach elektrycznych — zebrane z 16 województw, gotowe do analizy.",
@@ -80,6 +80,9 @@
     "chargingInsightsEyebrow": "Statystyki ładowania",
     "chargingInsightsTitle": "Poznaj wskaźniki infrastruktury",
     "chargingInsightsDescription": "Zobacz najlepszych operatorów, rozkład złączy, najmocniejsze stacje i pokrycie województw na podstawie zaimportowanych danych.",
+    "reportsEyebrow": "Raporty benchmarkowe",
+    "reportsTitle": "Raporty infrastruktury",
+    "reportsDescription": "Zobacz przykładowy raport benchmarkingowy i poznaj możliwości dedykowanej analizy infrastruktury dla operatorów sieci ładowania.",
     "b2bCtaTitle": "Analizy i raporty dla operatorów sieci ładowania",
     "b2bCtaBody": "Raport porównawczy oparty na pełnym pokryciu rynku albo wyróżnione miejsce na liście operatorów — porozmawiajmy o Twoich potrzebach.",
     "b2bCtaButton": "Skontaktuj się"
@@ -88,7 +91,10 @@
     "title": "Pojazdy",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
+    "activeFilter": "Aktywny filtr",
+    "availableVehicles": "Dostępne pojazdy",
     "allBrandsLabel": "Wszystkie marki",
+    "browseByBrand": "Przeglądaj według marki",
     "searchPlaceholder": "Szukaj pojazdów...",
     "searchButton": "Szukaj",
     "setupRequiredMessage": "Dane katalogu EV nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import OpenEV.",
@@ -107,7 +113,7 @@
     "body": "Katalog EV jest tymczasowo niedostępny. Spróbuj ponownie lub sprawdź, czy import OpenEV się zakończył."
   },
   "vehicleDetail": {
-    "backLink": "← Wróć do pojazdów",
+    "backLink": "Wróć do pojazdów",
     "batteryRangeTitle": "Bateria i zasięg",
     "rangeWltpLabel": "Zasięg (WLTP)",
     "rangeEpaLabel": "Zasięg (EPA)",
@@ -167,17 +173,18 @@
     "noResultsTitle": "Nie znaleziono stacji",
     "noResultsBody": "Usuń jeden filtr lub wyszukaj szersze miasto, operatora albo złącze.",
     "connectorsLabel": "Złącza",
-    "coordinatesLabel": "Współrzędne",
+    "localizationLabel": "Lokalizacja",
     "sourceLabel": "Źródło",
     "freshnessLabel": "Świeżość danych",
-    "mapLinkLabel": "mapa",
+    "mapLinkLabel": "Pokaż na mapie",
     "originalLinkLabel": "oryginał",
     "upToPower": "do {power} kW",
     "importedOn": "Zaimportowano {date}",
-    "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}"
+    "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}",
+    "locationUnavailable": "Brak danych o lokalizacji"
   },
   "stationDetail": {
-    "backLink": "← Wróć do stacji",
+    "backLink": "Wróć do stacji",
     "viewDetailsLink": "Zobacz szczegóły",
     "stationDetailsTitle": "Szczegóły stacji",
     "connectorsTitle": "Złącza",
@@ -188,8 +195,8 @@
     "provinceLabel": "Województwo",
     "coordinatesLabel": "Współrzędne",
     "sourceLabel": "Źródło",
-    "lastUpdatedLabel": "Ostatnia aktualizacja",
-    "openStreetMapLink": "OpenStreetMap",
+    "updatedLabel": "Aktualizacja",
+    "mapLinkLabel": "Pokaż na mapie",
     "originalLink": "oryginał",
     "locationMapTitle": "Lokalizacja",
     "connectorsCount": "{count, plural, one {# złącze} few {# złącza} many {# złączy} other {# złączy}}",
@@ -220,6 +227,10 @@
     "paymentMethodsLabel": "Metody płatności",
     "authMethodsLabel": "Metody autoryzacji",
     "notProvidedBySource": "Brak danych od źródła",
+    "upToPower": "do {power} kW",
+    "dataSourceLabel": "Źródło danych: {source}",
+    "lastImportedLabel": "Ostatnio zaimportowane: {date}",
+    "originalSourceLink": "Oryginalne źródło",
     "completenessFields": {
       "Coordinates": "Współrzędne",
       "Address/location": "Adres/lokalizacja",
@@ -253,7 +264,13 @@
     "privacyNote": "Wysyłając formularz, zgadzasz się na kontakt w sprawie Twojego zapytania. Nie udostępniamy danych stronom trzecim.",
     "successTitle": "Dziękujemy!",
     "successBody": "Otrzymaliśmy Twoje zgłoszenie i skontaktujemy się wkrótce.",
-    "validationErrorNotice": "Sprawdź, czy podano prawidłowy adres e-mail i wybrano jedną z opcji zainteresowania."
+    "validationErrorNotice": "Sprawdź, czy podano prawidłowy adres e-mail i wybrano jedną z opcji zainteresowania.",
+    "overviewCustomReportsTitle": "Raporty na zamówienie",
+    "overviewCustomReportsDescription": "Porównuj infrastrukturę ładowania, operatorów i potencjał rynku.",
+    "overviewFeaturedListingsTitle": "Wyróżnione wpisy",
+    "overviewFeaturedListingsDescription": "Zwiększ widoczność swojej sieci ładowania i usług.",
+    "overviewFastResponseTitle": "Szybka odpowiedź",
+    "overviewFastResponseDescription": "Zwykle odpowiadamy w ciągu jednego dnia roboczego."
   },
   "operatorFeatured": {
     "heroBadge": "Oferta B2B",
@@ -352,7 +369,26 @@
       "Aktualizacje kwartalne dostarczane e-mailem w miarę napływu nowych danych",
       "Opcjonalna rozmowa wsparcia w celu omówienia implikacji strategicznych"
     ],
-    "ctaLabel": "Zamów swój raport"
+    "ctaLabel": "Zamów swój raport",
+    "powerStructureTitle": "Struktura mocy",
+    "powerStructureSubtitle": "Przegląd dostępności mocy ładowania w sieci.",
+    "hpcShareLabel": "Udział stacji HPC",
+    "hpcShareHelper": "Stacje posiadające co najmniej jedno złącze o mocy {threshold} kW lub wyższej.",
+    "averagePowerLabel": "Średnia moc złączy",
+    "averagePowerHelper": "Średnia moc dla złączy posiadających znaną wartość kW.",
+    "maxPowerLabel": "Maksymalna zaobserwowana moc",
+    "maxPowerHelper": "Najwyższa moc złącza odnotowana w zbiorze danych.",
+    "mapSectionTitle": "Przykładowa mapa infrastruktury",
+    "mapSectionSubtitle": "Podgląd oparty na maksymalnie {count} ostatnio zaimportowanych stacjach ładowania.",
+    "methodologyTitle": "Metodologia",
+    "methodologyBody": "Raport został wygenerowany na podstawie zaimportowanych danych o infrastrukturze ładowania. Metryki agregowane są dla operatorów, województw, stacji oraz złączy dostępnych w momencie generowania raportu.",
+    "dataSourceLabel": "Źródło danych",
+    "dataSourceLine": "Dane infrastruktury ładowania EIPA / UDT Polska",
+    "snapshotDateLabel": "Data raportu",
+    "hpcDefinitionLabel": "Definicja HPC",
+    "hpcDefinitionLine": "Stacje posiadające co najmniej jedno złącze o mocy {threshold} kW lub wyższej.",
+    "ctaTitle": "Potrzebujesz raportu dopasowanego do swojej firmy?",
+    "ctaBody": "Zamów dedykowany raport benchmarkingowy uwzględniający Twój segment rynku, konkurencję, zasięg infrastruktury oraz potencjalne kierunki rozwoju."
   },
   "reportsSampleError": {
     "title": "Przykładowy raport niedostępny",
@@ -386,7 +422,12 @@
     "updatingButton": "Aktualizowanie...",
     "clearButton": "Wyczyść",
     "summary": "Wyświetlono {shown} z {total} stacji. Liczba znaczników na mapie: {markers}.",
-    "limited": "Wyniki są ograniczone do {limit}; zawęź filtry, aby uzyskać bardziej precyzyjną mapę.",
+    "viewDetailsLink": "Zobacz szczegóły",
+    "limitedTitle": "Limit wyników",
+    "limitedDescription": "Mapa pokazuje maksymalnie {limit} stacji. Zawęź filtry, aby uzyskać bardziej precyzyjne wyniki.",
+    "totalStations": "Łącznie stacji",
+    "displayedStations": "Wyświetlone stacje",
+    "mapMarkers": "Znaczniki na mapie",
     "client": {
       "powerUnknown": "Moc nieznana",
       "upToPower": "do {power} kW",
@@ -397,11 +438,11 @@
       "markerTitleMultiple": "{count, plural, one {# stacja ładowania} few {# stacje ładowania} many {# stacji ładowania} other {# stacji ładowania}}",
       "moreStationsInArea": "{count, plural, one {+ # stacja w tym miejscu} few {+ # stacje w tym miejscu} many {+ # stacji w tym miejscu} other {+ # stacji w tym miejscu}}",
       "viewStationDetailsLink": "Zobacz szczegóły stacji",
-      "viewDetailsLink": "Zobacz szczegóły",
       "mapResultsTitle": "Wyniki na mapie",
-      "markersAfterGrouping": "{count, plural, one {# znacznik mapy po pogrupowaniu pobliskich stacji.} few {# znaczniki mapy po pogrupowaniu pobliskich stacji.} many {# znaczników mapy po pogrupowaniu pobliskich stacji.} other {# znaczników mapy po pogrupowaniu pobliskich stacji.}}",
       "noStationsMatch": "Brak stacji spełniających te filtry mapy.",
-      "chargingStationGroup": "Grupa stacji ładowania"
+      "chargingStationGroup": "Grupa stacji ładowania",
+      "chooseStation": "Pokaż stacje",
+      "hideStations": "Ukryj stacje"
     }
   },
   "mapError": {
@@ -414,7 +455,7 @@
     "viewDetailsLink": "Zobacz szczegóły złącza"
   },
   "connectorDetail": {
-    "backLink": "← Wróć do złączy",
+    "backLink": "Wróć do złączy",
     "incompleteDataTitle": "Niepełne dane źródłowe",
     "incompleteDataBody": "Niektóre zaimportowane rekordy nie zawierają typu złącza, który można jednoznacznie zaklasyfikować. Ta strona pozwala wyjaśnić te rekordy bez wymyślania zgodności, mocy czy zasięgu regionalnego.",
     "imageLabelCaption": "Etykieta obrazu",
@@ -672,5 +713,13 @@
     "liabilityBody": "Serwis udostępniany jest w stanie \"tak jak jest\" (as-is), bez gwarancji nieprzerwanego działania. Nie odpowiadamy za szkody wynikające z wykorzystania prezentowanych danych w celach, do których nie są one przeznaczone.",
     "contactTitle": "Kontakt",
     "contactBody": "Pytania dotyczące regulaminu możesz kierować na kontakt@evsource.pl."
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "home": "Strona główna",
+    "stations": "Stacje",
+    "vehicles": "Pojazdy",
+    "reports": "Raporty"
   }
 }
