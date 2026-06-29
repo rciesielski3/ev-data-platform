@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
+import { SITE_EMAIL } from "@/lib/config/site";
+
 const Footer = async () => {
   const t = await getTranslations("footer");
   const year = new Date().getFullYear();
@@ -19,7 +21,7 @@ const Footer = async () => {
           <Link href="/terms" className="hover:text-emerald-700">
             {t("termsLink")}
           </Link>
-          <a href="mailto:kontakt@evsource.pl" className="hover:text-emerald-700">
+          <a href={`mailto:${SITE_EMAIL}`} className="hover:text-emerald-700">
             {t("contactLink")}
           </a>
         </nav>

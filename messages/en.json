@@ -680,10 +680,10 @@
   },
   "privacy": {
     "title": "Privacy policy",
-    "description": "What data evsource.pl collects, why, and how to reach us about it.",
+    "description": "What data evdatasource.com collects, why, and how to reach us about it.",
     "updatedLabel": "Last updated: {date}",
     "controllerTitle": "Data controller",
-    "controllerBody": "The data controller for personal data processed through evsource.pl is Adateo Rafał Ciesielski, NIP: 7781461342, ul. Polanowska 79, 60-454 Poznań, Poland. For data-protection inquiries, contact kontakt@evsource.pl.",
+    "controllerBody": "The data controller for personal data processed through evdatasource.com is Adateo Rafał Ciesielski, NIP: 7781461342, ul. Polanowska 79, 60-454 Poznań, Poland. For data-protection inquiries, contact kontakt@evdatasource.com.",
     "dataCollectedLeadTitle": "Contact form / lead submission",
     "dataCollectedLeadBody": "If you use the lead submission form (for example, to report a station for the report or to inquire about a featured listing), we collect: name (optional), email address, company name (optional), and message (optional). This data is used only to respond to your submission.",
     "dataCollectedCookieTitle": "Language cookie",
@@ -697,14 +697,14 @@
     "rightsTitle": "Your rights",
     "rightsBody": "You have the right to access, rectify, erase, restrict processing of, and port your data, and to object to processing based on legitimate interest. You may also lodge a complaint with Poland's data protection authority (UODO).",
     "contactTitle": "Contact",
-    "contactBody": "For questions about personal data, email kontakt@evsource.pl."
+    "contactBody": "For questions about personal data, email kontakt@evdatasource.com."
   },
   "terms": {
     "title": "Terms of use",
-    "description": "The rules for using evsource.pl - kept short and free of boilerplate that doesn't apply.",
+    "description": "The rules for using evdatasource.com - kept short and free of boilerplate that doesn't apply.",
     "updatedLabel": "Last updated: {date}",
     "scopeTitle": "Scope",
-    "scopeBody": "These terms cover use of the evsource.pl website. The site currently requires no account registration and processes no payments - this covers browsing the data and using the contact/lead forms only.",
+    "scopeBody": "These terms cover use of the evdatasource.com website. The site currently requires no account registration and processes no payments - this covers browsing the data and using the contact/lead forms only.",
     "dataTitle": "Nature of the data shown",
     "dataBody": "Electric vehicle and charging infrastructure data is sourced from third parties (EIPA / UDT Poland and OpenEV Data) and presented in imported, normalized form. We do not guarantee its completeness, currency, or accuracy. The data is informational and should not be the sole basis for safety-critical decisions (for example, route planning without an energy buffer based solely on a station's status on this site).",
     "noAccountsTitle": "No user accounts or payments",
@@ -714,7 +714,7 @@
     "liabilityTitle": "Limitation of liability",
     "liabilityBody": "The site is provided \"as is,\" without warranty of uninterrupted operation. We are not liable for damages arising from use of the displayed data for purposes it is not intended for.",
     "contactTitle": "Contact",
-    "contactBody": "Questions about these terms can be sent to kontakt@evsource.pl."
+    "contactBody": "Questions about these terms can be sent to kontakt@evdatasource.com."
   },
   "notFound": {
     "title": "Page not found",
