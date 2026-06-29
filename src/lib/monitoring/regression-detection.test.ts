@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import type { Mock } from "vitest";
 import { IngestionStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
@@ -11,7 +12,9 @@ import {
 
 vi.mock("@/lib/db/prisma");
 
-const mockPrisma = prisma as ReturnType<typeof vi.mocked>;
+const mockPrisma = prisma as unknown as {
+  ingestionRun: { findMany: Mock; findFirst: Mock };
+};
 
 describe("regression-detection", () => {
   beforeEach(() => {
@@ -118,7 +121,7 @@ describe("regression-detection", () => {
         },
       ]);
 
-      (mockPrisma.ingestionRun.findMany as any) = mockFindMany;
+      mockPrisma.ingestionRun.findMany = mockFindMany;
 
       const result = await checkPerCapitaRegressions("source-1", new Date());
 
@@ -235,7 +238,7 @@ describe("regression-detection", () => {
         },
       ]);
 
-      (mockPrisma.ingestionRun.findMany as any) = mockFindMany;
+      mockPrisma.ingestionRun.findMany = mockFindMany;
 
       const result = await checkPerCapitaRegressions("source-1", new Date());
 
@@ -318,7 +321,7 @@ describe("regression-detection", () => {
         },
       ]);
 
-      (mockPrisma.ingestionRun.findMany as any) = mockFindMany;
+      mockPrisma.ingestionRun.findMany = mockFindMany;
 
       const result = await checkPerCapitaRegressions("source-1", new Date());
 
@@ -330,7 +333,7 @@ describe("regression-detection", () => {
   describe("checkStationCountRegression", () => {
     it("returns false when no previous run exists", async () => {
       const mockFindFirst = vi.fn().mockResolvedValueOnce(null);
-      (mockPrisma.ingestionRun.findFirst as any) = mockFindFirst;
+      mockPrisma.ingestionRun.findFirst = mockFindFirst;
 
       const result = await checkStationCountRegression("source-1", 2000);
 
@@ -352,7 +355,7 @@ describe("regression-detection", () => {
         errorMessage: null,
         metadata: null,
       });
-      (mockPrisma.ingestionRun.findFirst as any) = mockFindFirst;
+      mockPrisma.ingestionRun.findFirst = mockFindFirst;
 
       const result = await checkStationCountRegression("source-1", 2000);
 
@@ -375,7 +378,7 @@ describe("regression-detection", () => {
         errorMessage: null,
         metadata: null,
       });
-      (mockPrisma.ingestionRun.findFirst as any) = mockFindFirst;
+      mockPrisma.ingestionRun.findFirst = mockFindFirst;
 
       const result = await checkStationCountRegression("source-1", 2050);
 
@@ -398,7 +401,7 @@ describe("regression-detection", () => {
         errorMessage: null,
         metadata: null,
       });
-      (mockPrisma.ingestionRun.findFirst as any) = mockFindFirst;
+      mockPrisma.ingestionRun.findFirst = mockFindFirst;
 
       const result = await checkStationCountRegression("source-1", 2000);
 
