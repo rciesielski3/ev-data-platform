@@ -26,10 +26,6 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
-import {
-  buildStationSummaryParts,
-  buildSummarySentence,
-} from "@/features/charging/station-summary";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";

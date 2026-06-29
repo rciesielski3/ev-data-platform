@@ -20,10 +20,7 @@ import {
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
-import {
-  formatDisplayDate,
-  formatDisplayNumber,
-} from "@/lib/display/data-display";
+import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { ArrowRightIcon } from "lucide-react";
