@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildLastVerifiedNote,
-  buildStationSummaryParts,
   buildSummarySentence,
+  buildStationSummaryParts,
   type StationSummaryInput,
 } from "@/features/charging/station-summary";
 

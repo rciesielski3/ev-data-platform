@@ -35,6 +35,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
 
   return {
+    metadataBase: new URL("https://evsource.pl"),
     title: t("title"),
     description: t("description"),
   };

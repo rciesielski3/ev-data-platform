@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
@@ -30,6 +31,10 @@ import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 3600;
 
+const isFilteredView = (
+  filters: ReturnType<typeof parseVehicleSearchParams>,
+): boolean => Boolean(filters.q || filters.brand) || filters.page > 1;
+
 const PAGE_SIZE = 24;
 
 type VehicleListItem = Prisma.EvModelGetPayload<{
@@ -39,31 +44,69 @@ type VehicleListItem = Prisma.EvModelGetPayload<{
   };
 }>;
 
-const getVehiclesData = unstable_cache(
-  async (filters: ReturnType<typeof parseVehicleSearchParams>) => {
-    const skip = (filters.page - 1) * PAGE_SIZE;
-    const where = buildVehicleWhere(filters);
+const getVehiclesData = (filters: ReturnType<typeof parseVehicleSearchParams>) =>
+  unstable_cache(
+    async () => {
+      const skip = (filters.page - 1) * PAGE_SIZE;
+      const where = buildVehicleWhere(filters);
 
-    const [vehicles, total, brands] = await Promise.all([
-      prisma.evModel.findMany({
-        where,
-        include: {
-          brand: true,
-          specs: true,
-        },
-        orderBy: [{ brand: { name: "asc" } }, { modelName: "asc" }],
-        take: PAGE_SIZE,
-        skip,
-      }),
-      prisma.evModel.count({ where }),
-      getTopVehicleBrands(),
-    ]);
+      const [vehicles, total, brands] = await Promise.all([
+        prisma.evModel.findMany({
+          where,
+          include: {
+            brand: true,
+            specs: true,
+          },
+          orderBy: [{ brand: { name: "asc" } }, { modelName: "asc" }],
+          take: PAGE_SIZE,
+          skip,
+        }),
+        prisma.evModel.count({ where }),
+        getTopVehicleBrands(),
+      ]);
 
-    return { vehicles, total, brands };
-  },
-  ["vehicles-page-data"],
-  { revalidate: 3600 },
-);
+      return { vehicles, total, brands };
+    },
+    [
+      "vehicles-page-data",
+      filters.q || "",
+      filters.brand || "",
+      filters.page.toString(),
+    ],
+    { revalidate: 3600 },
+  )();
+
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<VehicleSearchParams>;
+}): Promise<Metadata> => {
+  const t = await getTranslations("vehicles");
+  const filters = parseVehicleSearchParams(await searchParams);
+
+  let description: string;
+  try {
+    const { total } = await getVehiclesData(filters);
+    description = t("descriptionWithCount", { count: total });
+  } catch {
+    description = t("descriptionError");
+  }
+
+  if (isFilteredView(filters)) {
+    return {
+      title: t("title"),
+      description,
+      alternates: { canonical: "/vehicles" },
+      robots: { index: false, follow: true },
+    };
+  }
+
+  return {
+    title: t("title"),
+    description,
+    alternates: { canonical: "/vehicles" },
+  };
+};
 
 const BrandLogo = ({
   brandMark,
