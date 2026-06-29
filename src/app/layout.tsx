@@ -11,6 +11,7 @@ import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import NavLinks from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { SITE_URL } from "@/lib/config/site";
 
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -35,7 +36,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
 
   return {
-    metadataBase: new URL("https://evsource.pl"),
+    metadataBase: new URL(SITE_URL),
     title: t("title"),
     description: t("description"),
   };

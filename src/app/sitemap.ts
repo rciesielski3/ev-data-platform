@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
-
-const BASE_URL = "https://evsource.pl";
+import { SITE_URL } from "@/lib/config/site";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
@@ -24,13 +23,13 @@ const CONNECTOR_TYPES = ["ccs2", "type2", "chademo", "unknown"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
-    url: `${BASE_URL}${route.path}`,
+    url: `${SITE_URL}${route.path}`,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
 
   const connectorEntries: MetadataRoute.Sitemap = CONNECTOR_TYPES.map((type) => ({
-    url: `${BASE_URL}/connectors/${type}`,
+    url: `${SITE_URL}/connectors/${type}`,
     changeFrequency: "weekly",
     priority: 0.7,
   }));
@@ -45,14 +44,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const stationEntries: MetadataRoute.Sitemap = stations.map((station) => ({
-    url: `${BASE_URL}/stations/${station.id}`,
+    url: `${SITE_URL}/stations/${station.id}`,
     lastModified: station.updatedAt,
     changeFrequency: "weekly",
     priority: 0.6,
   }));
 
   const vehicleEntries: MetadataRoute.Sitemap = vehicles.map((vehicle) => ({
-    url: `${BASE_URL}/vehicles/${vehicle.id}`,
+    url: `${SITE_URL}/vehicles/${vehicle.id}`,
     lastModified: vehicle.updatedAt,
     changeFrequency: "weekly",
     priority: 0.6,
