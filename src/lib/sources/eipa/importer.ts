@@ -1,6 +1,8 @@
 import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
+import { captureSnapshot } from "@/lib/snapshots/capture-snapshot";
+import { deleteExpiredSnapshots } from "@/lib/snapshots/delete-expired-snapshots";
 import {
   checkForRecordCountRegression,
   ensureDataSource,
@@ -407,6 +409,18 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       },
       errorMessage,
     });
+
+    if (status !== IngestionStatus.FAILED) {
+      try {
+        await captureSnapshot();
+        await deleteExpiredSnapshots();
+      } catch (error) {
+        console.warn(
+          "[EIPA] daily snapshot capture/cleanup failed; import result is unaffected:",
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
 
     console.timeEnd("[EIPA] total import");
 
