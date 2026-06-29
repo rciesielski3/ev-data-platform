@@ -37,106 +37,6 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
   const featuredGroups = useMemo(() => groups.slice(0, 8), [groups]);
 
-  const formatPower = (powerKw: number | null) =>
-    powerKw === null
-      ? t("client.powerUnknown")
-      : t("client.upToPower", { power: powerKw });
-
-  const buildPopupHtml = (group: StationMapGroup) => {
-    const primaryStation = group.stations[0];
-
-    if (group.stationCount === 1 && primaryStation) {
-      return `
-  <article class="station-map-popup">
-    <p>${escapeHtml(primaryStation.operatorName)}</p>
-
-    <h3>${escapeHtml(primaryStation.name)}</h3>
-
-    <div class="station-map-popup-chips">
-      <span class="station-map-popup-chip station-map-popup-chip-power">
-        ${escapeHtml(formatPower(primaryStation.maxPowerKw))}
-      </span>
-
-      ${group.connectorLabels
-        .slice(0, 3)
-        .map(
-          (connector) => `
-            <span class="station-map-popup-chip">
-              ${escapeHtml(connector)}
-            </span>
-          `,
-        )
-        .join("")}
-    </div>
-
-    <a
-      class="station-map-popup-link"
-      href="${escapeHtml(primaryStation.detailsHref)}"
-    >
-      ${escapeHtml(t("client.viewStationDetailsLink"))}
-    </a>
-  </article>
-`;
-    }
-
-    const stationLinks = group.stations
-      .slice(0, 3)
-      .map(
-        (station) =>
-          `<li><a href="${escapeHtml(station.detailsHref)}">${escapeHtml(
-            station.name,
-          )}</a></li>`,
-      )
-      .join("");
-    const extraCount =
-      group.stations.length > 3 ? group.stations.length - 3 : 0;
-
-    return `
-  <article class="station-map-popup">
-    <p>${escapeHtml(group.operatorNames.slice(0, 3).join(", "))}</p>
-
-    <h3>${escapeHtml(
-      t("client.stationsNearbyPopup", {
-        count: group.stationCount,
-      }),
-    )}</h3>
-
-    <div class="station-map-popup-chips">
-      <span class="station-map-popup-chip station-map-popup-chip-power">
-        ${escapeHtml(formatPower(group.maxPowerKw))}
-      </span>
-
-      ${group.connectorLabels
-        .slice(0, 3)
-        .map(
-          (connector) => `
-            <span class="station-map-popup-chip">
-              ${escapeHtml(connector)}
-            </span>
-          `,
-        )
-        .join("")}
-    </div>
-
-    <ul class="station-map-popup-list">
-      ${stationLinks}
-    </ul>
-
-    ${
-      extraCount > 0
-        ? `<p class="station-map-popup-more">
-             ${escapeHtml(
-               t("client.moreStationsInArea", {
-                 count: extraCount,
-               }),
-             )}
-           </p>`
-        : ""
-    }
-  </article>
-`;
-  };
-
   useEffect(() => {
     let cancelled = false;
 
@@ -193,6 +93,106 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     if (mapSetupRevision === 0 || !map || !markerLayer || !leaflet) {
       return;
     }
+
+    const formatPower = (powerKw: number | null) =>
+      powerKw === null
+        ? t("client.powerUnknown")
+        : t("client.upToPower", { power: powerKw });
+
+    const buildPopupHtml = (group: StationMapGroup) => {
+      const primaryStation = group.stations[0];
+
+      if (group.stationCount === 1 && primaryStation) {
+        return `
+  <article class="station-map-popup">
+    <p>${escapeHtml(primaryStation.operatorName)}</p>
+
+    <h3>${escapeHtml(primaryStation.name)}</h3>
+
+    <div class="station-map-popup-chips">
+      <span class="station-map-popup-chip station-map-popup-chip-power">
+        ${escapeHtml(formatPower(primaryStation.maxPowerKw))}
+      </span>
+
+      ${group.connectorLabels
+        .slice(0, 3)
+        .map(
+          (connector) => `
+            <span class="station-map-popup-chip">
+              ${escapeHtml(connector)}
+            </span>
+          `,
+        )
+        .join("")}
+    </div>
+
+    <a
+      class="station-map-popup-link"
+      href="${escapeHtml(primaryStation.detailsHref)}"
+    >
+      ${escapeHtml(t("client.viewStationDetailsLink"))}
+    </a>
+  </article>
+`;
+      }
+
+      const stationLinks = group.stations
+        .slice(0, 3)
+        .map(
+          (station) =>
+            `<li><a href="${escapeHtml(station.detailsHref)}">${escapeHtml(
+              station.name,
+            )}</a></li>`,
+        )
+        .join("");
+      const extraCount =
+        group.stations.length > 3 ? group.stations.length - 3 : 0;
+
+      return `
+  <article class="station-map-popup">
+    <p>${escapeHtml(group.operatorNames.slice(0, 3).join(", "))}</p>
+
+    <h3>${escapeHtml(
+      t("client.stationsNearbyPopup", {
+        count: group.stationCount,
+      }),
+    )}</h3>
+
+    <div class="station-map-popup-chips">
+      <span class="station-map-popup-chip station-map-popup-chip-power">
+        ${escapeHtml(formatPower(group.maxPowerKw))}
+      </span>
+
+      ${group.connectorLabels
+        .slice(0, 3)
+        .map(
+          (connector) => `
+            <span class="station-map-popup-chip">
+              ${escapeHtml(connector)}
+            </span>
+          `,
+        )
+        .join("")}
+    </div>
+
+    <ul class="station-map-popup-list">
+      ${stationLinks}
+    </ul>
+
+    ${
+      extraCount > 0
+        ? `<p class="station-map-popup-more">
+             ${escapeHtml(
+               t("client.moreStationsInArea", {
+                 count: extraCount,
+               }),
+             )}
+           </p>`
+        : ""
+    }
+  </article>
+`;
+    };
 
     markerLayer.clearLayers();
 
