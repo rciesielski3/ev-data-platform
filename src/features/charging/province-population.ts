@@ -20,9 +20,26 @@ export const PROVINCE_POPULATION_AND_AREA: Record<
   opolskie: { population: 923_536, areaKm2: 9_412 },
 };
 
+const normalizeProvinceName = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/ą/g, "a")
+    .replace(/ć/g, "c")
+    .replace(/ę/g, "e")
+    .replace(/ł/g, "l")
+    .replace(/ń/g, "n")
+    .replace(/ó/g, "o")
+    .replace(/ś/g, "s")
+    .replace(/ź/g, "z")
+    .replace(/ż/g, "z");
+
 export const getProvincePopulationAndArea = (
   province: string
 ): { population: number; areaKm2: number } | null => {
-  const data = PROVINCE_POPULATION_AND_AREA[province];
-  return data || null;
+  const normalizedInput = normalizeProvinceName(province);
+  const entry = Object.entries(PROVINCE_POPULATION_AND_AREA).find(
+    ([key]) => normalizeProvinceName(key) === normalizedInput,
+  );
+  return entry ? entry[1] : null;
 };

@@ -42,14 +42,27 @@ const getSnapshotData = async () => {
   );
 
   const topOperators = [...operatorRows]
-    .sort((left, right) => right.stationCount - left.stationCount)
+    .sort((left, right) => {
+      const countDiff = right.stationCount - left.stationCount;
+      if (countDiff !== 0) return countDiff;
+      return left.operatorName.localeCompare(right.operatorName, "en", {
+        sensitivity: "base",
+      });
+    })
     .slice(0, TOP_OPERATOR_LIMIT);
 
   const perCapitaRowsWithData = coverage.provinceRows.filter(
     (row) => row.stationsPer100k !== null,
   );
   const perCapitaLeaders = [...perCapitaRowsWithData]
-    .sort((left, right) => (right.stationsPer100k ?? 0) - (left.stationsPer100k ?? 0))
+    .sort((left, right) => {
+      const perCapitaDiff =
+        (right.stationsPer100k ?? 0) - (left.stationsPer100k ?? 0);
+      if (perCapitaDiff !== 0) return perCapitaDiff;
+      return left.province.localeCompare(right.province, "en", {
+        sensitivity: "base",
+      });
+    })
     .slice(0, PER_CAPITA_LIST_SIZE);
 
   return {
@@ -69,7 +82,8 @@ export default async function StateOfChargingPage() {
 
   try {
     data = await getSnapshotData();
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch state of charging snapshot data:", error);
     data = { error: t("setupRequiredMessage") };
   }
 

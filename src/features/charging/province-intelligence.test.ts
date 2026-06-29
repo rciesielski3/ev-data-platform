@@ -35,8 +35,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 50,
         averagePowerKw: 36,
         operatorCount: 2,
-        stationsPer100k: null,
-        stationsPer1000Km2: null,
+        stationsPer100k: expect.closeTo((2 / 5_505_857) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((2 / 35_560) * 1000, 5),
       },
       {
         province: "Slaskie",
@@ -47,8 +47,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 11,
         averagePowerKw: 11,
         operatorCount: 1,
-        stationsPer100k: null,
-        stationsPer1000Km2: null,
+        stationsPer100k: expect.closeTo((1 / 4_261_792) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 12_331) * 1000, 5),
       },
     ]);
   });
@@ -76,8 +76,8 @@ describe("buildProvinceIntelligenceRows", () => {
       province: "Pomorskie",
       hpcStationCount: 2,
       maxPowerKw: 350,
-      stationsPer100k: null,
-      stationsPer1000Km2: null,
+      stationsPer100k: expect.closeTo((3 / 2_358_409) * 100_000, 5),
+      stationsPer1000Km2: expect.closeTo((3 / 18_293) * 1000, 5),
     });
   });
 
@@ -139,8 +139,8 @@ describe("buildProvinceIntelligenceRows", () => {
       province: "Malopolskie",
       stationCount: 4,
       operatorCount: 1,
-      stationsPer100k: null,
-      stationsPer1000Km2: null,
+      stationsPer100k: expect.closeTo((4 / 3_429_342) * 100_000, 5),
+      stationsPer1000Km2: expect.closeTo((4 / 15_190) * 1000, 5),
     });
   });
 
@@ -168,8 +168,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: 75.5,
         averagePowerKw: 62.8,
         operatorCount: 1,
-        stationsPer100k: null,
-        stationsPer1000Km2: null,
+        stationsPer100k: expect.closeTo((1 / 963_601) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 13_989) * 1000, 5),
       },
       {
         province: "Opolskie",
@@ -180,8 +180,8 @@ describe("buildProvinceIntelligenceRows", () => {
         maxPowerKw: null,
         averagePowerKw: null,
         operatorCount: 1,
-        stationsPer100k: null,
-        stationsPer1000Km2: null,
+        stationsPer100k: expect.closeTo((1 / 923_536) * 100_000, 5),
+        stationsPer1000Km2: expect.closeTo((1 / 9_412) * 1000, 5),
       },
     ]);
   });
