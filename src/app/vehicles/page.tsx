@@ -66,7 +66,12 @@ const getVehiclesData = unstable_cache(
 
     return { vehicles, total, brands };
   },
-  ["vehicles-page-data"],
+  (filters: ReturnType<typeof parseVehicleSearchParams>) => [
+    "vehicles-page-data",
+    filters.q || "",
+    filters.brand || "",
+    filters.page.toString(),
+  ],
   { revalidate: 3600 },
 );
 

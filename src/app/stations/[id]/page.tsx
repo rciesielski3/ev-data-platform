@@ -75,6 +75,7 @@ export const generateMetadata = async ({
       ? t("metaTitle", { name, city: station.city })
       : t("metaTitleFallback", { name }),
     description: summarySentence,
+    alternates: { canonical: `/stations/${id}` },
   };
 };
 

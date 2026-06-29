@@ -131,7 +131,15 @@ const getStationsData = unstable_cache(
       latestRuns,
     };
   },
-  ["stations-page-data"],
+  (filters: ReturnType<typeof parseStationSearchParams>) => [
+    "stations-page-data",
+    filters.q || "",
+    filters.connector || "",
+    filters.minPowerKw?.toString() || "",
+    filters.operator || "",
+    filters.location || "",
+    filters.page.toString(),
+  ],
   { revalidate: 3600 },
 );
 
