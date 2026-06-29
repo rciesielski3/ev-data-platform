@@ -20,15 +20,12 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
 const CONNECTOR_TYPES = ["ccs2", "type2", "chademo", "unknown"];
 
 export const generateSitemaps = async () => {
-  const [stationCount, vehicleCount] = await Promise.all([
-    prisma.chargingStation.count(),
-    prisma.evModel.count(),
-  ]);
+  const vehicleCount = await prisma.evModel.count();
 
-  const detailUrlCount = stationCount + vehicleCount;
-  const pageCount = Math.max(1, Math.ceil(detailUrlCount / 45_000));
+  const vehiclePageCount = Math.ceil(vehicleCount / 45_000);
+  const totalPageCount = 1 + vehiclePageCount;
 
-  return Array.from({ length: pageCount }, (_, id) => ({ id }));
+  return Array.from({ length: totalPageCount }, (_, id) => ({ id }));
 };
 
 export default async function sitemap({
@@ -53,7 +50,6 @@ export default async function sitemap({
 
     const stations = await prisma.chargingStation.findMany({
       select: { id: true, updatedAt: true },
-      take: 45_000,
     });
 
     const stationEntries: MetadataRoute.Sitemap = stations.map((station) => ({
