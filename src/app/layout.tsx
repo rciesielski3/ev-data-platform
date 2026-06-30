@@ -9,7 +9,7 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import Footer from "@/components/ui/Footer";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
-import NavLinks from "@/components/ui/NavLinks";
+import NavLinks, { type NavLink } from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { SITE_URL } from "@/lib/config/site";
 
@@ -49,17 +49,27 @@ const RootLayout = async ({
   const messages = await getMessages();
   const t = await getTranslations("nav");
 
-  const navLinks = [
-    { href: "/vehicles", label: t("vehicles") },
+  const navLinks: NavLink[] = [
     { href: "/stations", label: t("stations") },
     { href: "/map", label: t("map") },
-    { href: "/insights", label: t("insights") },
-    { href: "/provinces", label: t("provinces") },
-    { href: "/operators", label: t("operators") },
-    { href: "/coverage", label: t("coverage") },
-    { href: "/trends", label: t("trends") },
-    { href: "/reports", label: t("reports") },
+    { href: "/vehicles", label: t("vehicles") },
+    {
+      label: t("analysis"),
+      dropdown: true,
+      items: [
+        { href: "/insights", label: t("insights") },
+        { href: "/coverage", label: t("coverage") },
+        { href: "/trends", label: t("trends") },
+        { href: "/provinces", label: t("provinces") },
+        { href: "/operators", label: t("operators") },
+      ],
+    },
+    { href: "/reports", label: t("reports"), accent: true },
   ];
+
+  const mobileNavLinks = navLinks.flatMap((link) =>
+    "dropdown" in link ? link.items : [link],
+  );
 
   return (
     <html lang={locale}>
@@ -105,7 +115,7 @@ const RootLayout = async ({
                 </svg>
               </Link>
 
-              <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
+              <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
                 <NavLinks links={navLinks} />
                 <LanguageSwitcher
                   currentLocale={locale}
@@ -113,13 +123,13 @@ const RootLayout = async ({
                 />
               </nav>
 
-              <div className="flex items-center gap-3 sm:hidden">
+              <div className="flex items-center gap-3 md:hidden">
                 <LanguageSwitcher
                   currentLocale={locale}
                   ariaLabel={t("languageSwitcherLabel")}
                 />
                 <MobileNav
-                  links={navLinks}
+                  links={mobileNavLinks}
                   openLabel={t("openMenu")}
                   closeLabel={t("closeMenu")}
                 />
