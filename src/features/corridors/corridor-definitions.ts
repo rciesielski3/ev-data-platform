@@ -65,10 +65,10 @@ export const CORRIDOR_DEFINITIONS: CorridorDefinition[] = [
       },
       {
         from: { label: "Płońsk", latitude: 52.62, longitude: 20.38 },
-        to: { label: "Toruń", latitude: 53.01, longitude: 18.6 },
+        to: { label: "Olsztynek", latitude: 53.51, longitude: 20.28 },
       },
       {
-        from: { label: "Toruń", latitude: 53.01, longitude: 18.6 },
+        from: { label: "Olsztynek", latitude: 53.51, longitude: 20.28 },
         to: { label: "Gdańsk", latitude: 54.35, longitude: 18.65 },
       },
     ],
