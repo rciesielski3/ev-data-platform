@@ -35,7 +35,8 @@
     "reports": "Reports",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "languageSwitcherLabel": "Change language"
+    "languageSwitcherLabel": "Change language",
+    "corridors": "Corridors"
   },
   "home": {
     "title": "EVSource",
@@ -745,5 +746,28 @@
     "stations": "Stations",
     "vehicles": "Vehicles",
     "reports": "Reports"
+  },
+  "corridors": {
+    "title": "Corridor Coverage",
+    "description": "Charging gap analysis along major Polish highway corridors, based on pre-computed waypoints.",
+    "exportCsvLink": "Export CSV",
+    "exportJsonLink": "Export JSON",
+    "explainerTitle": "What this is, and is not",
+    "explainerBody": "This is a fast, approximate gap check along a handful of hand-picked highway corridors: a segment is flagged as a gap when it is longer than 60 km and the nearest 150 kW+ charger to its endpoint is missing or more than 60 km away. Distances are straight-line approximations, not driving distances, and waypoints are coarse city-level points, not precise route geometry. Treat this as a directional signal, not a routing or compliance tool.",
+    "setupRequiredMessage": "Corridor analysis is not available yet. Configure the database and run the charging station imports.",
+    "corridorsMetricLabel": "Corridors",
+    "corridorsMetricHelper": "Major highway corridors tracked",
+    "segmentsMetricLabel": "Segments",
+    "segmentsMetricHelper": "Corridor segments analyzed",
+    "gapsMetricLabel": "Gaps",
+    "gapsMetricHelper": "Segments without a nearby HPC charger",
+    "segmentHeader": "Segment",
+    "lengthHeader": "Length",
+    "nearestHpcHeader": "Nearest HPC",
+    "statusHeader": "Status"
+  },
+  "corridorsError": {
+    "title": "Corridor analysis could not load",
+    "body": "Corridor gap analysis is temporarily unavailable. Try again, or check that the charging imports have completed."
   }
 }

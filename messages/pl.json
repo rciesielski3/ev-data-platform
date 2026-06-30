@@ -35,7 +35,8 @@
     "reports": "Raporty",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
-    "languageSwitcherLabel": "Zmień język"
+    "languageSwitcherLabel": "Zmień język",
+    "corridors": "Korytarze"
   },
   "home": {
     "title": "EVSource",
@@ -745,5 +746,28 @@
     "stations": "Stacje",
     "vehicles": "Pojazdy",
     "reports": "Raporty"
+  },
+  "corridors": {
+    "title": "Pokrycie korytarzy",
+    "description": "Analiza luk w ładowaniu wzdłuż głównych polskich korytarzy autostradowych, na podstawie wstępnie obliczonych punktów trasy.",
+    "exportCsvLink": "Eksportuj CSV",
+    "exportJsonLink": "Eksportuj JSON",
+    "explainerTitle": "Czym to jest, a czym nie jest",
+    "explainerBody": "To szybka, przybliżona kontrola luk wzdłuż kilku wybranych korytarzy autostradowych: odcinek jest oznaczony jako luka, gdy jest dłuższy niż 60 km, a najbliższa ładowarka 150 kW+ od jego końca jest nieobecna lub oddalona o ponad 60 km. Odległości są przybliżeniami liniowymi, a nie odległościami drogowymi, a punkty trasy są przybliżonymi punktami miejskimi, a nie precyzyjną geometrią trasy. Traktuj to jako sygnał kierunkowy, a nie narzędzie do planowania trasy czy zgodności.",
+    "setupRequiredMessage": "Analiza korytarzy nie jest jeszcze dostępna. Skonfiguruj bazę danych i uruchom import stacji ładowania.",
+    "corridorsMetricLabel": "Korytarze",
+    "corridorsMetricHelper": "Śledzone główne korytarze autostradowe",
+    "segmentsMetricLabel": "Odcinki",
+    "segmentsMetricHelper": "Przeanalizowane odcinki korytarzy",
+    "gapsMetricLabel": "Luki",
+    "gapsMetricHelper": "Odcinki bez pobliskiej ładowarki HPC",
+    "segmentHeader": "Odcinek",
+    "lengthHeader": "Długość",
+    "nearestHpcHeader": "Najbliższe HPC",
+    "statusHeader": "Status"
+  },
+  "corridorsError": {
+    "title": "Nie udało się wczytać analizy korytarzy",
+    "body": "Analiza luk w korytarzach jest tymczasowo niedostępna. Spróbuj ponownie lub sprawdź, czy import danych o ładowarkach został zakończony."
   }
 }
