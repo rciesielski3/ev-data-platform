@@ -30,6 +30,7 @@
     "provinces": "Provinces",
     "operators": "Operators",
     "coverage": "Coverage",
+    "trends": "Trends",
     "reports": "Reports",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
@@ -677,6 +678,25 @@
   "coverageError": {
     "title": "Coverage analysis could not load",
     "body": "Infrastructure coverage rankings are temporarily unavailable. Try again, or check that the charging imports have completed."
+  },
+  "trends": {
+    "title": "Infrastructure Trends",
+    "description": "Track how Poland's charging infrastructure has grown over time, based on daily snapshots captured after each import.",
+    "viewInsightsLink": "View insights",
+    "setupRequiredMessage": "Trend data is not available yet. Configure the database and run the charging station imports.",
+    "range30d": "Last 30 days",
+    "range90d": "Last 90 days",
+    "chartTitle": "Growth over time",
+    "chartSubtitle": "Total stations, HPC stations, and connectors by snapshot date.",
+    "totalStationCountLabel": "Total stations",
+    "totalHpcStationCountLabel": "HPC stations",
+    "totalConnectorCountLabel": "Total connectors",
+    "emptyTitle": "No snapshot data yet",
+    "emptyBody": "Daily snapshots are captured automatically after each EIPA import. Check back after the next import completes."
+  },
+  "trendsError": {
+    "title": "Trends could not load",
+    "body": "Infrastructure trend data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "privacy": {
     "title": "Privacy policy",

@@ -30,6 +30,7 @@
     "provinces": "Województwa",
     "operators": "Operatorzy",
     "coverage": "Pokrycie",
+    "trends": "Trendy",
     "reports": "Raporty",
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
@@ -677,6 +678,25 @@
   "coverageError": {
     "title": "Nie udało się wczytać analizy pokrycia",
     "body": "Ranking pokrycia infrastrukturą jest tymczasowo niedostępny. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
+  },
+  "trends": {
+    "title": "Trendy infrastruktury",
+    "description": "Śledź rozwój polskiej infrastruktury ładowania w czasie na podstawie codziennych zrzutów danych zapisywanych po każdym imporcie.",
+    "viewInsightsLink": "Zobacz statystyki",
+    "setupRequiredMessage": "Dane trendów nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
+    "range30d": "Ostatnie 30 dni",
+    "range90d": "Ostatnie 90 dni",
+    "chartTitle": "Wzrost w czasie",
+    "chartSubtitle": "Łączna liczba stacji, stacji HPC i złączy według daty zrzutu.",
+    "totalStationCountLabel": "Stacje łącznie",
+    "totalHpcStationCountLabel": "Stacje HPC",
+    "totalConnectorCountLabel": "Złącza łącznie",
+    "emptyTitle": "Brak jeszcze danych zrzutów",
+    "emptyBody": "Codzienne zrzuty danych są zapisywane automatycznie po każdym imporcie EIPA. Sprawdź ponownie po zakończeniu kolejnego importu."
+  },
+  "trendsError": {
+    "title": "Nie udało się wczytać trendów",
+    "body": "Dane trendów infrastruktury są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy stacji ładowania się zakończyły."
   },
   "privacy": {
     "title": "Polityka prywatności",
