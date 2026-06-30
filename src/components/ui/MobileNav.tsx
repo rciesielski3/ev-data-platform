@@ -23,7 +23,7 @@ const MobileNav = ({
   const pathname = usePathname();
 
   return (
-    <div className="sm:hidden">
+    <div className="md:hidden">
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
