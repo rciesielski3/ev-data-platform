@@ -35,6 +35,34 @@ enum LeadStatus {
   CLOSED
 }
 
+enum PaymentMethod {
+  FREE
+  OPERATOR_CONTRACT
+  PAYMENT_CARD
+  CASH
+  PREPAID_CARD
+  FLEET_CARD
+  BANK_TRANSFER
+  ONLINE_PAYMENT
+  UNDETERMINED
+}
+
+enum AuthMethod {
+  OPEN_ACCESS
+  NO_ACCESS
+  RFID_MIFARE_CLASSIC
+  RFID_MIFARE_DESFIRE
+  RFID_CALYPSO
+  PINPAD
+  MOBILE_APP
+  PHONE_RFID
+  ISO15118_PLC
+  ISO15118_WIRELESS
+  PHONE_VOICE
+  SMS
+  PREPAID_CARD
+}
+
 model DataSource {
   id             String          @id @default(cuid())
   key            String          @unique
@@ -70,6 +98,7 @@ model ChargingOperator {
   sourceUrl      String?
   importedAt     DateTime
   updatedAt      DateTime          @updatedAt
+  paymentMethodCoverage Json?
   stations       ChargingStation[]
 
   @@unique([sourceName, sourceRecordId])
@@ -101,6 +130,8 @@ model ChargingStation {
   updatedAt       DateTime            @updatedAt
   isManualOverride Boolean            @default(false)
   rawPayload      Json?
+  acceptedPaymentMethods String[]     @default([])
+  authenticationTypes    String[]     @default([])
   connectors      ChargingConnector[]
 
   @@unique([sourceName, sourceRecordId])

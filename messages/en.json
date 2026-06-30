@@ -239,7 +239,8 @@
       "Source URL": "Source URL",
       "Source timestamp": "Source timestamp",
       "Connector type": "Connector type",
-      "Connector power": "Connector power"
+      "Connector power": "Connector power",
+      "Payment/authentication": "Payment/authentication"
     },
     "metaTitle": "{name} – {city} | EVSource",
     "metaTitleFallback": "{name} | EVSource"

@@ -1,4 +1,4 @@
-import { IngestionStatus, Prisma } from "@prisma/client";
+import { IngestionStatus, type Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 
@@ -48,7 +48,7 @@ const MIN_HISTORY_POINTS = 3;
 const HISTORY_WINDOW_DAYS = 35;
 
 const getPerCapitaMetrics = (
-  metadata: Prisma.JsonValue,
+  metadata: Prisma.JsonValue | null,
 ): ProvinceMetricsSnapshot[] | null => {
   if (!metadata || typeof metadata !== "object") return null;
   if (!("provinceMetrics" in metadata)) return null;
@@ -72,7 +72,7 @@ const getPerCapitaMetrics = (
  * Returns a map of province name to array of snapshots (most recent first).
  */
 export const aggregateProvinceMetricsFromRuns = (
-  runs: Array<{ metadata: Prisma.JsonValue }>,
+  runs: Array<{ metadata: Prisma.JsonValue | null }>,
 ): Map<string, ProvinceMetricsSnapshot[]> => {
   const provinceHistories = new Map<string, ProvinceMetricsSnapshot[]>();
 

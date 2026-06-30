@@ -398,3 +398,40 @@ describe("normalizeEipaStations payment/auth method dictionary resolution", () =
     ).not.toThrow();
   });
 });
+
+describe("normalizeEipaStations payment/auth enum field population", () => {
+  it("maps payment_methods/authentication_methods ids to enum values regardless of dictionary presence", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [
+        { ...baseStation, payment_methods: [1, 4], authentication_methods: [0, 32] },
+      ],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+      // No dictionary passed -- enum mapping is independent of the
+      // dictionary-description resolution used for rawPayload display labels.
+    });
+
+    expect(station.acceptedPaymentMethods).toEqual(["FREE", "PAYMENT_CARD"]);
+    expect(station.authenticationTypes).toEqual([
+      "OPEN_ACCESS",
+      "MOBILE_APP",
+    ]);
+  });
+
+  it("drops unmapped ids and returns an empty array when no codes are present", () => {
+    const [station] = normalizeEipaStations({
+      pools: [basePool],
+      stations: [
+        { ...baseStation, payment_methods: [9999], authentication_methods: undefined },
+      ],
+      points: [],
+      dynamicPoints: [],
+      operators: [],
+    });
+
+    expect(station.acceptedPaymentMethods).toEqual([]);
+    expect(station.authenticationTypes).toEqual([]);
+  });
+});

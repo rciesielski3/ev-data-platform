@@ -239,7 +239,8 @@
       "Source URL": "Adres źródła",
       "Source timestamp": "Znacznik czasu źródła",
       "Connector type": "Typ złącza",
-      "Connector power": "Moc złącza"
+      "Connector power": "Moc złącza",
+      "Payment/authentication": "Płatność/autoryzacja"
     },
     "metaTitle": "{name} – {city} | EVSource",
     "metaTitleFallback": "{name} | EVSource"

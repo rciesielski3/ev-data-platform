@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { Mock } from "vitest";
 import { IngestionStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
@@ -12,9 +11,7 @@ import {
 
 vi.mock("@/lib/db/prisma");
 
-const mockPrisma = prisma as unknown as {
-  ingestionRun: { findMany: Mock; findFirst: Mock };
-};
+const mockPrisma = vi.mocked(prisma, { deep: true });
 
 describe("regression-detection", () => {
   beforeEach(() => {

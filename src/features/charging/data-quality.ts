@@ -2,6 +2,7 @@ import {
   cleanText,
   isTechnicalEipaOperatorIdentifier,
 } from "@/features/charging/station-search";
+import { hasValidPaymentAuth } from "@/lib/validators/payment-auth";
 
 export const STATION_FRESHNESS_STALE_AFTER_DAYS = 90;
 
@@ -15,6 +16,7 @@ const COMPLETENESS_FIELDS = [
   "Source timestamp",
   "Connector type",
   "Connector power",
+  "Payment/authentication",
 ] as const;
 
 export const STATION_COMPLETENESS_FIELDS = [...COMPLETENESS_FIELDS];
@@ -50,6 +52,8 @@ export type StationQualityInput = {
   connectors?: StationQualityConnectorInput[] | null;
   latitude?: number | string | null;
   longitude?: number | string | null;
+  acceptedPaymentMethods?: string[] | null;
+  authenticationTypes?: string[] | null;
 };
 
 export type StationFreshness = {
@@ -248,6 +252,13 @@ export const buildStationCompletenessScore = (
     {
       field: "Connector power",
       isPresent: hasConnectorPower(station.connectors),
+    },
+    {
+      field: "Payment/authentication",
+      isPresent: hasValidPaymentAuth({
+        acceptedPaymentMethods: station.acceptedPaymentMethods,
+        authenticationTypes: station.authenticationTypes,
+      }),
     },
   ];
 
