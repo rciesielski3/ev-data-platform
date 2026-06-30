@@ -110,7 +110,10 @@ describe("buildCorridorAnalysis", () => {
   };
 
   it("reports per-segment gaps and a compliance score", () => {
-    const stations = [hpcStation(lodz.latitude, lodz.longitude)];
+    const stations = [
+      hpcStation(warsaw.latitude, warsaw.longitude),
+      hpcStation(lodz.latitude, lodz.longitude),
+    ];
 
     const analysis = buildCorridorAnalysis(corridor, stations);
 
@@ -122,8 +125,19 @@ describe("buildCorridorAnalysis", () => {
     expect(analysis.complianceScore).toBeCloseTo(0.5);
   });
 
+  it("flags a segment with HPC coverage only at the destination, not the origin", () => {
+    const stations = [hpcStation(lodz.latitude, lodz.longitude)];
+
+    const analysis = buildCorridorAnalysis(corridor, stations);
+
+    expect(analysis.segments[0].fromLabel).toBe("Warsaw");
+    expect(analysis.segments[0].toLabel).toBe("Łódź");
+    expect(analysis.segments[0].hasGap).toBe(true);
+  });
+
   it("gives a perfect compliance score when no segment has a gap", () => {
     const stations = [
+      hpcStation(warsaw.latitude, warsaw.longitude),
       hpcStation(lodz.latitude, lodz.longitude),
       hpcStation(poznan.latitude, poznan.longitude),
     ];

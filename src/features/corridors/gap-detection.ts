@@ -42,7 +42,7 @@ export type CorridorAnalysis = {
   complianceScore: number;
 };
 
-const haversineApproxKm = (
+const equirectangularDistanceKm = (
   a: { latitude: number; longitude: number },
   b: { latitude: number; longitude: number },
 ): number => {
@@ -78,7 +78,7 @@ export const findNearestHpc = (
       continue;
     }
 
-    const distanceKm = haversineApproxKm(waypoint, station);
+    const distanceKm = equirectangularDistanceKm(waypoint, station);
 
     if (distanceKm > NEAREST_HPC_SEARCH_RADIUS_KM) {
       continue;
@@ -101,7 +101,7 @@ export const detectGap = (
   segment: CorridorSegment,
   nearestHpc: NearestHpcResult,
 ): boolean => {
-  const segmentLengthKm = haversineApproxKm(segment.from, segment.to);
+  const segmentLengthKm = equirectangularDistanceKm(segment.from, segment.to);
 
   if (segmentLengthKm <= GAP_THRESHOLD_KM) {
     return false;
@@ -114,19 +114,36 @@ export const detectGap = (
   return nearestHpc.distanceKm > GAP_THRESHOLD_KM;
 };
 
+/**
+ * Picks the worse (farther, or missing) of two HPC results, since a segment
+ * is only as covered as its least-covered endpoint.
+ */
+const worseHpcResult = (
+  a: NearestHpcResult,
+  b: NearestHpcResult,
+): NearestHpcResult => {
+  if (a === null || b === null) {
+    return null;
+  }
+
+  return a.distanceKm >= b.distanceKm ? a : b;
+};
+
 const buildSegmentGap = (
   segment: CorridorSegment,
   stations: CorridorStationInput[],
 ): SegmentGap => {
-  const nearestHpc = findNearestHpc(segment.to, stations);
-  const segmentLengthKm = haversineApproxKm(segment.from, segment.to);
+  const nearestHpcFrom = findNearestHpc(segment.from, stations);
+  const nearestHpcTo = findNearestHpc(segment.to, stations);
+  const worstHpc = worseHpcResult(nearestHpcFrom, nearestHpcTo);
+  const segmentLengthKm = equirectangularDistanceKm(segment.from, segment.to);
 
   return {
     fromLabel: segment.from.label,
     toLabel: segment.to.label,
     segmentLengthKm,
-    nearestHpcDistanceKm: nearestHpc === null ? null : nearestHpc.distanceKm,
-    hasGap: detectGap(segment, nearestHpc),
+    nearestHpcDistanceKm: worstHpc === null ? null : worstHpc.distanceKm,
+    hasGap: detectGap(segment, worstHpc),
   };
 };
 
