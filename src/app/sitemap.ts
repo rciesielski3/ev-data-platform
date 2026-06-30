@@ -15,6 +15,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/provinces", priority: 0.8, changeFrequency: "daily" },
   { path: "/operators", priority: 0.8, changeFrequency: "daily" },
   { path: "/coverage", priority: 0.8, changeFrequency: "daily" },
+  { path: "/corridors", priority: 0.8, changeFrequency: "daily" },
   { path: "/connectors", priority: 0.8, changeFrequency: "daily" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
 ];

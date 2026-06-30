@@ -8,6 +8,7 @@ import {
   buildOperatorIntelligenceRows,
   type OperatorIntelligenceRow,
 } from "@/features/charging/operator-intelligence";
+import type { CorridorStationInput } from "@/features/corridors/gap-detection";
 import { prisma } from "@/lib/db/prisma";
 
 // These helpers wrap the shared Prisma query + row-building call in React's
@@ -78,4 +79,23 @@ export const getOperatorIntelligenceRows = cache(
 
     return buildOperatorIntelligenceRows(stations);
   },
+);
+
+/**
+ * Fetches every charging station's coordinates and connector power for
+ * corridor gap analysis. Memoized per request via React's `cache()`.
+ */
+export const getCorridorStations = cache(
+  async (): Promise<CorridorStationInput[]> =>
+    prisma.chargingStation.findMany({
+      select: {
+        latitude: true,
+        longitude: true,
+        connectors: {
+          select: {
+            powerKw: true,
+          },
+        },
+      },
+    }),
 );
