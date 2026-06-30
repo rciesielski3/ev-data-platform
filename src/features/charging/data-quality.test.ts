@@ -30,6 +30,8 @@ const completeStation: StationQualityInput = {
       powerKw: 150,
     },
   ],
+  acceptedPaymentMethods: ["PAYMENT_CARD"],
+  authenticationTypes: ["MOBILE_APP"],
 };
 
 describe("buildStationFreshness", () => {
@@ -89,8 +91,8 @@ describe("buildStationCompletenessScore", () => {
     expect(buildStationCompletenessScore(completeStation)).toEqual({
       scorePercent: 100,
       missingFields: [],
-      presentFieldCount: 7,
-      totalFieldCount: 7,
+      presentFieldCount: 8,
+      totalFieldCount: 8,
     });
   });
 
@@ -106,18 +108,21 @@ describe("buildStationCompletenessScore", () => {
         latitude: null,
         longitude: null,
         connectors: [],
+        acceptedPaymentMethods: [],
+        authenticationTypes: [],
       }),
     ).toEqual({
-      scorePercent: 29,
+      scorePercent: 25,
       missingFields: [
         "Coordinates",
         "Address/location",
         "Source URL",
         "Connector type",
         "Connector power",
+        "Payment/authentication",
       ],
       presentFieldCount: 2,
-      totalFieldCount: 7,
+      totalFieldCount: 8,
     });
   });
 
@@ -153,8 +158,8 @@ describe("buildStationCompletenessScore", () => {
     ).toEqual({
       scorePercent: 100,
       missingFields: [],
-      presentFieldCount: 7,
-      totalFieldCount: 7,
+      presentFieldCount: 8,
+      totalFieldCount: 8,
     });
   });
 
@@ -175,6 +180,42 @@ describe("buildStationCompletenessScore", () => {
         },
       }).missingFields,
     ).toEqual(["Operator"]);
+  });
+
+  it("treats payment/authentication as present when only one of the two arrays is non-empty", () => {
+    expect(
+      buildStationCompletenessScore({
+        ...completeStation,
+        acceptedPaymentMethods: [],
+        authenticationTypes: ["MOBILE_APP"],
+      }).missingFields,
+    ).not.toContain("Payment/authentication");
+
+    expect(
+      buildStationCompletenessScore({
+        ...completeStation,
+        acceptedPaymentMethods: ["CASH"],
+        authenticationTypes: [],
+      }).missingFields,
+    ).not.toContain("Payment/authentication");
+  });
+
+  it("treats payment/authentication as missing when both arrays are empty or absent", () => {
+    expect(
+      buildStationCompletenessScore({
+        ...completeStation,
+        acceptedPaymentMethods: [],
+        authenticationTypes: [],
+      }).missingFields,
+    ).toContain("Payment/authentication");
+
+    expect(
+      buildStationCompletenessScore({
+        ...completeStation,
+        acceptedPaymentMethods: undefined,
+        authenticationTypes: undefined,
+      }).missingFields,
+    ).toContain("Payment/authentication");
   });
 });
 

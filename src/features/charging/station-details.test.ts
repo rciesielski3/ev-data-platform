@@ -45,6 +45,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: null,
       connectors: [
         {
@@ -125,6 +127,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: null,
       connectors: [],
     });
@@ -168,6 +172,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: null,
       connectors: [],
     });
@@ -200,6 +206,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: null,
       connectors: [],
     });
@@ -240,6 +248,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         pool: {
           accessibility: "Restauracja w pobliżu",
@@ -290,6 +300,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         pool: {
           operating_hours: [
@@ -332,6 +344,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         pool: {
           // Monday reported twice (e.g. a split-shift schedule) while
@@ -389,6 +403,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         pool: {
           accessibility: 12345,
@@ -437,6 +453,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         resolvedPaymentMethods: [
           "Bezpłatne ładowanie",
@@ -485,6 +503,8 @@ describe("buildStationDetails", () => {
       importedAt: baseDate,
       updatedAt: baseDate,
       isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
       rawPayload: {
         resolvedPaymentMethods: [],
         resolvedAuthMethods: [],
@@ -524,6 +544,8 @@ describe("buildStationDetails", () => {
         importedAt: baseDate,
         updatedAt: baseDate,
         isManualOverride: false,
+      acceptedPaymentMethods: [],
+      authenticationTypes: [],
         rawPayload: null,
         connectors: [],
       },

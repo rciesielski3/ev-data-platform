@@ -21,9 +21,14 @@ import { normalizeEipaStations } from "@/lib/sources/eipa/normalize";
 import type {
   EipaDictionary,
   EipaOperator,
+  EipaStation,
   NormalizedChargingStation,
 } from "@/lib/sources/eipa/types";
 import { validateChargingStations } from "@/lib/validators/charging";
+import {
+  findUnknownEipaAuthMethodIds,
+  findUnknownEipaPaymentMethodIds,
+} from "@/lib/validators/payment-auth";
 
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
 const PROGRESS_STEP = 100;
@@ -75,6 +80,39 @@ const fetchEipaDictionarySafely = async (): Promise<EipaDictionary> => {
       error instanceof Error ? error.message : error,
     );
     return { station_payment_method: [], station_authentication_method: [] };
+  }
+};
+
+// payment_methods / authentication_methods carry dictionary ids that aren't
+// in our enum maps (EIPA_PAYMENT_METHOD_MAP / EIPA_AUTH_METHOD_MAP) yet, e.g.
+// if EIPA adds a new dictionary entry. Those ids are dropped during
+// normalization rather than rejecting the station, so this just surfaces
+// them as a warning for visibility.
+const warnAboutUnknownPaymentAuthIds = (stations: EipaStation[]) => {
+  const unknownPaymentIds = new Set<number>();
+  const unknownAuthIds = new Set<number>();
+
+  for (const station of stations) {
+    for (const id of findUnknownEipaPaymentMethodIds(station.payment_methods)) {
+      unknownPaymentIds.add(id);
+    }
+    for (const id of findUnknownEipaAuthMethodIds(station.authentication_methods)) {
+      unknownAuthIds.add(id);
+    }
+  }
+
+  if (unknownPaymentIds.size > 0) {
+    console.warn(
+      "[EIPA] unknown payment method dictionary ids encountered:",
+      Array.from(unknownPaymentIds).sort((a, b) => a - b),
+    );
+  }
+
+  if (unknownAuthIds.size > 0) {
+    console.warn(
+      "[EIPA] unknown authentication method dictionary ids encountered:",
+      Array.from(unknownAuthIds).sort((a, b) => a - b),
+    );
   }
 };
 
@@ -183,6 +221,8 @@ const upsertStation = async (
       importedAt,
       updatedAt: importedAt,
       rawPayload: station.rawPayload as Prisma.InputJsonValue,
+      acceptedPaymentMethods: station.acceptedPaymentMethods,
+      authenticationTypes: station.authenticationTypes,
     },
     update: {
       externalCode: station.externalCode,
@@ -201,6 +241,8 @@ const upsertStation = async (
       sourceUpdatedAt: station.sourceUpdatedAt,
       updatedAt: importedAt,
       rawPayload: station.rawPayload as Prisma.InputJsonValue,
+      acceptedPaymentMethods: station.acceptedPaymentMethods,
+      authenticationTypes: station.authenticationTypes,
     },
   });
 
@@ -278,6 +320,8 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       "[EIPA] dictionary auth methods:",
       dictionary.station_authentication_method.length,
     );
+
+    warnAboutUnknownPaymentAuthIds(stations.data);
 
     const dynamic = { data: [] };
 

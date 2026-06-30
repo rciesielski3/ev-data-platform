@@ -24,6 +24,8 @@ describe("validateChargingStations", () => {
         sourceUpdatedAt: null,
         operator: null,
         connectors: [],
+        acceptedPaymentMethods: [],
+        authenticationTypes: [],
         rawPayload: {},
       },
     ]);
@@ -51,6 +53,8 @@ describe("validateChargingStations", () => {
         sourceUpdatedAt: null,
         operator: null,
         connectors: [],
+        acceptedPaymentMethods: [],
+        authenticationTypes: [],
         rawPayload: {},
       },
     ]);

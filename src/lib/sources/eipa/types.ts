@@ -153,5 +153,7 @@ export type NormalizedChargingStation = {
     normalizedName: string;
   } | null;
   connectors: NormalizedChargingConnector[];
+  acceptedPaymentMethods: string[];
+  authenticationTypes: string[];
   rawPayload: Record<string, unknown>;
 };

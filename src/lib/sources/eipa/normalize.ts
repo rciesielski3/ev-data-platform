@@ -3,6 +3,10 @@ import {
   mapEipaInterfaceIds,
   normalizeOperatorName,
 } from "@/lib/normalizers/charging";
+import {
+  mapEipaAuthMethodIds,
+  mapEipaPaymentMethodIds,
+} from "@/lib/validators/payment-auth";
 import type {
   EipaDictionary,
   EipaDictionaryEntry,
@@ -207,6 +211,8 @@ export const normalizeEipaStations = (input: {
             }
           : null,
         connectors: normalizeConnectors(stationPoints, dynamicByPointId),
+        acceptedPaymentMethods: mapEipaPaymentMethodIds(station.payment_methods),
+        authenticationTypes: mapEipaAuthMethodIds(station.authentication_methods),
         rawPayload: {
           station,
           pool,

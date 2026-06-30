@@ -204,6 +204,8 @@ export type StationDetailsInput = {
   updatedAt: Date;
   isManualOverride: boolean;
   rawPayload: unknown;
+  acceptedPaymentMethods: string[];
+  authenticationTypes: string[];
   connectors: Array<{
     id: string;
     connectorType: string;
@@ -275,6 +277,8 @@ export const buildStationDetails = (
     operator: station.operator,
     sourceUrl: station.sourceUrl,
     connectors: station.connectors,
+    acceptedPaymentMethods: station.acceptedPaymentMethods,
+    authenticationTypes: station.authenticationTypes,
     latitude: station.latitude,
     longitude: station.longitude,
   });
