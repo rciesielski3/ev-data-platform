@@ -1,0 +1,141 @@
+name: Neon Weekly & Monthly Backup
+
+on:
+  schedule:
+    - cron: '0 0 * * *'        # Daily at 12:00 AM UTC
+    - cron: '0 0 1 * *'        # 1st of every month at 12:00 AM UTC
+  workflow_dispatch:
+
+env:
+  NEON_PROJECT_ID: green-sky-067338
+
+jobs:
+  determine-type:
+    runs-on: ubuntu-latest
+    outputs:
+      type: ${{ steps.vars.outputs.type }}
+      suffix: ${{ steps.vars.outputs.suffix }}
+      label: ${{ steps.vars.outputs.label }}
+    steps:
+      - name: Determine backup type (daily or monthly)
+        id: vars
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          MONTH=$(date -u +%Y-%m)
+          DAY_OF_MONTH=$(date -u +%d)
+
+          if [ "$DAY_OF_MONTH" = "01" ]; then
+            echo "type=monthly" >> $GITHUB_OUTPUT
+            echo "suffix=$MONTH" >> $GITHUB_OUTPUT
+            echo "label=Monthly" >> $GITHUB_OUTPUT
+          else
+            echo "type=daily" >> $GITHUB_OUTPUT
+            echo "suffix=$TODAY" >> $GITHUB_OUTPUT
+            echo "label=Daily" >> $GITHUB_OUTPUT
+          fi
+
+  create-backup:
+    needs: determine-type
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get primary branch ID
+        id: get_branch
+        run: |
+          BRANCHES=$(curl -s -X GET \
+            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+            -H "Content-Type: application/json")
+
+          PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.is_primary == true) | .id' | head -1)
+
+          if [ -z "$PRIMARY_ID" ]; then
+            echo "ERROR: Could not find primary branch"
+            exit 1
+          fi
+
+          echo "primary_id=$PRIMARY_ID" >> $GITHUB_OUTPUT
+
+      - name: Create Neon backup branch
+        id: create_backup
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"branch\": {
+                \"name\": \"backup-${{ needs.determine-type.outputs.type }}-${{ needs.determine-type.outputs.suffix }}\",
+                \"parent_id\": \"${{ steps.get_branch.outputs.primary_id }}\"
+              }
+            }")
+
+          BRANCH_ID=$(echo "$RESPONSE" | jq -r '.branch.id // empty')
+
+          if [ -z "$BRANCH_ID" ]; then
+            echo "ERROR: Failed to create backup branch"
+            echo "Response: $RESPONSE"
+            exit 1
+          fi
+
+          echo "backup_id=$BRANCH_ID" >> $GITHUB_OUTPUT
+
+      - name: Cleanup old backups
+        run: |
+          BRANCHES=$(curl -s -X GET \
+            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+            -H "Content-Type: application/json")
+
+          BACKUP_TYPE="${{ needs.determine-type.outputs.type }}"
+
+          BACKUPS=$(echo "$BRANCHES" | jq -r ".branches[] | select(.name | startswith(\"backup-$BACKUP_TYPE-\")) | .id + \"|\" + .name + \"|\" + .created_at" | sort -t'|' -k3)
+
+          BACKUP_COUNT=$(echo "$BACKUPS" | grep -c ".")
+
+          if [ "$BACKUP_COUNT" -ge 4 ]; then
+            OLDEST=$(echo "$BACKUPS" | head -1)
+            OLDEST_ID=$(echo "$OLDEST" | cut -d'|' -f1)
+            OLDEST_NAME=$(echo "$OLDEST" | cut -d'|' -f2)
+
+            echo "Deleting old backup: $OLDEST_NAME"
+
+            curl -s -X DELETE \
+              "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$OLDEST_ID" \
+              -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+              -H "Content-Type: application/json"
+          fi
+
+      - name: Send monthly backup email via Resend
+        if: needs.determine-type.outputs.type == 'monthly'
+        run: |
+          BACKUP_SUFFIX="${{ needs.determine-type.outputs.suffix }}"
+
+          BODY="✅ Monthly backup completed successfully.
+          Branch created: backup-monthly-${BACKUP_SUFFIX}
+          Created at: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          To restore:
+          1. Log in to Neon Console
+          2. Navigate to this project
+          3. Select backup branch: backup-monthly-${BACKUP_SUFFIX}
+          4. Click \"Promote to Primary\" (or create a new branch from it)
+          5. Verify data, then redirect application DATABASE_URL if needed"
+
+          RESPONSE=$(curl -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer ${{ secrets.RESEND_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"from\": \"neon@evsource.pl\",
+              \"to\": \"kontakt@evsource.pl\",
+              \"subject\": \"✅ EV Data Platform Monthly Backup - ${BACKUP_SUFFIX}\",
+              \"text\": \"${BODY}\"
+            }")
+
+          # Check if email was sent successfully
+          if echo "$RESPONSE" | jq -e '.id' > /dev/null 2>&1; then
+            echo "✓ Email sent successfully via Resend"
+          else
+            echo "✗ Failed to send email"
+            echo "Response: $RESPONSE"
+            exit 1
+          fi
