@@ -12,7 +12,7 @@ const KM_PER_DEGREE = 111;
 export const GAP_THRESHOLD_KM = 60;
 
 /** Stations farther than this from a waypoint are not considered nearby. */
-export const NEAREST_HPC_SEARCH_RADIUS_KM = 100;
+export const NEAREST_HPC_SEARCH_RADIUS_KM = 500;
 
 export type CorridorStationInput = {
   latitude: number;
@@ -75,6 +75,10 @@ export const findNearestHpc = (
 
   for (const station of stations) {
     if (!stationHasHpcConnector(station)) {
+      continue;
+    }
+
+    if (station.latitude === null || station.longitude === null) {
       continue;
     }
 

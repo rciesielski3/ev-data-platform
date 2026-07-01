@@ -764,6 +764,9 @@
     "segmentHeader": "Odcinek",
     "lengthHeader": "Długość",
     "nearestHpcHeader": "Najbliższe HPC",
+    "statusGap": "Luka",
+    "statusCovered": "Pokrycie",
+    "summary": "{coveredPercent} pokrycie · {gapCount, plural, one {# luka} other {# luk}}",
     "statusHeader": "Status"
   },
   "corridorsError": {

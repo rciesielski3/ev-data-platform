@@ -764,6 +764,9 @@
     "segmentHeader": "Segment",
     "lengthHeader": "Length",
     "nearestHpcHeader": "Nearest HPC",
+    "statusGap": "Gap",
+    "statusCovered": "Covered",
+    "summary": "{coveredPercent} covered · {gapCount, plural, one {# gap} other {# gaps}}",
     "statusHeader": "Status"
   },
   "corridorsError": {
