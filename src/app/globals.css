@@ -86,6 +86,8 @@ button.card:active,
   padding: 0.15rem 0.65rem;
   font-size: 0.75rem;
   font-weight: 600;
+  background-color: var(--accent-glow);
+  color: var(--foreground);
 }
 
 .hero-surface {
