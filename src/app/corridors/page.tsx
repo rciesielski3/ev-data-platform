@@ -23,7 +23,7 @@ const getCorridorAnalyses = async (): Promise<CorridorAnalysis[]> => {
 
 const formatKm = (value: number) => `${value.toFixed(0)} km`;
 
-const SegmentRow = ({ segment }: { segment: SegmentGap }) => (
+const SegmentRow = ({ segment, t }: { segment: SegmentGap; t: any }) => (
   <tr className="align-top">
     <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
       {segment.fromLabel} → {segment.toLabel}
@@ -36,9 +36,9 @@ const SegmentRow = ({ segment }: { segment: SegmentGap }) => (
     </td>
     <td className="px-4 py-4">
       {segment.hasGap ? (
-        <span className="badge bg-amber-100 text-amber-900">Gap</span>
+        <span className="badge bg-amber-100 text-amber-900">{t("corridors.statusGap")}</span>
       ) : (
-        <span className="badge bg-emerald-100 text-emerald-900">Covered</span>
+        <span className="badge bg-emerald-100 text-emerald-900">{t("corridors.statusCovered")}</span>
       )}
     </td>
   </tr>
@@ -47,6 +47,7 @@ const SegmentRow = ({ segment }: { segment: SegmentGap }) => (
 const CorridorCard = ({
   corridor,
   headers,
+  t,
 }: {
   corridor: CorridorAnalysis;
   headers: {
@@ -55,18 +56,20 @@ const CorridorCard = ({
     nearestHpc: string;
     status: string;
   };
+  t: any;
 }) => (
   <Card as="article" className="mb-6">
     <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <h2 className="text-lg font-semibold text-slate-950">{corridor.name}</h2>
         <p className="muted mt-1 text-sm">
-          {formatPercent(
-            corridor.segments.length - corridor.gapCount,
-            corridor.segments.length,
-          )}{" "}
-          covered · {formatInteger(corridor.gapCount)} gap
-          {corridor.gapCount === 1 ? "" : "s"}
+          {t("corridors.summary", {
+            coveredPercent: formatPercent(
+              corridor.segments.length - corridor.gapCount,
+              corridor.segments.length,
+            ),
+            gapCount: corridor.gapCount,
+          })}
         </p>
       </div>
     </div>
@@ -90,7 +93,7 @@ const CorridorCard = ({
         </thead>
         <tbody className="divide-y divide-slate-100">
           {corridor.segments.map((segment) => (
-            <SegmentRow key={`${segment.fromLabel}-${segment.toLabel}`} segment={segment} />
+            <SegmentRow key={`${segment.fromLabel}-${segment.toLabel}`} segment={segment} t={t} />
           ))}
         </tbody>
       </table>
@@ -178,6 +181,7 @@ export default async function CorridorsPage() {
                 nearestHpc: t("nearestHpcHeader"),
                 status: t("statusHeader"),
               }}
+              t={t}
             />
           ))}
         </>
