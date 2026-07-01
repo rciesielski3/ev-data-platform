@@ -23,7 +23,7 @@ const getCorridorAnalyses = async (): Promise<CorridorAnalysis[]> => {
 
 const formatKm = (value: number) => `${value.toFixed(0)} km`;
 
-const SegmentRow = ({ segment, t }: { segment: SegmentGap; t: any }) => (
+const SegmentRow = ({ segment, t }: { segment: SegmentGap; t: Awaited<ReturnType<typeof getTranslations<"corridors">>> }) => (
   <tr className="align-top">
     <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
       {segment.fromLabel} → {segment.toLabel}
@@ -56,7 +56,7 @@ const CorridorCard = ({
     nearestHpc: string;
     status: string;
   };
-  t: any;
+  t: Awaited<ReturnType<typeof getTranslations<"corridors">>>;
 }) => (
   <Card as="article" className="mb-6">
     <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
