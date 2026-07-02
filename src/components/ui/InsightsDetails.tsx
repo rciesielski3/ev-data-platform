@@ -19,7 +19,9 @@ const ShareBar = ({ percentLabel }: { percentLabel: string }) => {
     <div className="mt-2 h-2 rounded-full bg-slate-100">
       <div
         className="h-2 rounded-full bg-emerald-500"
-        style={{ width: `${Number.isFinite(percent) ? percent : 0}%` }}
+        style={
+          { "--share-bar-width": `${Number.isFinite(percent) ? percent : 0}%` } as React.CSSProperties
+        }
       />
     </div>
   );

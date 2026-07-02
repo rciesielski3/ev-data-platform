@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import Card from "@/components/ui/Card";
 import { CoverageDetails } from "@/components/ui/CoverageDetails";
 import { CoverageHero } from "@/components/ui/CoverageHero";
-import DetailsSkeleton from "@/components/ui/DetailsSkeleton";
+import { DetailsSkeleton } from "@/components/ui/DetailsSkeleton";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import {
