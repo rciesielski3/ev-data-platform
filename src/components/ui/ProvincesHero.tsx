@@ -21,21 +21,25 @@ export const ProvincesHero = async ({
   return (
     <section className="mb-8 grid gap-4 md:grid-cols-4">
       <MetricCard
+        index={0}
         label={t("provincesMetricLabel")}
         value={formatInteger(provinceCount)}
         helper={t("provincesMetricHelper")}
       />
       <MetricCard
+        index={1}
         label={t("stationsMetricLabel")}
         value={formatInteger(totalStations)}
         helper={t("stationsMetricHelper")}
       />
       <MetricCard
+        index={2}
         label={t("connectorsMetricLabel")}
         value={formatInteger(totalConnectors)}
         helper={t("connectorsMetricHelper")}
       />
       <MetricCard
+        index={3}
         label={t("hpcStationsMetricLabel")}
         value={formatInteger(totalHpcStations)}
         helper={t("hpcStationsMetricHelper")}
