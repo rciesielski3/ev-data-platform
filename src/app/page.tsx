@@ -6,7 +6,6 @@ import {
   CarFront,
   Search,
   MapPinned,
-  Plug,
   BarChart3,
   ArrowRight,
 } from "lucide-react";
@@ -224,19 +223,19 @@ const HomePage = async () => {
         <div className="grid gap-4 md:grid-cols-2">
           <Card
             as={Link}
-            href="/vehicles"
+            href="/map"
             interactive
             className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <CarFront className="h-6 w-6 text-[var(--accent)]" />
+            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("evCatalogEyebrow")}
+              {t("stationMapEyebrow")}
             </p>
             <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("evCatalogTitle")}
+              {t("stationMapTitle")}
             </h3>
-            <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+            <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
           <Card
             as={Link}
@@ -254,40 +253,6 @@ const HomePage = async () => {
             </h3>
             <p className="muted mt-2 text-sm">
               {t("stationSearchDescription")}
-            </p>
-          </Card>
-          <Card
-            as={Link}
-            href="/map"
-            interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
-            <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("stationMapEyebrow")}
-            </p>
-            <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("stationMapTitle")}
-            </h3>
-            <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
-          </Card>
-          <Card
-            as={Link}
-            href="/connectors"
-            interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <Plug className="h-6 w-6 text-[var(--accent)]" />
-            <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("connectorKnowledgeEyebrow")}
-            </p>
-            <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("connectorKnowledgeTitle")}
-            </h3>
-            <p className="muted mt-2 text-sm">
-              {t("connectorKnowledgeDescription")}
             </p>
           </Card>
           <Card
@@ -310,21 +275,19 @@ const HomePage = async () => {
           </Card>
           <Card
             as={Link}
-            href="/reports"
+            href="/vehicles"
             interactive
             className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <CarFront className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("reportsEyebrow")}
+              {t("evCatalogEyebrow")}
             </p>
-
             <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("reportsTitle")}
+              {t("evCatalogTitle")}
             </h3>
-
-            <p className="muted mt-2 text-sm">{t("reportsDescription")}</p>
+            <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
           </Card>
         </div>
       </section>
