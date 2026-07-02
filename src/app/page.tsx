@@ -12,6 +12,8 @@ import {
   Building2,
   Map,
   TrendingUp,
+  Megaphone,
+  Mail,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -373,6 +375,60 @@ const HomePage = async () => {
           <Button as={Link} href="/contact" variant="primary" size="lg">
             {t("b2bCtaButton")}
           </Button>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="rounded-lg bg-slate-50 px-8 py-12">
+          <div className="mx-auto mb-10 max-w-xl text-center">
+            <h2 className="font-display text-2xl font-bold">
+              {t("forOperatorsTitle")}
+            </h2>
+            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+            <p className="muted mt-3 text-sm">{t("forOperatorsSubtitle")}</p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Card
+              as={Link}
+              href="/reports"
+              interactive
+              className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+              <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("reportsTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">{t("reportsHelper")}</p>
+            </Card>
+            <Card className="relative bg-white opacity-75">
+              <span className="badge absolute right-5 top-5 bg-slate-100 text-slate-500">
+                {tCommon("comingSoonBadge")}
+              </span>
+              <Megaphone className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("promoteStationTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">
+                {t("promoteStationHelper")}
+              </p>
+            </Card>
+            <Card
+              as={Link}
+              href="/contact"
+              interactive
+              className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+              <Mail className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("operatorContactTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">
+                {t("operatorContactHelper")}
+              </p>
+            </Card>
+          </div>
         </div>
       </section>
     </main>

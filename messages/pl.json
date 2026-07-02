@@ -12,7 +12,8 @@
     "noConnectorDetails": "Brak danych o złączach",
     "previous": "Poprzednia",
     "next": "Następna",
-    "pageOf": "Strona {page} z {totalPages}"
+    "pageOf": "Strona {page} z {totalPages}",
+    "comingSoonBadge": "Wkrótce"
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",
@@ -84,6 +85,8 @@
     "reportsHelper": "Dedykowane raporty dla operatorów sieci — zaawansowana analityka",
     "operatorContactTitle": "Kontakt B2B",
     "operatorContactHelper": "Porozmawiaj z naszym zespołem o rozwiązaniach dla Twojej sieci",
+    "promoteStationTitle": "Wypromuj swoją stację",
+    "promoteStationHelper": "Zwiększ widoczność swojej sieci ładowania w naszym katalogu i raportach",
     "evCatalogEyebrow": "Katalog EV",
     "evCatalogTitle": "Przeglądaj modele pojazdów",
     "evCatalogDescription": "Przeszukuj marki i modele, a potem otwórz strony szczegółów z baterią, zasięgiem, ładowaniem, źródłem i świeżością danych.",

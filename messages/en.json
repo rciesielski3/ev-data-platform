@@ -12,7 +12,8 @@
     "noConnectorDetails": "No connector details",
     "previous": "Previous",
     "next": "Next",
-    "pageOf": "Page {page} of {totalPages}"
+    "pageOf": "Page {page} of {totalPages}",
+    "comingSoonBadge": "Coming soon"
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",
@@ -84,6 +85,8 @@
     "reportsHelper": "Dedicated reports for network operators — advanced analytics",
     "operatorContactTitle": "B2B Contact",
     "operatorContactHelper": "Talk to our team about solutions for your network",
+    "promoteStationTitle": "Promote Your Station",
+    "promoteStationHelper": "Increase visibility of your charging network in our directory and reports",
     "evCatalogEyebrow": "EV catalog",
     "evCatalogTitle": "Browse vehicle models",
     "evCatalogDescription": "Search brands and models, then open detail pages for battery, range, charging, source, and freshness.",
