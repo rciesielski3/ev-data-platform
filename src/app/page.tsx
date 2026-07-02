@@ -8,6 +8,10 @@ import {
   MapPinned,
   BarChart3,
   ArrowRight,
+  Layers,
+  Building2,
+  Map,
+  TrendingUp,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -288,6 +292,74 @@ const HomePage = async () => {
               {t("evCatalogTitle")}
             </h3>
             <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+          </Card>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="mx-auto mb-10 max-w-xl text-center">
+          <h2 className="font-display text-2xl font-bold">
+            {t("infrastructureIntelligenceTitle")}
+          </h2>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">
+            {t("infrastructureIntelligenceSubtitle")}
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card
+            as={Link}
+            href="/coverage"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Layers className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("coverageAnalysisTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("coverageAnalysisHelper")}</p>
+          </Card>
+          <Card
+            as={Link}
+            href="/operators"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Building2 className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("operatorComparisonTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">
+              {t("operatorComparisonHelper")}
+            </p>
+          </Card>
+          <Card
+            as={Link}
+            href="/provinces"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Map className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("provinceBreakdownTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("provinceBreakdownHelper")}</p>
+          </Card>
+          <Card
+            as={Link}
+            href="/trends"
+            interactive
+            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <TrendingUp className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("trendsAnalysisTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("trendsAnalysisHelper")}</p>
           </Card>
         </div>
       </section>
