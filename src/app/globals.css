@@ -39,6 +39,31 @@ body {
   }
 }
 
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem;
+    min-height: 120px;
+  }
+  .card h3 {
+    font-size: 1rem;
+  }
+  .card p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .card {
+    min-height: 140px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .card {
+    min-height: 160px;
+  }
+}
+
 a.card:hover,
 button.card:hover,
 .card[data-interactive="true"]:hover {
