@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
-import DetailsSkeleton from "@/components/ui/DetailsSkeleton";
+import { DetailsSkeleton } from "@/components/ui/DetailsSkeleton";
 import { ProvincesDetails } from "@/components/ui/ProvincesDetails";
 import { ProvincesHero } from "@/components/ui/ProvincesHero";
 import Notice from "@/components/ui/Notice";

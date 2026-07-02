@@ -11,7 +11,10 @@ export const MetricCard = ({
   helper,
   index = 0,
 }: MetricCardProps) => (
-  <section className="card stat-card" style={{ animationDelay: `${index * 90}ms` }}>
+  <section
+    className="card stat-card"
+    style={{ "--stat-card-delay": `${index * 90}ms` } as React.CSSProperties}
+  >
     <p className="text-sm font-medium text-slate-500">{label}</p>
     <p className="mt-2 text-3xl font-semibold text-slate-950">
       <span className="stat-card-value">{value}</span>
