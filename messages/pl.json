@@ -96,6 +96,8 @@
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
     "activeFilter": "Aktywny filtr",
     "availableVehicles": "Dostępne pojazdy",
+    "vehiclesCountLabel": "Modele EV",
+    "vehiclesCountHelper": "Całkowita liczba dostępnych modeli pojazdów elektrycznych",
     "allBrandsLabel": "Wszystkie marki",
     "browseByBrand": "Przeglądaj według marki",
     "searchPlaceholder": "Szukaj pojazdów...",
