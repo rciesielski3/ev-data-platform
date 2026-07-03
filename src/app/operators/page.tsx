@@ -209,6 +209,7 @@ export default async function OperatorsPage() {
         <>
           <section className="mb-8 grid gap-4 md:grid-cols-3">
             <MetricCard
+              index={0}
               label={t("operatorsMetricLabel")}
               value={formatInteger(rows.length)}
               helper={t("operatorsMetricHelper", {
@@ -216,6 +217,7 @@ export default async function OperatorsPage() {
               })}
             />
             <MetricCard
+              index={1}
               label={t("connectorCoverageMetricLabel")}
               value={formatInteger(summary.totalConnectors)}
               helper={t("connectorCoverageMetricHelper", {
@@ -223,6 +225,7 @@ export default async function OperatorsPage() {
               })}
             />
             <MetricCard
+              index={2}
               label={t("strongestConnectorMetricLabel")}
               value={formatPower(summary.strongestOperator?.maxPowerKw ?? null) ?? tCommon("unknown")}
               helper={
