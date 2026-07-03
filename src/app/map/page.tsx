@@ -184,7 +184,7 @@ const StationMapPage = async ({
   const params = await searchParams;
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <main className="mx-auto max-w-7xl px-6 py-12">
       <PageHeader
         title={t("title")}
         description={t("description")}

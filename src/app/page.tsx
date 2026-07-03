@@ -401,10 +401,13 @@ const HomePage = async () => {
               </h3>
               <p className="muted mt-2 text-sm">{t("reportsHelper")}</p>
             </Card>
-            <Card className="relative bg-white opacity-75">
-              <span className="badge absolute right-5 top-5 bg-slate-100 text-slate-500">
-                {tCommon("comingSoonBadge")}
-              </span>
+            <Card
+              as={Link}
+              href="/operator-featured"
+              interactive
+              className="group relative bg-white"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
               <Megaphone className="h-6 w-6 text-[var(--accent)]" />
               <h3 className="font-display mt-4 text-lg font-semibold">
                 {t("promoteStationTitle")}
