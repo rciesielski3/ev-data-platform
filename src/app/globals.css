@@ -39,31 +39,6 @@ body {
   }
 }
 
-@media (max-width: 639px) {
-  .card {
-    padding: 1rem;
-    min-height: 120px;
-  }
-  .card h3 {
-    font-size: 1rem;
-  }
-  .card p {
-    font-size: 0.875rem;
-  }
-}
-
-@media (min-width: 640px) {
-  .card {
-    min-height: 140px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .card {
-    min-height: 160px;
-  }
-}
-
 a.card:hover,
 button.card:hover,
 .card[data-interactive="true"]:hover {
@@ -105,16 +80,12 @@ button.card:active,
   color: var(--muted);
 }
 
-@layer components {
-  .badge {
-    display: inline-block;
-    border-radius: 999px;
-    padding: 0.15rem 0.65rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: var(--accent-glow);
-    color: var(--foreground);
-  }
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .hero-surface {
