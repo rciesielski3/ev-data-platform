@@ -39,7 +39,7 @@ body {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .card {
     padding: 1rem;
     min-height: 120px;
@@ -52,13 +52,13 @@ body {
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) {
+@media (min-width: 640px) {
   .card {
     min-height: 140px;
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .card {
     min-height: 160px;
   }

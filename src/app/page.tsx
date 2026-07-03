@@ -231,7 +231,7 @@ const HomePage = async () => {
             as={Link}
             href="/map"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <MapPinned className="h-6 w-6 text-[var(--accent)]" />
@@ -247,7 +247,7 @@ const HomePage = async () => {
             as={Link}
             href="/stations"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
@@ -265,7 +265,7 @@ const HomePage = async () => {
             as={Link}
             href="/insights"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
@@ -283,7 +283,7 @@ const HomePage = async () => {
             as={Link}
             href="/vehicles"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <CarFront className="h-6 w-6 text-[var(--accent)]" />
@@ -313,7 +313,7 @@ const HomePage = async () => {
             as={Link}
             href="/coverage"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Layers className="h-6 w-6 text-[var(--accent)]" />
@@ -326,7 +326,7 @@ const HomePage = async () => {
             as={Link}
             href="/operators"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Building2 className="h-6 w-6 text-[var(--accent)]" />
@@ -341,7 +341,7 @@ const HomePage = async () => {
             as={Link}
             href="/provinces"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Map className="h-6 w-6 text-[var(--accent)]" />
@@ -354,7 +354,7 @@ const HomePage = async () => {
             as={Link}
             href="/trends"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <TrendingUp className="h-6 w-6 text-[var(--accent)]" />
@@ -392,7 +392,7 @@ const HomePage = async () => {
               as={Link}
               href="/reports"
               interactive
-              className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="group relative bg-white"
             >
               <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
               <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
@@ -417,7 +417,7 @@ const HomePage = async () => {
               as={Link}
               href="/contact"
               interactive
-              className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="group relative bg-white"
             >
               <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
               <Mail className="h-6 w-6 text-[var(--accent)]" />
