@@ -715,7 +715,15 @@
     "totalHpcStationCountLabel": "Stacje HPC",
     "totalConnectorCountLabel": "Złącza łącznie",
     "emptyTitle": "Brak jeszcze danych zrzutów",
-    "emptyBody": "Codzienne zrzuty danych są zapisywane automatycznie po każdym imporcie EIPA. Sprawdź ponownie po zakończeniu kolejnego importu."
+    "emptyBody": "Codzienne zrzuty danych są zapisywane automatycznie po każdym imporcie EIPA. Sprawdź ponownie po zakończeniu kolejnego importu.",
+    "infrastructureTitle": "Metryki infrastruktury",
+    "infrastructureDescription": "Monitoruj wzrost infrastruktury ładowania w rzeczywistym czasie z aktualnymi metrykami.",
+    "stationsMetricLabel": "Stacje ładowania",
+    "stationsMetricHelper": "Łączna liczba stacji ładowania w sieci",
+    "hpcStationsMetricLabel": "Stacje HPC",
+    "hpcStationsMetricHelper": "Stacje z ładowaniem 150 kW+",
+    "connectorsMetricLabel": "Złącza łącznie",
+    "connectorsMetricHelper": "Wszystkie dostępne złącza ładowania"
   },
   "trendsError": {
     "title": "Nie udało się wczytać trendów",
