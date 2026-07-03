@@ -9,6 +9,7 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { filterInputClassName } from "@/components/ui/FilterField";
+import { MetricCard } from "@/features/charging/metric-card";
 import { buildChargingCostEstimate } from "@/features/ev/charging-cost";
 import {
   buildBrandMark,
@@ -24,7 +25,6 @@ import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { ArrowRightIcon } from "lucide-react";
-import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 3600;
 
@@ -203,14 +203,16 @@ export default async function VehiclesPage({
         }
       />
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        <Card className="bg-slate-50 text-center shadow-xl">
-          <p className="text-3xl font-bold text-[var(--accent)]">
-            <AnimatedCount end={vehicleCount} />
-          </p>
-          <p className="muted text-sm">{t("availableVehicles")}</p>
-        </Card>
+      <section className="mb-8">
+        <MetricCard
+          index={0}
+          label={t("vehiclesCountLabel")}
+          value={vehicleCount.toString()}
+          helper={t("vehiclesCountHelper")}
+        />
+      </section>
 
+      <div className="mb-8 grid gap-4 sm:grid-cols-2">
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
