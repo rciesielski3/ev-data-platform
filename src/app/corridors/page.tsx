@@ -155,16 +155,19 @@ export default async function CorridorsPage() {
         <>
           <section className="mb-8 grid gap-4 md:grid-cols-3">
             <MetricCard
+              index={0}
               label={t("corridorsMetricLabel")}
               value={formatInteger(analyses.length)}
               helper={t("corridorsMetricHelper")}
             />
             <MetricCard
+              index={1}
               label={t("segmentsMetricLabel")}
               value={formatInteger(totalSegments)}
               helper={t("segmentsMetricHelper")}
             />
             <MetricCard
+              index={2}
               label={t("gapsMetricLabel")}
               value={formatInteger(totalGaps)}
               helper={t("gapsMetricHelper")}
