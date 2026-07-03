@@ -713,7 +713,15 @@
     "totalHpcStationCountLabel": "HPC stations",
     "totalConnectorCountLabel": "Total connectors",
     "emptyTitle": "No snapshot data yet",
-    "emptyBody": "Daily snapshots are captured automatically after each EIPA import. Check back after the next import completes."
+    "emptyBody": "Daily snapshots are captured automatically after each EIPA import. Check back after the next import completes.",
+    "infrastructureTitle": "Infrastructure Metrics",
+    "infrastructureDescription": "Monitor charging infrastructure growth over time with real-time metrics.",
+    "stationsMetricLabel": "Charging Stations",
+    "stationsMetricHelper": "Total charging stations in the network",
+    "hpcStationsMetricLabel": "HPC Stations",
+    "hpcStationsMetricHelper": "Stations with 150 kW+ chargers",
+    "connectorsMetricLabel": "Total Connectors",
+    "connectorsMetricHelper": "All charging connectors available"
   },
   "trendsError": {
     "title": "Trends could not load",
