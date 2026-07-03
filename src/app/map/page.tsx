@@ -135,7 +135,7 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
       />
 
       <Card>
-        <div className="mb-4 grid gap-4 sm:grid-cols-3">
+        <div className="mb-6 grid gap-4 sm:grid-cols-3">
           <Card className="text-center bg-slate-50 shadow-xl">
             <p className="text-3xl font-bold text-[var(--accent)]">
               <AnimatedCount end={data.total} />
@@ -184,7 +184,7 @@ const StationMapPage = async ({
   const params = await searchParams;
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-4">
+    <main className="mx-auto max-w-7xl px-6 py-10">
       <PageHeader
         title={t("title")}
         description={t("description")}
