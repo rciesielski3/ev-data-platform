@@ -135,7 +135,7 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
       />
 
       <Card>
-        <div className="mb-6 grid gap-4 sm:grid-cols-3">
+        <div className="mb-8 grid gap-4 sm:grid-cols-3">
           <Card className="text-center bg-slate-50 shadow-xl">
             <p className="text-3xl font-bold text-[var(--accent)]">
               <AnimatedCount end={data.total} />
