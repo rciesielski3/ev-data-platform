@@ -161,7 +161,7 @@ const HomePage = async () => {
       />
 
       {"error" in status ? (
-        <div className="mx-auto w-full max-w-5xl px-6 pb-16">
+        <div className="mx-auto w-full max-w-6xl px-6 pb-16">
           <Notice title={tCommon("setupRequiredTitle")} tone="warning">
             <p>{status.error}</p>
           </Notice>
@@ -191,7 +191,7 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="section-accent mx-auto max-w-5xl px-6 py-16">
+      <section className="section-accent mx-auto max-w-6xl px-6 py-16">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
@@ -218,7 +218,7 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
+      <section className="mx-auto max-w-6xl px-6 pb-16 pt-6">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("exploreTitle")}
