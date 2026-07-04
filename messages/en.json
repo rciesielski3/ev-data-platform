@@ -114,6 +114,8 @@
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
     "activeFilter": "Active filter",
     "availableVehicles": "Available vehicles",
+    "vehiclesCountLabel": "EV Models",
+    "vehiclesCountHelper": "Total electric vehicle models available",
     "allBrandsLabel": "All brands",
     "browseByBrand": "Browse by brand",
     "searchPlaceholder": "Search vehicles...",
