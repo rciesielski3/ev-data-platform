@@ -212,7 +212,7 @@ export default async function VehiclesPage({
         />
       </section>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
+      <div className="mb-8">
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
