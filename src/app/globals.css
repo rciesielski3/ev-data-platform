@@ -311,14 +311,14 @@ button.card:active,
     transform: translateY(10px);
   }
 
-[style*="--share-bar-width"] {
-  width: var(--share-bar-width);
-}
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+[style*="--share-bar-width"] {
+  width: var(--share-bar-width);
 }
 
 @media (prefers-reduced-motion: reduce) {
