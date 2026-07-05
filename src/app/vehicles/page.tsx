@@ -204,14 +204,14 @@ export default async function VehiclesPage({
       />
 
       <section className="mb-8 grid gap-4 md:grid-cols-2">
-        <Card className="text-center shadow-xl" style={{ backgroundColor: "rgb(248, 250, 252)" }}>
+        <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             <AnimatedCount end={vehicleCount} />
           </p>
           <p className="muted text-sm">{t("availableVehicles")}</p>
         </Card>
 
-        <Card className="text-center shadow-xl" style={{ backgroundColor: "rgb(248, 250, 252)" }}>
+        <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
               ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
