@@ -204,12 +204,11 @@ export default async function VehiclesPage({
       />
 
       <section className="mb-8 grid gap-4 md:grid-cols-2">
-        <Card className="text-center bg-white border border-slate-100">
-          <p className="text-sm font-medium text-slate-500">{t("vehiclesCountLabel")}</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-950">
+        <Card className="text-center bg-slate-50 shadow-xl">
+          <p className="text-3xl font-bold text-[var(--accent)]">
             <AnimatedCount end={vehicleCount} />
           </p>
-          <p className="muted mt-1 text-sm">{t("vehiclesCountHelper")}</p>
+          <p className="muted text-sm">{t("vehiclesCountHelper")}</p>
         </Card>
 
         <Card className="text-center bg-slate-50 shadow-xl">
