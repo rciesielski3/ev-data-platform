@@ -281,9 +281,8 @@ export default async function VehiclesPage({
           <p className="muted mt-2">{t("noResultsBody")}</p>
         </Notice>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <div className="grid gap-6 sm:grid-cols-2">
-            {data.vehicles.map((vehicle) => {
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {data.vehicles.map((vehicle) => {
             const brandMark = buildBrandMark(vehicle.brand.name);
             const chargingCost = buildChargingCostEstimate(
               vehicle.specs?.batteryCapacityKwhNet ?? null,
@@ -376,16 +375,6 @@ export default async function VehiclesPage({
               </Card>
             );
           })}
-          </div>
-
-          <Card className="h-fit text-center bg-slate-50 shadow-xl">
-            <p className="text-3xl font-bold text-[var(--accent)]">
-              {filters.brand
-                ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
-                : t("allBrandsLabel")}
-            </p>
-            <p className="muted text-sm">{t("activeFilter")}</p>
-          </Card>
         </div>
       )}
 
