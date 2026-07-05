@@ -203,13 +203,22 @@ export default async function VehiclesPage({
         }
       />
 
-      <section className="mb-8 grid gap-4 md:grid-cols-3">
+      <section className="mb-8 grid gap-4 md:grid-cols-2">
+        <Card className="card stat-card" style={{ "--stat-card-delay": "0ms" } as React.CSSProperties}>
+          <p className="text-sm font-medium text-slate-500">{t("vehiclesCountLabel")}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">
+            <span className="stat-card-value"><AnimatedCount end={vehicleCount} /></span>
+          </p>
+          <p className="muted mt-1 text-sm">{t("vehiclesCountHelper")}</p>
+        </Card>
+
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
-            <AnimatedCount end={vehicleCount} />
+            {filters.brand
+              ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
+              : t("allBrandsLabel")}
           </p>
-          <p className="muted text-sm">{t("vehiclesCountLabel")}</p>
-          <p className="muted mt-1 text-xs">{t("vehiclesCountHelper")}</p>
+          <p className="muted text-sm">{t("activeFilter")}</p>
         </Card>
       </section>
 
