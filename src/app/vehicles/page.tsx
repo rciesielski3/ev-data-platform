@@ -9,7 +9,7 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { filterInputClassName } from "@/components/ui/FilterField";
-import { MetricCard } from "@/features/charging/metric-card";
+import AnimatedCount from "@/components/ui/CountUp";
 import { buildChargingCostEstimate } from "@/features/ev/charging-cost";
 import {
   buildBrandMark,
@@ -203,16 +203,15 @@ export default async function VehiclesPage({
         }
       />
 
-      <section className="mb-8">
-        <MetricCard
-          index={0}
-          label={t("vehiclesCountLabel")}
-          value={vehicleCount.toString()}
-          helper={t("vehiclesCountHelper")}
-        />
-      </section>
+      <section className="mb-8 grid gap-4 md:grid-cols-2">
+        <Card className="text-center bg-white border border-slate-100">
+          <p className="text-sm font-medium text-slate-500">{t("vehiclesCountLabel")}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">
+            <AnimatedCount end={vehicleCount} />
+          </p>
+          <p className="muted mt-1 text-sm">{t("vehiclesCountHelper")}</p>
+        </Card>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
@@ -221,7 +220,7 @@ export default async function VehiclesPage({
           </p>
           <p className="muted text-sm">{t("activeFilter")}</p>
         </Card>
-      </div>
+      </section>
 
       <div className="mb-3">
         <h2 className="text-sm font-semibold text-slate-700">
