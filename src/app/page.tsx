@@ -6,9 +6,14 @@ import {
   CarFront,
   Search,
   MapPinned,
-  Plug,
   BarChart3,
   ArrowRight,
+  Layers,
+  Building2,
+  Map,
+  TrendingUp,
+  Megaphone,
+  Mail,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -156,7 +161,7 @@ const HomePage = async () => {
       />
 
       {"error" in status ? (
-        <div className="mx-auto w-full max-w-5xl px-6 pb-16">
+        <div className="mx-auto w-full max-w-6xl px-6 pb-16">
           <Notice title={tCommon("setupRequiredTitle")} tone="warning">
             <p>{status.error}</p>
           </Notice>
@@ -186,7 +191,7 @@ const HomePage = async () => {
         />
       )}
 
-      <section className="section-accent mx-auto max-w-5xl px-6 py-16">
+      <section className="section-accent mx-auto max-w-6xl px-6 py-16">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("valuePropsTitle")}
@@ -213,7 +218,7 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 pb-16 pt-6">
+      <section className="mx-auto max-w-6xl px-6 pb-16 pt-6">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
             {t("exploreTitle")}
@@ -224,25 +229,25 @@ const HomePage = async () => {
         <div className="grid gap-4 md:grid-cols-2">
           <Card
             as={Link}
-            href="/vehicles"
+            href="/map"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <CarFront className="h-6 w-6 text-[var(--accent)]" />
+            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("evCatalogEyebrow")}
+              {t("stationMapEyebrow")}
             </p>
             <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("evCatalogTitle")}
+              {t("stationMapTitle")}
             </h3>
-            <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+            <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
           </Card>
           <Card
             as={Link}
             href="/stations"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <Search className="h-6 w-6 text-[var(--accent)]" />
@@ -258,43 +263,9 @@ const HomePage = async () => {
           </Card>
           <Card
             as={Link}
-            href="/map"
-            interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <MapPinned className="h-6 w-6 text-[var(--accent)]" />
-            <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("stationMapEyebrow")}
-            </p>
-            <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("stationMapTitle")}
-            </h3>
-            <p className="muted mt-2 text-sm">{t("stationMapDescription")}</p>
-          </Card>
-          <Card
-            as={Link}
-            href="/connectors"
-            interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <Plug className="h-6 w-6 text-[var(--accent)]" />
-            <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("connectorKnowledgeEyebrow")}
-            </p>
-            <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("connectorKnowledgeTitle")}
-            </h3>
-            <p className="muted mt-2 text-sm">
-              {t("connectorKnowledgeDescription")}
-            </p>
-          </Card>
-          <Card
-            as={Link}
             href="/insights"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
             <BarChart3 className="h-6 w-6 text-[var(--accent)]" />
@@ -310,21 +281,87 @@ const HomePage = async () => {
           </Card>
           <Card
             as={Link}
-            href="/reports"
+            href="/vehicles"
             interactive
-            className="group relative bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="group relative bg-white"
           >
             <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+            <CarFront className="h-6 w-6 text-[var(--accent)]" />
             <p className="mt-4 text-sm font-medium text-emerald-700">
-              {t("reportsEyebrow")}
+              {t("evCatalogEyebrow")}
             </p>
-
             <h3 className="font-display mt-2 text-xl font-semibold">
-              {t("reportsTitle")}
+              {t("evCatalogTitle")}
             </h3>
+            <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+          </Card>
+        </div>
+      </section>
 
-            <p className="muted mt-2 text-sm">{t("reportsDescription")}</p>
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="mx-auto mb-10 max-w-xl text-center">
+          <h2 className="font-display text-2xl font-bold">
+            {t("infrastructureIntelligenceTitle")}
+          </h2>
+          <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+          <p className="muted mt-3 text-sm">
+            {t("infrastructureIntelligenceSubtitle")}
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card
+            as={Link}
+            href="/coverage"
+            interactive
+            className="group relative bg-white"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Layers className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("coverageAnalysisTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("coverageAnalysisHelper")}</p>
+          </Card>
+          <Card
+            as={Link}
+            href="/operators"
+            interactive
+            className="group relative bg-white"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Building2 className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("operatorComparisonTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">
+              {t("operatorComparisonHelper")}
+            </p>
+          </Card>
+          <Card
+            as={Link}
+            href="/provinces"
+            interactive
+            className="group relative bg-white"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <Map className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("provinceBreakdownTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("provinceBreakdownHelper")}</p>
+          </Card>
+          <Card
+            as={Link}
+            href="/trends"
+            interactive
+            className="group relative bg-white"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <TrendingUp className="h-6 w-6 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-lg font-semibold">
+              {t("trendsAnalysisTitle")}
+            </h3>
+            <p className="muted mt-2 text-sm">{t("trendsAnalysisHelper")}</p>
           </Card>
         </div>
       </section>
@@ -338,6 +375,63 @@ const HomePage = async () => {
           <Button as={Link} href="/contact" variant="primary" size="lg">
             {t("b2bCtaButton")}
           </Button>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="rounded-lg bg-slate-50 px-8 py-12">
+          <div className="mx-auto mb-10 max-w-xl text-center">
+            <h2 className="font-display text-2xl font-bold">
+              {t("forOperatorsTitle")}
+            </h2>
+            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+            <p className="muted mt-3 text-sm">{t("forOperatorsSubtitle")}</p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Card
+              as={Link}
+              href="/reports"
+              interactive
+              className="group relative bg-white"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+              <FileBarChart className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("reportsTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">{t("reportsHelper")}</p>
+            </Card>
+            <Card
+              as={Link}
+              href="/operator-featured"
+              interactive
+              className="group relative bg-white"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+              <Megaphone className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("promoteStationTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">
+                {t("promoteStationHelper")}
+              </p>
+            </Card>
+            <Card
+              as={Link}
+              href="/contact"
+              interactive
+              className="group relative bg-white"
+            >
+              <ArrowRight className="absolute right-5 top-5 h-4 w-4 text-[var(--muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+              <Mail className="h-6 w-6 text-[var(--accent)]" />
+              <h3 className="font-display mt-4 text-lg font-semibold">
+                {t("operatorContactTitle")}
+              </h3>
+              <p className="muted mt-2 text-sm">
+                {t("operatorContactHelper")}
+              </p>
+            </Card>
+          </div>
         </div>
       </section>
     </main>

@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
+import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
+import { TrendsHero } from "@/components/ui/TrendsHero";
 import { buildTrendPoints } from "@/features/trends/trend-series";
+import { prisma } from "@/lib/db/prisma";
 import { getSnapshotsInRange } from "@/lib/snapshots/get-snapshots";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
 import { toDailySnapshotDto } from "@/lib/snapshots/snapshot-dto";
@@ -30,6 +33,24 @@ const getTrendPointsForRange = async (rangeDays: number) => {
   return buildTrendPoints(snapshots.map(toDailySnapshotDto));
 };
 
+const getTrendMetrics = async () => {
+  const [totalStations, totalHpcStations, totalConnectors] = await Promise.all([
+    prisma.chargingStation.count(),
+    prisma.chargingStation.count({
+      where: {
+        connectors: {
+          some: {
+            powerKw: { gte: 150 },
+          },
+        },
+      },
+    }),
+    prisma.chargingConnector.count(),
+  ]);
+
+  return { totalStations, totalHpcStations, totalConnectors };
+};
+
 export default async function TrendsPage({
   searchParams,
 }: {
@@ -52,6 +73,7 @@ export default async function TrendsPage({
   }
 
   const isEmpty = points !== null && points.length === 0;
+  const metrics = await getTrendMetrics();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -77,38 +99,51 @@ export default async function TrendsPage({
           <p className="muted mx-auto mt-2 max-w-2xl">{t("emptyBody")}</p>
         </Notice>
       ) : (
-        <section>
-          <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">{t("chartTitle")}</h2>
-              <p className="muted mt-1 text-sm">{t("chartSubtitle")}</p>
+        <>
+          <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
+            <h2 className="mb-2 text-lg font-medium">{t("infrastructureTitle")}</h2>
+            <p>{t("infrastructureDescription")}</p>
+          </Card>
+
+          <TrendsHero
+            totalStations={metrics.totalStations}
+            totalHpcStations={metrics.totalHpcStations}
+            totalConnectors={metrics.totalConnectors}
+          />
+
+          <section>
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold">{t("chartTitle")}</h2>
+                <p className="muted mt-1 text-sm">{t("chartSubtitle")}</p>
+              </div>
+              <div className="flex gap-2">
+                <Link
+                  href="/trends?range=30"
+                  className={`badge ${activeRange === "30" ? "bg-emerald-600 text-white" : ""}`}
+                >
+                  {t("range30d")}
+                </Link>
+                <Link
+                  href="/trends?range=90"
+                  className={`badge ${activeRange === "90" ? "bg-emerald-600 text-white" : ""}`}
+                >
+                  {t("range90d")}
+                </Link>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Link
-                href="/trends?range=30"
-                className={`badge ${activeRange === "30" ? "bg-emerald-600 text-white" : ""}`}
-              >
-                {t("range30d")}
-              </Link>
-              <Link
-                href="/trends?range=90"
-                className={`badge ${activeRange === "90" ? "bg-emerald-600 text-white" : ""}`}
-              >
-                {t("range90d")}
-              </Link>
+            <div className="card">
+              <TrendsChartClient
+                points={points}
+                labels={{
+                  totalStationCount: t("totalStationCountLabel"),
+                  totalHpcStationCount: t("totalHpcStationCountLabel"),
+                  totalConnectorCount: t("totalConnectorCountLabel"),
+                }}
+              />
             </div>
-          </div>
-          <div className="card">
-            <TrendsChartClient
-              points={points}
-              labels={{
-                totalStationCount: t("totalStationCountLabel"),
-                totalHpcStationCount: t("totalHpcStationCountLabel"),
-                totalConnectorCount: t("totalConnectorCountLabel"),
-              }}
-            />
-          </div>
-        </section>
+          </section>
+        </>
       )}
     </main>
   );
