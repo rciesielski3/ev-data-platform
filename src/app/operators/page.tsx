@@ -164,8 +164,11 @@ const OperatorTableSkeleton = () => (
   </Card>
 );
 
-const OperatorTableSection = async () => {
-  const rows = await getOperatorIntelligenceRows();
+const OperatorTableSection = async ({
+  rows,
+}: {
+  rows: OperatorIntelligenceRow[];
+}) => {
   const t = await getTranslations("operators");
   const tCommon = await getTranslations("common");
 
@@ -335,7 +338,7 @@ export default async function OperatorsPage() {
             </aside>
 
             <Suspense fallback={<OperatorTableSkeleton />}>
-              <OperatorTableSection />
+              <OperatorTableSection rows={rows} />
             </Suspense>
           </section>
         </>
