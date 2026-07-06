@@ -214,7 +214,12 @@ export default async function VehiclesPage({
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
-              ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
+              ? (topBrands.find((b) => b.slug === filters.brand)?.name ??
+                  ("error" in data
+                    ? "—"
+                    : data.vehicles.length > 0
+                      ? data.vehicles[0]?.brand.name
+                      : "—") ?? "—")
               : t("allBrandsLabel")}
           </p>
           <p className="muted text-sm">{t("activeFilter")}</p>
