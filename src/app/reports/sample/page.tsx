@@ -329,17 +329,17 @@ export default async function SampleReportPage() {
       <section className="mb-8 grid gap-4 md:grid-cols-4 print:break-inside-avoid">
         <MetricCard
           label={t("headlineStationsLabel")}
-          value={formatInteger(totalStations)}
+          value={totalStations}
           helper={t("headlineStationsHelper")}
         />
         <MetricCard
           label={t("headlineConnectorsLabel")}
-          value={formatInteger(totalConnectors)}
+          value={totalConnectors}
           helper={t("headlineConnectorsHelper")}
         />
         <MetricCard
           label={t("headlineOperatorsLabel")}
-          value={formatInteger(totalOperators)}
+          value={totalOperators}
           helper={t("headlineOperatorsHelper")}
         />
         <MetricCard
