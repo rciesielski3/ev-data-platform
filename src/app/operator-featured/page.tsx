@@ -4,8 +4,8 @@ import { getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import AnimatedCount from "@/components/ui/CountUp";
 import { prisma } from "@/lib/db/prisma";
-import { formatDisplayNumber } from "@/lib/display/data-display";
 
 export const revalidate = 3600;
 
@@ -51,14 +51,25 @@ export default async function OperatorFeaturedPage() {
             </p>
 
             {stats && (
-              <div className="mt-6 flex flex-col gap-2 text-sm text-slate-700">
-                <p className="font-medium">
-                  {t("heroStats", {
-                    stations: formatDisplayNumber(stats.stationCount),
-                    operators: formatDisplayNumber(stats.operatorCount),
-                    provinces: stats.provinceCount,
-                  })}
-                </p>
+              <div className="mt-8 grid w-full max-w-2xl gap-4 sm:grid-cols-3">
+                <Card className="text-center bg-slate-50 shadow-xl">
+                  <p className="text-3xl font-bold text-[var(--accent)]">
+                    <AnimatedCount end={stats.stationCount} />
+                  </p>
+                  <p className="muted text-sm">{t("heroStatStations")}</p>
+                </Card>
+                <Card className="text-center bg-slate-50 shadow-xl">
+                  <p className="text-3xl font-bold text-[var(--accent)]">
+                    <AnimatedCount end={stats.operatorCount} />
+                  </p>
+                  <p className="muted text-sm">{t("heroStatOperators")}</p>
+                </Card>
+                <Card className="text-center bg-slate-50 shadow-xl">
+                  <p className="text-3xl font-bold text-[var(--accent)]">
+                    <AnimatedCount end={stats.provinceCount} />
+                  </p>
+                  <p className="muted text-sm">{t("heroStatProvinces")}</p>
+                </Card>
               </div>
             )}
 
@@ -87,8 +98,8 @@ export default async function OperatorFeaturedPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {/* Visibility */}
           <Card className="flex flex-col gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100">
-              <Check className="h-6 w-6 text-emerald-700" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("visibilityTitle")}
@@ -98,8 +109,8 @@ export default async function OperatorFeaturedPage() {
 
           {/* Trust */}
           <Card className="flex flex-col gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100">
-              <Check className="h-6 w-6 text-emerald-700" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("trustTitle")}
@@ -109,8 +120,8 @@ export default async function OperatorFeaturedPage() {
 
           {/* Simple */}
           <Card className="flex flex-col gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100">
-              <Check className="h-6 w-6 text-emerald-700" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("simpleTitle")}
@@ -128,11 +139,11 @@ export default async function OperatorFeaturedPage() {
           </h2>
         </div>
 
-        <Card className="mx-auto max-w-md border-2 border-emerald-200">
+        <Card className="mx-auto max-w-md border-2 border-[var(--accent-soft-bg)]">
           <div className="flex flex-col gap-6">
             <div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-slate-900">
+                <div className="text-4xl font-bold text-[var(--accent)]">
                   290 <span className="text-lg text-slate-600">zł</span>
                 </div>
                 <p className="mt-2 text-sm text-slate-600">{t("pricingPeriod")}</p>
@@ -141,15 +152,15 @@ export default async function OperatorFeaturedPage() {
 
             <div className="space-y-3 border-t pt-6">
               <div className="flex items-start gap-3">
-                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" />
+                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--accent)]" />
                 <span className="text-slate-700">{t("pricingFeature1")}</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" />
+                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--accent)]" />
                 <span className="text-slate-700">{t("pricingFeature2")}</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" />
+                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--accent)]" />
                 <span className="text-slate-700">{t("pricingFeature3")}</span>
               </div>
             </div>
@@ -168,12 +179,12 @@ export default async function OperatorFeaturedPage() {
 
       {/* FAQ or additional info */}
       <section className="mx-auto w-full max-w-5xl px-6 py-16">
-        <div className="rounded-lg bg-emerald-50 p-8">
+        <Card className="bg-[var(--accent-soft-bg)]">
           <h2 className="text-xl font-bold text-slate-900">
             {t("nextStepsTitle")}
           </h2>
           <p className="mt-3 text-slate-700">{t("nextStepsBody")}</p>
-        </div>
+        </Card>
       </section>
     </main>
   );
