@@ -116,12 +116,12 @@ export default async function StateOfChargingPage() {
       <section className="mb-8 grid gap-4 sm:grid-cols-4">
         <MetricCard
           label={t("totalStationsLabel")}
-          value={formatInteger(data.totals.stationCount)}
+          value={data.totals.stationCount}
           helper={t("totalStationsHelper")}
         />
         <MetricCard
           label={t("totalConnectorsLabel")}
-          value={formatInteger(data.totals.connectorCount)}
+          value={data.totals.connectorCount}
           helper={t("totalConnectorsHelper")}
         />
         <MetricCard
@@ -131,7 +131,7 @@ export default async function StateOfChargingPage() {
         />
         <MetricCard
           label={t("provinceCoverageLabel")}
-          value={formatInteger(data.totals.provinceCount)}
+          value={data.totals.provinceCount}
           helper={t("provinceCoverageHelper")}
         />
       </section>

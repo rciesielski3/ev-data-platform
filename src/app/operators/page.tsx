@@ -211,7 +211,7 @@ export default async function OperatorsPage() {
             <MetricCard
               index={0}
               label={t("operatorsMetricLabel")}
-              value={formatInteger(rows.length)}
+              value={rows.length}
               helper={t("operatorsMetricHelper", {
                 count: formatInteger(summary.totalStations),
               })}
@@ -219,7 +219,7 @@ export default async function OperatorsPage() {
             <MetricCard
               index={1}
               label={t("connectorCoverageMetricLabel")}
-              value={formatInteger(summary.totalConnectors)}
+              value={summary.totalConnectors}
               helper={t("connectorCoverageMetricHelper", {
                 count: formatInteger(summary.knownPowerConnectors),
               })}

@@ -20,19 +20,19 @@ export const TrendsHero = async ({
       <MetricCard
         index={0}
         label={t("stationsMetricLabel")}
-        value={totalStations.toString()}
+        value={totalStations}
         helper={t("stationsMetricHelper")}
       />
       <MetricCard
         index={1}
         label={t("hpcStationsMetricLabel")}
-        value={totalHpcStations.toString()}
+        value={totalHpcStations}
         helper={t("hpcStationsMetricHelper")}
       />
       <MetricCard
         index={2}
         label={t("connectorsMetricLabel")}
-        value={totalConnectors.toString()}
+        value={totalConnectors}
         helper={t("connectorsMetricHelper")}
       />
     </section>

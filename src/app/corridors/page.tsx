@@ -157,19 +157,19 @@ export default async function CorridorsPage() {
             <MetricCard
               index={0}
               label={t("corridorsMetricLabel")}
-              value={formatInteger(analyses.length)}
+              value={analyses.length}
               helper={t("corridorsMetricHelper")}
             />
             <MetricCard
               index={1}
               label={t("segmentsMetricLabel")}
-              value={formatInteger(totalSegments)}
+              value={totalSegments}
               helper={t("segmentsMetricHelper")}
             />
             <MetricCard
               index={2}
               label={t("gapsMetricLabel")}
-              value={formatInteger(totalGaps)}
+              value={totalGaps}
               helper={t("gapsMetricHelper")}
             />
           </section>
