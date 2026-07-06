@@ -5,9 +5,13 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
-import { buildCoverageAnalysisFromRows } from "@/features/charging/coverage-analysis";
+import {
+  buildCoverageAnalysisFromRows,
+  type CoverageAnalysis,
+} from "@/features/charging/coverage-analysis";
 import { formatInteger, formatPercent } from "@/features/charging/insights";
 import { MetricCard } from "@/features/charging/metric-card";
+import type { ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
 import {
   getOperatorIntelligenceRows,
   getProvinceIntelligenceRows,
@@ -31,12 +35,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-const getMetricTotals = async () => {
-  const provinceRows = await getProvinceIntelligenceRows();
-
-  return buildCoverageAnalysisFromRows(provinceRows, PER_CAPITA_LIST_SIZE).totals;
-};
-
 const SkeletonRow = () => (
   <div className="h-5 animate-pulse rounded bg-slate-100" />
 );
@@ -50,21 +48,6 @@ const TopOperatorsSkeleton = () => (
       ))}
     </div>
   </Card>
-);
-
-const ProvinceCoverageSkeleton = () => (
-  <section className="mb-8 grid gap-4 lg:grid-cols-2">
-    {["leaders", "laggards"].map((column) => (
-      <Card key={column} as="article">
-        <div className="h-6 w-40 animate-pulse rounded bg-slate-200" />
-        <div className="mt-4 space-y-3">
-          {Array.from({ length: PER_CAPITA_LIST_SIZE }, (_, index) => (
-            <SkeletonRow key={`${column}-skeleton-${index}`} />
-          ))}
-        </div>
-      </Card>
-    ))}
-  </section>
 );
 
 const TopOperatorsSection = async () => {
@@ -112,15 +95,13 @@ const TopOperatorsSection = async () => {
   );
 };
 
-const ProvinceCoverageSection = async () => {
+const ProvinceCoverageSection = async ({
+  coverage,
+}: {
+  coverage: CoverageAnalysis;
+}) => {
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
-  const provinceRows = await getProvinceIntelligenceRows();
-
-  const coverage = buildCoverageAnalysisFromRows(
-    provinceRows,
-    PER_CAPITA_LIST_SIZE,
-  );
 
   const perCapitaLeaders = [...coverage.provinceRows]
     .filter((row) => row.stationsPer100k !== null)
@@ -211,25 +192,31 @@ export default async function StateOfChargingPage() {
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
 
-  let totals: Awaited<ReturnType<typeof getMetricTotals>> | { error: string };
+  let provinceRows: ProvinceIntelligenceRow[] | { error: string };
 
   try {
-    totals = await getMetricTotals();
+    provinceRows = await getProvinceIntelligenceRows();
   } catch (error) {
     console.error("Failed to fetch state of charging snapshot data:", error);
-    totals = { error: t("setupRequiredMessage") };
+    provinceRows = { error: t("setupRequiredMessage") };
   }
 
-  if ("error" in totals) {
+  if ("error" in provinceRows) {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12">
         <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{totals.error}</p>
+          <p>{provinceRows.error}</p>
         </Notice>
       </main>
     );
   }
+
+  const coverage = buildCoverageAnalysisFromRows(
+    provinceRows,
+    PER_CAPITA_LIST_SIZE,
+  );
+  const { totals } = coverage;
 
   const hpcShare = formatPercent(totals.hpcStationCount, totals.stationCount);
 
@@ -268,9 +255,7 @@ export default async function StateOfChargingPage() {
         <TopOperatorsSection />
       </Suspense>
 
-      <Suspense fallback={<ProvinceCoverageSkeleton />}>
-        <ProvinceCoverageSection />
-      </Suspense>
+      <ProvinceCoverageSection coverage={coverage} />
 
       <p className="muted text-sm">{t("populationSourceNote")}</p>
     </main>
