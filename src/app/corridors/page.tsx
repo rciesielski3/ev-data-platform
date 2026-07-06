@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
@@ -101,6 +103,22 @@ const CorridorCard = ({
   </Card>
 );
 
+const CorridorCardsSkeleton = () => (
+  <div className="space-y-6" aria-hidden="true">
+    {[0, 1, 2].map((index) => (
+      <Card key={index} as="article" className="mb-6 animate-pulse">
+        <div className="mb-4 h-6 w-48 rounded bg-slate-200" />
+        <div className="mb-4 h-4 w-64 rounded bg-slate-100" />
+        <div className="space-y-2">
+          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-10 rounded bg-slate-100" />
+        </div>
+      </Card>
+    ))}
+  </div>
+);
+
 export default async function CorridorsPage() {
   const t = await getTranslations("corridors");
   const tCommon = await getTranslations("common");
@@ -174,19 +192,21 @@ export default async function CorridorsPage() {
             />
           </section>
 
-          {analyses.map((corridor) => (
-            <CorridorCard
-              key={corridor.id}
-              corridor={corridor}
-              headers={{
-                segment: t("segmentHeader"),
-                length: t("lengthHeader"),
-                nearestHpc: t("nearestHpcHeader"),
-                status: t("statusHeader"),
-              }}
-              t={t}
-            />
-          ))}
+          <Suspense fallback={<CorridorCardsSkeleton />}>
+            {analyses.map((corridor) => (
+              <CorridorCard
+                key={corridor.id}
+                corridor={corridor}
+                headers={{
+                  segment: t("segmentHeader"),
+                  length: t("lengthHeader"),
+                  nearestHpc: t("nearestHpcHeader"),
+                  status: t("statusHeader"),
+                }}
+                t={t}
+              />
+            ))}
+          </Suspense>
         </>
       )}
     </main>
