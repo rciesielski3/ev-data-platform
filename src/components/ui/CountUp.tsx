@@ -9,6 +9,6 @@ type Props = {
 
 export default function AnimatedCount({ end, className }: Props) {
   return (
-    <CountUp end={end} duration={0.8} separator=" " className={className} />
+    <CountUp end={end} duration={0.8} separator="," className={className} />
   );
 }
