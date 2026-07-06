@@ -9,7 +9,7 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { filterInputClassName } from "@/components/ui/FilterField";
-import { MetricCard } from "@/features/charging/metric-card";
+import AnimatedCount from "@/components/ui/CountUp";
 import { buildChargingCostEstimate } from "@/features/ev/charging-cost";
 import {
   buildBrandMark,
@@ -203,25 +203,28 @@ export default async function VehiclesPage({
         }
       />
 
-      <section className="mb-8">
-        <MetricCard
-          index={0}
-          label={t("vehiclesCountLabel")}
-          value={vehicleCount.toString()}
-          helper={t("vehiclesCountHelper")}
-        />
-      </section>
+      <section className="mb-8 grid gap-4 md:grid-cols-2">
+        <Card className="text-center bg-slate-50 shadow-xl">
+          <p className="text-3xl font-bold text-[var(--accent)]">
+            <AnimatedCount end={vehicleCount} />
+          </p>
+          <p className="muted text-sm">{t("availableVehicles")}</p>
+        </Card>
 
-      <div className="mb-8">
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
             {filters.brand
-              ? (topBrands.find((b) => b.slug === filters.brand)?.name ?? "—")
+              ? (topBrands.find((b) => b.slug === filters.brand)?.name ??
+                  ("error" in data
+                    ? "—"
+                    : data.vehicles.length > 0
+                      ? data.vehicles[0]?.brand.name
+                      : "—") ?? "—")
               : t("allBrandsLabel")}
           </p>
           <p className="muted text-sm">{t("activeFilter")}</p>
         </Card>
-      </div>
+      </section>
 
       <div className="mb-3">
         <h2 className="text-sm font-semibold text-slate-700">

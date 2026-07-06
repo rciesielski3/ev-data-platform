@@ -309,10 +309,15 @@ button.card:active,
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+[style*="--share-bar-width"] {
+  width: var(--share-bar-width);
 }
 
 @media (prefers-reduced-motion: reduce) {
