@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -30,16 +31,46 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-const getSnapshotData = async () => {
-  const [provinceRows, operatorRows] = await Promise.all([
-    getProvinceIntelligenceRows(),
-    getOperatorIntelligenceRows(),
-  ]);
+const getMetricTotals = async () => {
+  const provinceRows = await getProvinceIntelligenceRows();
 
-  const coverage = buildCoverageAnalysisFromRows(
-    provinceRows,
-    PER_CAPITA_LIST_SIZE,
-  );
+  return buildCoverageAnalysisFromRows(provinceRows, PER_CAPITA_LIST_SIZE).totals;
+};
+
+const SkeletonRow = () => (
+  <div className="h-5 animate-pulse rounded bg-slate-100" />
+);
+
+const TopOperatorsSkeleton = () => (
+  <Card as="article" className="mb-8">
+    <div className="h-6 w-48 animate-pulse rounded bg-slate-200" />
+    <div className="mt-4 space-y-3">
+      {Array.from({ length: TOP_OPERATOR_LIMIT }, (_, index) => (
+        <SkeletonRow key={`operator-skeleton-${index}`} />
+      ))}
+    </div>
+  </Card>
+);
+
+const ProvinceCoverageSkeleton = () => (
+  <section className="mb-8 grid gap-4 lg:grid-cols-2">
+    {["leaders", "laggards"].map((column) => (
+      <Card key={column} as="article">
+        <div className="h-6 w-40 animate-pulse rounded bg-slate-200" />
+        <div className="mt-4 space-y-3">
+          {Array.from({ length: PER_CAPITA_LIST_SIZE }, (_, index) => (
+            <SkeletonRow key={`${column}-skeleton-${index}`} />
+          ))}
+        </div>
+      </Card>
+    ))}
+  </section>
+);
+
+const TopOperatorsSection = async () => {
+  const t = await getTranslations("stateOfCharging");
+  const tCommon = await getTranslations("common");
+  const operatorRows = await getOperatorIntelligenceRows();
 
   const topOperators = [...operatorRows]
     .sort((left, right) => {
@@ -51,10 +82,48 @@ const getSnapshotData = async () => {
     })
     .slice(0, TOP_OPERATOR_LIMIT);
 
-  const perCapitaRowsWithData = coverage.provinceRows.filter(
-    (row) => row.stationsPer100k !== null,
+  return (
+    <Card as="article" className="mb-8">
+      <h2 className="text-lg font-semibold text-slate-950">
+        {t("topOperatorsTitle")}
+      </h2>
+      <p className="muted mt-1 text-sm">{t("topOperatorsSubtitle")}</p>
+      <ol className="mt-4 space-y-3">
+        {topOperators.map((operator, index) => (
+          <li
+            key={operator.operatorName}
+            className="flex items-baseline justify-between gap-4"
+          >
+            <span className="flex items-baseline gap-3">
+              <span className="text-xs font-medium text-slate-400">
+                {index + 1}
+              </span>
+              <span className="font-medium text-slate-900">
+                {localizeFallback(operator.operatorName, tCommon)}
+              </span>
+            </span>
+            <span className="text-sm text-slate-500">
+              {t("operatorStationCount", { count: operator.stationCount })}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </Card>
   );
-  const perCapitaLeaders = [...perCapitaRowsWithData]
+};
+
+const ProvinceCoverageSection = async () => {
+  const t = await getTranslations("stateOfCharging");
+  const tCommon = await getTranslations("common");
+  const provinceRows = await getProvinceIntelligenceRows();
+
+  const coverage = buildCoverageAnalysisFromRows(
+    provinceRows,
+    PER_CAPITA_LIST_SIZE,
+  );
+
+  const perCapitaLeaders = [...coverage.provinceRows]
+    .filter((row) => row.stationsPer100k !== null)
     .sort((left, right) => {
       const perCapitaDiff =
         (right.stationsPer100k ?? 0) - (left.stationsPer100k ?? 0);
@@ -65,12 +134,76 @@ const getSnapshotData = async () => {
     })
     .slice(0, PER_CAPITA_LIST_SIZE);
 
-  return {
-    totals: coverage.totals,
-    perCapitaLaggards: coverage.lowestPerCapitaCoverageProvinces,
-    perCapitaLeaders,
-    topOperators,
-  };
+  const perCapitaLaggards = coverage.lowestPerCapitaCoverageProvinces;
+
+  const localizeProvinceLabel = (value: string) =>
+    localizeFallback(value, tCommon);
+
+  return (
+    <section className="mb-8 grid gap-4 lg:grid-cols-2">
+      <Card as="article">
+        <h2 className="text-lg font-semibold text-slate-950">
+          {t("perCapitaLeadersTitle")}
+        </h2>
+        <ol className="mt-4 space-y-3">
+          {perCapitaLeaders.map((row, index) => (
+            <li
+              key={row.province}
+              className="flex items-baseline justify-between gap-4"
+            >
+              <span className="flex items-baseline gap-3">
+                <span className="text-xs font-medium text-slate-400">
+                  {index + 1}
+                </span>
+                <span className="font-medium text-slate-900">
+                  {localizeProvinceLabel(row.province)}
+                </span>
+              </span>
+              <span className="text-sm text-slate-500">
+                {t("perCapitaMetric", {
+                  value:
+                    row.stationsPer100k === null
+                      ? ""
+                      : row.stationsPer100k.toFixed(2),
+                })}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </Card>
+
+      <Card as="article">
+        <h2 className="text-lg font-semibold text-slate-950">
+          {t("perCapitaLaggardsTitle")}
+        </h2>
+        <ol className="mt-4 space-y-3">
+          {perCapitaLaggards.map((row, index) => (
+            <li
+              key={row.province}
+              className="flex items-baseline justify-between gap-4"
+            >
+              <span className="flex items-baseline gap-3">
+                <span className="text-xs font-medium text-slate-400">
+                  {index + 1}
+                </span>
+                <span className="font-medium text-slate-900">
+                  {localizeProvinceLabel(row.province)}
+                </span>
+              </span>
+              <span className="text-sm text-slate-500">
+                {t("perCapitaMetric", {
+                  value:
+                    row.stationsPer100k === null
+                      ? ""
+                      : row.stationsPer100k.toFixed(2),
+                })}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </Card>
+    </section>
+  );
 };
 
 export default async function StateOfChargingPage() {
@@ -78,32 +211,27 @@ export default async function StateOfChargingPage() {
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
 
-  let data: Awaited<ReturnType<typeof getSnapshotData>> | { error: string };
+  let totals: Awaited<ReturnType<typeof getMetricTotals>> | { error: string };
 
   try {
-    data = await getSnapshotData();
+    totals = await getMetricTotals();
   } catch (error) {
     console.error("Failed to fetch state of charging snapshot data:", error);
-    data = { error: t("setupRequiredMessage") };
+    totals = { error: t("setupRequiredMessage") };
   }
 
-  if ("error" in data) {
+  if ("error" in totals) {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12">
         <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{data.error}</p>
+          <p>{totals.error}</p>
         </Notice>
       </main>
     );
   }
 
-  const hpcShare = formatPercent(
-    data.totals.hpcStationCount,
-    data.totals.stationCount,
-  );
-
-  const localizeProvinceLabel = (value: string) => localizeFallback(value, tCommon);
+  const hpcShare = formatPercent(totals.hpcStationCount, totals.stationCount);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
@@ -116,12 +244,12 @@ export default async function StateOfChargingPage() {
       <section className="mb-8 grid gap-4 sm:grid-cols-4">
         <MetricCard
           label={t("totalStationsLabel")}
-          value={data.totals.stationCount}
+          value={formatInteger(totals.stationCount)}
           helper={t("totalStationsHelper")}
         />
         <MetricCard
           label={t("totalConnectorsLabel")}
-          value={data.totals.connectorCount}
+          value={formatInteger(totals.connectorCount)}
           helper={t("totalConnectorsHelper")}
         />
         <MetricCard
@@ -131,101 +259,18 @@ export default async function StateOfChargingPage() {
         />
         <MetricCard
           label={t("provinceCoverageLabel")}
-          value={data.totals.provinceCount}
+          value={formatInteger(totals.provinceCount)}
           helper={t("provinceCoverageHelper")}
         />
       </section>
 
-      <Card as="article" className="mb-8">
-        <h2 className="text-lg font-semibold text-slate-950">
-          {t("topOperatorsTitle")}
-        </h2>
-        <p className="muted mt-1 text-sm">{t("topOperatorsSubtitle")}</p>
-        <ol className="mt-4 space-y-3">
-          {data.topOperators.map((operator, index) => (
-            <li
-              key={operator.operatorName}
-              className="flex items-baseline justify-between gap-4"
-            >
-              <span className="flex items-baseline gap-3">
-                <span className="text-xs font-medium text-slate-400">
-                  {index + 1}
-                </span>
-                <span className="font-medium text-slate-900">
-                  {localizeFallback(operator.operatorName, tCommon)}
-                </span>
-              </span>
-              <span className="text-sm text-slate-500">
-                {t("operatorStationCount", { count: operator.stationCount })}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </Card>
+      <Suspense fallback={<TopOperatorsSkeleton />}>
+        <TopOperatorsSection />
+      </Suspense>
 
-      <section className="mb-8 grid gap-4 lg:grid-cols-2">
-        <Card as="article">
-          <h2 className="text-lg font-semibold text-slate-950">
-            {t("perCapitaLeadersTitle")}
-          </h2>
-          <ol className="mt-4 space-y-3">
-            {data.perCapitaLeaders.map((row, index) => (
-              <li
-                key={row.province}
-                className="flex items-baseline justify-between gap-4"
-              >
-                <span className="flex items-baseline gap-3">
-                  <span className="text-xs font-medium text-slate-400">
-                    {index + 1}
-                  </span>
-                  <span className="font-medium text-slate-900">
-                    {localizeProvinceLabel(row.province)}
-                  </span>
-                </span>
-                <span className="text-sm text-slate-500">
-                  {t("perCapitaMetric", {
-                    value:
-                      row.stationsPer100k === null
-                        ? ""
-                        : row.stationsPer100k.toFixed(2),
-                  })}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </Card>
-
-        <Card as="article">
-          <h2 className="text-lg font-semibold text-slate-950">
-            {t("perCapitaLaggardsTitle")}
-          </h2>
-          <ol className="mt-4 space-y-3">
-            {data.perCapitaLaggards.map((row, index) => (
-              <li
-                key={row.province}
-                className="flex items-baseline justify-between gap-4"
-              >
-                <span className="flex items-baseline gap-3">
-                  <span className="text-xs font-medium text-slate-400">
-                    {index + 1}
-                  </span>
-                  <span className="font-medium text-slate-900">
-                    {localizeProvinceLabel(row.province)}
-                  </span>
-                </span>
-                <span className="text-sm text-slate-500">
-                  {t("perCapitaMetric", {
-                    value:
-                      row.stationsPer100k === null
-                        ? ""
-                        : row.stationsPer100k.toFixed(2),
-                  })}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </Card>
-      </section>
+      <Suspense fallback={<ProvinceCoverageSkeleton />}>
+        <ProvinceCoverageSection />
+      </Suspense>
 
       <p className="muted text-sm">{t("populationSourceNote")}</p>
     </main>
