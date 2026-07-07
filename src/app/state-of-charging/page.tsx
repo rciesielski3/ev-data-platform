@@ -10,6 +10,7 @@ import {
   type CoverageAnalysis,
 } from "@/features/charging/coverage-analysis";
 import { MetricCard } from "@/features/charging/metric-card";
+import type { OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import type { ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
 import {
   getOperatorIntelligenceRows,
@@ -49,12 +50,15 @@ const TopOperatorsSkeleton = () => (
   </Card>
 );
 
-const TopOperatorsSection = async () => {
+const TopOperatorsSection = async ({
+  rows,
+}: {
+  rows: OperatorIntelligenceRow[];
+}) => {
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
-  const operatorRows = await getOperatorIntelligenceRows();
 
-  const topOperators = [...operatorRows]
+  const topOperators = [...rows]
     .sort((left, right) => {
       const countDiff = right.stationCount - left.stationCount;
       if (countDiff !== 0) return countDiff;
@@ -191,21 +195,21 @@ export default async function StateOfChargingPage() {
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
 
-  let provinceRows: ProvinceIntelligenceRow[] | { error: string };
+  let provinceRows: ProvinceIntelligenceRow[];
+  let operatorRows: OperatorIntelligenceRow[];
 
   try {
-    provinceRows = await getProvinceIntelligenceRows();
+    [provinceRows, operatorRows] = await Promise.all([
+      getProvinceIntelligenceRows(),
+      getOperatorIntelligenceRows(),
+    ]);
   } catch (error) {
     console.error("Failed to fetch state of charging snapshot data:", error);
-    provinceRows = { error: t("setupRequiredMessage") };
-  }
-
-  if ("error" in provinceRows) {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12">
         <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{provinceRows.error}</p>
+          <p>{t("setupRequiredMessage")}</p>
         </Notice>
       </main>
     );
@@ -253,7 +257,7 @@ export default async function StateOfChargingPage() {
       </section>
 
       <Suspense fallback={<TopOperatorsSkeleton />}>
-        <TopOperatorsSection />
+        <TopOperatorsSection rows={operatorRows} />
       </Suspense>
 
       <ProvinceCoverageSection coverage={coverage} />
