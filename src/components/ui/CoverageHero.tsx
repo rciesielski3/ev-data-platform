@@ -35,6 +35,7 @@ export const CoverageHero = async ({ totals }: CoverageHeroProps) => {
         index={3}
         label={t("powerAvailabilityMetricLabel")}
         value={Math.round(totals.connectorPowerAvailabilityRatio * 100)}
+        unit="percent"
         helper={t("powerAvailabilityMetricHelper", {
           known: formatInteger(totals.knownPowerConnectorCount),
           total: formatInteger(totals.connectorCount),

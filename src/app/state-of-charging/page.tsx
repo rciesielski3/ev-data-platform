@@ -242,6 +242,7 @@ export default async function StateOfChargingPage() {
         <MetricCard
           label={t("hpcShareLabel")}
           value={hpcSharePercent}
+          unit="percent"
           helper={t("hpcShareHelper")}
         />
         <MetricCard

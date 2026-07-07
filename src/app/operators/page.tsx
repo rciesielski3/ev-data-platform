@@ -277,6 +277,7 @@ export default async function OperatorsPage() {
               index={2}
               label={t("strongestConnectorMetricLabel")}
               value={summary.strongestOperator?.maxPowerKw ?? 0}
+              unit="kW"
               helper={
                 summary.strongestOperator
                   ? t("strongestConnectorMetricHelper", {
