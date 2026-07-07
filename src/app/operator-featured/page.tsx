@@ -52,24 +52,24 @@ export default async function OperatorFeaturedPage() {
 
             {stats && (
               <div className="mt-8 grid w-full max-w-2xl gap-4 sm:grid-cols-3">
-                <Card className="text-center bg-slate-50 shadow-xl">
+                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.stationCount} />
+                    <AnimatedCount start={0} end={stats.stationCount} />
                   </p>
-                  <p className="muted text-sm">{t("heroStatStations")}</p>
-                </Card>
-                <Card className="text-center bg-slate-50 shadow-xl">
+                  <p className="muted text-sm mt-2">{t("heroStatStations")}</p>
+                </div>
+                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.operatorCount} />
+                    <AnimatedCount start={0} end={stats.operatorCount} />
                   </p>
-                  <p className="muted text-sm">{t("heroStatOperators")}</p>
-                </Card>
-                <Card className="text-center bg-slate-50 shadow-xl">
+                  <p className="muted text-sm mt-2">{t("heroStatOperators")}</p>
+                </div>
+                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.provinceCount} />
+                    <AnimatedCount start={0} end={stats.provinceCount} />
                   </p>
-                  <p className="muted text-sm">{t("heroStatProvinces")}</p>
-                </Card>
+                  <p className="muted text-sm mt-2">{t("heroStatProvinces")}</p>
+                </div>
               </div>
             )}
 
