@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, cache } from "react";
 
 import { getTranslations } from "next-intl/server";
 
@@ -16,11 +16,13 @@ import { getCorridorStations } from "@/lib/db/cached-queries";
 
 export const revalidate = 3600;
 
-const getCorridorAnalyses = async (): Promise<CorridorAnalysis[]> => {
-  const stations = await getCorridorStations();
+const getCorridorAnalyses = cache(
+  async (): Promise<CorridorAnalysis[]> => {
+    const stations = await getCorridorStations();
 
-  return buildAllCorridorAnalyses(CORRIDOR_DEFINITIONS, stations);
-};
+    return buildAllCorridorAnalyses(CORRIDOR_DEFINITIONS, stations);
+  }
+);
 
 const formatKm = (value: number) => `${value.toFixed(0)} km`;
 
