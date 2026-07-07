@@ -4,11 +4,18 @@ import CountUp from "react-countup";
 
 type Props = {
   end: number;
+  start?: number;
   className?: string;
 };
 
-export default function AnimatedCount({ end, className }: Props) {
+export default function AnimatedCount({ end, start, className }: Props) {
   return (
-    <CountUp end={end} duration={0.8} separator="," className={className} />
+    <CountUp
+      start={start ?? 0}
+      end={end}
+      duration={0.8}
+      separator=","
+      className={className}
+    />
   );
 }

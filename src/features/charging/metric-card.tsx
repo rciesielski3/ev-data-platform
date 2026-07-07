@@ -20,7 +20,7 @@ export const MetricCard = ({
     <p className="text-sm font-medium text-slate-500">{label}</p>
     <p className="mt-2 text-3xl font-semibold text-slate-950">
       {typeof value === "number" ? (
-        <AnimatedCount end={value} className="stat-card-value" />
+        <AnimatedCount start={value} end={value} className="stat-card-value" />
       ) : (
         <span className="stat-card-value">{value}</span>
       )}
