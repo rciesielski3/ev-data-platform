@@ -180,6 +180,18 @@ export default async function VehiclesPage({
   const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
   const vehicleCount = "error" in data ? 0 : data.total;
 
+  const getActiveBrandLabel = () => {
+    if (!filters.brand) return t("allBrandsLabel");
+
+    const brand = topBrands.find((b) => b.slug === filters.brand);
+    if (brand?.name) return brand.name;
+
+    if ("error" in data || data.vehicles.length === 0) return "—";
+    return data.vehicles[0]?.brand.name || "—";
+  };
+
+  const activeBrandLabel = getActiveBrandLabel();
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <PageHeader
@@ -213,14 +225,7 @@ export default async function VehiclesPage({
 
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
-            {filters.brand
-              ? (topBrands.find((b) => b.slug === filters.brand)?.name ??
-                  ("error" in data
-                    ? "—"
-                    : data.vehicles.length > 0
-                      ? data.vehicles[0]?.brand.name
-                      : "—") ?? "—")
-              : t("allBrandsLabel")}
+            {activeBrandLabel}
           </p>
           <p className="muted text-sm">{t("activeFilter")}</p>
         </Card>
