@@ -376,7 +376,7 @@
     "headlineOperatorsLabel": "Operators",
     "headlineOperatorsHelper": "Distinct operator brands",
     "headlineProvincesLabel": "Provinces covered",
-    "headlineProvincesHelper": "Regions with infrastructure",
+    "headlineProvincesHelper": "of 16 provinces with infrastructure",
     "marketShareTitle": "Market share by operator",
     "marketShareSubtitle": "Stations and connectors ranked by operator.",
     "marketShareLeaderLine": "{operator}: {stations} stations, {connectors} connectors ({share}% of market)",

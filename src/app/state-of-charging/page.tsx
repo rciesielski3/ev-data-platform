@@ -9,7 +9,6 @@ import {
   buildCoverageAnalysisFromRows,
   type CoverageAnalysis,
 } from "@/features/charging/coverage-analysis";
-import { formatInteger, formatPercent } from "@/features/charging/insights";
 import { MetricCard } from "@/features/charging/metric-card";
 import type { ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
 import {
@@ -218,7 +217,8 @@ export default async function StateOfChargingPage() {
   );
   const { totals } = coverage;
 
-  const hpcShare = formatPercent(totals.hpcStationCount, totals.stationCount);
+  const hpcSharePercent =
+    Math.round((totals.hpcStationCount / totals.stationCount) * 100) || 0;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
@@ -231,22 +231,22 @@ export default async function StateOfChargingPage() {
       <section className="mb-8 grid gap-4 sm:grid-cols-4">
         <MetricCard
           label={t("totalStationsLabel")}
-          value={formatInteger(totals.stationCount)}
+          value={totals.stationCount}
           helper={t("totalStationsHelper")}
         />
         <MetricCard
           label={t("totalConnectorsLabel")}
-          value={formatInteger(totals.connectorCount)}
+          value={totals.connectorCount}
           helper={t("totalConnectorsHelper")}
         />
         <MetricCard
           label={t("hpcShareLabel")}
-          value={hpcShare}
+          value={hpcSharePercent}
           helper={t("hpcShareHelper")}
         />
         <MetricCard
           label={t("provinceCoverageLabel")}
-          value={formatInteger(totals.provinceCount)}
+          value={totals.provinceCount}
           helper={t("provinceCoverageHelper")}
         />
       </section>

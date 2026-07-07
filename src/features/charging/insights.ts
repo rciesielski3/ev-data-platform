@@ -174,9 +174,9 @@ export const buildChargingInsights = (input: ChargingInsightsInput) => {
 
   return {
     summary: {
-      totalStations: formatInteger(input.totalStations),
-      totalConnectors: formatInteger(input.totalConnectors),
-      knownPowerConnectors: formatInteger(input.knownPowerConnectors),
+      totalStations: input.totalStations,
+      totalConnectors: input.totalConnectors,
+      knownPowerConnectors: input.knownPowerConnectors,
     },
     topOperators,
     connectorDistribution,

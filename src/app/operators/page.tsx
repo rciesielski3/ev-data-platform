@@ -276,7 +276,7 @@ export default async function OperatorsPage() {
             <MetricCard
               index={2}
               label={t("strongestConnectorMetricLabel")}
-              value={formatPower(summary.strongestOperator?.maxPowerKw ?? null) ?? tCommon("unknown")}
+              value={summary.strongestOperator?.maxPowerKw ?? 0}
               helper={
                 summary.strongestOperator
                   ? t("strongestConnectorMetricHelper", {
