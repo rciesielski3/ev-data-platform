@@ -409,7 +409,11 @@ export default async function SampleReportPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <MetricCard
             label={t("hpcShareLabel")}
-            value={Math.round((totalHpcStations / totalStations) * 100) || 0}
+            value={
+              totalStations > 0
+                ? Math.round((totalHpcStations / totalStations) * 100)
+                : 0
+            }
             unit="percent"
             helper={t("hpcShareHelper", { threshold: HPC_POWER_KW })}
           />

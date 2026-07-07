@@ -144,12 +144,11 @@ const ProvinceCoverageSection = async ({
                 </span>
               </span>
               <span className="text-sm text-slate-500">
-                {t("perCapitaMetric", {
-                  value:
-                    row.stationsPer100k === null
-                      ? ""
-                      : row.stationsPer100k.toFixed(2),
-                })}
+                {row.stationsPer100k === null
+                  ? tCommon("notAvailable")
+                  : t("perCapitaMetric", {
+                      value: row.stationsPer100k.toFixed(2),
+                    })}
               </span>
             </li>
           ))}
@@ -175,12 +174,11 @@ const ProvinceCoverageSection = async ({
                 </span>
               </span>
               <span className="text-sm text-slate-500">
-                {t("perCapitaMetric", {
-                  value:
-                    row.stationsPer100k === null
-                      ? ""
-                      : row.stationsPer100k.toFixed(2),
-                })}
+                {row.stationsPer100k === null
+                  ? tCommon("notAvailable")
+                  : t("perCapitaMetric", {
+                      value: row.stationsPer100k.toFixed(2),
+                    })}
               </span>
             </li>
           ))}
@@ -222,7 +220,9 @@ export default async function StateOfChargingPage() {
   const { totals } = coverage;
 
   const hpcSharePercent =
-    Math.round((totals.hpcStationCount / totals.stationCount) * 100) || 0;
+    totals.stationCount > 0
+      ? Math.round((totals.hpcStationCount / totals.stationCount) * 100)
+      : 0;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
