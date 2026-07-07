@@ -344,7 +344,7 @@ export default async function SampleReportPage() {
         />
         <MetricCard
           label={t("headlineProvincesLabel")}
-          value={`${formatInteger(totalProvinces)}/16`}
+          value={totalProvinces}
           helper={t("headlineProvincesHelper")}
         />
       </section>
@@ -409,25 +409,24 @@ export default async function SampleReportPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <MetricCard
             label={t("hpcShareLabel")}
-            value={formatPercent(totalHpcStations, totalStations)}
+            value={
+              totalStations > 0
+                ? Math.round((totalHpcStations / totalStations) * 100)
+                : 0
+            }
+            unit="percent"
             helper={t("hpcShareHelper", { threshold: HPC_POWER_KW })}
           />
           <MetricCard
             label={t("averagePowerLabel")}
-            value={
-              networkAveragePowerKw === null
-                ? tCommon("unknown")
-                : formatConnectorPower(networkAveragePowerKw)
-            }
+            value={networkAveragePowerKw ?? 0}
+            unit="kW"
             helper={t("averagePowerHelper")}
           />
           <MetricCard
             label={t("maxPowerLabel")}
-            value={
-              networkMaxPowerKw === null
-                ? tCommon("unknown")
-                : formatConnectorPower(networkMaxPowerKw)
-            }
+            value={networkMaxPowerKw ?? 0}
+            unit="kW"
             helper={t("maxPowerHelper")}
           />
         </div>

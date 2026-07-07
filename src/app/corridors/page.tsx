@@ -1,25 +1,29 @@
+import { Suspense, cache } from "react";
+
 import { getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
-import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
+import MetricCardSkeleton from "@/components/ui/MetricCardSkeleton";
 import { CORRIDOR_DEFINITIONS } from "@/features/corridors/corridor-definitions";
 import {
   buildAllCorridorAnalyses,
   type CorridorAnalysis,
   type SegmentGap,
 } from "@/features/corridors/gap-detection";
-import { formatInteger, formatPercent } from "@/features/charging/insights";
+import { formatPercent } from "@/features/charging/insights";
 import { MetricCard } from "@/features/charging/metric-card";
 import { getCorridorStations } from "@/lib/db/cached-queries";
 
 export const revalidate = 3600;
 
-const getCorridorAnalyses = async (): Promise<CorridorAnalysis[]> => {
-  const stations = await getCorridorStations();
+const getCorridorAnalyses = cache(
+  async (): Promise<CorridorAnalysis[]> => {
+    const stations = await getCorridorStations();
 
-  return buildAllCorridorAnalyses(CORRIDOR_DEFINITIONS, stations);
-};
+    return buildAllCorridorAnalyses(CORRIDOR_DEFINITIONS, stations);
+  }
+);
 
 const formatKm = (value: number) => `${value.toFixed(0)} km`;
 
@@ -101,23 +105,66 @@ const CorridorCard = ({
   </Card>
 );
 
+const CorridorCardsSkeleton = () => (
+  <div className="space-y-6" aria-hidden="true">
+    {[0, 1, 2].map((index) => (
+      <Card key={index} as="article" className="mb-6 animate-pulse">
+        <div className="mb-4 h-6 w-48 rounded bg-slate-200" />
+        <div className="mb-4 h-4 w-64 rounded bg-slate-100" />
+        <div className="space-y-2">
+          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-10 rounded bg-slate-100" />
+        </div>
+      </Card>
+    ))}
+  </div>
+);
+
+const GapsMetric = async ({
+  label,
+  helper,
+}: {
+  label: string;
+  helper: string;
+}) => {
+  const analyses = await getCorridorAnalyses();
+  const totalGaps = analyses.reduce((sum, corridor) => sum + corridor.gapCount, 0);
+
+  return <MetricCard index={2} label={label} value={totalGaps} helper={helper} />;
+};
+
+const CorridorCardsSection = async ({
+  headers,
+  t,
+}: {
+  headers: {
+    segment: string;
+    length: string;
+    nearestHpc: string;
+    status: string;
+  };
+  t: Awaited<ReturnType<typeof getTranslations<"corridors">>>;
+}) => {
+  const analyses = await getCorridorAnalyses();
+
+  return (
+    <>
+      {analyses.map((corridor) => (
+        <CorridorCard key={corridor.id} corridor={corridor} headers={headers} t={t} />
+      ))}
+    </>
+  );
+};
+
 export default async function CorridorsPage() {
   const t = await getTranslations("corridors");
-  const tCommon = await getTranslations("common");
 
-  let corridors: CorridorAnalysis[] | { error: string };
-
-  try {
-    corridors = await getCorridorAnalyses();
-  } catch {
-    corridors = { error: t("setupRequiredMessage") };
-  }
-
-  const errorMessage = "error" in corridors ? corridors.error : null;
-  const analyses = "error" in corridors ? null : corridors;
-
-  const totalSegments = analyses?.reduce((sum, c) => sum + c.segments.length, 0) ?? 0;
-  const totalGaps = analyses?.reduce((sum, c) => sum + c.gapCount, 0) ?? 0;
+  const totalCorridors = CORRIDOR_DEFINITIONS.length;
+  const totalSegments = CORRIDOR_DEFINITIONS.reduce(
+    (sum, corridor) => sum + corridor.segments.length,
+    0,
+  );
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -147,48 +194,35 @@ export default async function CorridorsPage() {
         <p>{t("explainerBody")}</p>
       </Card>
 
-      {errorMessage !== null ? (
-        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{errorMessage}</p>
-        </Notice>
-      ) : analyses === null ? null : (
-        <>
-          <section className="mb-8 grid gap-4 md:grid-cols-3">
-            <MetricCard
-              index={0}
-              label={t("corridorsMetricLabel")}
-              value={analyses.length}
-              helper={t("corridorsMetricHelper")}
-            />
-            <MetricCard
-              index={1}
-              label={t("segmentsMetricLabel")}
-              value={totalSegments}
-              helper={t("segmentsMetricHelper")}
-            />
-            <MetricCard
-              index={2}
-              label={t("gapsMetricLabel")}
-              value={totalGaps}
-              helper={t("gapsMetricHelper")}
-            />
-          </section>
+      <section className="mb-8 grid gap-4 md:grid-cols-3">
+        <MetricCard
+          index={0}
+          label={t("corridorsMetricLabel")}
+          value={totalCorridors}
+          helper={t("corridorsMetricHelper")}
+        />
+        <MetricCard
+          index={1}
+          label={t("segmentsMetricLabel")}
+          value={totalSegments}
+          helper={t("segmentsMetricHelper")}
+        />
+        <Suspense fallback={<MetricCardSkeleton />}>
+          <GapsMetric label={t("gapsMetricLabel")} helper={t("gapsMetricHelper")} />
+        </Suspense>
+      </section>
 
-          {analyses.map((corridor) => (
-            <CorridorCard
-              key={corridor.id}
-              corridor={corridor}
-              headers={{
-                segment: t("segmentHeader"),
-                length: t("lengthHeader"),
-                nearestHpc: t("nearestHpcHeader"),
-                status: t("statusHeader"),
-              }}
-              t={t}
-            />
-          ))}
-        </>
-      )}
+      <Suspense fallback={<CorridorCardsSkeleton />}>
+        <CorridorCardsSection
+          headers={{
+            segment: t("segmentHeader"),
+            length: t("lengthHeader"),
+            nearestHpc: t("nearestHpcHeader"),
+            status: t("statusHeader"),
+          }}
+          t={t}
+        />
+      </Suspense>
     </main>
   );
 }

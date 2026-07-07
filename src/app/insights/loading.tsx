@@ -1,3 +1,5 @@
+import MetricCardSkeleton from "@/components/ui/MetricCardSkeleton";
+
 const InsightsLoading = () => {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -8,10 +10,7 @@ const InsightsLoading = () => {
       </div>
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-32 animate-pulse rounded-xl border border-slate-200 bg-white"
-          />
+          <MetricCardSkeleton key={index} />
         ))}
       </div>
       <div className="grid gap-6 lg:grid-cols-2">

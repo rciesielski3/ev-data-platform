@@ -376,7 +376,7 @@
     "headlineOperatorsLabel": "Operatorzy",
     "headlineOperatorsHelper": "Odrębne marki operatorów",
     "headlineProvincesLabel": "Pokryte województwa",
-    "headlineProvincesHelper": "Regiony z infrastrukturą",
+    "headlineProvincesHelper": "z 16 województw z infrastrukturą",
     "marketShareTitle": "Udział w rynku wg operatora",
     "marketShareSubtitle": "Stacje i złącza uszeregowane wg operatora.",
     "marketShareLeaderLine": "{operator}: {stations} stacji, {connectors} złączy ({share}% rynku)",

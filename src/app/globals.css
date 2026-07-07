@@ -316,7 +316,7 @@ button.card:active,
   }
 }
 
-[style*="--share-bar-width"] {
+.share-bar-fill {
   width: var(--share-bar-width);
 }
 

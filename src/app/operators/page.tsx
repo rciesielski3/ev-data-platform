@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -148,6 +150,53 @@ const OperatorTable = ({
   </div>
 );
 
+const OperatorTableSkeleton = () => (
+  <Card as="section">
+    <div className="mb-4">
+      <div className="h-6 w-48 animate-pulse rounded bg-slate-100" />
+      <div className="mt-2 h-4 w-72 animate-pulse rounded bg-slate-100" />
+    </div>
+    <div className="space-y-3">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <div key={index} className="h-10 animate-pulse rounded bg-slate-100" />
+      ))}
+    </div>
+  </Card>
+);
+
+const OperatorTableSection = async ({
+  rows,
+}: {
+  rows: OperatorIntelligenceRow[];
+}) => {
+  const t = await getTranslations("operators");
+  const tCommon = await getTranslations("common");
+
+  return (
+    <Card as="section">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
+        <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
+      </div>
+      <OperatorTable
+        rows={rows}
+        headers={{
+          operator: t("operatorHeader"),
+          stations: t("stationsHeader"),
+          provinces: t("provincesHeader"),
+          connectors: t("connectorsHeader"),
+          knownPower: t("knownPowerHeader"),
+          avgPower: t("avgPowerHeader"),
+          maxPower: t("maxPowerHeader"),
+          strongestStation: t("strongestStationHeader"),
+        }}
+        unknownLabel={tCommon("unknown")}
+        localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+      />
+    </Card>
+  );
+};
+
 export default async function OperatorsPage() {
   const t = await getTranslations("operators");
   const tCommon = await getTranslations("common");
@@ -227,7 +276,8 @@ export default async function OperatorsPage() {
             <MetricCard
               index={2}
               label={t("strongestConnectorMetricLabel")}
-              value={formatPower(summary.strongestOperator?.maxPowerKw ?? null) ?? tCommon("unknown")}
+              value={summary.strongestOperator?.maxPowerKw ?? 0}
+              unit="kW"
               helper={
                 summary.strongestOperator
                   ? t("strongestConnectorMetricHelper", {
@@ -288,27 +338,9 @@ export default async function OperatorsPage() {
               </Card>
             </aside>
 
-            <Card as="section">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
-                <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
-              </div>
-              <OperatorTable
-                rows={rows}
-                headers={{
-                  operator: t("operatorHeader"),
-                  stations: t("stationsHeader"),
-                  provinces: t("provincesHeader"),
-                  connectors: t("connectorsHeader"),
-                  knownPower: t("knownPowerHeader"),
-                  avgPower: t("avgPowerHeader"),
-                  maxPower: t("maxPowerHeader"),
-                  strongestStation: t("strongestStationHeader"),
-                }}
-                unknownLabel={tCommon("unknown")}
-                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-              />
-            </Card>
+            <Suspense fallback={<OperatorTableSkeleton />}>
+              <OperatorTableSection rows={rows} />
+            </Suspense>
           </section>
         </>
       )}
