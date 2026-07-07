@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
+import MetricCardSkeleton from "@/components/ui/MetricCardSkeleton";
 import { CORRIDOR_DEFINITIONS } from "@/features/corridors/corridor-definitions";
 import {
   buildAllCorridorAnalyses,
@@ -102,13 +103,6 @@ const CorridorCard = ({
       </table>
     </div>
   </Card>
-);
-
-const MetricCardSkeleton = () => (
-  <div
-    className="h-32 animate-pulse rounded-xl border border-slate-200 bg-white"
-    aria-hidden="true"
-  />
 );
 
 const CorridorCardsSkeleton = () => (
