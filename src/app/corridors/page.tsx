@@ -40,9 +40,9 @@ const SegmentRow = ({ segment, t }: { segment: SegmentGap; t: Awaited<ReturnType
     </td>
     <td className="px-4 py-4">
       {segment.hasGap ? (
-        <span className="badge bg-amber-100 text-amber-900">{t("corridors.statusGap")}</span>
+        <span className="badge bg-amber-100 text-amber-900">{t("statusGap")}</span>
       ) : (
-        <span className="badge bg-emerald-100 text-emerald-900">{t("corridors.statusCovered")}</span>
+        <span className="badge bg-emerald-100 text-emerald-900">{t("statusCovered")}</span>
       )}
     </td>
   </tr>
@@ -67,7 +67,7 @@ const CorridorCard = ({
       <div>
         <h2 className="text-lg font-semibold text-slate-950">{corridor.name}</h2>
         <p className="muted mt-1 text-sm">
-          {t("corridors.summary", {
+          {t("summary", {
             coveredPercent: formatPercent(
               corridor.segments.length - corridor.gapCount,
               corridor.segments.length,
