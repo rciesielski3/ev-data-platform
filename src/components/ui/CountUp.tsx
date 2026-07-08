@@ -1,21 +1,28 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useLocale } from "next-intl";
 import CountUp from "react-countup";
 
 type Props = {
   end: number;
-  start?: number;
   className?: string;
 };
 
-export default function AnimatedCount({ end, start, className }: Props) {
+export default function AnimatedCount({ end, className }: Props) {
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale);
+  const prevEndRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    prevEndRef.current = end;
+  }, [end]);
+
+  const start = prevEndRef.current ?? end;
 
   return (
     <CountUp
-      start={start ?? 0}
+      start={start}
       end={end}
       duration={0.8}
       formattingFn={(value) => formatter.format(value)}
