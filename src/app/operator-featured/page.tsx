@@ -135,10 +135,10 @@ export default async function OperatorFeaturedPage() {
       {/* Pricing Section */}
       <section className="section-accent mx-auto w-full max-w-5xl px-6 py-16">
         <div className="mb-12 text-center">
-          
-            <h2 className="font-display text-3xl font-bold text-slate-900">
+          <h2 className="font-display text-3xl font-bold text-slate-900">
             {t("pricingTitle")}
           </h2>
+          <div className="mx-auto mt-4 h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
         </div>
 
         <Card className="mx-auto max-w-md border-2 border-[var(--accent-soft-bg)]">
