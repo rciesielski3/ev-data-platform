@@ -185,7 +185,6 @@ export default async function OperatorFeaturedPage() {
           <h2 className="text-xl font-bold text-slate-900">
             {t("nextStepsTitle")}
           </h2>
-          <div className="mx-auto mt-3 h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
           <p className="mt-3 text-slate-700">{t("nextStepsBody")}</p>
         </Card>
       </section>
