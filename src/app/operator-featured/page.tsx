@@ -98,7 +98,7 @@ export default async function OperatorFeaturedPage() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Visibility */}
-          <Card className="flex flex-col gap-4 group bg-emerald-50">
+          <Card className="flex flex-col gap-4 group">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
               <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
@@ -109,7 +109,7 @@ export default async function OperatorFeaturedPage() {
           </Card>
 
           {/* Trust */}
-          <Card className="flex flex-col gap-4 group bg-emerald-50">
+          <Card className="flex flex-col gap-4 group">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
               <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
@@ -120,7 +120,7 @@ export default async function OperatorFeaturedPage() {
           </Card>
 
           {/* Simple */}
-          <Card className="flex flex-col gap-4 group bg-emerald-50">
+          <Card className="flex flex-col gap-4 group">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
               <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
