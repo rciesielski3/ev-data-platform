@@ -7,9 +7,9 @@ export type ActionBarProps = {
 
 export const ActionBar = ({ children, className }: ActionBarProps) => (
   <nav
-    className={`border-b border-[var(--card-border)] bg-white py-4 px-6 ${className || ""}`}
+    className={`border-b border-[var(--card-border)] bg-white py-4 ${className || ""}`}
   >
-    <div className="mx-auto max-w-6xl flex flex-wrap gap-3 items-center justify-end">
+    <div className="flex flex-wrap gap-3 items-center justify-end">
       {children}
     </div>
   </nav>

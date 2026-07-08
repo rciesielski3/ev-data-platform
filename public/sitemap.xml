@@ -80,12 +80,4 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- API status -->
-  <url>
-    <loc>https://www.evdatasource.com/api/status</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.6</priority>
-  </url>
 </urlset>
