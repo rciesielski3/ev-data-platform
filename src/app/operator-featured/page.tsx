@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
-import AnimatedCount from "@/components/ui/CountUp";
+import Hero from "@/components/ui/Hero";
+import StatStrip from "@/components/ui/StatStrip";
 import { prisma } from "@/lib/db/prisma";
+import { formatDisplayNumber } from "@/lib/display/data-display";
 
 export const revalidate = 3600;
 
@@ -27,6 +29,7 @@ const getStats = async () => {
 
 export default async function OperatorFeaturedPage() {
   const t = await getTranslations("operatorFeatured");
+  const locale = await getLocale();
 
   let stats;
   try {
@@ -38,56 +41,40 @@ export default async function OperatorFeaturedPage() {
   return (
     <main className="flex flex-1 flex-col">
       {/* Hero Section */}
-      <section className="hero-surface relative overflow-hidden px-6 py-16 sm:py-24 lg:py-32">
-        <div className="mx-auto max-w-4xl">
-          <div className="flex flex-col items-center gap-8 text-center">
-            <span className="badge">{t("heroBadge")}</span>
-            <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-soft-text)] bg-clip-text text-transparent">
-              {t("heroTitle")}
-            </h1>
-            <p className="text-lg text-slate-600 sm:text-xl max-w-2xl">
-              {t("heroSubtitle")}
-            </p>
-
-            {stats && (
-              <div className="mt-10 grid w-full max-w-3xl gap-6 sm:grid-cols-3">
-                <div className="card stat-card group relative bg-gradient-to-br from-slate-50 to-white shadow-lg hover:shadow-xl text-center" style={{ "--stat-card-delay": "0ms" } as React.CSSProperties}>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-glow)] to-transparent opacity-0 group-hover:opacity-5 rounded-[18px] transition-opacity duration-300" />
-                  <p className="text-4xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.stationCount} />
-                  </p>
-                  <p className="muted text-sm mt-3 font-medium">{t("heroStatStations")}</p>
-                </div>
-                <div className="card stat-card group relative bg-gradient-to-br from-slate-50 to-white shadow-lg hover:shadow-xl text-center" style={{ "--stat-card-delay": "90ms" } as React.CSSProperties}>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-glow)] to-transparent opacity-0 group-hover:opacity-5 rounded-[18px] transition-opacity duration-300" />
-                  <p className="text-4xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.operatorCount} />
-                  </p>
-                  <p className="muted text-sm mt-3 font-medium">{t("heroStatOperators")}</p>
-                </div>
-                <div className="card stat-card group relative bg-gradient-to-br from-slate-50 to-white shadow-lg hover:shadow-xl text-center" style={{ "--stat-card-delay": "180ms" } as React.CSSProperties}>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-glow)] to-transparent opacity-0 group-hover:opacity-5 rounded-[18px] transition-opacity duration-300" />
-                  <p className="text-4xl font-bold text-[var(--accent)]">
-                    <AnimatedCount end={stats.provinceCount} />
-                  </p>
-                  <p className="muted text-sm mt-3 font-medium">{t("heroStatProvinces")}</p>
-                </div>
-              </div>
-            )}
-
-            <div className="mt-12">
-              <Button
-                as={Link}
-                href="/contact?interest=FEATURED_LISTING"
-                variant="primary"
-                className="px-10 py-4 text-base font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
-              >
-                {t("ctaButton")}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero
+        badge={t("heroBadge")}
+        title={t("heroTitle")}
+        subhead={t("heroSubtitle")}
+        actions={
+          <Button
+            as={Link}
+            href="/contact?interest=FEATURED_LISTING"
+            variant="primary"
+            size="lg"
+            className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
+          >
+            {t("ctaButton")}
+          </Button>
+        }
+      />
+      {stats && (
+        <StatStrip
+          stats={[
+            {
+              value: formatDisplayNumber(stats.stationCount, locale),
+              label: t("heroStatStations"),
+            },
+            {
+              value: formatDisplayNumber(stats.operatorCount, locale),
+              label: t("heroStatOperators"),
+            },
+            {
+              value: formatDisplayNumber(stats.provinceCount, locale),
+              label: t("heroStatProvinces"),
+            },
+          ]}
+        />
+      )}
 
       {/* Value Props Section */}
       <section className="mx-auto w-full max-w-5xl px-6 py-20">
