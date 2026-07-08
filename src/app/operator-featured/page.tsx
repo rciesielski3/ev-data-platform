@@ -52,19 +52,19 @@ export default async function OperatorFeaturedPage() {
 
             {stats && (
               <div className="mt-8 grid w-full max-w-2xl gap-4 sm:grid-cols-3">
-                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
+                <div className="card stat-card bg-slate-50 shadow-xl text-center" style={{ "--stat-card-delay": "0ms" } as React.CSSProperties}>
                   <p className="text-3xl font-bold text-[var(--accent)]">
                     <AnimatedCount end={stats.stationCount} />
                   </p>
                   <p className="muted text-sm mt-2">{t("heroStatStations")}</p>
                 </div>
-                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
+                <div className="card stat-card bg-slate-50 shadow-xl text-center" style={{ "--stat-card-delay": "90ms" } as React.CSSProperties}>
                   <p className="text-3xl font-bold text-[var(--accent)]">
                     <AnimatedCount end={stats.operatorCount} />
                   </p>
                   <p className="muted text-sm mt-2">{t("heroStatOperators")}</p>
                 </div>
-                <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
+                <div className="card stat-card bg-slate-50 shadow-xl text-center" style={{ "--stat-card-delay": "180ms" } as React.CSSProperties}>
                   <p className="text-3xl font-bold text-[var(--accent)]">
                     <AnimatedCount end={stats.provinceCount} />
                   </p>
@@ -78,7 +78,7 @@ export default async function OperatorFeaturedPage() {
                 as={Link}
                 href="/contact?interest=FEATURED_LISTING"
                 variant="primary"
-                className="px-8 py-3 text-base"
+                className="px-8 py-3 text-base transition-transform hover:translate-y-[-4px]"
               >
                 {t("ctaButton")}
               </Button>
@@ -90,16 +90,18 @@ export default async function OperatorFeaturedPage() {
       {/* Value Props Section */}
       <section className="mx-auto w-full max-w-5xl px-6 py-16">
         <div className="mb-12 text-center">
-          <h2 className="font-display text-3xl font-bold text-slate-900">
+          
+            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+<h2 className="font-display text-3xl font-bold text-slate-900">
             {t("valuePropsTitle")}
           </h2>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Visibility */}
-          <Card className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-4 group bg-emerald-50">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
-              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("visibilityTitle")}
@@ -108,9 +110,9 @@ export default async function OperatorFeaturedPage() {
           </Card>
 
           {/* Trust */}
-          <Card className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-4 group bg-emerald-50">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
-              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("trustTitle")}
@@ -119,9 +121,9 @@ export default async function OperatorFeaturedPage() {
           </Card>
 
           {/* Simple */}
-          <Card className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-4 group bg-emerald-50">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-soft-bg)]">
-              <Check className="h-6 w-6 text-[var(--accent-soft-text)]" />
+              <Check className="h-6 w-6 text-[var(--accent-soft-text)] transition-transform duration-300 group-hover:scale-110" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
               {t("simpleTitle")}
@@ -134,7 +136,9 @@ export default async function OperatorFeaturedPage() {
       {/* Pricing Section */}
       <section className="section-accent mx-auto w-full max-w-5xl px-6 py-16">
         <div className="mb-12 text-center">
-          <h2 className="font-display text-3xl font-bold text-slate-900">
+          
+            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+<h2 className="font-display text-3xl font-bold text-slate-900">
             {t("pricingTitle")}
           </h2>
         </div>
@@ -180,7 +184,9 @@ export default async function OperatorFeaturedPage() {
       {/* FAQ or additional info */}
       <section className="mx-auto w-full max-w-5xl px-6 py-16">
         <Card className="bg-[var(--accent-soft-bg)]">
-          <h2 className="text-xl font-bold text-slate-900">
+          
+            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
+<h2 className="text-xl font-bold text-slate-900">
             {t("nextStepsTitle")}
           </h2>
           <p className="mt-3 text-slate-700">{t("nextStepsBody")}</p>
