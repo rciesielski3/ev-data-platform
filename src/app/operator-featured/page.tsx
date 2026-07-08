@@ -89,7 +89,7 @@ export default async function OperatorFeaturedPage() {
       </section>
 
       {/* Value Props Section */}
-      <section className="mx-auto w-full max-w-5xl px-6 py-20">
+      <section className="border-t border-slate-200 mx-auto w-full max-w-5xl px-6 py-20 mt-8">
         <div className="mb-16 text-center">
           <h2 className="font-display text-3xl font-bold text-slate-900">
             {t("valuePropsTitle")}
