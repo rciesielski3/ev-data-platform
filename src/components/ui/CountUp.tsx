@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import CountUp from "react-countup";
 
@@ -12,13 +12,16 @@ type Props = {
 export default function AnimatedCount({ end, className }: Props) {
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale);
-  const prevEndRef = useRef<number | null>(null);
+  const [start, setStart] = useState<number | null>(null);
 
   useEffect(() => {
-    prevEndRef.current = end;
+    setStart((prevStart) => prevStart ?? end);
   }, [end]);
 
-  const start = prevEndRef.current ?? end;
+  // On first mount, start is null, so show the end value immediately
+  if (start === null) {
+    return <span className={className}>{formatter.format(end)}</span>;
+  }
 
   return (
     <CountUp
