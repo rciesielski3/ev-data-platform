@@ -90,10 +90,10 @@ export default async function OperatorFeaturedPage() {
       {/* Value Props Section */}
       <section className="mx-auto w-full max-w-5xl px-6 py-16">
         <div className="mb-12 text-center">
-          <div className="mx-auto mb-4 h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
           <h2 className="font-display text-3xl font-bold text-slate-900">
             {t("valuePropsTitle")}
           </h2>
+          <div className="mx-auto mt-4 h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
