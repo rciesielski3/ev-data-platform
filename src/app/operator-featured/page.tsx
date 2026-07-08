@@ -54,19 +54,19 @@ export default async function OperatorFeaturedPage() {
               <div className="mt-8 grid w-full max-w-2xl gap-4 sm:grid-cols-3">
                 <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount start={0} end={stats.stationCount} />
+                    <AnimatedCount end={stats.stationCount} />
                   </p>
                   <p className="muted text-sm mt-2">{t("heroStatStations")}</p>
                 </div>
                 <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount start={0} end={stats.operatorCount} />
+                    <AnimatedCount end={stats.operatorCount} />
                   </p>
                   <p className="muted text-sm mt-2">{t("heroStatOperators")}</p>
                 </div>
                 <div className="text-center bg-slate-50 shadow-xl rounded-lg p-6">
                   <p className="text-3xl font-bold text-[var(--accent)]">
-                    <AnimatedCount start={0} end={stats.provinceCount} />
+                    <AnimatedCount end={stats.provinceCount} />
                   </p>
                   <p className="muted text-sm mt-2">{t("heroStatProvinces")}</p>
                 </div>

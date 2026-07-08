@@ -20,6 +20,11 @@ export const resolveLocaleFromAcceptLanguage = (
     .split(",")
     .map((part) => part.trim().split(";")[0]?.slice(0, 2).toLowerCase());
 
+  // Prefer Polish (primary language for this app)
+  if (candidates.includes("pl")) {
+    return "pl";
+  }
+
   const match = candidates.find((candidate) => isSupportedLocale(candidate));
 
   return match ?? DEFAULT_LOCALE;
