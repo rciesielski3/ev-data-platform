@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
 import Hero from "@/components/ui/Hero";
-import StatStrip from "@/components/ui/StatStrip";
 import { prisma } from "@/lib/db/prisma";
-import { formatDisplayNumber } from "@/lib/display/data-display";
 
 export const revalidate = 3600;
 
@@ -29,7 +27,6 @@ const getStats = async () => {
 
 export default async function OperatorFeaturedPage() {
   const t = await getTranslations("operatorFeatured");
-  const locale = await getLocale();
 
   let stats;
   try {
@@ -57,24 +54,39 @@ export default async function OperatorFeaturedPage() {
           </Button>
         }
       />
-      {stats && (
-        <StatStrip
-          stats={[
-            {
-              value: formatDisplayNumber(stats.stationCount, locale),
-              label: t("heroStatStations"),
-            },
-            {
-              value: formatDisplayNumber(stats.operatorCount, locale),
-              label: t("heroStatOperators"),
-            },
-            {
-              value: formatDisplayNumber(stats.provinceCount, locale),
-              label: t("heroStatProvinces"),
-            },
-          ]}
-        />
-      )}
+
+      {/* What's Included Section */}
+      <section className="mx-auto w-full max-w-5xl px-6 py-12">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[var(--accent-soft-bg)] mb-3">
+              <svg className="h-6 w-6 text-[var(--accent)]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-slate-900 mb-1">{t("whatsIncluded1Title")}</h3>
+            <p className="text-sm text-slate-600">{t("whatsIncluded1Body")}</p>
+          </div>
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[var(--accent-soft-bg)] mb-3">
+              <svg className="h-6 w-6 text-[var(--accent)]" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-slate-900 mb-1">{t("whatsIncluded2Title")}</h3>
+            <p className="text-sm text-slate-600">{t("whatsIncluded2Body")}</p>
+          </div>
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[var(--accent-soft-bg)] mb-3">
+              <svg className="h-6 w-6 text-[var(--accent)]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-slate-900 mb-1">{t("whatsIncluded3Title")}</h3>
+            <p className="text-sm text-slate-600">{t("whatsIncluded3Body")}</p>
+          </div>
+        </div>
+      </section>
 
       {/* Value Props Section */}
       <section className="mx-auto w-full max-w-5xl px-6 py-20">
@@ -164,6 +176,18 @@ export default async function OperatorFeaturedPage() {
                   <div className="flex items-start gap-3">
                     <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--accent)] font-bold" />
                     <span className="text-slate-700 font-medium">{t("pricingFeature3")}</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--accent)] font-bold" />
+                    <span className="text-slate-700 font-medium">{t("pricingFeature4")}</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--accent)] font-bold" />
+                    <span className="text-slate-700 font-medium">{t("pricingFeature5")}</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--accent)] font-bold" />
+                    <span className="text-slate-700 font-medium">{t("pricingFeature6")}</span>
                   </div>
                 </div>
 
