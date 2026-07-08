@@ -136,8 +136,7 @@ export default async function OperatorFeaturedPage() {
       <section className="section-accent mx-auto w-full max-w-5xl px-6 py-16">
         <div className="mb-12 text-center">
           
-            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
-<h2 className="font-display text-3xl font-bold text-slate-900">
+            <h2 className="font-display text-3xl font-bold text-slate-900">
             {t("pricingTitle")}
           </h2>
         </div>
@@ -184,8 +183,7 @@ export default async function OperatorFeaturedPage() {
       <section className="mx-auto w-full max-w-5xl px-6 py-16">
         <Card className="bg-[var(--accent-soft-bg)]">
           
-            <div className="mx-auto h-1 w-32 rounded-full bg-gradient-to-r from-[var(--accent-glow)] to-[var(--accent-deep)]" />
-<h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-slate-900">
             {t("nextStepsTitle")}
           </h2>
           <p className="mt-3 text-slate-700">{t("nextStepsBody")}</p>
