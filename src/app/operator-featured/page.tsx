@@ -3,7 +3,6 @@ import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
 import AnimatedCount from "@/components/ui/CountUp";
 import { prisma } from "@/lib/db/prisma";
 
