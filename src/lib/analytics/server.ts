@@ -1,53 +1,67 @@
+import { createGaClient } from "./ga-client";
 import { GaReport } from "./types";
+import { getCache, setCache, getCacheKey } from "./cache";
 
 export async function getGaMetrics(
-  userTier: "professional" | "enterprise" = "professional"
+  userTier: string
+): Promise<GaReport | null> {
+  return getGaMetricsWithTier(userTier);
+}
+
+export async function getGaMetricsWithTier(
+  userTier: string,
+  userId: string = "default-user"
 ): Promise<GaReport | null> {
   try {
-    // Mock implementation for now - actual GA fetch in Task 4
-    // Return sample data based on tier
-    const basicMetrics = [
-      { name: "screenPageViews", value: "1240" },
-      { name: "totalUsers", value: "340" },
-      { name: "activeUsers", value: "145" },
-      { name: "bounceRate", value: "32.5%" },
-    ];
+    const propertyId = process.env.GA4_PROPERTY_ID;
+    if (!propertyId) {
+      console.warn("GA4_PROPERTY_ID not set");
+      return null;
+    }
 
-    const advancedMetrics = [
-      ...basicMetrics,
-      { name: "ecommerceRevenue", value: "$4,230" },
-      { name: "ecommercePurchases", value: "28" },
-      { name: "itemRevenue", value: "$151" },
-    ];
+    const cacheKey = getCacheKey(userId, propertyId);
 
-    const metrics =
-      userTier === "enterprise" ? advancedMetrics : basicMetrics;
+    // Check cache first
+    const cached = getCache(cacheKey);
+    if (cached) {
+      return cached;
+    }
 
-    const today = new Date();
-    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const client = createGaClient();
+    const accessLevel = userTier === "enterprise" ? "advanced" : "basic";
 
-    const formatDate = (date: Date) => date.toISOString().split("T")[0];
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
 
-    return {
-      userId: "",
-      propertyId: process.env.GA4_PROPERTY_ID || "",
-      dateRange: {
-        startDate: formatDate(thirtyDaysAgo),
-        endDate: formatDate(today),
-      },
-      metrics,
-      cachedAt: new Date(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    const report = await client.getMetrics(
+      startDate.toISOString().split("T")[0],
+      endDate.toISOString().split("T")[0],
+      accessLevel
+    );
+
+    const result = {
+      ...report,
+      userId,
     };
+
+    // Cache the result
+    const ttlHours = parseInt(process.env.GA_DATA_CACHE_TTL_HOURS || "24");
+    setCache(cacheKey, result, ttlHours);
+
+    return result;
   } catch (error) {
     console.error("Failed to fetch GA metrics:", error);
     return null;
   }
 }
 
-export async function getGaMetricsWithTier(
-  userTier: "professional" | "enterprise"
-): Promise<GaReport | null> {
-  // Enhanced version with actual tier-based access control
-  return getGaMetrics(userTier);
+export async function isGaLinked(userId: string): Promise<boolean> {
+  try {
+    // This will be implemented when auth system is added
+    // For now, always return false
+    return false;
+  } catch {
+    return false;
+  }
 }
