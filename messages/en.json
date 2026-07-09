@@ -365,7 +365,15 @@
     "sampleCta": "View sample report",
     "closingTitle": "Ready to dig deeper?",
     "closingBody": "Get custom analysis tailored to your strategy. Reach out with details about your operator or market research needs.",
-    "closingCta": "Get in touch"
+    "closingCta": "Get in touch",
+    "gaMetricsTitle": "Your Performance",
+    "gaMetricsScreenPageViews": "Page Views",
+    "gaMetricsTotalUsers": "Users",
+    "gaMetricsActiveUsers": "Active Users",
+    "gaMetricsBounceRate": "Bounce Rate",
+    "gaMetricsEcommerceRevenue": "Revenue (USD)",
+    "gaMetricsLinkedAt": "Linked with GA4",
+    "gaMetricsNotLinked": "Link with Google Analytics to see metrics"
   },
   "reportsSample": {
     "title": "Sample Report",
