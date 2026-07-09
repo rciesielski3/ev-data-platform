@@ -4,36 +4,11 @@ import { getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
 import Hero from "@/components/ui/Hero";
-import { prisma } from "@/lib/db/prisma";
 
 export const revalidate = 3600;
 
-const getStats = async () => {
-  const [stationCount, operatorCount, provinces] = await Promise.all([
-    prisma.chargingStation.count(),
-    prisma.chargingOperator.count(),
-    prisma.chargingStation.groupBy({
-      by: ["province"],
-      where: { province: { not: null } },
-    }),
-  ]);
-
-  return {
-    stationCount,
-    operatorCount,
-    provinceCount: provinces.length,
-  };
-};
-
 export default async function OperatorFeaturedPage() {
   const t = await getTranslations("operatorFeatured");
-
-  let stats;
-  try {
-    stats = await getStats();
-  } catch {
-    stats = null;
-  }
 
   return (
     <main className="flex flex-1 flex-col">
