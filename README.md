@@ -296,3 +296,38 @@ MIT
 Please credit if you reuse it in your own work 🙌
 
 [☕ Buy Me a Coffee](https://buycoffee.to/adateo)
+
+---
+
+## SEO & Search Console Setup
+
+### Google Search Console (GSC)
+
+1. Visit [Google Search Console](https://search.google.com/search-console)
+2. Add property: `https://www.evdatasource.com`
+3. Verify ownership via DNS record or HTML file
+4. Submit sitemap: `https://www.evdatasource.com/sitemap.xml`
+5. Monitor Coverage report for indexing status
+6. Track Performance metrics (clicks, impressions, CTR, position)
+7. Monitor Core Web Vitals in the Experience section
+
+### Bing Webmaster Tools
+
+1. Visit [Bing Webmaster Tools](https://www.bing.com/webmasters)
+2. Add site: `https://www.evdatasource.com`
+3. Verify via DNS or HTML file
+4. Submit sitemap: `https://www.evdatasource.com/sitemap.xml`
+5. Monitor Crawl Issues and Index Explorer
+
+### Automated Monitoring
+
+- Daily sitemap pings run via GitHub Actions (`.github/workflows/seo-monitoring.yml`)
+- Scheduled for 2 AM UTC to coincide with data imports
+- Core Web Vitals tracked via Vercel SpeedInsights integration
+- JSON-LD schema markup validates organization structure
+
+### Validation
+
+- JSON-LD schema: [Schema.org Validator](https://validator.schema.org/)
+- Core Web Vitals: [PageSpeed Insights](https://pagespeed.web.dev/)
+- Sitemap: [XML Sitemap Validator](https://www.xml-sitemaps.com/validate-xml-sitemap.html)

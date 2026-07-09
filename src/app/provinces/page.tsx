@@ -47,16 +47,16 @@ export default async function ProvincesPage() {
       />
 
       <ActionBar>
-        <Link href="/insights" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
+        <Link href="/insights" className="action-link">
           {t("viewInsightsLink")}
         </Link>
-        <Link href="/stations" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
+        <Link href="/stations" className="action-link">
           {t("browseStationsLink")}
         </Link>
-        <a href="/api/exports/provinces?format=csv" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
+        <a href="/api/exports/provinces?format=csv" className="action-link">
           {t("exportCsvLink")}
         </a>
-        <a href="/api/exports/provinces?format=json" className="text-sm font-medium text-emerald-700 hover:text-emerald-900">
+        <a href="/api/exports/provinces?format=json" className="action-link">
           {t("exportJsonLink")}
         </a>
       </ActionBar>
