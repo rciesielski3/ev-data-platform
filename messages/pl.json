@@ -359,7 +359,15 @@
     "sampleCta": "Wyświetl przykładowy raport",
     "closingTitle": "Gotów do zagłębiania się?",
     "closingBody": "Uzyskaj niestandardową analizę dostosowaną do Twojej strategii. Skontaktuj się ze szczegółami dotyczącymi Twojego operatora lub potrzeb badawczych rynku.",
-    "closingCta": "Skontaktuj się z nami"
+    "closingCta": "Skontaktuj się z nami",
+    "gaMetricsTitle": "Twoja wydajność",
+    "gaMetricsScreenPageViews": "Odsłony",
+    "gaMetricsTotalUsers": "Użytkownicy",
+    "gaMetricsActiveUsers": "Aktywni użytkownicy",
+    "gaMetricsBounceRate": "Współczynnik odskoku",
+    "gaMetricsEcommerceRevenue": "Przychód (USD)",
+    "gaMetricsLinkedAt": "Powiązane z GA4",
+    "gaMetricsNotLinked": "Powiąż z Google Analytics aby zobaczyć metryki"
   },
   "reportsSample": {
     "title": "Przykładowy raport",

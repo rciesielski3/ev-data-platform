@@ -5,6 +5,8 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
+import { GaMetricsCard } from "@/components/analytics/GaMetricsCard";
+import { getGaMetrics } from "@/lib/analytics/server";
 import {
   ArrowRight,
   Building2,
@@ -23,12 +25,26 @@ const FeatureItem = ({ children }: { children: React.ReactNode }) => (
 
 export default async function ReportsPage() {
   const t = await getTranslations("reports");
+  
+  // Fetch GA metrics for current user (mock implementation for now)
+  const gaMetrics = await getGaMetrics("professional");
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <PageHeader title={t("title")} description={t("description")} />
 
-      <section className="grid gap-6 sm:grid-cols-3">
+      {/* GA Metrics Section (if user has GA linked) */}
+      {gaMetrics && (
+        <section className="mt-10">
+          <GaMetricsCard
+            metrics={gaMetrics.metrics}
+            dateRange={gaMetrics.dateRange}
+            title={t("gaMetricsTitle")}
+          />
+        </section>
+      )}
+
+      <section className="mt-10 grid gap-6 sm:grid-cols-3">
         <Card
           as="article"
           className="flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
