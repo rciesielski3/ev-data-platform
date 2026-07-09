@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
     // Extract user tier from query params (in real implementation, fetch from database)
     const { searchParams } = new URL(request.url);
     const tier = (searchParams.get("tier") as "professional" | "enterprise") || "professional";
+    const userId = searchParams.get("userId") || "default-user";
 
     if (!["professional", "enterprise"].includes(tier)) {
       return NextResponse.json(
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch GA metrics with tier-based filtering
-    const metricsData = await getGaMetricsWithTier(tier);
+    const metricsData = await getGaMetricsWithTier(tier, userId);
 
     if (!metricsData) {
       return NextResponse.json(
