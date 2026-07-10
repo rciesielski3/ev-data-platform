@@ -8,6 +8,7 @@ on:
 
 env:
   NEON_PROJECT_ID: green-sky-067338
+  NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
 
 jobs:
   determine-type:
