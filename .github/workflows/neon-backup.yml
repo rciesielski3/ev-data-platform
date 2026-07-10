@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  NEON_PROJECT_ID: green-sky-067338
+  NEON_PROJECT_ID: br-square-river-asmo25oj
 
 jobs:
   determine-type:
