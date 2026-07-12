@@ -31,9 +31,23 @@ const getMapData = unstable_cache(
       await Promise.all([
         prisma.chargingStation.findMany({
           where,
-          include: {
-            operator: true,
+          select: {
+            id: true,
+            name: true,
+            latitude: true,
+            longitude: true,
+            province: true,
+            operator: {
+              select: {
+                name: true,
+                normalizedName: true,
+              },
+            },
             connectors: {
+              select: {
+                connectorType: true,
+                powerKw: true,
+              },
               orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
             },
           },
