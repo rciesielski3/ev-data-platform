@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  NEON_PROJECT_ID: br-square-river-asmo25oj
+  NEON_PROJECT_ID: green-sky-067338
   NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
 
 jobs:
@@ -44,10 +44,8 @@ jobs:
         run: |
           BRANCHES=$(curl -s -X GET \
             "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
-            -H "Authorization: Bearer $NEON_API_KEY" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json")
-
-          echo "DEBUG: API Response: $BRANCHES"
 
           PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.is_primary == true) | .id' | head -1)
 
