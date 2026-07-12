@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
 import { MetricCard } from "@/features/charging/metric-card";
-import { formatInteger } from "@/features/charging/insights";
 
 type ProvincesHeroProps = {
   provinceCount: number;
@@ -23,25 +22,25 @@ export const ProvincesHero = async ({
       <MetricCard
         index={0}
         label={t("provincesMetricLabel")}
-        value={formatInteger(provinceCount)}
+        value={provinceCount}
         helper={t("provincesMetricHelper")}
       />
       <MetricCard
         index={1}
         label={t("stationsMetricLabel")}
-        value={formatInteger(totalStations)}
+        value={totalStations}
         helper={t("stationsMetricHelper")}
       />
       <MetricCard
         index={2}
         label={t("connectorsMetricLabel")}
-        value={formatInteger(totalConnectors)}
+        value={totalConnectors}
         helper={t("connectorsMetricHelper")}
       />
       <MetricCard
         index={3}
         label={t("hpcStationsMetricLabel")}
-        value={formatInteger(totalHpcStations)}
+        value={totalHpcStations}
         helper={t("hpcStationsMetricHelper")}
       />
     </section>

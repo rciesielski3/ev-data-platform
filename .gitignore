@@ -48,3 +48,9 @@ docs
 
 # claude settings
 .claude/
+
+# GA4 OAuth credentials (never commit!)
+oauth_evsource.json
+.env.local
+.env.*.local
+.worktrees

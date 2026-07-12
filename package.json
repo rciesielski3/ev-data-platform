@@ -25,18 +25,20 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@google-analytics/data": "^6.1.0",
     "@prisma/client": "^6.9.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "google-auth-library": "^9.15.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.21.0",
-    "next": "^15.3.3",
+    "next": "^15.5.20",
     "next-intl": "^4.13.0",
     "react": "^19.1.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.1.0",
     "recharts": "^3.9.0",
-    "simple-icons": "^16.24.0",
+    "simple-icons": "^16.25.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -47,12 +49,12 @@
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.29.0",
-    "eslint-config-next": "^15.3.3",
+    "eslint-config-next": "^15.5.20",
     "husky": "^9.1.7",
     "postcss": "^8.5.15",
     "prisma": "^6.9.0",
     "tailwindcss": "^3.4.17",
-    "tsx": "^4.20.3",
+    "tsx": "^4.23.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   }

@@ -1,3 +1,5 @@
+import MetricCardSkeleton from "@/components/ui/MetricCardSkeleton";
+
 const CorridorsLoading = () => {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -8,10 +10,7 @@ const CorridorsLoading = () => {
       <div className="mb-8 h-28 animate-pulse rounded-xl border border-slate-200 bg-white" />
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-32 animate-pulse rounded-xl border border-slate-200 bg-white"
-          />
+          <MetricCardSkeleton key={index} />
         ))}
       </div>
       {Array.from({ length: 3 }).map((_, index) => (

@@ -248,3 +248,18 @@ model DailySnapshot {
   @@index([snapshotDate])
   @@index([capturedAt])
 }
+
+model GaUser {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  email               String
+  gaPropertyId        String
+  oauthAccessToken    String   @db.Text
+  oauthRefreshToken   String   @db.Text
+  oauthExpiresAt      DateTime
+  tier                String   @default("professional")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+}

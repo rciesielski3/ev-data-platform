@@ -90,6 +90,42 @@ button.card:active,
   color: var(--foreground);
 }
 
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--accent);
+  background-color: var(--accent-soft-bg);
+  text-decoration: none;
+  transition: all 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.action-link:hover {
+  background-color: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgb(5 150 105 / 0.2);
+}
+
+.action-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgb(5 150 105 / 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-link,
+  .action-link:hover,
+  .action-link:active {
+    transition: none;
+    transform: none;
+  }
+}
+
 .hero-surface {
   position: relative;
   overflow: hidden;
@@ -269,6 +305,7 @@ button.card:active,
 
 .stat-card {
   animation: stat-rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--stat-card-delay, 0ms);
 }
 
 .stat-card-value {
@@ -316,7 +353,7 @@ button.card:active,
   }
 }
 
-[style*="--share-bar-width"] {
+.share-bar-fill {
   width: var(--share-bar-width);
 }
 

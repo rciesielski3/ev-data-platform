@@ -42,12 +42,35 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
+export const generateJsonLd = async () => {
+  const t = await getTranslations("home");
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "EVSource",
+    description: t("description"),
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.svg`,
+    sameAs: [
+      "https://github.com/rciesielski3/EV-Data-Platform",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "Customer Service",
+      email: "kontakt@evdatasource.com",
+    },
+    founder: "Rafal Ciesielski",
+  };
+};
+
 const RootLayout = async ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
   const locale = (await getLocale()) as SupportedLocale;
   const messages = await getMessages();
   const t = await getTranslations("nav");
+  const jsonLd = await generateJsonLd();
 
   const navLinks: NavLink[] = [
     { href: "/stations", label: t("stations") },
@@ -74,6 +97,12 @@ const RootLayout = async ({
 
   return (
     <html lang={locale}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]`}
       >

@@ -21,9 +21,9 @@ describe("buildChargingInsights", () => {
     const insights = buildChargingInsights(baseInput);
 
     expect(insights.summary).toEqual({
-      totalStations: "0",
-      totalConnectors: "0",
-      knownPowerConnectors: "0",
+      totalStations: 0,
+      totalConnectors: 0,
+      knownPowerConnectors: 0,
     });
     expect(insights.topOperators).toEqual([]);
     expect(insights.connectorDistribution).toEqual([]);
