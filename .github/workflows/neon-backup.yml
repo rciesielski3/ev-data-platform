@@ -8,6 +8,7 @@ on:
 
 env:
   NEON_PROJECT_ID: green-sky-067338
+  NEON_ORG_ID: org-jolly-bird-48400667
   NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
 
 jobs:
@@ -45,7 +46,8 @@ jobs:
           BRANCHES=$(curl -s -X GET \
             "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json")
+            -H "Content-Type: application/json" \
+            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
 
           PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.is_primary == true) | .id' | head -1)
 
@@ -63,6 +65,7 @@ jobs:
             "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json" \
+            -H "X-Neon-Organization-Id: $NEON_ORG_ID" \
             -d "{
               \"branch\": {
                 \"name\": \"backup-${{ needs.determine-type.outputs.type }}-${{ needs.determine-type.outputs.suffix }}\",
@@ -85,7 +88,8 @@ jobs:
           BRANCHES=$(curl -s -X GET \
             "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json")
+            -H "Content-Type: application/json" \
+            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
 
           BACKUP_TYPE="${{ needs.determine-type.outputs.type }}"
 
@@ -103,7 +107,8 @@ jobs:
             curl -s -X DELETE \
               "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$OLDEST_ID" \
               -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-              -H "Content-Type: application/json"
+              -H "Content-Type: application/json" \
+              -H "X-Neon-Organization-Id: $NEON_ORG_ID"
           fi
 
       - name: Send monthly backup email via Resend
