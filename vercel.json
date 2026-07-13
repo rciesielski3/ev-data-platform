@@ -1,12 +1,3 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/import-eipa",
-      "schedule": "0 2 * * *"
-    },
-    {
-      "path": "/api/cron/import-openev",
-      "schedule": "0 2 * * 0"
-    }
-  ]
+  "crons": []
 }
