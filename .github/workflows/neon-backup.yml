@@ -39,11 +39,45 @@ jobs:
     needs: determine-type
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve Neon project ID
+        id: resolve
+        run: |
+          PROJECTS=$(curl -s -X GET \
+            "https://console.neon.tech/api/v2/projects" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+            -H "Content-Type: application/json")
+
+          if ! echo "$PROJECTS" | jq -e '.projects' > /dev/null 2>&1; then
+            echo "ERROR: Neon API did not return a projects list (check NEON_API_KEY)"
+            echo "Response: $PROJECTS"
+            exit 1
+          fi
+
+          echo "Accessible Neon projects (id | name):"
+          echo "$PROJECTS" | jq -r '.projects[] | "  \(.id) | \(.name)"'
+
+          if echo "$PROJECTS" | jq -e --arg id "$NEON_PROJECT_ID" '.projects[] | select(.id == $id)' > /dev/null 2>&1; then
+            PROJECT_ID="$NEON_PROJECT_ID"
+            echo "Using configured NEON_PROJECT_ID: $PROJECT_ID"
+          else
+            COUNT=$(echo "$PROJECTS" | jq '.projects | length')
+            if [ "$COUNT" = "1" ]; then
+              PROJECT_ID=$(echo "$PROJECTS" | jq -r '.projects[0].id')
+              echo "Configured NEON_PROJECT_ID '$NEON_PROJECT_ID' not found; using the only accessible project: $PROJECT_ID"
+            else
+              echo "ERROR: Configured NEON_PROJECT_ID '$NEON_PROJECT_ID' not found among $COUNT accessible projects."
+              echo "Update the NEON_PROJECT_ID env value in this workflow to one of the IDs listed above."
+              exit 1
+            fi
+          fi
+
+          echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
+
       - name: Get primary branch ID
         id: get_branch
         run: |
           BRANCHES=$(curl -s -X GET \
-            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json")
 
@@ -51,6 +85,7 @@ jobs:
 
           if [ -z "$PRIMARY_ID" ]; then
             echo "ERROR: Could not find primary branch"
+            echo "Response: $BRANCHES"
             exit 1
           fi
 
@@ -60,7 +95,7 @@ jobs:
         id: create_backup
         run: |
           RESPONSE=$(curl -s -X POST \
-            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d "{
@@ -83,7 +118,7 @@ jobs:
       - name: Cleanup old backups
         run: |
           BRANCHES=$(curl -s -X GET \
-            "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json")
 
@@ -101,7 +136,7 @@ jobs:
             echo "Deleting old backup: $OLDEST_NAME"
 
             curl -s -X DELETE \
-              "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$OLDEST_ID" \
+              "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches/$OLDEST_ID" \
               -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
               -H "Content-Type: application/json"
           fi
