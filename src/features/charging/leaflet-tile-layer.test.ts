@@ -45,10 +45,17 @@ beforeAll(() => {
     removeEventListener: () => {},
   };
 
-  Object.assign(globalThis, {
-    window: fakeWindow,
-    document: fakeDocument,
-    navigator: fakeWindow.navigator,
+  Object.defineProperty(globalThis, 'window', {
+    value: fakeWindow,
+    configurable: true,
+  });
+  Object.defineProperty(globalThis, 'document', {
+    value: fakeDocument,
+    configurable: true,
+  });
+  Object.defineProperty(globalThis, 'navigator', {
+    value: fakeWindow.navigator,
+    configurable: true,
   });
 });
 
