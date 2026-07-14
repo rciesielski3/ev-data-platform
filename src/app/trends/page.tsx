@@ -67,8 +67,7 @@ export default async function TrendsPage({
 
   try {
     points = await getTrendPointsForRange(RANGE_DAYS[activeRange]);
-  } catch (error) {
-    console.error("Failed to load snapshots:", error);
+  } catch {
     errorMessage = t("setupRequiredMessage");
   }
 

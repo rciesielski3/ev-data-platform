@@ -82,8 +82,7 @@ export default async function StateOfChargingPage() {
 
   try {
     data = await getSnapshotData();
-  } catch (error) {
-    console.error("Failed to fetch state of charging snapshot data:", error);
+  } catch {
     data = { error: t("setupRequiredMessage") };
   }
 

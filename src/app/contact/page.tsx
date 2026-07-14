@@ -21,9 +21,6 @@ const notifySlackFeaturedLead = async (
   submittedAt: Date,
 ) => {
   if (!process.env.SLACK_WEBHOOK_FEATURED_LEADS) {
-    console.log(
-      "SLACK_WEBHOOK_FEATURED_LEADS not configured, skipping Slack notification",
-    );
     return;
   }
 
@@ -92,11 +89,10 @@ const notifySlackFeaturedLead = async (
     );
 
     if (!slackResponse.ok) {
-      const slackError = await slackResponse.text();
-      console.error("Slack webhook error:", slackError);
+      // Silently ignore Slack webhook errors to avoid disrupting the user's lead submission
     }
-  } catch (error) {
-    console.error("Failed to notify Slack:", error);
+  } catch {
+    // Silently ignore Slack webhook errors to avoid disrupting the user's lead submission
   }
 };
 
