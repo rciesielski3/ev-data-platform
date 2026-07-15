@@ -87,7 +87,7 @@ const getMapData = unstable_cache(
     };
   },
   ["map-station-data"],
-  { revalidate: 3600 },
+  { revalidate: 600 },
 );
 
 const MapPanelLoading = () => (

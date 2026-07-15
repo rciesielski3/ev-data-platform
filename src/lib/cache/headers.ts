@@ -45,10 +45,19 @@ export const setResponseHeaders = (
 };
 
 export const addEtagHeader = (response: NextResponse, data: unknown): NextResponse => {
-  const hash = createHash('sha256');
-  hash.update(JSON.stringify(data));
-  const etag = `"${hash.digest('hex').slice(0, 16)}"`;
+  try {
+    if (data === undefined) {
+      return response;
+    }
 
-  response.headers.set('ETag', etag);
+    const hash = createHash('sha256');
+    hash.update(JSON.stringify(data));
+    const etag = `"${hash.digest('hex').slice(0, 16)}"`;
+
+    response.headers.set('ETag', etag);
+  } catch {
+    // Gracefully skip ETag if data is not serializable (e.g., contains BigInt, circular refs)
+  }
+
   return response;
 };

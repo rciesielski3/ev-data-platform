@@ -90,6 +90,25 @@ describe('Cache Headers', () => {
       expect(result).toBeInstanceOf(NextResponse);
       expect(result.headers.get('ETag')).toBeDefined();
     });
+
+    it('handles undefined data gracefully without throwing', () => {
+      const response = new NextResponse('test');
+      const result = addEtagHeader(response, undefined);
+
+      expect(result).toBeInstanceOf(NextResponse);
+      expect(result.headers.get('ETag')).toBeNull();
+    });
+
+    it('handles non-serializable data gracefully without throwing', () => {
+      const response = new NextResponse('test');
+      const circularRef = { a: 1 };
+      (circularRef as Record<string, unknown>).self = circularRef;
+
+      const result = addEtagHeader(response, circularRef);
+
+      expect(result).toBeInstanceOf(NextResponse);
+      expect(result.headers.get('ETag')).toBeNull();
+    });
   });
 
   describe('CACHE_STRATEGIES constants', () => {
