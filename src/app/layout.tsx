@@ -42,7 +42,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-export const generateJsonLd = async () => {
+const generateJsonLd = async () => {
   const t = await getTranslations("home");
 
   return {
