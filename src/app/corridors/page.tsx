@@ -15,7 +15,7 @@ import { formatPercent } from "@/features/charging/insights";
 import { MetricCard } from "@/features/charging/metric-card";
 import { getCorridorStations } from "@/lib/db/cached-queries";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 const getCorridorAnalyses = cache(
   async (): Promise<CorridorAnalysis[]> => {

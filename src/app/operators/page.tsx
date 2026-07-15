@@ -12,7 +12,7 @@ import { MetricCard } from "@/features/charging/metric-card";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 const numberFormatter = new Intl.NumberFormat("en");
 

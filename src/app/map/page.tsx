@@ -19,7 +19,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import AnimatedCount from "@/components/ui/CountUp";
 
-export const revalidate = 3600;
+export const revalidate = 600;
 
 const MAP_STATION_LIMIT = 1000;
 

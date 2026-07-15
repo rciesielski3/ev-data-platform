@@ -14,7 +14,7 @@ import {
 } from "@/features/charging/coverage-analysis";
 import { getProvinceIntelligenceRows } from "@/lib/db/cached-queries";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 const getCoverageData = async (): Promise<CoverageAnalysis> => {
   const provinceRows = await getProvinceIntelligenceRows();

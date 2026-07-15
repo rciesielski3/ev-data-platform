@@ -11,7 +11,7 @@ import { ActionBar } from "@/components/ui/ActionBar";
 import { type ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
 import { getProvinceIntelligenceRows } from "@/lib/db/cached-queries";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export default async function ProvincesPage() {
   const t = await getTranslations("provinces");

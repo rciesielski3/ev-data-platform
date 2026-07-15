@@ -13,7 +13,7 @@ import { toDailySnapshotDto } from "@/lib/snapshots/snapshot-dto";
 
 import TrendsChartClient from "@/app/trends/trends-chart-client";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 const RANGE_DAYS = { "30": 30, "90": 90 } as const;
 type RangeKey = keyof typeof RANGE_DAYS;
