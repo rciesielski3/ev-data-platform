@@ -27,6 +27,7 @@ export const getCacheHeaders = (strategy: CacheStrategy): Record<string, string>
   return {
     'Cache-Control': `public, max-age=${config.maxAge}, s-maxage=${config.sMaxAge}, stale-while-revalidate=${config.staleWhileRevalidate}`,
     'CDN-Cache-Control': `max-age=${config.sMaxAge}, stale-while-revalidate=${config.staleWhileRevalidate}`,
+    'Vary': 'Accept-Encoding',
   };
 };
 
