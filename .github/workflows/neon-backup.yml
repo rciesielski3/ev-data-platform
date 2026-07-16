@@ -44,10 +44,9 @@ jobs:
         id: resolve
         run: |
           PROJECTS=$(curl -s -X GET \
-            "https://console.neon.tech/api/v2/projects" \
+            "https://console.neon.tech/api/v2/projects?org_id=$NEON_ORG_ID" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
+            -H "Content-Type: application/json")
 
           if ! echo "$PROJECTS" | jq -e '.projects' > /dev/null 2>&1; then
             echo "ERROR: Neon API did not return a projects list (check NEON_API_KEY)"
@@ -79,10 +78,9 @@ jobs:
         id: get_branch
         run: |
           BRANCHES=$(curl -s -X GET \
-            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches?org_id=$NEON_ORG_ID" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
+            -H "Content-Type: application/json")
 
           PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.is_primary == true) | .id' | head -1)
 
@@ -98,10 +96,9 @@ jobs:
         id: create_backup
         run: |
           RESPONSE=$(curl -s -X POST \
-            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches?org_id=$NEON_ORG_ID" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -H "X-Neon-Organization-Id: $NEON_ORG_ID" \
             -d "{
               \"branch\": {
                 \"name\": \"backup-${{ needs.determine-type.outputs.type }}-${{ needs.determine-type.outputs.suffix }}\",
@@ -122,10 +119,9 @@ jobs:
       - name: Cleanup old backups
         run: |
           BRANCHES=$(curl -s -X GET \
-            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches" \
+            "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches?org_id=$NEON_ORG_ID" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
+            -H "Content-Type: application/json")
 
           BACKUP_TYPE="${{ needs.determine-type.outputs.type }}"
 
@@ -141,10 +137,9 @@ jobs:
             echo "Deleting old backup: $OLDEST_NAME"
 
             curl -s -X DELETE \
-              "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches/$OLDEST_ID" \
+              "https://console.neon.tech/api/v2/projects/${{ steps.resolve.outputs.project_id }}/branches/$OLDEST_ID?org_id=$NEON_ORG_ID" \
               -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-              -H "Content-Type: application/json" \
-              -H "X-Neon-Organization-Id: $NEON_ORG_ID"
+              -H "Content-Type: application/json"
           fi
 
       - name: Send monthly backup email via Resend
