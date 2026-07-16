@@ -46,7 +46,8 @@ jobs:
           PROJECTS=$(curl -s -X GET \
             "https://console.neon.tech/api/v2/projects" \
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
-            -H "Content-Type: application/json")
+            -H "Content-Type: application/json" \
+            -H "X-Neon-Organization-Id: $NEON_ORG_ID")
 
           if ! echo "$PROJECTS" | jq -e '.projects' > /dev/null 2>&1; then
             echo "ERROR: Neon API did not return a projects list (check NEON_API_KEY)"
