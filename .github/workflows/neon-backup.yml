@@ -82,7 +82,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
             -H "Content-Type: application/json")
 
-          PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.is_primary == true) | .id' | head -1)
+          PRIMARY_ID=$(echo "$BRANCHES" | jq -r '.branches[] | select(.primary == true) | .id' | head -1)
 
           if [ -z "$PRIMARY_ID" ]; then
             echo "ERROR: Could not find primary branch"
