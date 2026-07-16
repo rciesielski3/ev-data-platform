@@ -1,15 +1,15 @@
 # Neon Database Backup Runbook
 
-**Last Updated:** 2026-07-12  
-**Status:** Operational (PR #89 merged)  
+**Last Updated:** 2026-07-16  
+**Status:** Operational (Project ID updated in PR #110)  
 **Workflow File:** `.github/workflows/neon-backup.yml`
 
 ## Overview
 
 The EV Data Platform uses automated Neon database backups via GitHub Actions to ensure disaster recovery capability. Backups are created daily and monthly, with automated email notifications for monthly backups.
 
-**Workflow Status:** ✅ LIVE (Fixed in PR #89)
-- Project ID restored to working state: `green-sky-067338`
+**Workflow Status:** ✅ LIVE (Fixed in PR #89, updated in PR #110)
+- Project ID updated to current state: `sparkling-meadow-78717373`
 - API key configured in GitHub Secrets
 - All backup operations functional
 
@@ -29,7 +29,7 @@ Branch naming:
 ### Environment Variables
 ```yaml
 env:
-  NEON_PROJECT_ID: green-sky-067338  # Primary Neon project (do NOT change)
+  NEON_PROJECT_ID: sparkling-meadow-78717373  # Primary Neon project (updated 2026-07-16)
   NEON_API_KEY: ${{ secrets.NEON_API_KEY }}  # GitHub secret
 ```
 
@@ -37,7 +37,7 @@ env:
 
 | Secret | Purpose | Created |
 |--------|---------|---------|
-| `NEON_API_KEY` | API access to `green-sky-067338` | 2026-07-10 |
+| `NEON_API_KEY` | API access to `sparkling-meadow-78717373` | 2026-07-15 (refreshed) |
 | `RESEND_API_KEY` | Email service for notifications | Pre-existing |
 
 **Setup:** Go to repository Settings → Secrets and variables → Actions → Verify both secrets are present
@@ -92,16 +92,16 @@ gh run list --workflow=neon-backup.yml --limit=3
 **Cause:** Wrong project ID or invalid API key
 
 **Resolution:**
-1. Verify `.github/workflows/neon-backup.yml` line 10: `NEON_PROJECT_ID: green-sky-067338`
+1. Verify `.github/workflows/neon-backup.yml` line 10: `NEON_PROJECT_ID: sparkling-meadow-78717373`
 2. Verify GitHub Secrets: `NEON_API_KEY` is set and valid
 3. Test API key manually:
 ```bash
-curl -X GET https://console.neon.tech/api/v2/projects/green-sky-067338/branches \
+curl -X GET https://console.neon.tech/api/v2/projects/sparkling-meadow-78717373/branches?org_id=org-jolly-bird-48400667 \
   -H "Authorization: Bearer $NEON_API_KEY" \
   -H "Content-Type: application/json" | jq '.branches[0:2]'
 ```
 
-**Recent History:** This error occurred on 2026-07-10 when project ID was changed to `br-square-river-asmo25oj`. Fixed by PR #89 reverting to `green-sky-067338`.
+**Recent History:** This error occurred on 2026-07-10 when project ID was changed to `br-square-river-asmo25oj`. Fixed by PR #89 reverting to `green-sky-067338`. Project ID updated again on 2026-07-16 to `sparkling-meadow-78717373` due to Neon backend migration (PR #110).
 
 ### Workflow Fails: "Could not find primary branch"
 **Symptoms:** jq parsing error after successful API response
@@ -130,7 +130,7 @@ curl -X GET https://console.neon.tech/api/v2/projects/green-sky-067338/branches 
 If backup branch needs to be restored to production:
 
 1. **Log in to Neon Console:** https://console.neon.tech
-2. **Select project:** `green-sky-067338`
+2. **Select project:** `sparkling-meadow-78717373` (EV Data Platform)
 3. **Find backup branch:** Listed as `backup-monthly-YYYY-MM` or `backup-daily-YYYY-MM-DD`
 4. **Promote to primary:** Click branch → "Promote to Primary"
    - OR create new branch from backup (safer for testing)
@@ -172,6 +172,6 @@ If backup branch needs to be restored to production:
 
 ## Contact & Support
 
-**Neon Project:** green-sky-067338  
+**Neon Project:** sparkling-meadow-78717373 (EV Data Platform)  
 **Responsible:** EV Data Platform Team  
-**Last Verified:** 2026-07-12 (PR #89 merge)
+**Last Updated:** 2026-07-16 (PR #110 merge, project ID updated due to Neon backend migration)

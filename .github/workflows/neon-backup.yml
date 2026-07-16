@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  NEON_PROJECT_ID: green-sky-067338
+  NEON_PROJECT_ID: sparkling-meadow-78717373
   NEON_ORG_ID: org-jolly-bird-48400667
   NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
 
