@@ -41,7 +41,7 @@
   },
   "home": {
     "title": "EVSource",
-    "description": "Znormalizowane dane o stacjach ładowania i pojazdach elektrycznych w Polsce — pełne pokrycie 16 województw, gotowe do analiz porównawczych dla operatorów sieci ładowania.",
+    "description": "Odkryj 10 000+ stacji ładowania EV w Polsce. Porównaj pojazdy elektryczne. Dane infrastruktury ładowania w czasie rzeczywistym.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
@@ -110,6 +110,7 @@
   },
   "vehicles": {
     "title": "Pojazdy",
+    "description": "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, bateria, czas ładowania, ceny. Specyfikacje wszystkich EV w jednym miejscu.",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
     "activeFilter": "Aktywny filtr",
@@ -169,7 +170,7 @@
   },
   "stations": {
     "title": "Stacje ładowania",
-    "description": "Przeszukuj polską infrastrukturę ładowania według miejsca, złącza, mocy i operatora.",
+    "description": "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po złączu, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     "viewInsightsLink": "Zobacz statystyki",
     "browseCatalogLink": "Przeglądaj katalog EV",
     "setupRequiredMessage": "Dane stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",
@@ -450,7 +451,7 @@
   },
   "map": {
     "title": "Mapa stacji ładowania",
-    "description": "Eksploruj polskie stacje ładowania według województwa, typu złącza i minimalnej mocy ładowania.",
+    "description": "Interaktywna mapa wszystkich stacji ładowania EV w Polsce. Wyszukaj po lokalizacji, złączu i mocy ładowania.",
     "searchListLink": "Lista wyszukiwania",
     "viewInsightsLink": "Zobacz statystyki",
     "setupRequiredMessage": "Dane mapy stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",
@@ -539,7 +540,7 @@
   },
   "insights": {
     "title": "Statystyki ładowania",
-    "description": "Zagregowane wskaźniki kondycji i pokrycia z bazy danych stacji ładowania.",
+    "description": "Zagregowane metryki i analiza polskiej infrastruktury ładowania EV.",
     "browseStationsLink": "Przeglądaj stacje",
     "setupRequiredMessage": "Statystyki ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
     "emptyTitle": "Brak jeszcze danych o ładowaniu",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ShieldCheck,
@@ -28,6 +29,14 @@ import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const revalidate = 3600;
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("home");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+};
 
 const getStatus = async () => {
   const [

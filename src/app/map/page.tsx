@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -20,6 +21,14 @@ import Button from "@/components/ui/Button";
 import AnimatedCount from "@/components/ui/CountUp";
 
 export const revalidate = 600;
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("map");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+};
 
 const MAP_STATION_LIMIT = 1000;
 

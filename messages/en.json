@@ -41,7 +41,7 @@
   },
   "home": {
     "title": "EVSource",
-    "description": "Normalized data on charging stations and EV models in Poland — full coverage across all 16 provinces, ready for benchmarking by charging network operators.",
+    "description": "Discover 10,000+ EV charging stations in Poland. Compare electric vehicles. Real-time charging infrastructure data.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -110,6 +110,7 @@
   },
   "vehicles": {
     "title": "Vehicles",
+    "description": "Compare 2,000+ EV models: range, battery, charging time, and pricing. Complete specs for all electric vehicles.",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
     "activeFilter": "Active filter",
@@ -169,7 +170,7 @@
   },
   "stations": {
     "title": "Charging Stations",
-    "description": "Search Polish charging infrastructure by place, connector, power, and operator.",
+    "description": "Browse 10,000+ EV charging stations. Filter by connector type, operator, and region. Real-time availability updates.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
     "setupRequiredMessage": "Charging station data is not available yet. Configure the database and run the EIPA import.",
@@ -450,7 +451,7 @@
   },
   "map": {
     "title": "Charging Station Map",
-    "description": "Explore Polish charging stations by province, connector type, and minimum charging power.",
+    "description": "Interactive map of all EV charging stations in Poland. Search by location, connector type, and charging speed.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Charging station map data is not available yet. Configure the database and run the EIPA import.",
@@ -539,7 +540,7 @@
   },
   "insights": {
     "title": "Charging Insights",
-    "description": "Aggregate health and coverage metrics from the charging station database.",
+    "description": "Aggregate metrics and analysis of Poland's EV charging infrastructure.",
     "browseStationsLink": "Browse stations",
     "setupRequiredMessage": "Charging insights are not available yet. Configure the database and run the charging station imports.",
     "emptyTitle": "No charging data yet",

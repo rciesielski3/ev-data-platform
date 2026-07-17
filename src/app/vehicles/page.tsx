@@ -81,18 +81,10 @@ export const generateMetadata = async ({
   const t = await getTranslations("vehicles");
   const filters = parseVehicleSearchParams(await searchParams);
 
-  let description: string;
-  try {
-    const { total } = await getVehiclesData(filters);
-    description = t("descriptionWithCount", { count: total });
-  } catch {
-    description = t("descriptionError");
-  }
-
   if (isFilteredView(filters)) {
     return {
       title: t("title"),
-      description,
+      description: t("description"),
       alternates: { canonical: "/vehicles" },
       robots: { index: false, follow: true },
     };
@@ -100,7 +92,7 @@ export const generateMetadata = async ({
 
   return {
     title: t("title"),
-    description,
+    description: t("description"),
     alternates: { canonical: "/vehicles" },
   };
 };

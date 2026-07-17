@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
@@ -15,6 +16,14 @@ import {
 import { prisma } from "@/lib/db/prisma";
 
 export const revalidate = 3600;
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("insights");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+};
 
 const INSIGHT_LIMIT = 10;
 const HIGHEST_POWER_CANDIDATE_LIMIT = 80;
