@@ -40,8 +40,8 @@
     "corridors": "Corridors"
   },
   "home": {
-    "title": "EVSource",
-    "description": "Discover 10,000+ EV charging stations in Poland. Compare electric vehicles. Real-time charging infrastructure data.",
+    "title": "Przewodnik Ładowania EV & Infrastruktura – evsource.pl",
+    "description": "Odkryj 10 000+ stacji ładowania EV w Polsce. Porównaj pojazdy elektryczne. Dane infrastruktury ładowania w czasie rzeczywistym.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -493,8 +493,8 @@
     "body": "Charging station map data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "connectors": {
-    "title": "Connector knowledge base",
-    "description": "Static reference notes for interpreting connector names in imported charging station and vehicle data. These pages do not claim live compatibility or charger availability.",
+    "title": "Rodzaje Ładowarek EV – Porównanie – evsource.pl",
+    "description": "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
     "viewDetailsLink": "View connector details"
   },
   "connectorDetail": {
@@ -539,8 +539,8 @@
     }
   },
   "insights": {
-    "title": "Charging Insights",
-    "description": "Comprehensive statistics and analysis of Poland's EV charging infrastructure. Explore operator networks, connector types, regional density, and growth trends.",
+    "title": "Statystyki Ładowania EV & Analiza Rynku – evsource.pl",
+    "description": "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji ładowania, pokrycie operatorów, rozkład rodzajów ładowarek i trendy rynku pojazdów elektrycznych.",
     "browseStationsLink": "Browse stations",
     "setupRequiredMessage": "Charging insights are not available yet. Configure the database and run the charging station imports.",
     "emptyTitle": "No charging data yet",

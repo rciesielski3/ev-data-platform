@@ -33,8 +33,8 @@ export const revalidate = 3600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t("title") || "Przewodnik Ładowania EV & Infrastruktura – evsource.pl",
+    description: t("description") || "Odkryj 10 000+ stacji ładowania EV w Polsce. Porównaj pojazdy elektryczne. Dane infrastruktury ładowania w czasie rzeczywistym.",
   };
 };
 
@@ -168,6 +168,52 @@ const HomePage = async () => {
           ) : undefined
         }
       />
+
+      <section className="mt-16 mb-16 mx-auto max-w-6xl px-6">
+        <h2 className="text-3xl font-bold mb-8">Przewodnik dla Rozpoczynających</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card">
+            <h3 className="text-lg font-semibold mb-3">Jak znaleźć stację ładowania?</h3>
+            <p className="text-muted mb-4">
+              Skorzystaj z naszej interaktywnej mapy ładowarek lub przeglądaj
+              listę wszystkich stacji ładowania EV w Polsce.
+            </p>
+            <Link href="/map" className="text-green-600 underline font-semibold">
+              Otwórz mapę ładowarek →
+            </Link>
+          </div>
+          <div className="card">
+            <h3 className="text-lg font-semibold mb-3">Jakie są rodzaje ładowarek?</h3>
+            <p className="text-muted mb-4">
+              Poznaj różne rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO
+              i dowiedz się, które pasuje do Twojego pojazdu.
+            </p>
+            <Link href="/connectors" className="text-green-600 underline font-semibold">
+              Porównaj rodzaje ładowarek →
+            </Link>
+          </div>
+          <div className="card">
+            <h3 className="text-lg font-semibold mb-3">Porównaj modele EV</h3>
+            <p className="text-muted mb-4">
+              Przeglądaj 2000+ modeli pojazdów elektrycznych z informacjami
+              o zasięgu, baterii i czasie ładowania.
+            </p>
+            <Link href="/vehicles" className="text-green-600 underline font-semibold">
+              Porównaj pojazdy elektryczne →
+            </Link>
+          </div>
+          <div className="card">
+            <h3 className="text-lg font-semibold mb-3">Statystyki ładowania EV</h3>
+            <p className="text-muted mb-4">
+              Sprawdzaj statystyki infrastruktury ładowania, gęstość stacji
+              i trendy rynku pojazdów elektrycznych w Polsce.
+            </p>
+            <Link href="/insights" className="text-green-600 underline font-semibold">
+              Przejrzyj statystyki →
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {"error" in status ? (
         <div className="mx-auto w-full max-w-6xl px-6 pb-16">
