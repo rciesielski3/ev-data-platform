@@ -25,8 +25,8 @@ export const revalidate = 600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("map");
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t("title") || "Interaktywna Mapa Ładowarek EV – evsource.pl",
+    description: t("description") || "Interaktywna mapa wszystkich stacji ładowania EV w Polsce. Wyszukaj po lokalizacji, rodzaju złącza i mocy ładowania.",
   };
 };
 
@@ -223,9 +223,28 @@ const StationMapPage = async ({
         }
       />
 
+      <h1 className="text-4xl font-bold mb-4">
+        Interaktywna Mapa Ładowarek EV w Polsce
+      </h1>
+
+      <p className="text-lg text-muted mb-6">
+        Użyj naszej interaktywnej mapy ładowarek EV, aby znaleźć stacje ładowania blisko Ciebie.
+        Wyszukuj stacje ładowania po lokalizacji, rodzaju złącza (CCS2, Type 2, CHAdeMO),
+        mocy ładowania i operatorze. Mapa ładowarek EV jest aktualizowana w czasie rzeczywistym.
+      </p>
+
       <Suspense fallback={<MapPanelLoading />}>
         <MapDataPanel params={params} />
       </Suspense>
+
+      <div className="mt-8 p-4 bg-blue-50 rounded">
+        <p className="font-semibold mb-2">Wolisz listę stacji?</p>
+        <p>
+          <Link href="/stations" className="text-green-600 underline">
+            Przeglądaj wszystkie stacje ładowania w Polsce
+          </Link>
+        </p>
+      </div>
     </main>
   );
 };

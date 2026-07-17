@@ -109,8 +109,8 @@
     "b2bCtaButton": "Get in touch"
   },
   "vehicles": {
-    "title": "Vehicles",
-    "description": "Compare 2,000+ EV models and specifications. View range, battery capacity, charging time, pricing, and complete details for electric vehicles worldwide.",
+    "title": "Compare Electric Vehicle Models – evsource.pl",
+    "description": "Compare 2000+ electric vehicle models. Range, battery capacity, charging time, prices and specifications for all available EVs.",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
     "activeFilter": "Active filter",
@@ -169,7 +169,7 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "title": "Charging Stations",
+    "title": "Charging Stations in Poland – evsource.pl",
     "description": "Browse 10,000+ EV charging stations in Poland. Filter by connector type (CCS2, Type 2), operator, and region. Real-time availability updates and coverage.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
@@ -450,8 +450,8 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "title": "Charging Station Map",
-    "description": "Interactive map of all EV charging stations in Poland. Search and locate by location, connector type (CCS2, Type 2), charging speed, and operator network.",
+    "title": "Interactive EV Charging Map – evsource.pl",
+    "description": "Interactive map of all EV charging stations in Poland. Search by location, connector type, and charging power.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Charging station map data is not available yet. Configure the database and run the EIPA import.",
