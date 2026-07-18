@@ -37,18 +37,11 @@ const spaceGrotesk = Space_Grotesk({
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
-  const locale = (await getLocale()) as SupportedLocale;
 
   return {
     metadataBase: new URL(SITE_URL),
     title: t("title"),
     description: t("description"),
-    alternates: {
-      languages: {
-        pl: `${SITE_URL}/pl`,
-        en: `${SITE_URL}/en`,
-      },
-    },
   };
 };
 

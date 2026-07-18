@@ -27,24 +27,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}${route.path}`,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
-    alternates: {
-      languages: {
-        pl: `${SITE_URL}/pl${route.path}`,
-        en: `${SITE_URL}/en${route.path}`,
-      },
-    },
   }));
 
   const connectorEntries: MetadataRoute.Sitemap = CONNECTOR_TYPES.map((type) => ({
     url: `${SITE_URL}/connectors/${type}`,
     changeFrequency: "weekly",
     priority: 0.7,
-    alternates: {
-      languages: {
-        pl: `${SITE_URL}/pl/connectors/${type}`,
-        en: `${SITE_URL}/en/connectors/${type}`,
-      },
-    },
   }));
 
   const [stations, vehicles] = await Promise.all([
@@ -61,12 +49,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: station.updatedAt,
     changeFrequency: "weekly",
     priority: 0.6,
-    alternates: {
-      languages: {
-        pl: `${SITE_URL}/pl/stations/${station.id}`,
-        en: `${SITE_URL}/en/stations/${station.id}`,
-      },
-    },
   }));
 
   const vehicleEntries: MetadataRoute.Sitemap = vehicles.map((vehicle) => ({
@@ -74,12 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: vehicle.updatedAt,
     changeFrequency: "weekly",
     priority: 0.6,
-    alternates: {
-      languages: {
-        pl: `${SITE_URL}/pl/vehicles/${vehicle.id}`,
-        en: `${SITE_URL}/en/vehicles/${vehicle.id}`,
-      },
-    },
   }));
 
   return [...staticEntries, ...connectorEntries, ...stationEntries, ...vehicleEntries];
