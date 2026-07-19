@@ -1,8 +1,6 @@
-const numberFormatter = new Intl.NumberFormat("en");
-const percentFormatter = new Intl.NumberFormat("en", {
-  style: "percent",
-  maximumFractionDigits: 0,
-});
+"use client";
+
+import { useLocale, useTranslations } from "next-intl";
 
 export type MetricCardProps = {
   label: string;
@@ -19,12 +17,25 @@ export const MetricCard = ({
   helper,
   index = 0,
 }: MetricCardProps) => {
+  const locale = useLocale();
+  const t = useTranslations("common");
+  const numberFormatter = new Intl.NumberFormat(
+    locale === "pl" ? "pl-PL" : "en-US"
+  );
+  const percentFormatter = new Intl.NumberFormat(
+    locale === "pl" ? "pl-PL" : "en-US",
+    {
+      style: "percent",
+      maximumFractionDigits: 0,
+    }
+  );
+
   const formatValue = () => {
     if (unit === "percent") {
       return percentFormatter.format(value / 100);
     }
     if (unit === "kW") {
-      return value === 0 ? "Unknown" : `${numberFormatter.format(value)} kW`;
+      return value === 0 ? t("unknown") : `${numberFormatter.format(value)} kW`;
     }
     if (unit) {
       return `${numberFormatter.format(value)} ${unit}`;
