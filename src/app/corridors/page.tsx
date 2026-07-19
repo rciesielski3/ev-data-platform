@@ -3,6 +3,7 @@ import { Suspense, cache } from "react";
 import { getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
+import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import MetricCardSkeleton from "@/components/ui/MetricCardSkeleton";
 import { CORRIDOR_DEFINITIONS } from "@/features/corridors/corridor-definitions";
@@ -158,71 +159,84 @@ const CorridorCardsSection = async ({
 };
 
 export default async function CorridorsPage() {
-  const t = await getTranslations("corridors");
+  try {
+    const t = await getTranslations("corridors");
 
-  const totalCorridors = CORRIDOR_DEFINITIONS.length;
-  const totalSegments = CORRIDOR_DEFINITIONS.reduce(
-    (sum, corridor) => sum + corridor.segments.length,
-    0,
-  );
+    const totalCorridors = CORRIDOR_DEFINITIONS.length;
+    const totalSegments = CORRIDOR_DEFINITIONS.reduce(
+      (sum, corridor) => sum + corridor.segments.length,
+      0,
+    );
 
-  return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
-      <PageHeader
-        title={t("title")}
-        description={t("description")}
-        actions={
-          <>
-            <a
-              href="/api/exports/corridors?format=csv"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
-              {t("exportCsvLink")}
-            </a>
-            <a
-              href="/api/exports/corridors?format=json"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
-              {t("exportJsonLink")}
-            </a>
-          </>
-        }
-      />
-
-      <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
-        <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
-        <p>{t("explainerBody")}</p>
-      </Card>
-
-      <section className="mb-8 grid gap-4 md:grid-cols-3">
-        <MetricCard
-          index={0}
-          label={t("corridorsMetricLabel")}
-          value={totalCorridors}
-          helper={t("corridorsMetricHelper")}
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <PageHeader
+          title={t("title")}
+          description={t("description")}
+          actions={
+            <>
+              <a
+                href="/api/exports/corridors?format=csv"
+                className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+              >
+                {t("exportCsvLink")}
+              </a>
+              <a
+                href="/api/exports/corridors?format=json"
+                className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+              >
+                {t("exportJsonLink")}
+              </a>
+            </>
+          }
         />
-        <MetricCard
-          index={1}
-          label={t("segmentsMetricLabel")}
-          value={totalSegments}
-          helper={t("segmentsMetricHelper")}
-        />
-        <Suspense fallback={<MetricCardSkeleton />}>
-          <GapsMetric label={t("gapsMetricLabel")} helper={t("gapsMetricHelper")} />
+
+        <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
+          <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
+          <p>{t("explainerBody")}</p>
+        </Card>
+
+        <section className="mb-8 grid gap-4 md:grid-cols-3">
+          <MetricCard
+            index={0}
+            label={t("corridorsMetricLabel")}
+            value={totalCorridors}
+            helper={t("corridorsMetricHelper")}
+          />
+          <MetricCard
+            index={1}
+            label={t("segmentsMetricLabel")}
+            value={totalSegments}
+            helper={t("segmentsMetricHelper")}
+          />
+          <Suspense fallback={<MetricCardSkeleton />}>
+            <GapsMetric label={t("gapsMetricLabel")} helper={t("gapsMetricHelper")} />
+          </Suspense>
+        </section>
+
+        <Suspense fallback={<CorridorCardsSkeleton />}>
+          <CorridorCardsSection
+            headers={{
+              segment: t("segmentHeader"),
+              length: t("lengthHeader"),
+              nearestHpc: t("nearestHpcHeader"),
+              status: t("statusHeader"),
+            }}
+            t={t}
+          />
         </Suspense>
-      </section>
-
-      <Suspense fallback={<CorridorCardsSkeleton />}>
-        <CorridorCardsSection
-          headers={{
-            segment: t("segmentHeader"),
-            length: t("lengthHeader"),
-            nearestHpc: t("nearestHpcHeader"),
-            status: t("statusHeader"),
-          }}
-          t={t}
+      </main>
+    );
+  } catch (error) {
+    console.error("Corridors page error:", error);
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <Notice
+          title="Unavailable"
+          description="Corridor analysis is not yet available. Please check back later."
+          tone="neutral"
         />
-      </Suspense>
-    </main>
-  );
+      </main>
+    );
+  }
 }
