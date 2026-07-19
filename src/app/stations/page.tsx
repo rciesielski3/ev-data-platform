@@ -55,16 +55,16 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title"),
-      description: t("description"),
+      title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+      description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+    description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     alternates: { canonical: "/stations" },
   };
 };
@@ -183,6 +183,17 @@ const StationsPage = async ({
           </>
         }
       />
+
+      <h1 className="text-4xl font-bold mb-4">
+        Przeglądaj Stacje Ładowania EV w Polsce
+      </h1>
+
+      <p className="text-lg muted mb-6">
+        Nasza baza zawiera ponad 10 000 stacji ładowania EV w całej Polsce.
+        Przefiltruj stacje ładowania po rodzaju złącza (CCS2, Type 2, CHAdeMO),
+        operatorze lub regionie, aby znaleźć stacje ładowania, które Cię interesują.
+        Wszystkie dane o dostępności stacji ładowania aktualizowane są w czasie rzeczywistym.
+      </p>
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
@@ -491,6 +502,15 @@ const StationsPage = async ({
               )}
             </nav>
           )}
+
+          <div className="mt-8 p-4 bg-blue-50 rounded">
+            <p className="font-semibold mb-2">Szukasz mapa ładowarek?</p>
+            <p>
+              <Link href="/map" className="text-green-600 underline">
+                Użyj naszej interaktywnej mapy ładowarek
+              </Link>
+            </p>
+          </div>
         </>
       )}
     </main>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -6,6 +7,14 @@ import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
 import { getConnectorPageEntries } from "@/features/charging/connector-pages";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("connectors");
+  return {
+    title: t("title") || "Rodzaje Ładowarek EV – Porównanie – evsource.pl",
+    description: t("description") || "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
+  };
+};
 
 export default async function ConnectorsPage() {
   const t = await getTranslations("connectors");

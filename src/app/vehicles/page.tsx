@@ -81,26 +81,18 @@ export const generateMetadata = async ({
   const t = await getTranslations("vehicles");
   const filters = parseVehicleSearchParams(await searchParams);
 
-  let description: string;
-  try {
-    const { total } = await getVehiclesData(filters);
-    description = t("descriptionWithCount", { count: total });
-  } catch {
-    description = t("descriptionError");
-  }
-
   if (isFilteredView(filters)) {
     return {
-      title: t("title"),
-      description,
+      title: t("title") || "Porównaj Modele Pojazdów Elektrycznych – evsource.pl",
+      description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
       alternates: { canonical: "/vehicles" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: t("title"),
-    description,
+    title: t("title") || "Porównaj Modele Pojazdów Elektrycznych – evsource.pl",
+    description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
     alternates: { canonical: "/vehicles" },
   };
 };
