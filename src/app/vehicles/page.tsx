@@ -207,16 +207,6 @@ export default async function VehiclesPage({
         }
       />
 
-      <h1 className="text-4xl font-bold mb-4">
-        Porównaj Modele Pojazdów Elektrycznych
-      </h1>
-
-      <p className="text-lg text-muted mb-6">
-        Porównaj ponad 2000 modeli pojazdów elektrycznych (EV). Sprawdzaj zasięg pojazdu,
-        pojemność baterii, czas ładowania (ładowarka), ceny i specyfikacje.
-        Nasza baza danych pojazdów elektrycznych zawiera wszystkie popularne modele EV dostępne w Polsce i na świecie.
-      </p>
-
       <section className="mb-8 grid gap-4 md:grid-cols-2">
         <Card className="text-center bg-slate-50 shadow-xl">
           <p className="text-3xl font-bold text-[var(--accent)]">
@@ -415,15 +405,6 @@ export default async function VehiclesPage({
           )}
         </div>
       )}
-
-      <div className="mt-8 p-4 bg-blue-50 rounded">
-        <p className="font-semibold mb-2">Które złącze ładowania pasuje do Twojego pojazdu?</p>
-        <p>
-          <Link href="/connectors" className="text-green-600 underline">
-            Dowiedz się o rodzajach ładowarek
-          </Link>
-        </p>
-      </div>
     </main>
   );
 }

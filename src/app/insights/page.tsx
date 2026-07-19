@@ -202,67 +202,6 @@ export default async function InsightsPage() {
           <Suspense fallback={<DetailsSkeleton />}>
             <InsightsDetails insights={insights} />
           </Suspense>
-
-          {/* Charging Speeds Section */}
-          <section className="mt-12 mb-12">
-            <h2 className="text-3xl font-bold mb-6">Szybkości Ładowania EV</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="card">
-                <h3 className="font-semibold mb-2">AC (Zmiennoprądowe)</h3>
-                <p className="text-sm text-muted">
-                  Ładowanie powolne (3–11 kW). Typowe dla domowych i publicznych stacji.
-                </p>
-                <p className="text-xs text-muted mt-2">Czas: 6–8 godzin na 0–100%</p>
-              </div>
-              <div className="card">
-                <h3 className="font-semibold mb-2">DC (Stałoprądowe)</h3>
-                <p className="text-sm text-muted">
-                  Ładowanie szybkie (50–150 kW). Idealne dla podróży.
-                </p>
-                <p className="text-xs text-muted mt-2">Czas: 20–45 minut na 0–80%</p>
-              </div>
-              <div className="card">
-                <h3 className="font-semibold mb-2">Ultra-szybkie</h3>
-                <p className="text-sm text-muted">
-                  Ładowanie najszybsze (200+ kW). Dla nowoczesnych pojazdów.
-                </p>
-                <p className="text-xs text-muted mt-2">Czas: 10–20 minut na 0–80%</p>
-              </div>
-            </div>
-          </section>
-
-          {/* FAQ Section */}
-          <section className="mt-12 mb-12">
-            <h2 className="text-3xl font-bold mb-6">Często Zadawane Pytania</h2>
-            <div className="space-y-4">
-              <details className="border rounded p-4">
-                <summary className="font-semibold cursor-pointer">
-                  Ile kosztuje ładowanie pojazdu elektrycznego?
-                </summary>
-                <p className="mt-3 text-muted">
-                  Koszt ładowania zależy od operatora i lokalizacji. Średnio: €0.20–0.50 za kWh.
-                  Nabicie od 0–100% kosztuje €4–12 w zależności od pojemności baterii (40–100 kWh).
-                </p>
-              </details>
-              <details className="border rounded p-4">
-                <summary className="font-semibold cursor-pointer">
-                  Czy są darmowe stacje ładowania?
-                </summary>
-                <p className="mt-3 text-muted">
-                  Tak, wiele hipermarketów i parkingów oferuje darmowe ładowanie dla klientów.
-                  Sprawdź naszą mapę, aby znaleźć darmowe stacje w Twojej okolicy.
-                </p>
-              </details>
-              <details className="border rounded p-4">
-                <summary className="font-semibold cursor-pointer">
-                  Jak szybko ładuje się pojazd elektryczny?
-                </summary>
-                <p className="mt-3 text-muted">
-                  Zależy od typu złącza i mocy stacji. AC: 6–8h, DC: 20–45 min, Ultra-DC: 10–20 min.
-                </p>
-              </details>
-            </div>
-          </section>
         </>
       )}
     </main>
