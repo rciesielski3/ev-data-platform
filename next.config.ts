@@ -1,3 +1,8 @@
+import { runBuildVerification } from './src/lib/config/verify-secrets-build';
+
+// Verify secrets before build
+runBuildVerification();
+
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
