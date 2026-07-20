@@ -40,8 +40,8 @@
     "corridors": "Korytarze"
   },
   "home": {
-    "title": "EVSource",
-    "description": "Znormalizowane dane o stacjach ładowania i pojazdach elektrycznych w Polsce — pełne pokrycie 16 województw, gotowe do analiz porównawczych dla operatorów sieci ładowania.",
+    "title": "Przewodnik Ładowania EV & Infrastruktura – www.evdatasource.com",
+    "description": "Odkryj 10 000+ stacji ładowania EV w Polsce. Porównaj pojazdy elektryczne. Dane infrastruktury ładowania w czasie rzeczywistym.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
@@ -109,7 +109,8 @@
     "b2bCtaButton": "Skontaktuj się"
   },
   "vehicles": {
-    "title": "Pojazdy",
+    "title": "Porównaj Modele Pojazdów Elektrycznych – www.evdatasource.com",
+    "description": "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "descriptionError": "Przeglądaj pojazdy elektryczne po skonfigurowaniu importu katalogu.",
     "activeFilter": "Aktywny filtr",
@@ -168,8 +169,8 @@
     "backLink": "Wróć do pojazdów"
   },
   "stations": {
-    "title": "Stacje ładowania",
-    "description": "Przeszukuj polską infrastrukturę ładowania według miejsca, złącza, mocy i operatora.",
+    "title": "Stacje Ładowania EV w Polsce – www.evdatasource.com",
+    "description": "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     "viewInsightsLink": "Zobacz statystyki",
     "browseCatalogLink": "Przeglądaj katalog EV",
     "setupRequiredMessage": "Dane stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",
@@ -449,8 +450,8 @@
     "unknownExplanation": "Brak daty potwierdzenia danych dla tej stacji."
   },
   "map": {
-    "title": "Mapa stacji ładowania",
-    "description": "Eksploruj polskie stacje ładowania według województwa, typu złącza i minimalnej mocy ładowania.",
+    "title": "Interaktywna Mapa Ładowarek EV – www.evdatasource.com",
+    "description": "Interaktywna mapa wszystkich stacji ładowania EV w Polsce. Wyszukaj po lokalizacji, rodzaju złącza i mocy ładowania.",
     "searchListLink": "Lista wyszukiwania",
     "viewInsightsLink": "Zobacz statystyki",
     "setupRequiredMessage": "Dane mapy stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",
@@ -492,8 +493,8 @@
     "body": "Dane mapy stacji ładowania są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy danych o ładowaniu się zakończyły."
   },
   "connectors": {
-    "title": "Baza wiedzy o złączach",
-    "description": "Statyczne notatki referencyjne do interpretowania nazw złączy w zaimportowanych danych stacji i pojazdów. Te strony nie deklarują rzeczywistej zgodności ani dostępności ładowarek.",
+    "title": "Rodzaje Ładowarek EV – Porównanie – www.evdatasource.com",
+    "description": "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
     "viewDetailsLink": "Zobacz szczegóły złącza"
   },
   "connectorDetail": {
@@ -538,8 +539,8 @@
     }
   },
   "insights": {
-    "title": "Statystyki ładowania",
-    "description": "Zagregowane wskaźniki kondycji i pokrycia z bazy danych stacji ładowania.",
+    "title": "Statystyki Ładowania EV & Analiza Rynku – www.evdatasource.com",
+    "description": "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji ładowania, pokrycie operatorów, rozkład rodzajów ładowarek i trendy rynku pojazdów elektrycznych.",
     "browseStationsLink": "Przeglądaj stacje",
     "setupRequiredMessage": "Statystyki ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
     "emptyTitle": "Brak jeszcze danych o ładowaniu",

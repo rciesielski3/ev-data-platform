@@ -40,8 +40,8 @@
     "corridors": "Corridors"
   },
   "home": {
-    "title": "EVSource",
-    "description": "Normalized data on charging stations and EV models in Poland — full coverage across all 16 provinces, ready for benchmarking by charging network operators.",
+    "title": "EV Charging Guide & Infrastructure – www.evdatasource.com",
+    "description": "Discover 10,000+ EV charging stations in Poland. Compare electric vehicles. Real-time charging infrastructure data.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -109,7 +109,8 @@
     "b2bCtaButton": "Get in touch"
   },
   "vehicles": {
-    "title": "Vehicles",
+    "title": "Compare Electric Vehicle Models – www.evdatasource.com",
+    "description": "Compare 2000+ electric vehicle models. Range, battery capacity, charging time, prices and specifications for all available EVs.",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
     "activeFilter": "Active filter",
@@ -168,8 +169,8 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "title": "Charging Stations",
-    "description": "Search Polish charging infrastructure by place, connector, power, and operator.",
+    "title": "Charging Stations in Poland – www.evdatasource.com",
+    "description": "Browse 10,000+ EV charging stations in Poland. Filter by connector type (CCS2, Type 2), operator, and region. Real-time availability updates and coverage.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
     "setupRequiredMessage": "Charging station data is not available yet. Configure the database and run the EIPA import.",
@@ -449,8 +450,8 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "title": "Charging Station Map",
-    "description": "Explore Polish charging stations by province, connector type, and minimum charging power.",
+    "title": "Interactive EV Charging Map – www.evdatasource.com",
+    "description": "Interactive map of all EV charging stations in Poland. Search by location, connector type, and charging power.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Charging station map data is not available yet. Configure the database and run the EIPA import.",
@@ -492,8 +493,8 @@
     "body": "Charging station map data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "connectors": {
-    "title": "Connector knowledge base",
-    "description": "Static reference notes for interpreting connector names in imported charging station and vehicle data. These pages do not claim live compatibility or charger availability.",
+    "title": "EV Charging Connector Types – Comparison – www.evdatasource.com",
+    "description": "Compare EV charging connector types: CCS2, Type 2, CHAdeMO. Learn which connector works with your vehicle.",
     "viewDetailsLink": "View connector details"
   },
   "connectorDetail": {
@@ -538,8 +539,8 @@
     }
   },
   "insights": {
-    "title": "Charging Insights",
-    "description": "Aggregate health and coverage metrics from the charging station database.",
+    "title": "EV Charging Statistics & Market Analysis – www.evdatasource.com",
+    "description": "Explore EV charging statistics and infrastructure analysis. Analyze station density, operator coverage, and market trends.",
     "browseStationsLink": "Browse stations",
     "setupRequiredMessage": "Charging insights are not available yet. Configure the database and run the charging station imports.",
     "emptyTitle": "No charging data yet",
