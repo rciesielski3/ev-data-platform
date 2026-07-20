@@ -184,11 +184,6 @@ const StationsPage = async ({
         }
       />
 
-<<<<<<< HEAD
-=======
-      <h1 className="text-4xl font-bold mb-4">
->>>>>>> c4a1b2a (fix: complete SEO hotfixes - domain references and hardcoded Polish text)
-
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{data.error}</p>
