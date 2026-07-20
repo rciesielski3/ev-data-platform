@@ -20,7 +20,7 @@ export const revalidate = 3600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("insights");
   return {
-    title: t("title") || "EV Charging Statistics – evsource.pl",
+    title: t("title") || "EV Charging Statistics – www.evdatasource.com",
     description: t("description") || "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji, operatorów i trendy rynku.",
   };
 };

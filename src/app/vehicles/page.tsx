@@ -83,7 +83,7 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
+      title: t("title") || "Electric Vehicles & EV Models – www.evdatasource.com",
       description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
       alternates: { canonical: "/vehicles" },
       robots: { index: false, follow: true },
@@ -91,7 +91,7 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
+    title: t("title") || "Electric Vehicles & EV Models – www.evdatasource.com",
     description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
     alternates: { canonical: "/vehicles" },
   };
