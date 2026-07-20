@@ -56,7 +56,7 @@ export const generateMetadata = async ({
   if (isFilteredView(filters)) {
     return {
       title: t("title") || "EV Charging Stations – evsource.pl",
-      description: t("description"),
+      description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
     };
@@ -64,7 +64,7 @@ export const generateMetadata = async ({
 
   return {
     title: t("title") || "EV Charging Stations – evsource.pl",
-    description: t("description"),
+    description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     alternates: { canonical: "/stations" },
   };
 };

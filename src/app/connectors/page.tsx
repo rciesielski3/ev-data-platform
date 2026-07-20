@@ -8,6 +8,14 @@ import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
 import { getConnectorPageEntries } from "@/features/charging/connector-pages";
 
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("connectors");
+  return {
+    title: t("title") || "EV Charging Connectors – evsource.pl",
+    description: t("description") || "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
+  };
+};
+
 export default async function ConnectorsPage() {
   const t = await getTranslations("connectors");
   const tKnowledge = await getTranslations("connectorKnowledge");
