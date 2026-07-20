@@ -4,16 +4,6 @@ export const REQUIRED_SECRETS = {
     required: true,
     env: 'DATABASE_URL',
   },
-  NEXTAUTH_SECRET: {
-    description: 'NextAuth session encryption key',
-    required: process.env.NODE_ENV === 'production',
-    env: 'NEXTAUTH_SECRET',
-  },
-  NEXTAUTH_URL: {
-    description: 'NextAuth callback URL',
-    required: process.env.NODE_ENV === 'production',
-    env: 'NEXTAUTH_URL',
-  },
   NEON_API_KEY: {
     description: 'Neon API key for backup/management operations',
     required: process.env.NODE_ENV === 'production',
