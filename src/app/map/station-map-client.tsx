@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap } from "leaflet";
 
 import {
@@ -37,12 +37,12 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
   const featuredGroups = useMemo(() => groups.slice(0, 8), [groups]);
 
-  const formatPower = (powerKw: number | null) =>
-    powerKw === null
-      ? t("client.powerUnknown")
-      : t("client.upToPower", { power: powerKw });
+  const buildPopupHtml = useCallback((group: StationMapGroup) => {
+    const formatPower = (powerKw: number | null) =>
+      powerKw === null
+        ? t("client.powerUnknown")
+        : t("client.upToPower", { power: powerKw });
 
-  const buildPopupHtml = (group: StationMapGroup) => {
     const primaryStation = group.stations[0];
 
     if (group.stationCount === 1 && primaryStation) {
@@ -135,7 +135,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     }
   </article>
 `;
-  };
+  }, [t]);
 
   useEffect(() => {
     let cancelled = false;
@@ -224,7 +224,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     } else {
       map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
     }
-  }, [groups, mapSetupRevision, t]);
+  }, [groups, mapSetupRevision, t, buildPopupHtml]);
 
   return (
     <section className="grid gap-6 lg:grid-cols-[3fr_1fr]">
