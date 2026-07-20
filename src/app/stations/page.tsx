@@ -55,7 +55,7 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+      title: t("title") || "Stacje Ładowania EV w Polsce – www.evdatasource.com",
       description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
@@ -63,7 +63,7 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+    title: t("title") || "Stacje Ładowania EV w Polsce – www.evdatasource.com",
     description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     alternates: { canonical: "/stations" },
   };
@@ -184,6 +184,10 @@ const StationsPage = async ({
         }
       />
 
+<<<<<<< HEAD
+=======
+      <h1 className="text-4xl font-bold mb-4">
+>>>>>>> c4a1b2a (fix: complete SEO hotfixes - domain references and hardcoded Polish text)
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
