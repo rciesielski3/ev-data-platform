@@ -184,16 +184,6 @@ const StationsPage = async ({
         }
       />
 
-      <h1 className="text-4xl font-bold mb-4">
-        Przeglądaj Stacje Ładowania EV w Polsce
-      </h1>
-
-      <p className="text-lg muted mb-6">
-        Nasza baza zawiera ponad 10 000 stacji ładowania EV w całej Polsce.
-        Przefiltruj stacje ładowania po rodzaju złącza (CCS2, Type 2, CHAdeMO),
-        operatorze lub regionie, aby znaleźć stacje ładowania, które Cię interesują.
-        Wszystkie dane o dostępności stacji ładowania aktualizowane są w czasie rzeczywistym.
-      </p>
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
