@@ -91,7 +91,7 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title"),
+      title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
       description,
       alternates: { canonical: "/vehicles" },
       robots: { index: false, follow: true },
@@ -99,7 +99,7 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: t("title"),
+    title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
     description,
     alternates: { canonical: "/vehicles" },
   };
