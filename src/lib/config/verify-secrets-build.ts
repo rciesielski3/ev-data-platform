@@ -12,3 +12,5 @@ export const runBuildVerification = (): void => {
     process.exit(1);
   }
 };
+
+runBuildVerification();
