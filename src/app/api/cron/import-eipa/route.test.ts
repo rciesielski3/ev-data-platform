@@ -33,7 +33,7 @@ describe("GET /api/cron/import-eipa", () => {
   describe("Authorization", () => {
     it("returns 401 when no auth header is provided in production", async () => {
       const response = await GET(
-        new Request("https://example.com/api/cron/import-eipa"),
+        new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
       expect(response.status).toBe(401);
@@ -46,7 +46,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer wrong-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
 
       expect(response.status).toBe(401);
     });
@@ -56,7 +56,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
 
       expect(response.status).toBe(200);
     });
@@ -66,7 +66,7 @@ describe("GET /api/cron/import-eipa", () => {
       vi.stubEnv("NODE_ENV", "development");
 
       const response = await GET(
-        new Request("https://example.com/api/cron/import-eipa"),
+        new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
       expect(response.status).toBe(200);
@@ -76,7 +76,7 @@ describe("GET /api/cron/import-eipa", () => {
       vi.stubEnv("NODE_ENV", "development");
 
       const response = await GET(
-        new Request("https://example.com/api/cron/import-eipa"),
+        new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
       expect(response.status).toBe(401);
@@ -94,7 +94,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -112,7 +112,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      await GET(request);
+      await GET(request as any);
 
       expect(mockRunEipaImport).toHaveBeenCalledTimes(1);
       expect(mockRunEipaImport).toHaveBeenCalledWith();
@@ -123,7 +123,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      await GET(request);
+      await GET(request as any);
 
       expect(mockNotifyImportFailure).not.toHaveBeenCalled();
     });
@@ -144,7 +144,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -166,7 +166,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -188,7 +188,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(500);
@@ -207,7 +207,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(500);

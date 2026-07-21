@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import type { Mock } from "vitest";
-import type { LeadInterest, LeadSubmission } from "@prisma/client";
+import type { LeadInterest, LeadStatus, LeadSubmission } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 import { createLeadSubmission } from "@/lib/db/lead-submissions";
@@ -20,7 +20,9 @@ const mockLeadSubmission: LeadSubmission = {
   company: "Acme Corp",
   interest: "REPORT" as LeadInterest,
   message: "Interested in your platform",
+  status: "NEW" as LeadStatus,
   createdAt: new Date("2026-01-01"),
+  updatedAt: new Date("2026-01-01"),
 };
 
 describe("createLeadSubmission", () => {
@@ -171,6 +173,8 @@ describe("createLeadSubmission", () => {
       interest: "REPORT" as LeadInterest,
       message: null,
       createdAt: new Date("2026-01-15"),
+      status: "NEW" as LeadStatus,
+      updatedAt: new Date("2026-01-15"),
     };
 
     mockPrisma.leadSubmission.create = vi

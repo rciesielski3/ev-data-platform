@@ -8,10 +8,7 @@ import { GET } from "@/app/api/exports/operators/route";
 vi.mock("@/lib/db/cached-queries");
 
 const mockGetOperatorIntelligenceRows =
-  getOperatorIntelligenceRows as Mock<
-    [],
-    Promise<OperatorIntelligenceRow[]>
-  >;
+  getOperatorIntelligenceRows as unknown as any;
 
 const createOperatorRow = (overrides: Partial<OperatorIntelligenceRow> = {}): OperatorIntelligenceRow => ({
   operatorName: "Test Operator",
@@ -34,7 +31,7 @@ describe("GET /api/exports/operators", () => {
   describe("CSV Format (default)", () => {
     it("returns CSV format when no format parameter is provided", async () => {
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
 
       expect(response.status).toBe(200);
@@ -53,7 +50,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
 
@@ -63,7 +60,7 @@ describe("GET /api/exports/operators", () => {
 
     it("includes all columns in the correct order", async () => {
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
       const [headerLine] = text.split("\r\n");
@@ -87,7 +84,7 @@ describe("GET /api/exports/operators", () => {
 
     it("sets correct attachment filename for CSV", async () => {
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
 
       const disposition = response.headers.get("content-disposition");
@@ -104,7 +101,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
 
@@ -115,7 +112,7 @@ describe("GET /api/exports/operators", () => {
   describe("JSON Format", () => {
     it("returns JSON when format=json parameter is provided", async () => {
       const response = await GET(
-        new Request("https://example.com/api/exports/operators?format=json"),
+        new Request("https://example.com/api/exports/operators?format=json") as any,
       );
 
       expect(response.status).toBe(200);
@@ -132,7 +129,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators?format=json"),
+        new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
 
@@ -160,7 +157,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators?format=json"),
+        new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
 
@@ -171,7 +168,7 @@ describe("GET /api/exports/operators", () => {
 
     it("sets correct attachment filename for JSON", async () => {
       const response = await GET(
-        new Request("https://example.com/api/exports/operators?format=json"),
+        new Request("https://example.com/api/exports/operators?format=json") as any,
       );
 
       const disposition = response.headers.get("content-disposition");
@@ -184,7 +181,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockResolvedValue([]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
 
@@ -197,7 +194,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockResolvedValue([]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators?format=json"),
+        new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
 
@@ -213,7 +210,7 @@ describe("GET /api/exports/operators", () => {
       );
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
 
       expect(response.status).toBe(503);
@@ -225,7 +222,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockRejectedValue("unexpected error");
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
 
       expect(response.status).toBe(503);
@@ -248,7 +245,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
-        new Request("https://example.com/api/exports/operators"),
+        new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
 

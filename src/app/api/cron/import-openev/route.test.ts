@@ -33,7 +33,7 @@ describe("GET /api/cron/import-openev", () => {
   describe("Authorization", () => {
     it("returns 401 when no auth header is provided in production", async () => {
       const response = await GET(
-        new Request("https://example.com/api/cron/import-openev"),
+        new Request("https://example.com/api/cron/import-openev") as any,
       );
 
       expect(response.status).toBe(401);
@@ -46,7 +46,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer invalid-token" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
 
       expect(response.status).toBe(401);
     });
@@ -56,7 +56,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
 
       expect(response.status).toBe(200);
     });
@@ -66,7 +66,7 @@ describe("GET /api/cron/import-openev", () => {
       vi.stubEnv("NODE_ENV", "development");
 
       const response = await GET(
-        new Request("https://example.com/api/cron/import-openev"),
+        new Request("https://example.com/api/cron/import-openev") as any,
       );
 
       expect(response.status).toBe(200);
@@ -84,7 +84,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -102,7 +102,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      await GET(request);
+      await GET(request as any);
 
       expect(mockNotifyImportFailure).not.toHaveBeenCalled();
     });
@@ -123,7 +123,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -145,7 +145,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
 
       expect(mockNotifyImportFailure).toHaveBeenCalledWith(
         "OpenEV",
@@ -164,7 +164,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(500);
@@ -183,7 +183,7 @@ describe("GET /api/cron/import-openev", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
-      const response = await GET(request);
+      const response = await GET(request as any);
       const body = await response.json();
 
       expect(response.status).toBe(500);
