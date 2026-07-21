@@ -18,7 +18,7 @@ const mockLeadSubmission: LeadSubmission = {
   name: "John Doe",
   email: "john@example.com",
   company: "Acme Corp",
-  interest: "GENERAL" as LeadInterest,
+  interest: "REPORT" as LeadInterest,
   message: "Interested in your platform",
   createdAt: new Date("2026-01-01"),
 };
@@ -41,7 +41,7 @@ describe("createLeadSubmission", () => {
       name: "John Doe",
       email: "john@example.com",
       company: "Acme Corp",
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
       message: "Interested in your platform",
     };
 
@@ -63,7 +63,7 @@ describe("createLeadSubmission", () => {
 
     const input = {
       email: "  john@example.com  ",
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
     };
 
     await createLeadSubmission(input);
@@ -71,7 +71,7 @@ describe("createLeadSubmission", () => {
     expect(mockPrisma.leadSubmission.create).toHaveBeenCalledWith({
       data: {
         email: "john@example.com",
-        interest: "GENERAL",
+        interest: "REPORT",
       },
     });
   });
@@ -83,7 +83,7 @@ describe("createLeadSubmission", () => {
 
     const input = {
       email: "JOHN@EXAMPLE.COM",
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
     };
 
     await createLeadSubmission(input);
@@ -91,7 +91,7 @@ describe("createLeadSubmission", () => {
     expect(mockPrisma.leadSubmission.create).toHaveBeenCalledWith({
       data: {
         email: "john@example.com",
-        interest: "GENERAL",
+        interest: "REPORT",
       },
     });
   });
@@ -103,7 +103,7 @@ describe("createLeadSubmission", () => {
 
     const input = {
       email: "  JOHN@EXAMPLE.COM  ",
-      interest: "PARTNERSHIP" as LeadInterest,
+      interest: "FEATURED_LISTING" as LeadInterest,
     };
 
     await createLeadSubmission(input);
@@ -111,7 +111,7 @@ describe("createLeadSubmission", () => {
     expect(mockPrisma.leadSubmission.create).toHaveBeenCalledWith({
       data: {
         email: "john@example.com",
-        interest: "PARTNERSHIP",
+        interest: "FEATURED_LISTING",
       },
     });
   });
@@ -123,7 +123,7 @@ describe("createLeadSubmission", () => {
 
     const input = {
       email: "minimal@example.com",
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
     };
 
     await createLeadSubmission(input);
@@ -131,7 +131,7 @@ describe("createLeadSubmission", () => {
     expect(mockPrisma.leadSubmission.create).toHaveBeenCalledWith({
       data: {
         email: "minimal@example.com",
-        interest: "GENERAL",
+        interest: "REPORT",
       },
     });
   });
@@ -145,7 +145,7 @@ describe("createLeadSubmission", () => {
       name: "Jane Smith",
       email: "jane@example.com",
       company: "TechCorp",
-      interest: "DATA_API" as LeadInterest,
+      interest: "BOTH" as LeadInterest,
       message: "We want to integrate your API",
     };
 
@@ -156,7 +156,7 @@ describe("createLeadSubmission", () => {
         name: "Jane Smith",
         email: "jane@example.com",
         company: "TechCorp",
-        interest: "DATA_API",
+        interest: "BOTH",
         message: "We want to integrate your API",
       },
     });
@@ -168,7 +168,7 @@ describe("createLeadSubmission", () => {
       name: "Test User",
       email: "test@example.com",
       company: null,
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
       message: null,
       createdAt: new Date("2026-01-15"),
     };
@@ -180,7 +180,7 @@ describe("createLeadSubmission", () => {
     const result = await createLeadSubmission({
       name: "Test User",
       email: "test@example.com",
-      interest: "GENERAL" as LeadInterest,
+      interest: "REPORT" as LeadInterest,
     });
 
     expect(result).toEqual(expectedSubmission);

@@ -18,7 +18,7 @@ const createMockLead = (overrides?: Partial<LeadSubmission>): LeadSubmission => 
   name: "John Doe",
   email: "john@example.com",
   company: null,
-  interest: "GENERAL" as LeadInterest,
+  interest: "REPORT" as LeadInterest,
   message: null,
   createdAt: new Date("2026-01-01"),
   ...overrides,
@@ -32,10 +32,10 @@ describe("getLeadsByInterest", () => {
   it("queries leads by interest without limit", async () => {
     mockPrisma.leadSubmission.findMany = vi.fn().mockResolvedValue([]);
 
-    await getLeadsByInterest("GENERAL");
+    await getLeadsByInterest("REPORT");
 
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenCalledWith({
-      where: { interest: "GENERAL" },
+      where: { interest: "REPORT" },
       orderBy: { createdAt: "desc" },
       take: undefined,
     });
@@ -44,10 +44,10 @@ describe("getLeadsByInterest", () => {
   it("queries leads by interest with limit", async () => {
     mockPrisma.leadSubmission.findMany = vi.fn().mockResolvedValue([]);
 
-    await getLeadsByInterest("PARTNERSHIP", 10);
+    await getLeadsByInterest("FEATURED_LISTING", 10);
 
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenCalledWith({
-      where: { interest: "PARTNERSHIP" },
+      where: { interest: "FEATURED_LISTING" },
       orderBy: { createdAt: "desc" },
       take: 10,
     });
@@ -76,7 +76,7 @@ describe("getLeadsByInterest", () => {
       .fn()
       .mockResolvedValue(mockLeads);
 
-    const result = await getLeadsByInterest("GENERAL");
+    const result = await getLeadsByInterest("REPORT");
 
     expect(result).toHaveLength(3);
     expect(result[0].id).toBe("3");
@@ -87,7 +87,7 @@ describe("getLeadsByInterest", () => {
   it("returns empty array when no leads match the interest", async () => {
     mockPrisma.leadSubmission.findMany = vi.fn().mockResolvedValue([]);
 
-    const result = await getLeadsByInterest("DATA_API");
+    const result = await getLeadsByInterest("BOTH");
 
     expect(result).toEqual([]);
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenCalled();
@@ -111,11 +111,11 @@ describe("getLeadsByInterest", () => {
       .fn()
       .mockResolvedValue(mockLeads);
 
-    const result = await getLeadsByInterest("GENERAL", 2);
+    const result = await getLeadsByInterest("REPORT", 2);
 
     expect(result).toHaveLength(2);
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenCalledWith({
-      where: { interest: "GENERAL" },
+      where: { interest: "REPORT" },
       orderBy: { createdAt: "desc" },
       take: 2,
     });
@@ -125,9 +125,9 @@ describe("getLeadsByInterest", () => {
     mockPrisma.leadSubmission.findMany = vi.fn().mockResolvedValue([]);
 
     const interests: LeadInterest[] = [
-      "GENERAL",
-      "PARTNERSHIP",
-      "DATA_API",
+      "REPORT",
+      "FEATURED_LISTING",
+      "BOTH",
     ] as LeadInterest[];
 
     for (const interest of interests) {
@@ -136,17 +136,17 @@ describe("getLeadsByInterest", () => {
 
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenCalledTimes(3);
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenNthCalledWith(1, {
-      where: { interest: "GENERAL" },
+      where: { interest: "REPORT" },
       orderBy: { createdAt: "desc" },
       take: undefined,
     });
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenNthCalledWith(2, {
-      where: { interest: "PARTNERSHIP" },
+      where: { interest: "FEATURED_LISTING" },
       orderBy: { createdAt: "desc" },
       take: undefined,
     });
     expect(mockPrisma.leadSubmission.findMany).toHaveBeenNthCalledWith(3, {
-      where: { interest: "DATA_API" },
+      where: { interest: "BOTH" },
       orderBy: { createdAt: "desc" },
       take: undefined,
     });
@@ -158,7 +158,7 @@ describe("getLeadsByInterest", () => {
       name: "Jane Smith",
       email: "jane@company.com",
       company: "Tech Corp",
-      interest: "PARTNERSHIP" as LeadInterest,
+      interest: "FEATURED_LISTING" as LeadInterest,
       message: "Interested in partnership opportunities",
       createdAt: new Date("2026-07-15"),
     });
@@ -167,7 +167,7 @@ describe("getLeadsByInterest", () => {
       .fn()
       .mockResolvedValue([completeLead]);
 
-    const result = await getLeadsByInterest("PARTNERSHIP");
+    const result = await getLeadsByInterest("FEATURED_LISTING");
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual(completeLead);
