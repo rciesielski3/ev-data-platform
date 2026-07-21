@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateEvModels, type EvValidationResult } from "./ev";
+import { validateEvModels } from "./ev";
 import type { NormalizedEvModel } from "@/lib/sources/openev/types";
 import { RangeStandard } from "@prisma/client";
 

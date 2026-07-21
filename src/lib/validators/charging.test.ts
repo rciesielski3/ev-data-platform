@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   validateChargingStations,
-  type ValidationResult,
 } from "./charging";
 import type { NormalizedChargingStation } from "@/lib/sources/eipa/types";
 

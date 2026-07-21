@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Mock } from "vitest";
 
 import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 import type { OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
@@ -8,6 +7,7 @@ import { GET } from "@/app/api/exports/operators/route";
 vi.mock("@/lib/db/cached-queries");
 
 const mockGetOperatorIntelligenceRows =
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   getOperatorIntelligenceRows as unknown as any;
 
 const createOperatorRow = (overrides: Partial<OperatorIntelligenceRow> = {}): OperatorIntelligenceRow => ({
@@ -31,6 +31,7 @@ describe("GET /api/exports/operators", () => {
   describe("CSV Format (default)", () => {
     it("returns CSV format when no format parameter is provided", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
 
@@ -50,6 +51,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
@@ -60,6 +62,7 @@ describe("GET /api/exports/operators", () => {
 
     it("includes all columns in the correct order", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
@@ -84,6 +87,7 @@ describe("GET /api/exports/operators", () => {
 
     it("sets correct attachment filename for CSV", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
 
@@ -101,6 +105,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
@@ -112,6 +117,7 @@ describe("GET /api/exports/operators", () => {
   describe("JSON Format", () => {
     it("returns JSON when format=json parameter is provided", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators?format=json") as any,
       );
 
@@ -129,6 +135,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
@@ -157,6 +164,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
@@ -168,6 +176,7 @@ describe("GET /api/exports/operators", () => {
 
     it("sets correct attachment filename for JSON", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators?format=json") as any,
       );
 
@@ -181,6 +190,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockResolvedValue([]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();
@@ -194,6 +204,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockResolvedValue([]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators?format=json") as any,
       );
       const body = await response.json();
@@ -210,6 +221,7 @@ describe("GET /api/exports/operators", () => {
       );
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
 
@@ -222,6 +234,7 @@ describe("GET /api/exports/operators", () => {
       mockGetOperatorIntelligenceRows.mockRejectedValue("unexpected error");
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
 
@@ -245,6 +258,7 @@ describe("GET /api/exports/operators", () => {
       ]);
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/exports/operators") as any,
       );
       const text = await response.text();

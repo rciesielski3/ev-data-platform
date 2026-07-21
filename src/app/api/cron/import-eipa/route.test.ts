@@ -33,6 +33,7 @@ describe("GET /api/cron/import-eipa", () => {
   describe("Authorization", () => {
     it("returns 401 when no auth header is provided in production", async () => {
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
@@ -46,6 +47,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer wrong-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
 
       expect(response.status).toBe(401);
@@ -56,6 +58,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
 
       expect(response.status).toBe(200);
@@ -66,6 +69,7 @@ describe("GET /api/cron/import-eipa", () => {
       vi.stubEnv("NODE_ENV", "development");
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
@@ -76,6 +80,7 @@ describe("GET /api/cron/import-eipa", () => {
       vi.stubEnv("NODE_ENV", "development");
 
       const response = await GET(
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         new Request("https://example.com/api/cron/import-eipa") as any,
       );
 
@@ -94,6 +99,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
       const body = await response.json();
 
@@ -112,6 +118,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       await GET(request as any);
 
       expect(mockRunEipaImport).toHaveBeenCalledTimes(1);
@@ -123,6 +130,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       await GET(request as any);
 
       expect(mockNotifyImportFailure).not.toHaveBeenCalled();
@@ -144,6 +152,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
       const body = await response.json();
 
@@ -166,6 +175,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
       const body = await response.json();
 
@@ -188,6 +198,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
       const body = await response.json();
 
@@ -207,6 +218,7 @@ describe("GET /api/cron/import-eipa", () => {
         headers: { authorization: "Bearer test-secret" },
       });
 
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       const response = await GET(request as any);
       const body = await response.json();
 
