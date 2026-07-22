@@ -40,7 +40,7 @@
     "corridors": "Corridors"
   },
   "home": {
-    "title": "EV Charging Guide & Infrastructure – www.evdatasource.com",
+    "title": "EV Charging Guide & Infrastructure – evsource.pl",
     "description": "Discover 10,000+ EV charging stations in Poland. Compare electric vehicles. Real-time charging infrastructure data.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
@@ -109,7 +109,7 @@
     "b2bCtaButton": "Get in touch"
   },
   "vehicles": {
-    "title": "Compare Electric Vehicle Models – www.evdatasource.com",
+    "title": "Compare Electric Vehicle Models – evsource.pl",
     "description": "Compare 2000+ electric vehicle models. Range, battery capacity, charging time, prices and specifications for all available EVs.",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "descriptionError": "Browse electric vehicles after the catalog import is configured.",
@@ -169,7 +169,7 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "title": "Charging Stations in Poland – www.evdatasource.com",
+    "title": "Charging Stations in Poland – evsource.pl",
     "description": "Browse 10,000+ EV charging stations in Poland. Filter by connector type (CCS2, Type 2), operator, and region. Real-time availability updates and coverage.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
@@ -450,7 +450,7 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "title": "Interactive EV Charging Map – www.evdatasource.com",
+    "title": "Interactive EV Charging Map – evsource.pl",
     "description": "Interactive map of all EV charging stations in Poland. Search by location, connector type, and charging power.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
@@ -493,7 +493,7 @@
     "body": "Charging station map data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "connectors": {
-    "title": "EV Charging Connector Types – Comparison – www.evdatasource.com",
+    "title": "EV Charging Connector Types – Comparison – evsource.pl",
     "description": "Compare EV charging connector types: CCS2, Type 2, CHAdeMO. Learn which connector works with your vehicle.",
     "viewDetailsLink": "View connector details"
   },
@@ -539,7 +539,7 @@
     }
   },
   "insights": {
-    "title": "EV Charging Statistics & Market Analysis – www.evdatasource.com",
+    "title": "EV Charging Statistics & Market Analysis – evsource.pl",
     "description": "Explore EV charging statistics and infrastructure analysis. Analyze station density, operator coverage, and market trends.",
     "browseStationsLink": "Browse stations",
     "setupRequiredMessage": "Charging insights are not available yet. Configure the database and run the charging station imports.",
