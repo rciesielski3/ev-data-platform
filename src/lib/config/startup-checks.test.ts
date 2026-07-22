@@ -6,6 +6,10 @@ describe('Startup Checks', () => {
 
   beforeEach(() => {
     process.env = { ...originalEnv };
+    // Ensure CI variables are unset for tests that verify error handling
+    delete process.env.CI;
+    delete process.env.GITHUB_ACTIONS;
+    delete process.env.VERCEL;
   });
 
   afterEach(() => {
