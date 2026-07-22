@@ -285,7 +285,7 @@ export default async function OperatorsPage() {
             />
           </section>
 
-          <section className="grid gap-6 lg:grid-cols-[1fr_2fr]">
+          <section className="mb-8 rounded-lg bg-gray-50 p-6 grid gap-6 lg:grid-cols-[1fr_2fr]">
             <aside className="space-y-6">
               <Card as="article">
                 <h2 className="text-xl font-semibold">{t("largestFootprintTitle")}</h2>
