@@ -197,33 +197,25 @@ export default async function OperatorsPage() {
             </Card>
           </section>
 
-          <section>
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
-                <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
-              </div>
-            </div>
-            <Suspense fallback={<OperatorTableSkeleton />}>
-              <OperatorTablePaginated
-                rows={rows}
-                title={t("comparisonTitle")}
-                subtitle={t("comparisonSubtitle")}
-                headers={{
-                  operator: t("operatorHeader"),
-                  stations: t("stationsHeader"),
-                  provinces: t("provincesHeader"),
-                  connectors: t("connectorsHeader"),
-                  knownPower: t("knownPowerHeader"),
-                  avgPower: t("avgPowerHeader"),
-                  maxPower: t("maxPowerHeader"),
-                  strongestStation: t("strongestStationHeader"),
-                }}
-                unknownLabel={tCommon("unknown")}
-                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-              />
-            </Suspense>
-          </section>
+          <Suspense fallback={<OperatorTableSkeleton />}>
+            <OperatorTablePaginated
+              rows={rows}
+              title={t("comparisonTitle")}
+              subtitle={t("comparisonSubtitle")}
+              headers={{
+                operator: t("operatorHeader"),
+                stations: t("stationsHeader"),
+                provinces: t("provincesHeader"),
+                connectors: t("connectorsHeader"),
+                knownPower: t("knownPowerHeader"),
+                avgPower: t("avgPowerHeader"),
+                maxPower: t("maxPowerHeader"),
+                strongestStation: t("strongestStationHeader"),
+              }}
+              unknownLabel={tCommon("unknown")}
+              localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+            />
+          </Suspense>
         </>
       )}
     </main>
