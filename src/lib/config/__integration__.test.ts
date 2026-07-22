@@ -10,6 +10,10 @@ describe('Secrets Verification Integration', () => {
     process.env.DATABASE_URL = 'postgresql://example';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.env as any).NODE_ENV = 'development';
+    // Clear CI environment variables for proper test execution
+    delete process.env.CI;
+    delete process.env.GITHUB_ACTIONS;
+    delete process.env.VERCEL;
   });
 
   afterEach(() => {
