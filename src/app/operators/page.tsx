@@ -285,47 +285,47 @@ export default async function OperatorsPage() {
             />
           </section>
 
-          <section className="mb-8 grid gap-6 lg:grid-cols-[1fr_2fr]">
-            <aside className="space-y-6">
-              <Card as="article">
-                <h2 className="text-xl font-semibold">{t("largestFootprintTitle")}</h2>
-                <p className="muted mt-1 text-sm">{t("largestFootprintSubtitle")}</p>
-                <div className="mt-5 space-y-4">
-                  {rows.slice(0, 5).map((row) => (
-                    <div
-                      key={row.operatorName}
-                      className="flex items-baseline justify-between gap-4"
-                    >
-                      <span className="font-medium text-slate-900">
-                        {localizeFallback(row.operatorName, tCommon)}
-                      </span>
-                      <span className="text-sm text-slate-500">
-                        {formatInteger(row.stationCount)} {t("stationsUnit")}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              <Card as="article">
-                <h2 className="text-xl font-semibold">{t("provinceReachTitle")}</h2>
-                <p className="muted mt-1 text-sm">{t("provinceReachSubtitle")}</p>
-                {summary.broadestOperator ? (
-                  <div className="mt-5">
-                    <p className="text-2xl font-semibold text-slate-950">
-                      {localizeFallback(summary.broadestOperator.operatorName, tCommon)}
-                    </p>
-                    <p className="muted mt-1 text-sm">
-                      {t("provinceReachBody", {
-                        provinces: formatInteger(summary.broadestOperator.provinceCount),
-                        stations: formatInteger(summary.broadestOperator.stationCount),
-                      })}
-                    </p>
+          <section className="mb-8 grid gap-6 lg:grid-cols-[2fr_1fr]">
+            <Card as="article">
+              <h2 className="text-xl font-semibold">{t("largestFootprintTitle")}</h2>
+              <p className="muted mt-1 text-sm">{t("largestFootprintSubtitle")}</p>
+              <div className="mt-5 space-y-4">
+                {rows.slice(0, 5).map((row) => (
+                  <div
+                    key={row.operatorName}
+                    className="flex items-baseline justify-between gap-4"
+                  >
+                    <span className="font-medium text-slate-900">
+                      {localizeFallback(row.operatorName, tCommon)}
+                    </span>
+                    <span className="text-sm text-slate-500">
+                      {formatInteger(row.stationCount)} {t("stationsUnit")}
+                    </span>
                   </div>
-                ) : null}
-              </Card>
-            </aside>
+                ))}
+              </div>
+            </Card>
 
+            <Card as="article" className="bg-emerald-50 flex flex-col items-center justify-center">
+              <h2 className="text-xl font-semibold text-center">{t("provinceReachTitle")}</h2>
+              <p className="muted mt-1 text-sm text-center">{t("provinceReachSubtitle")}</p>
+              {summary.broadestOperator ? (
+                <div className="mt-5 text-center">
+                  <p className="text-2xl font-semibold text-slate-950">
+                    {localizeFallback(summary.broadestOperator.operatorName, tCommon)}
+                  </p>
+                  <p className="muted mt-1 text-sm">
+                    {t("provinceReachBody", {
+                      provinces: formatInteger(summary.broadestOperator.provinceCount),
+                      stations: formatInteger(summary.broadestOperator.stationCount),
+                    })}
+                  </p>
+                </div>
+              ) : null}
+            </Card>
+          </section>
+
+          <section>
             <Suspense fallback={<OperatorTableSkeleton />}>
               <OperatorTableSection rows={rows} />
             </Suspense>
