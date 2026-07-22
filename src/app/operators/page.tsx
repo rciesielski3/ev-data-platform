@@ -165,6 +165,97 @@ const OperatorTableSkeleton = () => (
   </Card>
 );
 
+"use client";
+
+import { useState } from "react";
+
+type OperatorTableSectionProps = {
+  rows: OperatorIntelligenceRow[];
+  headers: OperatorTableHeaders;
+  unknownLabel: string;
+  localizeOperatorLabel: (value: string) => string;
+  title: string;
+  subtitle: string;
+};
+
+const OperatorTableSectionClient = ({
+  rows,
+  headers,
+  unknownLabel,
+  localizeOperatorLabel,
+  title,
+  subtitle,
+}: OperatorTableSectionProps) => {
+  const ROWS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(rows.length / ROWS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+  const endIndex = startIndex + ROWS_PER_PAGE;
+  const paginatedRows = rows.slice(startIndex, endIndex);
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
+
+  return (
+    <Card as="section">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="muted mt-1 text-sm">{subtitle}</p>
+      </div>
+      <OperatorTable
+        rows={paginatedRows}
+        headers={headers}
+        unknownLabel={unknownLabel}
+        localizeOperatorLabel={localizeOperatorLabel}
+      />
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between border-t border-slate-200 pt-4">
+          <div className="text-sm text-slate-600">
+            Showing {startIndex + 1}–{Math.min(endIndex, rows.length)} of {rows.length}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`rounded-md px-2 py-2 text-sm font-medium ${
+                    currentPage === page
+                      ? "bg-slate-900 text-white"
+                      : "bg-white text-slate-700 hover:bg-slate-100"
+                  } border border-slate-300`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+};
+
 const OperatorTableSection = async ({
   rows,
 }: {
@@ -174,27 +265,23 @@ const OperatorTableSection = async ({
   const tCommon = await getTranslations("common");
 
   return (
-    <Card as="section">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
-        <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
-      </div>
-      <OperatorTable
-        rows={rows}
-        headers={{
-          operator: t("operatorHeader"),
-          stations: t("stationsHeader"),
-          provinces: t("provincesHeader"),
-          connectors: t("connectorsHeader"),
-          knownPower: t("knownPowerHeader"),
-          avgPower: t("avgPowerHeader"),
-          maxPower: t("maxPowerHeader"),
-          strongestStation: t("strongestStationHeader"),
-        }}
-        unknownLabel={tCommon("unknown")}
-        localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-      />
-    </Card>
+    <OperatorTableSectionClient
+      rows={rows}
+      headers={{
+        operator: t("operatorHeader"),
+        stations: t("stationsHeader"),
+        provinces: t("provincesHeader"),
+        connectors: t("connectorsHeader"),
+        knownPower: t("knownPowerHeader"),
+        avgPower: t("avgPowerHeader"),
+        maxPower: t("maxPowerHeader"),
+        strongestStation: t("strongestStationHeader"),
+      }}
+      unknownLabel={tCommon("unknown")}
+      localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+      title={t("comparisonTitle")}
+      subtitle={t("comparisonSubtitle")}
+    />
   );
 };
 
