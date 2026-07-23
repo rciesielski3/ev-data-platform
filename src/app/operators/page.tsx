@@ -198,7 +198,13 @@ export default async function OperatorsPage() {
               }
             >
               <OperatorTablePaginated
-                rows={rows}
+                rows={rows.map((row) => ({
+                  ...row,
+                  operatorName: localizeFallback(row.operatorName, tCommon),
+                  strongestStationName: row.strongestStationName
+                    ? localizeFallback(row.strongestStationName, tCommon)
+                    : row.strongestStationName,
+                }))}
                 title={t("comparisonTitle")}
                 subtitle={t("comparisonSubtitle")}
                 headers={{
@@ -212,7 +218,6 @@ export default async function OperatorsPage() {
                   strongestStation: t("strongestStationHeader"),
                 }}
                 unknownLabel={tCommon("unknown")}
-                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
               />
             </Suspense>
           </section>

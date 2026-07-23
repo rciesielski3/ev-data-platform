@@ -23,19 +23,16 @@ type OperatorTablePaginatedProps = {
   subtitle: string;
   headers: OperatorTableHeaders;
   unknownLabel: string;
-  localizeOperatorLabel: (value: string) => string;
 };
 
 const OperatorTable = ({
   rows,
   headers,
   unknownLabel,
-  localizeOperatorLabel,
 }: {
   rows: OperatorIntelligenceRow[];
   headers: OperatorTableHeaders;
   unknownLabel: string;
-  localizeOperatorLabel: (value: string) => string;
 }) => (
   <div className="overflow-x-auto">
     <table className="min-w-full divide-y divide-slate-200 text-sm">
@@ -71,7 +68,7 @@ const OperatorTable = ({
         {rows.map((row) => (
           <tr key={row.operatorName}>
             <th scope="row" className="py-4 pr-4 text-left font-medium text-slate-950">
-              {localizeOperatorLabel(row.operatorName)}
+              {row.operatorName}
             </th>
             <td className="px-4 py-4 text-right text-slate-700">
               {formatInteger(row.stationCount)}
@@ -92,9 +89,7 @@ const OperatorTable = ({
               {row.maxPowerKw ? formatConnectorPower(row.maxPowerKw) : unknownLabel}
             </td>
             <td className="py-4 pl-4 text-slate-700">
-              {row.strongestStationName
-                ? localizeOperatorLabel(row.strongestStationName)
-                : unknownLabel}
+              {row.strongestStationName ? row.strongestStationName : unknownLabel}
             </td>
           </tr>
         ))}
@@ -109,7 +104,6 @@ export const OperatorTablePaginated = ({
   subtitle,
   headers,
   unknownLabel,
-  localizeOperatorLabel,
 }: OperatorTablePaginatedProps) => {
   const searchParams = useSearchParams();
   const ROWS_PER_PAGE = 10;
@@ -154,7 +148,6 @@ export const OperatorTablePaginated = ({
         rows={paginatedRows}
         headers={headers}
         unknownLabel={unknownLabel}
-        localizeOperatorLabel={localizeOperatorLabel}
       />
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between border-t border-slate-200 pt-4">
