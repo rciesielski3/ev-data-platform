@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -10,14 +8,11 @@ import { ActionBar } from "@/components/ui/ActionBar";
 import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
+import { formatInteger } from "@/features/charging/insights";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 
 export const revalidate = 300;
-
-const numberFormatter = new Intl.NumberFormat("en");
-
-const formatInteger = (value: number) => numberFormatter.format(value);
 
 const getSummary = (rows: OperatorIntelligenceRow[]) => {
   const totalStations = rows.reduce((total, row) => total + row.stationCount, 0);
@@ -56,20 +51,6 @@ const getSummary = (rows: OperatorIntelligenceRow[]) => {
   };
 };
 
-
-const OperatorTableSkeleton = () => (
-  <Card as="section">
-    <div className="mb-4">
-      <div className="h-6 w-48 animate-pulse rounded bg-slate-100" />
-      <div className="mt-2 h-4 w-72 animate-pulse rounded bg-slate-100" />
-    </div>
-    <div className="space-y-3">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="h-10 animate-pulse rounded bg-slate-100" />
-      ))}
-    </div>
-  </Card>
-);
 
 export default async function OperatorsPage() {
   const t = await getTranslations("operators");
@@ -199,25 +180,23 @@ export default async function OperatorsPage() {
           </section>
 
           <section>
-            <Suspense fallback={<OperatorTableSkeleton />}>
-              <OperatorTablePaginated
-                rows={rows}
-                title={t("comparisonTitle")}
-                subtitle={t("comparisonSubtitle")}
-                headers={{
-                  operator: t("operatorHeader"),
-                  stations: t("stationsHeader"),
-                  provinces: t("provincesHeader"),
-                  connectors: t("connectorsHeader"),
-                  knownPower: t("knownPowerHeader"),
-                  avgPower: t("avgPowerHeader"),
-                  maxPower: t("maxPowerHeader"),
-                  strongestStation: t("strongestStationHeader"),
-                }}
-                unknownLabel={tCommon("unknown")}
-                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-              />
-            </Suspense>
+            <OperatorTablePaginated
+              rows={rows}
+              title={t("comparisonTitle")}
+              subtitle={t("comparisonSubtitle")}
+              headers={{
+                operator: t("operatorHeader"),
+                stations: t("stationsHeader"),
+                provinces: t("provincesHeader"),
+                connectors: t("connectorsHeader"),
+                knownPower: t("knownPowerHeader"),
+                avgPower: t("avgPowerHeader"),
+                maxPower: t("maxPowerHeader"),
+                strongestStation: t("strongestStationHeader"),
+              }}
+              unknownLabel={tCommon("unknown")}
+              localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+            />
           </section>
         </>
       )}

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import Card from "@/components/ui/Card";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
+import { formatInteger, formatConnectorPower } from "@/features/charging/insights";
 
 type OperatorTableHeaders = {
   operator: string;
@@ -23,18 +24,6 @@ type OperatorTablePaginatedProps = {
   headers: OperatorTableHeaders;
   unknownLabel: string;
   localizeOperatorLabel: (value: string) => string;
-};
-
-const numberFormatter = new Intl.NumberFormat("en");
-
-const formatInteger = (value: number) => numberFormatter.format(value);
-
-const formatPower = (value: number | null) => {
-  if (value === null) {
-    return null;
-  }
-
-  return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)} kW`;
 };
 
 const OperatorTable = ({
@@ -97,10 +86,10 @@ const OperatorTable = ({
               {formatInteger(row.knownPowerConnectorCount)}
             </td>
             <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.averagePowerKw) ?? unknownLabel}
+              {row.averagePowerKw ? formatConnectorPower(row.averagePowerKw) : unknownLabel}
             </td>
             <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.maxPowerKw) ?? unknownLabel}
+              {row.maxPowerKw ? formatConnectorPower(row.maxPowerKw) : unknownLabel}
             </td>
             <td className="py-4 pl-4 text-slate-700">
               {row.strongestStationName
@@ -122,20 +111,37 @@ export const OperatorTablePaginated = ({
   unknownLabel,
   localizeOperatorLabel,
 }: OperatorTablePaginatedProps) => {
+  const searchParams = useSearchParams();
   const ROWS_PER_PAGE = 10;
-  const [currentPage, setCurrentPage] = useState(1);
 
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
   const totalPages = Math.ceil(rows.length / ROWS_PER_PAGE);
+  const currentPage = Math.min(page, totalPages);
+
   const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
   const endIndex = startIndex + ROWS_PER_PAGE;
   const paginatedRows = rows.slice(startIndex, endIndex);
 
-  const goToPreviousPage = () => {
-    setCurrentPage((prev) => Math.max(1, prev - 1));
+  const createPageUrl = (pageNum: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", pageNum.toString());
+    return `?${params.toString()}`;
   };
 
-  const goToNextPage = () => {
-    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  const getPaginationButtons = () => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const buttons = [1];
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    if (start > 2) buttons.push(-1);
+    for (let i = start; i <= end; i++) buttons.push(i);
+    if (end < totalPages - 1) buttons.push(-1);
+    buttons.push(totalPages);
+
+    return buttons;
   };
 
   return (
@@ -156,35 +162,47 @@ export const OperatorTablePaginated = ({
             Showing {startIndex + 1}–{Math.min(endIndex, rows.length)} of {rows.length}
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            <a
+              href={createPageUrl(currentPage - 1)}
+              className={`rounded-md border border-slate-300 px-3 py-2 text-sm font-medium ${
+                currentPage === 1
+                  ? "pointer-events-none bg-slate-50 text-slate-400 opacity-50"
+                  : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
             >
               Previous
-            </button>
+            </a>
             <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`rounded-md px-2 py-2 text-sm font-medium ${
-                    currentPage === page
-                      ? "bg-slate-900 text-white"
-                      : "bg-white text-slate-700 hover:bg-slate-100"
-                  } border border-slate-300`}
-                >
-                  {page}
-                </button>
-              ))}
+              {getPaginationButtons().map((page) =>
+                page === -1 ? (
+                  <span key={`ellipsis-${Math.random()}`} className="px-2 py-2 text-slate-500">
+                    …
+                  </span>
+                ) : (
+                  <a
+                    key={page}
+                    href={createPageUrl(page)}
+                    className={`rounded-md px-2 py-2 text-sm font-medium border border-slate-300 ${
+                      currentPage === page
+                        ? "bg-slate-900 text-white"
+                        : "bg-white text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    {page}
+                  </a>
+                )
+              )}
             </div>
-            <button
-              onClick={goToNextPage}
-              disabled={currentPage === totalPages}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            <a
+              href={createPageUrl(currentPage + 1)}
+              className={`rounded-md border border-slate-300 px-3 py-2 text-sm font-medium ${
+                currentPage === totalPages
+                  ? "pointer-events-none bg-slate-50 text-slate-400 opacity-50"
+                  : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
             >
               Next
-            </button>
+            </a>
           </div>
         </div>
       )}
