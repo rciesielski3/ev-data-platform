@@ -644,7 +644,11 @@
     "maxPowerHeader": "Maks. moc",
     "avgPowerHeader": "Śr. moc",
     "operatorsHeader": "Operatorzy",
-    "stationsPer100kHeader": "Stacje / 100 tys. mieszkańców"
+    "stationsPer100kHeader": "Stacje / 100 tys. mieszkańców",
+    "actionBarHeading": "Co chcesz zrobić dalej?",
+    "actionBarDescription": "Przeanalizuj województwa lub pobierz dane do dalszej analizy.",
+    "actionBarAnalysisGroupLabel": "Analiza",
+    "actionBarExportGroupLabel": "Eksport danych"
   },
   "provincesError": {
     "title": "Nie udało się wczytać analizy województw",

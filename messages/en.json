@@ -644,7 +644,11 @@
     "maxPowerHeader": "Max power",
     "avgPowerHeader": "Avg power",
     "operatorsHeader": "Operators",
-    "stationsPer100kHeader": "Stations / 100k residents"
+    "stationsPer100kHeader": "Stations / 100k residents",
+    "actionBarHeading": "What would you like to do next?",
+    "actionBarDescription": "Analyze provinces or download data for further analysis.",
+    "actionBarAnalysisGroupLabel": "Analysis",
+    "actionBarExportGroupLabel": "Data Export"
   },
   "provincesError": {
     "title": "Province intelligence could not load",
