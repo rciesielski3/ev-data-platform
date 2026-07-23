@@ -756,10 +756,10 @@
   },
   "privacy": {
     "title": "Polityka prywatności",
-    "description": "Jakie dane zbieramy na evdatasource.com, w jakim celu i jak się z nami skontaktować w ich sprawie.",
+    "description": "Jakie dane zbieramy na evsource.pl, w jakim celu i jak się z nami skontaktować w ich sprawie.",
     "updatedLabel": "Ostatnia aktualizacja: {date}",
     "controllerTitle": "Administrator danych",
-    "controllerBody": "Administratorem danych osobowych przetwarzanych w ramach evdatasource.com jest Adateo Rafał Ciesielski, NIP: 7781461342, ul. Polanowska 79, 60-454 Poznań. Kontakt w sprawach związanych z ochroną danych: kontakt@evdatasource.com.",
+    "controllerBody": "Administratorem danych osobowych przetwarzanych w ramach evsource.pl jest Adateo Rafał Ciesielski, NIP: 7781461342, ul. Polanowska 79, 60-454 Poznań. Kontakt w sprawach związanych z ochroną danych: kontakt@evsource.pl.",
     "dataCollectedLeadTitle": "Formularz kontaktowy / zgłoszenie",
     "dataCollectedLeadBody": "Jeśli skorzystasz z formularza zgłoszeniowego (np. zgłoszenie stacji do raportu lub oferty wyróżnionego wpisu), zbieramy: imię (opcjonalnie), adres e-mail, nazwę firmy (opcjonalnie) oraz treść wiadomości (opcjonalnie). Dane te są potrzebne wyłącznie do odpowiedzi na zgłoszenie.",
     "dataCollectedCookieTitle": "Plik cookie językowy",
@@ -773,14 +773,14 @@
     "rightsTitle": "Twoje prawa",
     "rightsBody": "Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia oraz wniesienia sprzeciwu wobec przetwarzania opartego na uzasadnionym interesie. Możesz też wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (UODO).",
     "contactTitle": "Kontakt",
-    "contactBody": "W sprawach dotyczących danych osobowych pisz na kontakt@evdatasource.com."
+    "contactBody": "W sprawach dotyczących danych osobowych pisz na kontakt@evsource.pl."
   },
   "terms": {
     "title": "Regulamin",
-    "description": "Zasady korzystania z evdatasource.com - krótko i bez zbędnych klauzul.",
+    "description": "Zasady korzystania z evsource.pl - krótko i bez zbędnych klauzul.",
     "updatedLabel": "Ostatnia aktualizacja: {date}",
     "scopeTitle": "Zakres",
-    "scopeBody": "Niniejszy regulamin dotyczy korzystania z serwisu evdatasource.com. Serwis nie wymaga obecnie rejestracji konta i nie obsługuje płatności - dotyczy to wyłącznie przeglądania danych i korzystania z formularzy kontaktowych/zgłoszeniowych.",
+    "scopeBody": "Niniejszy regulamin dotyczy korzystania z serwisu evsource.pl. Serwis nie wymaga obecnie rejestracji konta i nie obsługuje płatności - dotyczy to wyłącznie przeglądania danych i korzystania z formularzy kontaktowych/zgłoszeniowych.",
     "dataTitle": "Charakter prezentowanych danych",
     "dataBody": "Dane o pojazdach elektrycznych i infrastrukturze ładowania pochodzą ze źródeł zewnętrznych (EIPA / UDT Poland oraz OpenEV Data) i są prezentowane w formie zaimportowanej i znormalizowanej. Nie gwarantujemy ich kompletności, aktualności ani dokładności. Dane mają charakter informacyjny i nie powinny być jedynym źródłem przy decyzjach związanych z bezpieczeństwem (np. planowaniu trasy bez zapasu energii w oparciu wyłącznie o status stacji w serwisie).",
     "noAccountsTitle": "Brak kont użytkowników i płatności",
@@ -790,7 +790,7 @@
     "liabilityTitle": "Ograniczenie odpowiedzialności",
     "liabilityBody": "Serwis udostępniany jest w stanie \"tak jak jest\" (as-is), bez gwarancji nieprzerwanego działania. Nie odpowiadamy za szkody wynikające z wykorzystania prezentowanych danych w celach, do których nie są one przeznaczone.",
     "contactTitle": "Kontakt",
-    "contactBody": "Pytania dotyczące regulaminu możesz kierować na kontakt@evdatasource.com."
+    "contactBody": "Pytania dotyczące regulaminu możesz kierować na kontakt@evsource.pl."
   },
   "notFound": {
     "title": "Nie znaleziono strony",

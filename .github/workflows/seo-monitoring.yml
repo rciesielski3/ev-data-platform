@@ -14,11 +14,11 @@ jobs:
     steps:
       - name: Verify robots.txt exists
         run: |
-          curl -s https://www.evdatasource.com/robots.txt | head -5 || echo "Note: robots.txt check (optional)"
+          curl -s https://evsource.pl/robots.txt | head -5 || echo "Note: robots.txt check (optional)"
 
       - name: Verify sitemap is accessible
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://www.evdatasource.com/sitemap.xml | grep -E "200|301" && echo "Sitemap accessible"
+          curl -s -o /dev/null -w "%{http_code}" https://evsource.pl/sitemap.xml | grep -E "200|301" && echo "Sitemap accessible"
 
       - name: Check for crawl errors (informational)
         run: |
