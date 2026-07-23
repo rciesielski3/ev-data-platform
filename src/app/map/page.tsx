@@ -25,10 +25,11 @@ export const revalidate = 600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("map");
   return {
-    title: t("title") || "Interaktywna Mapa Ładowarek EV – www.evdatasource.com",
+    title: t("title") || "EV Charging Map – evsource.pl",
     description: t("description") || "Interaktywna mapa wszystkich stacji ładowania EV w Polsce. Wyszukaj po lokalizacji, rodzaju złącza i mocy ładowania.",
   };
 };
+
 
 const MAP_STATION_LIMIT = 1000;
 

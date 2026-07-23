@@ -11,7 +11,7 @@ import { getConnectorPageEntries } from "@/features/charging/connector-pages";
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("connectors");
   return {
-    title: t("title") || "Rodzaje Ładowarek EV – Porównanie – www.evdatasource.com",
+    title: t("title") || "EV Charging Connectors – evsource.pl",
     description: t("description") || "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
   };
 };

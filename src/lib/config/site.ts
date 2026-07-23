@@ -1,5 +1,5 @@
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.evdatasource.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://evsource.pl";
 
 export const SITE_EMAIL = "kontakt@evdatasource.com";
 

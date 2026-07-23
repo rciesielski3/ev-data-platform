@@ -33,10 +33,11 @@ export const revalidate = 3600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
   return {
-    title: t("title") || "Przewodnik Ładowania EV & Infrastruktura – www.evdatasource.com",
+    title: t("title") || "EV Charging Guide & Infrastructure – evsource.pl",
     description: t("description") || "Odkryj 10 000+ stacji ładowania EV w Polsce. Porównaj pojazdy elektryczne. Dane infrastruktury ładowania w czasie rzeczywistym.",
   };
 };
+
 
 const getStatus = async () => {
   const [

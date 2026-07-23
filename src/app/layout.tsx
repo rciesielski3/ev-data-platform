@@ -12,6 +12,7 @@ import MobileNav from "@/components/ui/MobileNav";
 import NavLinks, { type NavLink } from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { SITE_URL } from "@/lib/config/site";
+import { runStartupChecks } from "@/lib/config/startup-checks";
 
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -70,6 +71,9 @@ const generateJsonLd = async () => {
 const RootLayout = async ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
+  // Run startup verification on app initialization
+  await runStartupChecks();
+
   const locale = (await getLocale()) as SupportedLocale;
   const messages = await getMessages();
   const t = await getTranslations("nav");

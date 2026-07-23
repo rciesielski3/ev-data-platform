@@ -55,7 +55,7 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+      title: t("title") || "EV Charging Stations – evsource.pl",
       description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
@@ -63,7 +63,7 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: t("title") || "Stacje Ładowania EV w Polsce – evsource.pl",
+    title: t("title") || "EV Charging Stations – evsource.pl",
     description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
     alternates: { canonical: "/stations" },
   };
@@ -183,7 +183,6 @@ const StationsPage = async ({
           </>
         }
       />
-
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
@@ -492,15 +491,6 @@ const StationsPage = async ({
               )}
             </nav>
           )}
-
-          <div className="mt-8 p-4 bg-blue-50 rounded">
-            <p className="font-semibold mb-2">Szukasz mapa ładowarek?</p>
-            <p>
-              <Link href="/map" className="text-green-600 underline">
-                Użyj naszej interaktywnej mapy ładowarek
-              </Link>
-            </p>
-          </div>
         </>
       )}
     </main>

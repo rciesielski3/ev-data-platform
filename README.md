@@ -103,6 +103,10 @@ npm run dev
 
 Application will be available at `http://localhost:3000`.
 
+### Environment Setup
+
+See [SECRETS.md](./docs/SECRETS.md) for required environment variables and secrets configuration.
+
 ### Commands
 
 | Command                    | Purpose                                          |

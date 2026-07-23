@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "validate": "npm run lint && npm run typecheck && npm run test && npm run build",
     "validate:quick": "npm run lint && npm run typecheck && npm run test",
+    "verify:secrets": "tsx src/lib/config/verify-secrets-build.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
