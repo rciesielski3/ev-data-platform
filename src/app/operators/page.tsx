@@ -6,7 +6,6 @@ import { getTranslations } from "next-intl/server";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
-import { ActionBar } from "@/components/ui/ActionBar";
 import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
@@ -75,20 +74,50 @@ export default async function OperatorsPage() {
         description={t("description")}
       />
 
-      <ActionBar>
-        <Link href="/insights" className="action-link">
-          {t("viewInsightsLink")}
-        </Link>
-        <Link href="/stations" className="action-link">
-          {t("browseStationsLink")}
-        </Link>
-        <a href="/api/exports/operators?format=csv" className="action-link">
-          {t("exportCsvLink")}
-        </a>
-        <a href="/api/exports/operators?format=json" className="action-link">
-          {t("exportJsonLink")}
-        </a>
-      </ActionBar>
+      <Card as="section" className="mb-8 bg-emerald-50">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-slate-900">Co chcesz zrobić dalej?</h3>
+          <p className="muted mt-1 text-sm">Przeanalizuj operatorów lub pobierz dane do dalszej analizy.</p>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Analiza</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link
+                href="/insights"
+                className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
+              >
+                {t("viewInsightsLink")}
+              </Link>
+              <Link
+                href="/stations"
+                className="rounded-md border border-emerald-600 bg-white px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 transition-colors"
+              >
+                {t("browseStationsLink")}
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Eksport danych</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a
+                href="/api/exports/operators?format=csv"
+                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                {t("exportCsvLink")}
+              </a>
+              <a
+                href="/api/exports/operators?format=json"
+                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                {t("exportJsonLink")}
+              </a>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {"error" in rows ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
