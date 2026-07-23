@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -180,23 +182,39 @@ export default async function OperatorsPage() {
           </section>
 
           <section>
-            <OperatorTablePaginated
-              rows={rows}
-              title={t("comparisonTitle")}
-              subtitle={t("comparisonSubtitle")}
-              headers={{
-                operator: t("operatorHeader"),
-                stations: t("stationsHeader"),
-                provinces: t("provincesHeader"),
-                connectors: t("connectorsHeader"),
-                knownPower: t("knownPowerHeader"),
-                avgPower: t("avgPowerHeader"),
-                maxPower: t("maxPowerHeader"),
-                strongestStation: t("strongestStationHeader"),
-              }}
-              unknownLabel={tCommon("unknown")}
-              localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-            />
+            <Suspense
+              fallback={
+                <Card as="section">
+                  <div className="mb-4">
+                    <div className="h-6 w-48 animate-pulse rounded bg-slate-100" />
+                    <div className="mt-2 h-4 w-72 animate-pulse rounded bg-slate-100" />
+                  </div>
+                  <div className="space-y-3">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <div key={index} className="h-10 animate-pulse rounded bg-slate-100" />
+                    ))}
+                  </div>
+                </Card>
+              }
+            >
+              <OperatorTablePaginated
+                rows={rows}
+                title={t("comparisonTitle")}
+                subtitle={t("comparisonSubtitle")}
+                headers={{
+                  operator: t("operatorHeader"),
+                  stations: t("stationsHeader"),
+                  provinces: t("provincesHeader"),
+                  connectors: t("connectorsHeader"),
+                  knownPower: t("knownPowerHeader"),
+                  avgPower: t("avgPowerHeader"),
+                  maxPower: t("maxPowerHeader"),
+                  strongestStation: t("strongestStationHeader"),
+                }}
+                unknownLabel={tCommon("unknown")}
+                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+              />
+            </Suspense>
           </section>
         </>
       )}
