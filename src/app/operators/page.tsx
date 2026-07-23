@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { ActionBar } from "@/components/ui/ActionBar";
+import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -17,14 +18,6 @@ export const revalidate = 300;
 const numberFormatter = new Intl.NumberFormat("en");
 
 const formatInteger = (value: number) => numberFormatter.format(value);
-
-const formatPower = (value: number | null) => {
-  if (value === null) {
-    return null;
-  }
-
-  return `${Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)} kW`;
-};
 
 const getSummary = (rows: OperatorIntelligenceRow[]) => {
   const totalStations = rows.reduce((total, row) => total + row.stationCount, 0);
@@ -63,93 +56,6 @@ const getSummary = (rows: OperatorIntelligenceRow[]) => {
   };
 };
 
-type OperatorTableHeaders = {
-  operator: string;
-  stations: string;
-  provinces: string;
-  connectors: string;
-  knownPower: string;
-  avgPower: string;
-  maxPower: string;
-  strongestStation: string;
-};
-
-const OperatorTable = ({
-  rows,
-  headers,
-  unknownLabel,
-  localizeOperatorLabel,
-}: {
-  rows: OperatorIntelligenceRow[];
-  headers: OperatorTableHeaders;
-  unknownLabel: string;
-  localizeOperatorLabel: (value: string) => string;
-}) => (
-  <div className="overflow-x-auto">
-    <table className="min-w-full divide-y divide-slate-200 text-sm">
-      <thead>
-        <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-          <th scope="col" className="py-3 pr-4">
-            {headers.operator}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.stations}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.provinces}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.connectors}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.knownPower}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.avgPower}
-          </th>
-          <th scope="col" className="px-4 py-3 text-right">
-            {headers.maxPower}
-          </th>
-          <th scope="col" className="py-3 pl-4">
-            {headers.strongestStation}
-          </th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-slate-100">
-        {rows.map((row) => (
-          <tr key={row.operatorName}>
-            <th scope="row" className="py-4 pr-4 text-left font-medium text-slate-950">
-              {localizeOperatorLabel(row.operatorName)}
-            </th>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatInteger(row.stationCount)}
-            </td>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatInteger(row.provinceCount)}
-            </td>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatInteger(row.connectorCount)}
-            </td>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatInteger(row.knownPowerConnectorCount)}
-            </td>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.averagePowerKw) ?? unknownLabel}
-            </td>
-            <td className="px-4 py-4 text-right text-slate-700">
-              {formatPower(row.maxPowerKw) ?? unknownLabel}
-            </td>
-            <td className="py-4 pl-4 text-slate-700">
-              {row.strongestStationName
-                ? localizeOperatorLabel(row.strongestStationName)
-                : unknownLabel}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
 
 const OperatorTableSkeleton = () => (
   <Card as="section">
@@ -164,39 +70,6 @@ const OperatorTableSkeleton = () => (
     </div>
   </Card>
 );
-
-const OperatorTableSection = async ({
-  rows,
-}: {
-  rows: OperatorIntelligenceRow[];
-}) => {
-  const t = await getTranslations("operators");
-  const tCommon = await getTranslations("common");
-
-  return (
-    <Card as="section">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
-        <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
-      </div>
-      <OperatorTable
-        rows={rows}
-        headers={{
-          operator: t("operatorHeader"),
-          stations: t("stationsHeader"),
-          provinces: t("provincesHeader"),
-          connectors: t("connectorsHeader"),
-          knownPower: t("knownPowerHeader"),
-          avgPower: t("avgPowerHeader"),
-          maxPower: t("maxPowerHeader"),
-          strongestStation: t("strongestStationHeader"),
-        }}
-        unknownLabel={tCommon("unknown")}
-        localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
-      />
-    </Card>
-  );
-};
 
 export default async function OperatorsPage() {
   const t = await getTranslations("operators");
@@ -327,7 +200,23 @@ export default async function OperatorsPage() {
 
           <section>
             <Suspense fallback={<OperatorTableSkeleton />}>
-              <OperatorTableSection rows={rows} />
+              <OperatorTablePaginated
+                rows={rows}
+                title={t("comparisonTitle")}
+                subtitle={t("comparisonSubtitle")}
+                headers={{
+                  operator: t("operatorHeader"),
+                  stations: t("stationsHeader"),
+                  provinces: t("provincesHeader"),
+                  connectors: t("connectorsHeader"),
+                  knownPower: t("knownPowerHeader"),
+                  avgPower: t("avgPowerHeader"),
+                  maxPower: t("maxPowerHeader"),
+                  strongestStation: t("strongestStationHeader"),
+                }}
+                unknownLabel={tCommon("unknown")}
+                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
+              />
             </Suspense>
           </section>
         </>
