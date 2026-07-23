@@ -62,7 +62,7 @@ const generateJsonLd = async () => {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      email: "kontakt@evdatasource.com",
+      email: "kontakt@evsource.pl",
     },
     founder: "Rafal Ciesielski",
   };
