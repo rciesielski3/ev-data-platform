@@ -31,7 +31,7 @@ export const ActionSection = ({
   exportJsonLabel,
   exportJsonHref,
 }: ActionSectionProps) => (
-  <Card as="section" className="mb-8 bg-gray-50">
+  <Card as="section" className="mt-8 mb-8 bg-gray-50">
     <div className="mb-4">
       <h3 className="text-lg font-semibold text-slate-900">{heading}</h3>
       <p className="muted mt-1 text-sm">{description}</p>
