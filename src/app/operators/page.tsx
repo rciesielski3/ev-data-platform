@@ -74,16 +74,18 @@ export default async function OperatorsPage() {
         description={t("description")}
       />
 
-      <Card as="section" className="mb-8 bg-emerald-50">
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-slate-900">Co chcesz zrobić dalej?</h3>
-          <p className="muted mt-1 text-sm">Przeanalizuj operatorów lub pobierz dane do dalszej analizy.</p>
+      <Card as="section" className="mb-8 bg-gray-50">
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-900">{t("actionBarHeading")}</h3>
+          <p className="muted mt-1 text-sm">{t("actionBarDescription")}</p>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Analiza</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              {t("actionBarAnalysisGroupLabel")}
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/insights"
                 className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
@@ -100,8 +102,10 @@ export default async function OperatorsPage() {
           </div>
 
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Eksport danych</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              {t("actionBarExportGroupLabel")}
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href="/api/exports/operators?format=csv"
                 className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"

@@ -599,7 +599,11 @@
     "knownPowerHeader": "Znana moc",
     "avgPowerHeader": "Śr. moc",
     "maxPowerHeader": "Maks. moc",
-    "strongestStationHeader": "Najmocniejsza stacja"
+    "strongestStationHeader": "Najmocniejsza stacja",
+    "actionBarHeading": "Co chcesz zrobić dalej?",
+    "actionBarDescription": "Przeanalizuj operatorów lub pobierz dane do dalszej analizy.",
+    "actionBarAnalysisGroupLabel": "Analiza",
+    "actionBarExportGroupLabel": "Eksport danych"
   },
   "operatorsError": {
     "title": "Nie udało się wczytać analizy operatorów",
