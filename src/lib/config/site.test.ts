@@ -35,7 +35,7 @@ describe("site config", () => {
 
   it("exports SITE_EMAIL as the expected contact email", () => {
     expect(typeof SITE_EMAIL).toBe("string");
-    expect(SITE_EMAIL).toBe("kontakt@evdatasource.com");
+    expect(SITE_EMAIL).toBe("kontakt@evsource.pl");
     expect(SITE_EMAIL).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
   });
 
