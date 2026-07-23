@@ -33,7 +33,7 @@
     "google-auth-library": "^9.15.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.24.0",
-    "next": "^15.5.20",
+    "next": "^15.5.21",
     "next-intl": "^4.13.0",
     "react": "^19.1.0",
     "react-countup": "^6.5.3",
