@@ -599,7 +599,11 @@
     "knownPowerHeader": "Known power",
     "avgPowerHeader": "Avg power",
     "maxPowerHeader": "Max power",
-    "strongestStationHeader": "Strongest station"
+    "strongestStationHeader": "Strongest station",
+    "actionBarHeading": "What would you like to do next?",
+    "actionBarDescription": "Analyze operators or download data for further analysis.",
+    "actionBarAnalysisGroupLabel": "Analysis",
+    "actionBarExportGroupLabel": "Data Export"
   },
   "operatorsError": {
     "title": "Operator intelligence could not load",
@@ -640,7 +644,11 @@
     "maxPowerHeader": "Max power",
     "avgPowerHeader": "Avg power",
     "operatorsHeader": "Operators",
-    "stationsPer100kHeader": "Stations / 100k residents"
+    "stationsPer100kHeader": "Stations / 100k residents",
+    "actionBarHeading": "What would you like to do next?",
+    "actionBarDescription": "Analyze provinces or download data for further analysis.",
+    "actionBarAnalysisGroupLabel": "Analysis",
+    "actionBarExportGroupLabel": "Data Export"
   },
   "provincesError": {
     "title": "Province intelligence could not load",

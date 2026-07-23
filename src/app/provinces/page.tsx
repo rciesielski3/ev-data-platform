@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
@@ -7,7 +6,7 @@ import { ProvincesDetails } from "@/components/ui/ProvincesDetails";
 import { ProvincesHero } from "@/components/ui/ProvincesHero";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
-import { ActionBar } from "@/components/ui/ActionBar";
+import { ActionSection } from "@/components/ui/ActionSection";
 import { type ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
 import { getProvinceIntelligenceRows } from "@/lib/db/cached-queries";
 
@@ -46,21 +45,6 @@ export default async function ProvincesPage() {
         description={t("description")}
       />
 
-      <ActionBar>
-        <Link href="/insights" className="action-link">
-          {t("viewInsightsLink")}
-        </Link>
-        <Link href="/stations" className="action-link">
-          {t("browseStationsLink")}
-        </Link>
-        <a href="/api/exports/provinces?format=csv" className="action-link">
-          {t("exportCsvLink")}
-        </a>
-        <a href="/api/exports/provinces?format=json" className="action-link">
-          {t("exportJsonLink")}
-        </a>
-      </ActionBar>
-
       {"error" in rows ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{rows.error}</p>
@@ -80,6 +64,21 @@ export default async function ProvincesPage() {
           <Suspense fallback={<DetailsSkeleton />}>
             <ProvincesDetails rows={rows} />
           </Suspense>
+
+          <ActionSection
+            heading={t("actionBarHeading")}
+            description={t("actionBarDescription")}
+            analysisGroupLabel={t("actionBarAnalysisGroupLabel")}
+            exportGroupLabel={t("actionBarExportGroupLabel")}
+            primaryActionLabel={t("viewInsightsLink")}
+            primaryActionHref="/insights"
+            secondaryActionLabel={t("browseStationsLink")}
+            secondaryActionHref="/stations"
+            exportCsvLabel={t("exportCsvLink")}
+            exportCsvHref="/api/exports/provinces?format=csv"
+            exportJsonLabel={t("exportJsonLink")}
+            exportJsonHref="/api/exports/provinces?format=json"
+          />
         </>
       )}
     </main>

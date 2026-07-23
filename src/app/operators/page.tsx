@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
-import { ActionBar } from "@/components/ui/ActionBar";
+import { ActionSection } from "@/components/ui/ActionSection";
 import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
@@ -74,21 +74,6 @@ export default async function OperatorsPage() {
         title={t("title")}
         description={t("description")}
       />
-
-      <ActionBar>
-        <Link href="/insights" className="action-link">
-          {t("viewInsightsLink")}
-        </Link>
-        <Link href="/stations" className="action-link">
-          {t("browseStationsLink")}
-        </Link>
-        <a href="/api/exports/operators?format=csv" className="action-link">
-          {t("exportCsvLink")}
-        </a>
-        <a href="/api/exports/operators?format=json" className="action-link">
-          {t("exportJsonLink")}
-        </a>
-      </ActionBar>
 
       {"error" in rows ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
@@ -198,7 +183,13 @@ export default async function OperatorsPage() {
               }
             >
               <OperatorTablePaginated
-                rows={rows}
+                rows={rows.map((row) => ({
+                  ...row,
+                  operatorName: localizeFallback(row.operatorName, tCommon),
+                  strongestStationName: row.strongestStationName
+                    ? localizeFallback(row.strongestStationName, tCommon)
+                    : row.strongestStationName,
+                }))}
                 title={t("comparisonTitle")}
                 subtitle={t("comparisonSubtitle")}
                 headers={{
@@ -212,10 +203,24 @@ export default async function OperatorsPage() {
                   strongestStation: t("strongestStationHeader"),
                 }}
                 unknownLabel={tCommon("unknown")}
-                localizeOperatorLabel={(value) => localizeFallback(value, tCommon)}
               />
             </Suspense>
           </section>
+
+          <ActionSection
+            heading={t("actionBarHeading")}
+            description={t("actionBarDescription")}
+            analysisGroupLabel={t("actionBarAnalysisGroupLabel")}
+            exportGroupLabel={t("actionBarExportGroupLabel")}
+            primaryActionLabel={t("viewInsightsLink")}
+            primaryActionHref="/insights"
+            secondaryActionLabel={t("browseStationsLink")}
+            secondaryActionHref="/stations"
+            exportCsvLabel={t("exportCsvLink")}
+            exportCsvHref="/api/exports/operators?format=csv"
+            exportJsonLabel={t("exportJsonLink")}
+            exportJsonHref="/api/exports/operators?format=json"
+          />
         </>
       )}
     </main>
