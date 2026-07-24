@@ -123,21 +123,21 @@ const HomePage = async () => {
           <>
             <Button
               as={Link}
-              href="/map"
+              href="/stations"
               variant="primary"
               size="lg"
               className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
-              {t("heroPrimaryCta")}
+              Odkryj 20,000+ stacji ładowania
             </Button>
             <Button
               as={Link}
-              href="/contact"
+              href="/map"
               variant="ghost"
               size="lg"
               className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
-              {t("heroSecondaryCta")}
+              Znajdź ładowarkę blisko ciebie
             </Button>
           </>
         }
@@ -224,6 +224,26 @@ const HomePage = async () => {
             <FileBarChart className="h-6 w-6 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="mt-4 font-semibold">{t("valueBenchmarkTitle")}</h3>
             <p className="muted mt-2 text-sm">{t("valueBenchmarkBody")}</p>
+          </Card>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="mx-auto max-w-3xl">
+          <Card
+            as={Link}
+            href="/vehicles"
+            interactive
+            className="group relative bg-gradient-to-br from-emerald-50 to-white"
+          >
+            <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--accent)] transition-transform group-hover:translate-x-1" />
+            <CarFront className="h-8 w-8 text-[var(--accent)]" />
+            <h3 className="font-display mt-4 text-xl font-semibold">
+              Sprawdź czas ładowania dla Twojego modelu
+            </h3>
+            <p className="muted mt-3 text-sm">
+              Porównaj pojazdy elektryczne i dowiedz się, jak długo trwa ich ładowanie na różnych typach złączy.
+            </p>
           </Card>
         </div>
       </section>
