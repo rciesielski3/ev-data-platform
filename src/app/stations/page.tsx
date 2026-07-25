@@ -202,7 +202,7 @@ const StationsPage = async ({
           Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd
           Dozoru Technicznego) i EIPA (Elektroniczny Integrowany Plan Ładowania). Nasza
           baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do
-          najbardziej aktualnych informacji. Wybierz miasto z listy poniżej, aby zobaczyć
+          najbardziej aktualnych informacji. <Link href="/stations/warszawa" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź ładowarki w Warszawie</Link>, lub wybierz miasto z listy poniżej, aby zobaczyć
           stacje w Twojej okolicy.
         </p>
       </section>
@@ -590,11 +590,11 @@ const StationsPage = async ({
               Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują
               darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje
               abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze,
-              aby porównać dostępność i taryfy. <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">Więcej informacji o operatorach →</Link>
+              aby porównać dostępność i taryfy. <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">Więcej informacji o operatorach →</Link> Masz pytania? <Link href="#faq" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź nasz FAQ</Link>
             </p>
           </section>
 
-          <section className="mt-12">
+          <section className="mt-12" id="faq">
             <h2 className="mb-4 text-2xl font-semibold text-slate-950">
               FAQ: Jak Znaleźć Ładowarkę
             </h2>
