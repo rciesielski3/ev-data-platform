@@ -185,6 +185,28 @@ const StationsPage = async ({
         }
       />
 
+      <section className="mb-12">
+        <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+          Wyszukaj Stacje Ładowania Blisko Ciebie
+        </h2>
+        <p className="mb-4 leading-relaxed text-slate-700">
+          Nasza interaktywna mapa zawiera ponad 20 000 stacji ładowania EV w Polsce.
+          Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę
+          odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2,
+          CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji
+          pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe
+          informacje o każdej stacji — adres, dostępne złącza, moc ładowania, operator i
+          godziny otwarcia — pomagają Ci wybrać idealne miejsce do ładowania.
+        </p>
+        <p className="leading-relaxed text-slate-700">
+          Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd
+          Dozoru Technicznego) i EIPA (Elektroniczny Integrowany Plan Ładowania). Nasza
+          baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do
+          najbardziej aktualnych informacji. Wybierz miasto z listy poniżej, aby zobaczyć
+          stacje w Twojej okolicy.
+        </p>
+      </section>
+
       <section className="mb-8 flex flex-wrap items-center gap-3">
         <span className="text-sm font-medium text-slate-500">
           {t("browseByCityHeading")}
@@ -507,6 +529,121 @@ const StationsPage = async ({
               )}
             </nav>
           )}
+
+          <section className="mt-16 border-t border-slate-200 pt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              Rodzaje Ładowarek: AC vs DC vs 400kW
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              Rynek ładowarek EV w Polsce oferuje różne typy zasilania dostosowane do
+              potrzeb kierowców. Ładowarki AC (prąd zmienny) pracują na napięciu
+              jednofazowym (3,7 kW, 7,4 kW) lub trójfazowym (11 kW, 22 kW) — idealne do
+              ładowania nocnego w domu lub przy pracy. Ładowarki DC (prąd stały), zwane
+              też szybkimi ładowarkami, oferują moc od 50 kW do 350 kW i pozwalają na
+              naładowanie baterii do 80% w 20–40 minut. Ładowarki 400kW to najnowsza
+              technologia, dostępna przede wszystkim na autostradach.
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              Czas ładowania zależy od mocy ładowania i pojemności baterii pojazdu. Auto
+              z baterią 60 kWh ładuje się ładowarką 22 kW około 3 godziny, a ładowarką
+              150 kW około 30 minut. W naszej bazie możesz filtrować stacje po minimalnej
+              mocy, aby znaleźć właściwą ładowarkę dla Twojego pojazdu. <Link href="/vehicles" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź
+              czasy ładowania dla swoich modeli pojazdów →</Link>
+            </p>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              Ile Kosztuje Ładowanie?
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania.
+              Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje abonament
+              miesięczny (np. 50–100 PLN) oraz opłatę za minutę lub kWh. Ładowanie AC
+              w domu kosztuje średnio 0,60–1,20 PLN za kWh, podczas gdy ładowanie na
+              publicznych stacjach DC wynosi 2–5 PLN za kWh. Niektórzy operatorzy oferują
+              specjalne taryfy dla regularnych użytkowników, zmniejszające koszty do
+              1–1,50 PLN za kWh.
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady)
+              i pory dnia. Wiele sieci oferuje tańsze ładowanie nocą. Nasze detale stacji
+              zawierają informacje o operatorze i jego taryfach — wyszukaj swoją lokalną
+              stację, aby poznać dokładne ceny.
+            </p>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              Porównanie Operatorów Ładowania
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to
+              największa sieć z ponad 3000 stacjami na terenie całej Polski, oferująca
+              zarówno ładowanie AC, jak i szybkie ładowanie DC. Energa ma solidną
+              infrastrukturę z naciskiem na miasta i trasy handlowe. GreenWay skupia się
+              na dużych miastach i stacjach autostradowych z nowoczesną technologią
+              400kW. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy, rozwijają
+              się lokalnie.
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują
+              darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje
+              abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze,
+              aby porównać dostępność i taryfy. <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">Więcej informacji o operatorach →</Link>
+            </p>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              FAQ: Jak Znaleźć Ładowarkę
+            </h2>
+            <div className="space-y-6">
+              <article>
+                <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                  Jak znaleźć ładowarkę blisko mnie?
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  Użyj naszej mapy i wpisz swoją lokalizację w pole &quot;Lokalizacja&quot;.
+                  System pokaże stacje w promieniu 10 km. Możesz również przeglądać miasto
+                  miasto klikając na linki poniżej mapy.
+                </p>
+              </article>
+              <article>
+                <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                  Jaki typ złącza powinienem wybrać?
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  Typ złącza zależy od twojego pojazdu. Większość nowoczesnych EV obsługuje
+                  Type 2 (ładowanie AC) i CCS (ładowanie DC). Starsze pojazdy mogą mieć
+                  CHAdeMO. Sprawdź dokumentację swojego pojazdu, a następnie filtruj stacje
+                  po właściwym typie złącza.
+                </p>
+              </article>
+              <article>
+                <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                  Jakie są godziny pracy ładowarek?
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  Większość publicznych ładowarek jest dostępna 24/7. Niektorzy operatorzy
+                  mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej
+                  stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby
+                  zobaczyć pełne informacje.
+                </p>
+              </article>
+              <article>
+                <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                  Czy mogę zarezerwować ładowarkę?
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging,
+                  Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na
+                  15–30 minut przed przyездом. Sprawdź aplikację wybranego operatora, aby
+                  poznać szczegóły.
+                </p>
+              </article>
+            </div>
+          </section>
         </>
       )}
     </main>
