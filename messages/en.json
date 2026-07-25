@@ -205,7 +205,8 @@
     "upToPower": "up to {power} kW",
     "importedOn": "Imported {date}",
     "importedOnWithSource": "Imported {date} / source {sourceDate}",
-    "locationUnavailable": "Location details unavailable"
+    "locationUnavailable": "Location details unavailable",
+    "browseByCityHeading": "Browse by city"
   },
   "stationDetail": {
     "backLink": "Back to stations",
@@ -272,6 +273,25 @@
     "title": "Station details unavailable",
     "body": "The station detail record could not be loaded. Try again, or return to the station search.",
     "backLink": "Back to stations"
+  },
+  "regionalStations": {
+    "metaTitle": "EV Charging Stations in {name} | evsource.pl",
+    "metaDescription": "Discover EV charging stations in {location}. Interactive map, operators, and coverage. Search near you.",
+    "title": "EV Charging Stations in {name}",
+    "description": "Discover {count} EV charging stations available in {location}. Interactive map, filters, and operator details.",
+    "backLink": "Back to all stations",
+    "mapCta": "Show on the map",
+    "statsStationsLabel": "Charging stations",
+    "statsOperatorsLabel": "Operators",
+    "statsMaxPowerLabel": "Max charging power",
+    "statsMaxPowerValue": "{power} kW",
+    "statsUnavailable": "Not available",
+    "operatorsTitle": "Charging Operators in {location}",
+    "operatorStationCount": "{count, plural, one {# station} other {# stations}}",
+    "viewStationsLink": "View stations →",
+    "ctaTitle": "Ready to charge?",
+    "ctaDescription": "Search for charging stations in {location} on our interactive map.",
+    "stationsCta": "Browse stations"
   },
   "contact": {
     "title": "Get in touch",

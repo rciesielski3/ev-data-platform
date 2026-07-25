@@ -205,7 +205,8 @@
     "upToPower": "do {power} kW",
     "importedOn": "Zaimportowano {date}",
     "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}",
-    "locationUnavailable": "Brak danych o lokalizacji"
+    "locationUnavailable": "Brak danych o lokalizacji",
+    "browseByCityHeading": "Przeglądaj według miasta"
   },
   "stationDetail": {
     "backLink": "Wróć do stacji",
@@ -272,6 +273,25 @@
     "title": "Szczegóły stacji niedostępne",
     "body": "Nie udało się wczytać rekordu stacji. Spróbuj ponownie lub wróć do wyszukiwania stacji.",
     "backLink": "Wróć do stacji"
+  },
+  "regionalStations": {
+    "metaTitle": "Stacje Ładowania EV {name} | evsource.pl",
+    "metaDescription": "Odkryj stacje ładowania EV {location}. Interaktywna mapa, operatorzy, pokrycie. Wyszukaj blisko siebie.",
+    "title": "Stacje Ładowania EV {name}",
+    "description": "Odkryj {count} stacji ładowania EV dostępnych {location}. Interaktywna mapa, filtry, szczegóły operatorów.",
+    "backLink": "Wróć do wszystkich stacji",
+    "mapCta": "Pokaż na mapie",
+    "statsStationsLabel": "Stacji ładowania",
+    "statsOperatorsLabel": "Operatorów",
+    "statsMaxPowerLabel": "Maksymalna moc ładowania",
+    "statsMaxPowerValue": "{power} kW",
+    "statsUnavailable": "Brak danych",
+    "operatorsTitle": "Operatorzy Ładowania {location}",
+    "operatorStationCount": "{count, plural, one {# stacja} few {# stacje} many {# stacji} other {# stacji}}",
+    "viewStationsLink": "Zobacz stacje →",
+    "ctaTitle": "Gotowy do ładowania?",
+    "ctaDescription": "Wyszukaj stacje ładowania {location} na naszej interaktywnej mapie.",
+    "stationsCta": "Przeglądaj stacje"
   },
   "contact": {
     "title": "Skontaktuj się z nami",

@@ -26,6 +26,7 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -183,6 +184,21 @@ const StationsPage = async ({
           </>
         }
       />
+
+      <section className="mb-8 flex flex-wrap items-center gap-3">
+        <span className="text-sm font-medium text-slate-500">
+          {t("browseByCityHeading")}
+        </span>
+        {REGIONAL_CITIES.map((regionalCity) => (
+          <Link
+            key={regionalCity.slug}
+            href={`/stations/${regionalCity.slug}`}
+            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+          >
+            {regionalCity.name}
+          </Link>
+        ))}
+      </section>
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
