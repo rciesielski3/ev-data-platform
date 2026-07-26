@@ -172,7 +172,7 @@
   },
   "stations": {
     "title": "EV Charging Stations Map Poland - Find Near You | evsource.pl",
-    "description": "Discover 20,000+ EV charging stations in Poland. Interactive map, filters, operator details. Find a charger near you.",
+    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
     "setupRequiredMessage": "Charging station data is not available yet. Configure the database and run the EIPA import.",
@@ -473,7 +473,7 @@
   },
   "map": {
     "title": "Interactive EV Charging Map Poland | Find Near You | evsource.pl",
-    "description": "Interactive map of 20,000+ EV charging stations in Poland. Filters, charging times, availability. Find a charger near you now.",
+    "description": "Interactive map of EV charging infrastructure across Poland. Filters, charging times, and availability. Find a charger near you.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Charging station map data is not available yet. Configure the database and run the EIPA import.",

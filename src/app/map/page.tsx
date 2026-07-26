@@ -26,7 +26,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("map");
   return {
     title: t("title") || "Interaktywna Mapa Ładowarek EV w Polsce | Znajdź Blisko Ciebie | evsource.pl",
-    description: t("description") || "Mapa interaktywna 20,000+ stacji ładowania EV w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko Ciebie teraz.",
+    description: t("description") || "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko ciebie.",
   };
 };
 

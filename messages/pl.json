@@ -172,7 +172,7 @@
   },
   "stations": {
     "title": "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    "description": "Odkryj 20,000+ stacji ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Wyszukaj ładowarkę blisko ciebie.",
+    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
     "viewInsightsLink": "Zobacz statystyki",
     "browseCatalogLink": "Przeglądaj katalog EV",
     "setupRequiredMessage": "Dane stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",
@@ -473,7 +473,7 @@
   },
   "map": {
     "title": "Interaktywna Mapa Ładowarek EV w Polsce | Znajdź Blisko Ciebie | evsource.pl",
-    "description": "Mapa interaktywna 20,000+ stacji ładowania EV w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko Ciebie teraz.",
+    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko ciebie.",
     "searchListLink": "Lista wyszukiwania",
     "viewInsightsLink": "Zobacz statystyki",
     "setupRequiredMessage": "Dane mapy stacji ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom import EIPA.",

@@ -34,7 +34,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
   return {
     title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    description: t("description") || "Odkryj 20,000+ stacji ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Wyszukaj ładowarkę blisko ciebie.",
+    description: t("description") || "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
   };
 };
 
@@ -128,7 +128,7 @@ const HomePage = async () => {
               size="lg"
               className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
-              Odkryj 20,000+ stacji ładowania
+              Odkryj infrastrukturę ładowania EV
             </Button>
             <Button
               as={Link}
