@@ -106,7 +106,9 @@
     "reportsDescription": "Explore sample benchmarking reports and discover custom infrastructure analysis for charging network operators.",
     "b2bCtaTitle": "Analytics and reports for charging network operators",
     "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing — let's talk about what you need.",
-    "b2bCtaButton": "Get in touch"
+    "b2bCtaButton": "Get in touch",
+    "chargingCardTitle": "Check Charging Time for Your Model",
+    "chargingCardDescription": "Compare electric vehicles and learn how long their charging takes on different connector types."
   },
   "vehicles": {
     "title": "Compare Electric Vehicle Models – evsource.pl",

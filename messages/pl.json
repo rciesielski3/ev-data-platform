@@ -106,7 +106,9 @@
     "reportsDescription": "Zobacz przykładowy raport benchmarkingowy i poznaj możliwości dedykowanej analizy infrastruktury dla operatorów sieci ładowania.",
     "b2bCtaTitle": "Analizy i raporty dla operatorów sieci ładowania",
     "b2bCtaBody": "Raport porównawczy oparty na pełnym pokryciu rynku albo wyróżnione miejsce na liście operatorów — porozmawiajmy o Twoich potrzebach.",
-    "b2bCtaButton": "Skontaktuj się"
+    "b2bCtaButton": "Skontaktuj się",
+    "chargingCardTitle": "Sprawdź czas ładowania dla Twojego modelu",
+    "chargingCardDescription": "Porównaj pojazdy elektryczne i dowiedz się, jak długo trwa ich ładowanie na różnych typach złączy."
   },
   "vehicles": {
     "title": "Porównaj Modele Pojazdów Elektrycznych – evsource.pl",

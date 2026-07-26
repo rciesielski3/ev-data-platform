@@ -239,10 +239,10 @@ const HomePage = async () => {
             <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--accent)] transition-transform group-hover:translate-x-1" />
             <CarFront className="h-8 w-8 text-[var(--accent)]" />
             <h3 className="font-display mt-4 text-xl font-semibold">
-              Sprawdź czas ładowania dla Twojego modelu
+              {t("chargingCardTitle")}
             </h3>
             <p className="muted mt-3 text-sm">
-              Porównaj pojazdy elektryczne i dowiedz się, jak długo trwa ich ładowanie na różnych typach złączy.
+              {t("chargingCardDescription")}
             </p>
           </Card>
         </div>
