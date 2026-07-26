@@ -40,8 +40,8 @@
     "corridors": "Corridors"
   },
   "home": {
-    "title": "EV Charging Guide & Infrastructure – evsource.pl",
-    "description": "Discover 10,000+ EV charging stations in Poland. Compare electric vehicles. Real-time charging infrastructure data.",
+    "title": "EV Charging Map Poland - Find Near You | evsource.pl",
+    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -106,7 +106,9 @@
     "reportsDescription": "Explore sample benchmarking reports and discover custom infrastructure analysis for charging network operators.",
     "b2bCtaTitle": "Analytics and reports for charging network operators",
     "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing — let's talk about what you need.",
-    "b2bCtaButton": "Get in touch"
+    "b2bCtaButton": "Get in touch",
+    "chargingCardTitle": "Check Charging Time for Your Model",
+    "chargingCardDescription": "Compare electric vehicles and learn how long their charging takes on different connector types."
   },
   "vehicles": {
     "title": "Compare Electric Vehicle Models – evsource.pl",
@@ -169,8 +171,8 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "title": "Charging Stations in Poland – evsource.pl",
-    "description": "Browse 10,000+ EV charging stations in Poland. Filter by connector type (CCS2, Type 2), operator, and region. Real-time availability updates and coverage.",
+    "title": "EV Charging Stations Map Poland - Find Near You | evsource.pl",
+    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
     "setupRequiredMessage": "Charging station data is not available yet. Configure the database and run the EIPA import.",
@@ -205,7 +207,8 @@
     "upToPower": "up to {power} kW",
     "importedOn": "Imported {date}",
     "importedOnWithSource": "Imported {date} / source {sourceDate}",
-    "locationUnavailable": "Location details unavailable"
+    "locationUnavailable": "Location details unavailable",
+    "browseByCityHeading": "Browse by city"
   },
   "stationDetail": {
     "backLink": "Back to stations",
@@ -272,6 +275,25 @@
     "title": "Station details unavailable",
     "body": "The station detail record could not be loaded. Try again, or return to the station search.",
     "backLink": "Back to stations"
+  },
+  "regionalStations": {
+    "metaTitle": "EV Charging Stations in {name} | evsource.pl",
+    "metaDescription": "Discover EV charging stations in {location}. Interactive map, operators, and coverage. Search near you.",
+    "title": "EV Charging Stations in {name}",
+    "description": "Discover {count} EV charging stations available in {location}. Interactive map, filters, and operator details.",
+    "backLink": "Back to all stations",
+    "mapCta": "Show on the map",
+    "statsStationsLabel": "Charging stations",
+    "statsOperatorsLabel": "Operators",
+    "statsMaxPowerLabel": "Max charging power",
+    "statsMaxPowerValue": "{power} kW",
+    "statsUnavailable": "Not available",
+    "operatorsTitle": "Charging Operators in {location}",
+    "operatorStationCount": "{count, plural, one {# station} other {# stations}}",
+    "viewStationsLink": "View stations →",
+    "ctaTitle": "Ready to charge?",
+    "ctaDescription": "Search for charging stations in {location} on our interactive map.",
+    "stationsCta": "Browse stations"
   },
   "contact": {
     "title": "Get in touch",
@@ -450,8 +472,8 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "title": "Interactive EV Charging Map – evsource.pl",
-    "description": "Interactive map of all EV charging stations in Poland. Search by location, connector type, and charging power.",
+    "title": "Interactive EV Charging Map Poland | Find Near You | evsource.pl",
+    "description": "Interactive map of EV charging infrastructure across Poland. Filters, charging times, and availability. Find a charger near you.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Charging station map data is not available yet. Configure the database and run the EIPA import.",
@@ -825,5 +847,54 @@
   "corridorsError": {
     "title": "Corridor analysis could not load",
     "body": "Corridor gap analysis is temporarily unavailable. Try again, or check that the charging imports have completed."
+  },
+  "stationsPage": {
+    "searchSection": {
+      "heading": "Find Charging Stations Near You",
+      "body1": "Our interactive map contains one of the largest EV charging networks across Poland. Using our advanced filters, you can easily find a charger that meets your needs. Search by location, connector type (Type 2, CCS, CHAdeMO), power (11 kW to 350 kW), and network operator. Geolocation lets you discover stations near you within a 10 km radius. Detailed information for each station — address, available connectors, charging power, operator, and opening hours — helps you choose the perfect place to charge.",
+      "body2Prefix": "All charging network operators in Poland are regulated by UDT (Technical Inspection Authority) and EIPA (Electric Infrastructure Inventory of Alternative Fuels — national charging registry). Our database is updated regularly to ensure you have access to the most current information.",
+      "body2LinkWarsawText": "Check charging stations in Warsaw",
+      "body2Suffix": "or select a city from the list below to see stations in your area."
+    },
+    "chargingTypesSection": {
+      "heading": "Types of Chargers: AC vs DC vs 400kW",
+      "body1": "The EV charger market in Poland offers different power types tailored to drivers' needs. AC chargers (alternating current) operate at single-phase voltage (3.7 kW, 7.4 kW) or three-phase (11 kW, 22 kW) — ideal for overnight charging at home or work. DC chargers (direct current), also called fast chargers, provide power from 50 kW to 350 kW and allow charging batteries to 80% in 20–40 minutes. 400kW chargers are the newest technology, available primarily on highways.",
+      "body2Prefix": "Charging time depends on the charger's power and your vehicle's battery capacity. A car with a 60 kWh battery charges on a 22 kW charger in about 3 hours, and on a 150 kW charger in about 30 minutes. In our database, you can filter stations by minimum power to find the right charger for your vehicle.",
+      "body2LinkText": "Check charging times for your vehicle models →"
+    },
+    "pricingSection": {
+      "heading": "How Much Does Charging Cost?",
+      "body1": "The cost of EV charging in Poland depends on the network operator and type of charging. Most operators (ORLEN Charging, Energa, GreenWay) offer monthly subscriptions plus per-minute or per-kWh fees. Home AC charging is typically less expensive than public fast-charging stations. Some operators offer special rates for regular users.",
+      "body2": "Prices vary significantly depending on location (city vs. highway) and time of day. Many networks offer cheaper charging at night. Our station details include operator information and tariffs — search for your local station to learn exact prices."
+    },
+    "operatorsSection": {
+      "heading": "Charging Operator Comparison",
+      "body1": "Poland has several major charging network operators. ORLEN Charging is one of the leading networks nationwide, offering both AC and fast DC charging. Energa has solid infrastructure focusing on cities and commercial routes. GreenWay concentrates on major cities and highway stations with modern 400kW technology. Smaller operators like ElectroMobility+ and Inergy are expanding locally.",
+      "body2": "Each operator has different pricing strategies and availability — some offer free charging for new users, while others have flexible subscription options. On our map, you can filter stations by operator to compare availability and rates.",
+      "body2InsightsLinkText": "More operator information →",
+      "body2FaqText": "Have questions?",
+      "body2FaqLinkText": "Check our FAQ"
+    },
+    "faqSection": {
+      "heading": "FAQ: How to Find a Charger",
+      "faqs": [
+        {
+          "question": "How do I find a charger near me?",
+          "answer": "Use our map and enter your location in the \"Location\" field. The system will show stations within a 10 km radius. You can also browse stations in specific cities by clicking the links below the map."
+        },
+        {
+          "question": "Which connector type should I choose?",
+          "answer": "The connector type depends on your vehicle. Most modern EVs support Type 2 (AC charging) and CCS (DC charging). Older vehicles may have CHAdeMO. Check your vehicle's documentation, then filter stations by the correct connector type."
+        },
+        {
+          "question": "What are charger operating hours?",
+          "answer": "Most public chargers are available 24/7. Some operators may have limited hours in small towns. Details for each station are in its profile — click the right arrow icon to see full information."
+        },
+        {
+          "question": "Can I reserve a charger?",
+          "answer": "Charger reservations depend on the operator. Most networks (ORLEN Charging, Energa, GreenWay) allow reservations through a mobile app 15–30 minutes before arrival. Check the operator's app for details."
+        }
+      ]
+    }
   }
 }

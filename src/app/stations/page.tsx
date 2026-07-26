@@ -26,6 +26,7 @@ import {
   StationCompletenessBadge,
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -55,16 +56,16 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "EV Charging Stations – evsource.pl",
-      description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
+      title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
+      description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: t("title") || "EV Charging Stations – evsource.pl",
-    description: t("description") || "Przeglądaj 10 000+ stacji ładowania EV w Polsce. Filtruj po rodzaju złącza, operatorze, regionie. Dostępność w czasie rzeczywistym.",
+    title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
+    description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
     alternates: { canonical: "/stations" },
   };
 };
@@ -147,6 +148,7 @@ const StationsPage = async ({
 }) => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stations");
+  const tStationsPage = await getTranslations("stationsPage");
   const tCommon = await getTranslations("common");
 
   const filters = parseStationSearchParams(await searchParams);
@@ -183,6 +185,37 @@ const StationsPage = async ({
           </>
         }
       />
+
+      <section className="mb-12">
+        <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+          {tStationsPage("searchSection.heading")}
+        </h2>
+        <p className="mb-4 leading-relaxed text-slate-700">
+          {tStationsPage("searchSection.body1")}
+        </p>
+        <p className="leading-relaxed text-slate-700">
+          {tStationsPage("searchSection.body2Prefix")}{" "}
+          <Link href="/stations/warszawa" className="text-emerald-700 underline hover:text-emerald-900">
+            {tStationsPage("searchSection.body2LinkWarsawText")}
+          </Link>
+          , {tStationsPage("searchSection.body2Suffix")}
+        </p>
+      </section>
+
+      <section className="mb-8 flex flex-wrap items-center gap-3">
+        <span className="text-sm font-medium text-slate-500">
+          {t("browseByCityHeading")}
+        </span>
+        {REGIONAL_CITIES.map((regionalCity) => (
+          <Link
+            key={regionalCity.slug}
+            href={`/stations/${regionalCity.slug}`}
+            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+          >
+            {regionalCity.name}
+          </Link>
+        ))}
+      </section>
 
       {"error" in data ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
@@ -491,6 +524,71 @@ const StationsPage = async ({
               )}
             </nav>
           )}
+
+          <section className="mt-16 border-t border-slate-200 pt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              {tStationsPage("chargingTypesSection.heading")}
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              {tStationsPage("chargingTypesSection.body1")}
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              {tStationsPage("chargingTypesSection.body2Prefix")}{" "}
+              <Link href="/vehicles" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("chargingTypesSection.body2LinkText")}
+              </Link>
+            </p>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              {tStationsPage("pricingSection.heading")}
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              {tStationsPage("pricingSection.body1")}
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              {tStationsPage("pricingSection.body2")}
+            </p>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              {tStationsPage("operatorsSection.heading")}
+            </h2>
+            <p className="mb-4 leading-relaxed text-slate-700">
+              {tStationsPage("operatorsSection.body1")}
+            </p>
+            <p className="leading-relaxed text-slate-700">
+              {tStationsPage("operatorsSection.body2")}{" "}
+              <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("operatorsSection.body2InsightsLinkText")}
+              </Link>
+              {" "}
+              {tStationsPage("operatorsSection.body2FaqText")}{" "}
+              <Link href="#faq" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("operatorsSection.body2FaqLinkText")}
+              </Link>
+            </p>
+          </section>
+
+          <section className="mt-12" id="faq">
+            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+              {tStationsPage("faqSection.heading")}
+            </h2>
+            <div className="space-y-6">
+              {tStationsPage.raw("faqSection.faqs").map((faq: { question: string; answer: string }, index: number) => (
+                <article key={index}>
+                  <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                    {faq.question}
+                  </h3>
+                  <p className="leading-relaxed text-slate-700">
+                    {faq.answer}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
         </>
       )}
     </main>
