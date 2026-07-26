@@ -209,6 +209,7 @@
     "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}",
     "locationUnavailable": "Brak danych o lokalizacji",
     "browseByCityHeading": "Przeglądaj według miasta",
+    "cityCardSubtitle": "Stacje ładowania {location}",
     "cityNames": {
       "warsaw": "Warszawa",
       "krakow": "Kraków",

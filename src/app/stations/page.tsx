@@ -6,6 +6,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import Disclosure from "@/components/ui/Disclosure";
 import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
@@ -186,35 +187,29 @@ const StationsPage = async ({
         }
       />
 
-      <section className="mb-12">
-        <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-          {tStationsPage("searchSection.heading")}
-        </h2>
-        <p className="mb-4 leading-relaxed text-slate-700">
-          {tStationsPage("searchSection.body1")}
-        </p>
-        <p className="leading-relaxed text-slate-700">
-          {tStationsPage("searchSection.body2Prefix")}{" "}
-          <Link href="/stations/warszawa" className="text-emerald-700 underline hover:text-emerald-900">
-            {tStationsPage("searchSection.body2LinkWarsawText")}
-          </Link>
-          , {tStationsPage("searchSection.body2Suffix")}
-        </p>
-      </section>
-
-      <section className="mb-8 flex flex-wrap items-center gap-3">
-        <span className="text-sm font-medium text-slate-500">
-          {t("browseByCityHeading")}
-        </span>
-        {REGIONAL_CITIES.map((regionalCity) => (
-          <Link
-            key={regionalCity.slug}
-            href={`/stations/${regionalCity.slug}`}
-            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
-          >
-            {regionalCity.name}
-          </Link>
-        ))}
+      <section className="mb-8">
+        <Disclosure
+          summary={
+            <span className="text-lg font-semibold">
+              {tStationsPage("searchSection.heading")}
+            </span>
+          }
+          defaultOpen={false}
+        >
+          <div className="space-y-3 text-sm leading-relaxed">
+            <p>{tStationsPage("searchSection.body1")}</p>
+            <p>
+              {tStationsPage("searchSection.body2Prefix")}{" "}
+              <Link
+                href="/stations/warszawa"
+                className="text-emerald-700 underline hover:text-emerald-900"
+              >
+                {tStationsPage("searchSection.body2LinkWarsawText")}
+              </Link>
+              , {tStationsPage("searchSection.body2Suffix")}
+            </p>
+          </div>
+        </Disclosure>
       </section>
 
       {"error" in data ? (
@@ -591,6 +586,37 @@ const StationsPage = async ({
           </section>
         </>
       )}
+
+      <section className="mt-16 space-y-4">
+        <h2 className="text-xl font-semibold text-slate-900">
+          {t("browseByCityHeading")}
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {REGIONAL_CITIES.map((regionalCity) => {
+            const cityLabel = t(`cityNames.${regionalCity.i18nKey}`);
+            const cityLocation =
+              locale === "pl" ? regionalCity.locativePhrase : cityLabel;
+
+            return (
+              <Card
+                key={regionalCity.slug}
+                as={Link}
+                href={`/stations/${regionalCity.slug}`}
+                interactive
+                className="group relative bg-white"
+              >
+                <p className="text-lg font-semibold text-slate-900">
+                  {cityLabel}
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {t("cityCardSubtitle", { location: cityLocation })}
+                </p>
+                <ArrowRightIcon className="absolute right-4 top-4 h-5 w-5 text-slate-400 transition-colors group-hover:text-emerald-600" />
+              </Card>
+            );
+          })}
+        </div>
+      </section>
     </main>
   );
 };

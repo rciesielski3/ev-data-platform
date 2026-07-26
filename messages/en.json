@@ -209,6 +209,7 @@
     "importedOnWithSource": "Imported {date} / source {sourceDate}",
     "locationUnavailable": "Location details unavailable",
     "browseByCityHeading": "Browse by city",
+    "cityCardSubtitle": "Charging stations in {location}",
     "cityNames": {
       "warsaw": "Warsaw",
       "krakow": "Krakow",
