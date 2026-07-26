@@ -230,11 +230,10 @@ const HomePage = async () => {
 
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="mx-auto max-w-3xl">
-          <Card
-            as={Link}
+          <Link
             href="/vehicles"
-            interactive
-            className="group relative bg-gradient-to-br from-emerald-50 to-white"
+            className="card-charging group relative bg-gradient-to-br from-emerald-50 to-white transition-transform duration-200 hover:-translate-y-1"
+            data-interactive="true"
           >
             <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--accent)] transition-transform group-hover:translate-x-1" />
             <CarFront className="h-8 w-8 text-[var(--accent)]" />
@@ -244,7 +243,7 @@ const HomePage = async () => {
             <p className="muted mt-3 text-sm">
               {t("chargingCardDescription")}
             </p>
-          </Card>
+          </Link>
         </div>
       </section>
 
