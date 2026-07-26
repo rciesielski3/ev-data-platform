@@ -208,7 +208,18 @@
     "importedOn": "Imported {date}",
     "importedOnWithSource": "Imported {date} / source {sourceDate}",
     "locationUnavailable": "Location details unavailable",
-    "browseByCityHeading": "Browse by city"
+    "browseByCityHeading": "Browse by city",
+    "cityCardSubtitle": "Charging stations in {location}",
+    "cityNames": {
+      "warsaw": "Warsaw",
+      "krakow": "Krakow",
+      "wroclaw": "Wroclaw",
+      "poznan": "Poznan",
+      "gdansk": "Gdansk",
+      "lodz": "Lodz",
+      "silesia": "Silesia",
+      "triCity": "Tri-City"
+    }
   },
   "stationDetail": {
     "backLink": "Back to stations",
