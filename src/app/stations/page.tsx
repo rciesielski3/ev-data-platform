@@ -542,91 +542,51 @@ const StationsPage = async ({
 
           <section className="mt-12">
             <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-              Ile Kosztuje Ładowanie?
+              {tStationsPage("pricingSection.heading")}
             </h2>
             <p className="mb-4 leading-relaxed text-slate-700">
-              Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania.
-              Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje opcje abonamentowe
-              oraz opłatę za minutę lub kWh. Ładowanie AC jest zwykle tańsze niż ładowanie DC na
-              publicznych stacjach. Wielu operatorów oferuje specjalne taryfy dla regularnych
-              użytkowników. Szczegółowe informacje o cenach dla każdej stacji znajdują się
-              w jej profilu.
+              {tStationsPage("pricingSection.body1")}
             </p>
             <p className="leading-relaxed text-slate-700">
-              Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady)
-              i pory dnia. Rekomendujemy skontaktowanie się bezpośrednio z operatorami,
-              aby poznać aktualnie obowiązujące taryfy dla Twojej lokalizacji.
+              {tStationsPage("pricingSection.body2")}
             </p>
           </section>
 
           <section className="mt-12">
             <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-              Porównanie Operatorów Ładowania
+              {tStationsPage("operatorsSection.heading")}
             </h2>
             <p className="mb-4 leading-relaxed text-slate-700">
-              Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to
-              jedna z największych sieci w Polsce, oferująca zarówno ładowanie AC, jak i
-              szybkie ładowanie DC. Energa ma solidną infrastrukturę z naciskiem na miasta
-              i trasy handlowe. GreenWay skupia się na dużych miastach i stacjach autostradowych
-              z nowoczesną technologią. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy,
-              rozwijają się lokalnie.
+              {tStationsPage("operatorsSection.body1")}
             </p>
             <p className="leading-relaxed text-slate-700">
-              Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują
-              darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje
-              abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze,
-              aby porównać dostępność i taryfy. <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">Więcej informacji o operatorach →</Link> Masz pytania? <Link href="#faq" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź nasz FAQ</Link>
+              {tStationsPage("operatorsSection.body2")}{" "}
+              <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("operatorsSection.body2InsightsLinkText")}
+              </Link>
+              {" "}
+              {tStationsPage("operatorsSection.body2FaqText")}{" "}
+              <Link href="#faq" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("operatorsSection.body2FaqLinkText")}
+              </Link>
             </p>
           </section>
 
           <section className="mt-12" id="faq">
             <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-              FAQ: Jak Znaleźć Ładowarkę
+              {tStationsPage("faqSection.heading")}
             </h2>
             <div className="space-y-6">
-              <article>
-                <h3 className="mb-2 text-lg font-semibold text-slate-950">
-                  Jak znaleźć ładowarkę blisko mnie?
-                </h3>
-                <p className="leading-relaxed text-slate-700">
-                  Użyj naszej mapy i wpisz swoją lokalizację w pole &quot;Lokalizacja&quot;.
-                  System pokaże stacje w promieniu 10 km. Możesz również przeglądać stacje
-                  w poszczególnych miastach klikając na linki poniżej mapy.
-                </p>
-              </article>
-              <article>
-                <h3 className="mb-2 text-lg font-semibold text-slate-950">
-                  Jaki typ złącza powinienem wybrać?
-                </h3>
-                <p className="leading-relaxed text-slate-700">
-                  Typ złącza zależy od twojego pojazdu. Większość nowoczesnych EV obsługuje
-                  Type 2 (ładowanie AC) i CCS (ładowanie DC). Starsze pojazdy mogą mieć
-                  CHAdeMO. Sprawdź dokumentację swojego pojazdu, a następnie filtruj stacje
-                  po właściwym typie złącza.
-                </p>
-              </article>
-              <article>
-                <h3 className="mb-2 text-lg font-semibold text-slate-950">
-                  Jakie są godziny pracy ładowarek?
-                </h3>
-                <p className="leading-relaxed text-slate-700">
-                  Większość publicznych ładowarek jest dostępna 24/7. Niektórzy operatorzy
-                  mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej
-                  stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby
-                  zobaczyć pełne informacje.
-                </p>
-              </article>
-              <article>
-                <h3 className="mb-2 text-lg font-semibold text-slate-950">
-                  Czy mogę zarezerwować ładowarkę?
-                </h3>
-                <p className="leading-relaxed text-slate-700">
-                  Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging,
-                  Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na
-                  15–30 minut przed przyjazdem. Sprawdź aplikację wybranego operatora, aby
-                  poznać szczegóły.
-                </p>
-              </article>
+              {tStationsPage.raw("faqSection.faqs").map((faq: { question: string; answer: string }, index: number) => (
+                <article key={index}>
+                  <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                    {faq.question}
+                  </h3>
+                  <p className="leading-relaxed text-slate-700">
+                    {faq.answer}
+                  </p>
+                </article>
+              ))}
             </div>
           </section>
         </>
