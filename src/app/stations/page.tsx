@@ -208,6 +208,17 @@ const StationsPage = async ({
               </Link>
               , {tStationsPage("searchSection.body2Suffix")}
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {REGIONAL_CITIES.map((city) => (
+                <Link
+                  key={city.slug}
+                  href={`/stations/${city.slug}`}
+                  className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 transition-colors hover:border-emerald-400 hover:bg-emerald-100 hover:text-emerald-900"
+                >
+                  {t(`cityNames.${city.i18nKey}`)}
+                </Link>
+              ))}
+            </div>
           </div>
         </Disclosure>
       </section>
@@ -587,36 +598,6 @@ const StationsPage = async ({
         </>
       )}
 
-      <section className="mt-16 space-y-4">
-        <h2 className="text-xl font-semibold text-slate-900">
-          {t("browseByCityHeading")}
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {REGIONAL_CITIES.map((regionalCity) => {
-            const cityLabel = t(`cityNames.${regionalCity.i18nKey}`);
-            const cityLocation =
-              locale === "pl" ? regionalCity.locativePhrase : cityLabel;
-
-            return (
-              <Card
-                key={regionalCity.slug}
-                as={Link}
-                href={`/stations/${regionalCity.slug}`}
-                interactive
-                className="group relative bg-white"
-              >
-                <p className="text-lg font-semibold text-slate-900">
-                  {cityLabel}
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {t("cityCardSubtitle", { location: cityLocation })}
-                </p>
-                <ArrowRightIcon className="absolute right-4 top-4 h-5 w-5 text-slate-400 transition-colors group-hover:text-emerald-600" />
-              </Card>
-            );
-          })}
-        </div>
-      </section>
     </main>
   );
 };
