@@ -57,7 +57,7 @@ export const generateMetadata = async ({
   if (isFilteredView(filters)) {
     return {
       title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-      description: t("description") || "Odkryj 20,000+ stacji ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Wyszukaj ładowarkę blisko ciebie.",
+      description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
     };
@@ -65,7 +65,7 @@ export const generateMetadata = async ({
 
   return {
     title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    description: t("description") || "Odkryj 20,000+ stacji ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Wyszukaj ładowarkę blisko ciebie.",
+    description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
     alternates: { canonical: "/stations" },
   };
 };
@@ -148,6 +148,7 @@ const StationsPage = async ({
 }) => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stations");
+  const tStationsPage = await getTranslations("stationsPage");
   const tCommon = await getTranslations("common");
 
   const filters = parseStationSearchParams(await searchParams);
@@ -187,23 +188,17 @@ const StationsPage = async ({
 
       <section className="mb-12">
         <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-          Wyszukaj Stacje Ładowania Blisko Ciebie
+          {tStationsPage("searchSection.heading")}
         </h2>
         <p className="mb-4 leading-relaxed text-slate-700">
-          Nasza interaktywna mapa zawiera ponad 20 000 stacji ładowania EV w Polsce.
-          Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę
-          odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2,
-          CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji
-          pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe
-          informacje o każdej stacji — adres, dostępne złącza, moc ładowania, operator i
-          godziny otwarcia — pomagają Ci wybrać idealne miejsce do ładowania.
+          {tStationsPage("searchSection.body1")}
         </p>
         <p className="leading-relaxed text-slate-700">
-          Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd
-          Dozoru Technicznego) i EIPA (Elektroniczny Integrowany Plan Ładowania). Nasza
-          baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do
-          najbardziej aktualnych informacji. <Link href="/stations/warszawa" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź ładowarki w Warszawie</Link>, lub wybierz miasto z listy poniżej, aby zobaczyć
-          stacje w Twojej okolicy.
+          {tStationsPage("searchSection.body2Prefix")}{" "}
+          <Link href="/stations/warszawa" className="text-emerald-700 underline hover:text-emerald-900">
+            {tStationsPage("searchSection.body2LinkWarsawText")}
+          </Link>
+          , {tStationsPage("searchSection.body2Suffix")}
         </p>
       </section>
 
@@ -532,23 +527,16 @@ const StationsPage = async ({
 
           <section className="mt-16 border-t border-slate-200 pt-12">
             <h2 className="mb-4 text-2xl font-semibold text-slate-950">
-              Rodzaje Ładowarek: AC vs DC vs 400kW
+              {tStationsPage("chargingTypesSection.heading")}
             </h2>
             <p className="mb-4 leading-relaxed text-slate-700">
-              Rynek ładowarek EV w Polsce oferuje różne typy zasilania dostosowane do
-              potrzeb kierowców. Ładowarki AC (prąd zmienny) pracują na napięciu
-              jednofazowym (3,7 kW, 7,4 kW) lub trójfazowym (11 kW, 22 kW) — idealne do
-              ładowania nocnego w domu lub przy pracy. Ładowarki DC (prąd stały), zwane
-              też szybkimi ładowarkami, oferują moc od 50 kW do 350 kW i pozwalają na
-              naładowanie baterii do 80% w 20–40 minut. Ładowarki 400kW to najnowsza
-              technologia, dostępna przede wszystkim na autostradach.
+              {tStationsPage("chargingTypesSection.body1")}
             </p>
             <p className="leading-relaxed text-slate-700">
-              Czas ładowania zależy od mocy ładowania i pojemności baterii pojazdu. Auto
-              z baterią 60 kWh ładuje się ładowarką 22 kW około 3 godziny, a ładowarką
-              150 kW około 30 minut. W naszej bazie możesz filtrować stacje po minimalnej
-              mocy, aby znaleźć właściwą ładowarkę dla Twojego pojazdu. <Link href="/vehicles" className="text-emerald-700 underline hover:text-emerald-900">Sprawdź
-              czasy ładowania dla swoich modeli pojazdów →</Link>
+              {tStationsPage("chargingTypesSection.body2Prefix")}{" "}
+              <Link href="/vehicles" className="text-emerald-700 underline hover:text-emerald-900">
+                {tStationsPage("chargingTypesSection.body2LinkText")}
+              </Link>
             </p>
           </section>
 
@@ -558,18 +546,16 @@ const StationsPage = async ({
             </h2>
             <p className="mb-4 leading-relaxed text-slate-700">
               Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania.
-              Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje abonament
-              miesięczny (np. 50–100 PLN) oraz opłatę za minutę lub kWh. Ładowanie AC
-              w domu kosztuje średnio 0,60–1,20 PLN za kWh, podczas gdy ładowanie na
-              publicznych stacjach DC wynosi 2–5 PLN za kWh. Niektórzy operatorzy oferują
-              specjalne taryfy dla regularnych użytkowników, zmniejszające koszty do
-              1–1,50 PLN za kWh.
+              Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje opcje abonamentowe
+              oraz opłatę za minutę lub kWh. Ładowanie AC jest zwykle tańsze niż ładowanie DC na
+              publicznych stacjach. Wielu operatorów oferuje specjalne taryfy dla regularnych
+              użytkowników. Szczegółowe informacje o cenach dla każdej stacji znajdują się
+              w jej profilu.
             </p>
             <p className="leading-relaxed text-slate-700">
               Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady)
-              i pory dnia. Wiele sieci oferuje tańsze ładowanie nocą. Nasze detale stacji
-              zawierają informacje o operatorze i jego taryfach — wyszukaj swoją lokalną
-              stację, aby poznać dokładne ceny.
+              i pory dnia. Rekomendujemy skontaktowanie się bezpośrednio z operatorami,
+              aby poznać aktualnie obowiązujące taryfy dla Twojej lokalizacji.
             </p>
           </section>
 
@@ -579,12 +565,11 @@ const StationsPage = async ({
             </h2>
             <p className="mb-4 leading-relaxed text-slate-700">
               Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to
-              największa sieć z ponad 3000 stacjami na terenie całej Polski, oferująca
-              zarówno ładowanie AC, jak i szybkie ładowanie DC. Energa ma solidną
-              infrastrukturę z naciskiem na miasta i trasy handlowe. GreenWay skupia się
-              na dużych miastach i stacjach autostradowych z nowoczesną technologią
-              400kW. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy, rozwijają
-              się lokalnie.
+              jedna z największych sieci w Polsce, oferująca zarówno ładowanie AC, jak i
+              szybkie ładowanie DC. Energa ma solidną infrastrukturę z naciskiem na miasta
+              i trasy handlowe. GreenWay skupia się na dużych miastach i stacjach autostradowych
+              z nowoczesną technologią. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy,
+              rozwijają się lokalnie.
             </p>
             <p className="leading-relaxed text-slate-700">
               Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują
@@ -605,8 +590,8 @@ const StationsPage = async ({
                 </h3>
                 <p className="leading-relaxed text-slate-700">
                   Użyj naszej mapy i wpisz swoją lokalizację w pole &quot;Lokalizacja&quot;.
-                  System pokaże stacje w promieniu 10 km. Możesz również przeglądać miasto
-                  miasto klikając na linki poniżej mapy.
+                  System pokaże stacje w promieniu 10 km. Możesz również przeglądać stacje
+                  w poszczególnych miastach klikając na linki poniżej mapy.
                 </p>
               </article>
               <article>
@@ -625,7 +610,7 @@ const StationsPage = async ({
                   Jakie są godziny pracy ładowarek?
                 </h3>
                 <p className="leading-relaxed text-slate-700">
-                  Większość publicznych ładowarek jest dostępna 24/7. Niektorzy operatorzy
+                  Większość publicznych ładowarek jest dostępna 24/7. Niektórzy operatorzy
                   mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej
                   stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby
                   zobaczyć pełne informacje.
@@ -638,7 +623,7 @@ const StationsPage = async ({
                 <p className="leading-relaxed text-slate-700">
                   Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging,
                   Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na
-                  15–30 minut przed przyездом. Sprawdź aplikację wybranego operatora, aby
+                  15–30 minut przed przyjazdem. Sprawdź aplikację wybranego operatora, aby
                   poznać szczegóły.
                 </p>
               </article>
