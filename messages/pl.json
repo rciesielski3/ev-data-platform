@@ -208,7 +208,17 @@
     "importedOn": "Zaimportowano {date}",
     "importedOnWithSource": "Zaimportowano {date} / źródło {sourceDate}",
     "locationUnavailable": "Brak danych o lokalizacji",
-    "browseByCityHeading": "Przeglądaj według miasta"
+    "browseByCityHeading": "Przeglądaj według miasta",
+    "cityNames": {
+      "warsaw": "Warszawa",
+      "krakow": "Kraków",
+      "wroclaw": "Wrocław",
+      "poznan": "Poznań",
+      "gdansk": "Gdańsk",
+      "lodz": "Łódź",
+      "silesia": "Śląsk",
+      "triCity": "Trójmiasto"
+    }
   },
   "stationDetail": {
     "backLink": "Wróć do stacji",
