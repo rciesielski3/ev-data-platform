@@ -41,7 +41,7 @@
   },
   "home": {
     "title": "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    "description": "Odkryj 20,000+ stacji ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Wyszukaj ładowarkę blisko ciebie.",
+    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
@@ -851,8 +851,8 @@
   "stationsPage": {
     "searchSection": {
       "heading": "Wyszukaj Stacje Ładowania Blisko Ciebie",
-      "body1": "Nasza interaktywna mapa zawiera ponad 20 000 stacji ładowania EV w Polsce. Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2, CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe informacje o każdej stacji — adres, dostępne złącza, moc ładowania, operator i godziny otwarcia — pomagają Ci wybrać idealne miejsce do ładowania.",
-      "body2Prefix": "Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd Dozoru Technicznego) i EIPA (Elektroniczny Integrowany Plan Ładowania). Nasza baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do najbardziej aktualnych informacji.",
+      "body1": "Nasza interaktywna mapa zawiera jedną z największych sieci stacji ładowania EV w Polsce. Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2, CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe informacje o każdej stacji — adres, dostępne złącza, moc ładowania, operator i godziny otwarcia — pomagają Ci wybrać idealne miejsce do ładowania.",
+      "body2Prefix": "Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd Dozoru Technicznego) i EIPA (Ewidencja Infrastruktury Paliw Alternatywnych — krajowy rejestr infrastruktury ładowania). Nasza baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do najbardziej aktualnych informacji.",
       "body2LinkWarsawText": "Sprawdź ładowarki w Warszawie",
       "body2Suffix": "lub wybierz miasto z listy poniżej, aby zobaczyć stacje w Twojej okolicy."
     },
@@ -864,12 +864,12 @@
     },
     "pricingSection": {
       "heading": "Ile Kosztuje Ładowanie?",
-      "body1": "Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania. Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje abonament miesięczny (np. 50–100 PLN) oraz opłatę za minutę lub kWh. Ładowanie AC w domu kosztuje średnio 0,60–1,20 PLN za kWh, podczas gdy ładowanie na publicznych stacjach DC wynosi 2–5 PLN za kWh. Niektórzy operatorzy oferują specjalne taryfy dla regularnych użytkowników, zmniejszające koszty do 1–1,50 PLN za kWh.",
+      "body1": "Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania. Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje abonament miesięczny oraz opłatę za minutę lub kWh. Ładowanie AC w domu jest zazwyczaj tańsze niż na publicznych stacjach szybkiego ładowania. Niektórzy operatorzy oferują specjalne taryfy dla regularnych użytkowników.",
       "body2": "Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady) i pory dnia. Wiele sieci oferuje tańsze ładowanie nocą. Nasze detale stacji zawierają informacje o operatorze i jego taryfach — wyszukaj swoją lokalną stację, aby poznać dokładne ceny."
     },
     "operatorsSection": {
       "heading": "Porównanie Operatorów Ładowania",
-      "body1": "Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to największa sieć z ponad 3000 stacjami na terenie całej Polski, oferująca zarówno ładowanie AC, jak i szybkie ładowanie DC. Energa ma solidną infrastrukturę z naciskiem na miasta i trasy handlowe. GreenWay skupia się na dużych miastach i stacjach autostradowych z nowoczesną technologią 400kW. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy, rozwijają się lokalnie.",
+      "body1": "Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to jedna z największych sieci, oferująca zarówno ładowanie AC, jak i szybkie ładowanie DC. Energa ma solidną infrastrukturę z naciskiem na miasta i trasy handlowe. GreenWay skupia się na dużych miastach i stacjach autostradowych z nowoczesną technologią 400kW. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy, rozwijają się lokalnie.",
       "body2": "Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze, aby porównać dostępność i taryfy.",
       "body2InsightsLinkText": "Więcej informacji o operatorach →",
       "body2FaqText": "Masz pytania?",
@@ -888,11 +888,11 @@
         },
         {
           "question": "Jakie są godziny pracy ładowarek?",
-          "answer": "Większość publicznych ładowarek jest dostępna 24/7. Niektorzy operatorzy mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby zobaczyć pełne informacje."
+          "answer": "Większość publicznych ładowarek jest dostępna 24/7. Niektórzy operatorzy mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby zobaczyć pełne informacje."
         },
         {
           "question": "Czy mogę zarezerwować ładowarkę?",
-          "answer": "Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging, Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na 15–30 minut przed przyездом. Sprawdź aplikację wybranego operatora, aby poznać szczegóły."
+          "answer": "Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging, Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na 15–30 minut przed przyjazdem. Sprawdź aplikację wybranego operatora, aby poznać szczegóły."
         }
       ]
     }

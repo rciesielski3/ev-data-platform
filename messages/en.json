@@ -41,7 +41,7 @@
   },
   "home": {
     "title": "EV Charging Map Poland - Find Near You | evsource.pl",
-    "description": "Discover 20,000+ EV charging stations in Poland. Interactive map, filters, operator details. Find a charger near you.",
+    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -851,8 +851,8 @@
   "stationsPage": {
     "searchSection": {
       "heading": "Find Charging Stations Near You",
-      "body1": "Our interactive map contains over 20,000 EV charging stations across Poland. Using our advanced filters, you can easily find a charger that meets your needs. Search by location, connector type (Type 2, CCS, CHAdeMO), power (11 kW to 350 kW), and network operator. Geolocation lets you discover stations near you within a 10 km radius. Detailed information for each station — address, available connectors, charging power, operator, and opening hours — helps you choose the perfect place to charge.",
-      "body2Prefix": "All charging network operators in Poland are regulated by UDT (Technical Inspection Authority) and EIPA (Electronic Integrated Charging Plan). Our database is updated regularly to ensure you have access to the most current information.",
+      "body1": "Our interactive map contains one of the largest EV charging networks across Poland. Using our advanced filters, you can easily find a charger that meets your needs. Search by location, connector type (Type 2, CCS, CHAdeMO), power (11 kW to 350 kW), and network operator. Geolocation lets you discover stations near you within a 10 km radius. Detailed information for each station — address, available connectors, charging power, operator, and opening hours — helps you choose the perfect place to charge.",
+      "body2Prefix": "All charging network operators in Poland are regulated by UDT (Technical Inspection Authority) and EIPA (Electric Infrastructure Inventory of Alternative Fuels — national charging registry). Our database is updated regularly to ensure you have access to the most current information.",
       "body2LinkWarsawText": "Check charging stations in Warsaw",
       "body2Suffix": "or select a city from the list below to see stations in your area."
     },
@@ -864,12 +864,12 @@
     },
     "pricingSection": {
       "heading": "How Much Does Charging Cost?",
-      "body1": "The cost of EV charging in Poland depends on the network operator and type of charging. Most operators (ORLEN Charging, Energa, GreenWay) offer monthly subscriptions (e.g., 50–100 PLN) plus per-minute or per-kWh fees. Home AC charging averages 0.60–1.20 PLN per kWh, while public DC station charging ranges from 2–5 PLN per kWh. Some operators offer special rates for regular users, reducing costs to 1–1.50 PLN per kWh.",
+      "body1": "The cost of EV charging in Poland depends on the network operator and type of charging. Most operators (ORLEN Charging, Energa, GreenWay) offer monthly subscriptions plus per-minute or per-kWh fees. Home AC charging is typically less expensive than public fast-charging stations. Some operators offer special rates for regular users.",
       "body2": "Prices vary significantly depending on location (city vs. highway) and time of day. Many networks offer cheaper charging at night. Our station details include operator information and tariffs — search for your local station to learn exact prices."
     },
     "operatorsSection": {
       "heading": "Charging Operator Comparison",
-      "body1": "Poland has several major charging network operators. ORLEN Charging is the largest network with over 3,000 stations nationwide, offering both AC and fast DC charging. Energa has solid infrastructure focusing on cities and commercial routes. GreenWay concentrates on major cities and highway stations with modern 400kW technology. Smaller operators like ElectroMobility+ and Inergy are expanding locally.",
+      "body1": "Poland has several major charging network operators. ORLEN Charging is one of the leading networks nationwide, offering both AC and fast DC charging. Energa has solid infrastructure focusing on cities and commercial routes. GreenWay concentrates on major cities and highway stations with modern 400kW technology. Smaller operators like ElectroMobility+ and Inergy are expanding locally.",
       "body2": "Each operator has different pricing strategies and availability — some offer free charging for new users, while others have flexible subscription options. On our map, you can filter stations by operator to compare availability and rates.",
       "body2InsightsLinkText": "More operator information →",
       "body2FaqText": "Have questions?",
