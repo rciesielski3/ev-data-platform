@@ -232,8 +232,7 @@ const HomePage = async () => {
         <div className="mx-auto max-w-3xl">
           <Link
             href="/vehicles"
-            className="card-charging group relative bg-gradient-to-br from-emerald-50 to-white transition-transform duration-200 hover:-translate-y-1"
-            data-interactive="true"
+            className="group relative border border-[var(--card-border)] rounded-[18px] p-5 bg-gradient-to-br from-emerald-50 to-white transition-transform duration-200 hover:-translate-y-3 shadow-sm hover:shadow-md"
           >
             <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--accent)] transition-transform group-hover:translate-x-1" />
             <CarFront className="h-8 w-8 text-[var(--accent)]" />
