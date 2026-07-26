@@ -232,10 +232,10 @@ const HomePage = async () => {
         <div className="mx-auto max-w-3xl">
           <Link
             href="/vehicles"
-            className="group relative block border border-[var(--card-border)] rounded-[18px] p-5 bg-gradient-to-br from-emerald-50 to-white"
+            className="group relative block border border-[var(--card-border)] rounded-[18px] p-5 bg-gradient-to-br from-emerald-50 to-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
           >
-            <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--accent)] transition-transform group-hover:translate-x-1" />
-            <CarFront className="h-8 w-8 text-[var(--accent)]" />
+            <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--muted)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+            <CarFront className="h-8 w-8 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
             <h3 className="font-display mt-4 text-xl font-semibold">
               {t("chargingCardTitle")}
             </h3>
