@@ -303,7 +303,11 @@
     "viewStationsLink": "View stations →",
     "ctaTitle": "Ready to charge?",
     "ctaDescription": "Search for charging stations in {location} on our interactive map.",
-    "stationsCta": "Browse stations"
+    "stationsCta": "Browse stations",
+    "operatorCompletenessLabel": "complete",
+    "operatorOutdatedLabel": "Outdated",
+    "operatorMaxPowerLabel": "up to {{power}} kW",
+    "operatorConnectorsLabel": "Connectors"
   },
   "contact": {
     "title": "Get in touch",
