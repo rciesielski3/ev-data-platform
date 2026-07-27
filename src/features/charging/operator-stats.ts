@@ -59,12 +59,6 @@ export const calculateOperatorCityStats = async (
     .filter(Boolean)
     .sort((a, b) => b!.getTime() - a!.getTime())[0];
 
-  const maxPowerKw = Math.max(
-    ...stations
-      .flatMap((s) => s.connectors)
-      .map((c) => c.powerKw ?? 0),
-  ) || null;
-
   const connectorCounts = new Map<string, number>();
   for (const station of stations) {
     for (const connector of station.connectors) {

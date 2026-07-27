@@ -5,6 +5,11 @@ import { prisma } from "@/lib/db/prisma";
 
 vi.mock("@/lib/db/prisma");
 
+interface MockStation {
+  sourceUpdatedAt: Date;
+  connectors: Array<{ powerKw: number | null; connectorType: string }>;
+}
+
 const mockPrisma = prisma as unknown as {
   chargingStation: { findMany: Mock };
 };
@@ -25,7 +30,7 @@ describe("calculateOperatorCityStats", () => {
   });
 
   it("calculates completeness as percentage of stations with power data", async () => {
-    const mockStations = [
+    const mockStations: MockStation[] = [
       {
         sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
         connectors: [{ powerKw: 22, connectorType: "Type 2" }],
@@ -42,7 +47,7 @@ describe("calculateOperatorCityStats", () => {
 
     mockPrisma.chargingStation.findMany = vi
       .fn()
-      .mockResolvedValue(mockStations as any);
+      .mockResolvedValue(mockStations);
 
     const result = await calculateOperatorCityStats("warsaw", "TestOp");
 
@@ -55,7 +60,7 @@ describe("calculateOperatorCityStats", () => {
     const date2 = new Date("2026-07-26T14:00:00Z");
     const date3 = new Date("2026-07-24T09:00:00Z");
 
-    const mockStations = [
+    const mockStations: MockStation[] = [
       {
         sourceUpdatedAt: date1,
         connectors: [{ powerKw: 22, connectorType: "Type 2" }],
@@ -72,7 +77,7 @@ describe("calculateOperatorCityStats", () => {
 
     mockPrisma.chargingStation.findMany = vi
       .fn()
-      .mockResolvedValue(mockStations as any);
+      .mockResolvedValue(mockStations);
 
     const result = await calculateOperatorCityStats("warsaw", "TestOp");
 
@@ -80,7 +85,7 @@ describe("calculateOperatorCityStats", () => {
   });
 
   it("aggregates connectors by type+power and limits to top 5", async () => {
-    const mockStations = Array.from({ length: 10 }, (_, i) => ({
+    const mockStations: MockStation[] = Array.from({ length: 10 }, () => ({
       sourceUpdatedAt: new Date(),
       connectors: [
         { powerKw: 22, connectorType: "Type 2" },
@@ -91,7 +96,7 @@ describe("calculateOperatorCityStats", () => {
 
     mockPrisma.chargingStation.findMany = vi
       .fn()
-      .mockResolvedValue(mockStations as any);
+      .mockResolvedValue(mockStations);
 
     const result = await calculateOperatorCityStats("warsaw", "TestOp");
 
