@@ -210,13 +210,15 @@ const StationsPage = async ({
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {REGIONAL_CITIES.map((city) => (
-                <Link
+                <Button
                   key={city.slug}
+                  as={Link}
                   href={`/stations/${city.slug}`}
-                  className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 transition-colors hover:border-emerald-400 hover:bg-emerald-100 hover:text-emerald-900"
+                  variant="secondary"
+                  className="shrink-0 rounded-full"
                 >
                   {t(`cityNames.${city.i18nKey}`)}
-                </Link>
+                </Button>
               ))}
             </div>
           </div>
