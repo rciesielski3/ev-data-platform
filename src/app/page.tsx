@@ -228,24 +228,6 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="mx-auto max-w-3xl">
-          <Link
-            href="/vehicles"
-            className="group relative block border border-[var(--card-border)] rounded-[18px] p-5 bg-gradient-to-br from-emerald-50 to-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-          >
-            <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-[var(--muted)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-            <CarFront className="h-8 w-8 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110" />
-            <h3 className="font-display mt-4 text-xl font-semibold">
-              {t("chargingCardTitle")}
-            </h3>
-            <p className="muted mt-3 text-sm">
-              {t("chargingCardDescription")}
-            </p>
-          </Link>
-        </div>
-      </section>
-
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-6">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h2 className="font-display text-2xl font-bold">
@@ -321,7 +303,7 @@ const HomePage = async () => {
             <h3 className="font-display mt-2 text-xl font-semibold">
               {t("evCatalogTitle")}
             </h3>
-            <p className="muted mt-2 text-sm">{t("evCatalogDescription")}</p>
+            <p className="muted mt-2 text-sm">{t("chargingCardDescription")}</p>
           </Card>
         </div>
       </section>
