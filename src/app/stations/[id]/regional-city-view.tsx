@@ -126,7 +126,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       })}
                     </p>
                     <Link
-                      href={`/stations?city=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
+                      href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
                       className="mt-3 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-900"
                     >
                       {t("viewStationsLink")}
