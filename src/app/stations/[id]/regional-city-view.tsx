@@ -115,7 +115,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                 {stats.operatorBreakdown.map((operator) => (
                   <div
                     key={operator.name}
-                    className="border border-[var(--card-border)] rounded-[18px] p-5 bg-emerald-50 shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                    className="border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                   >
                     <h3 className="text-lg font-semibold text-[var(--foreground)]">
                       {operator.name}
