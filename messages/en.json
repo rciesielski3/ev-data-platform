@@ -89,7 +89,6 @@
     "promoteStationHelper": "Increase visibility of your charging network in our directory and reports",
     "evCatalogEyebrow": "EV catalog",
     "evCatalogTitle": "Browse vehicle models",
-    "evCatalogDescription": "Search brands and models, then open detail pages for battery, range, charging, source, and freshness.",
     "stationSearchEyebrow": "Station search",
     "stationSearchTitle": "Find charging infrastructure",
     "stationSearchDescription": "Filter stations by location, connector, minimum power, and operator using imported EIPA data.",

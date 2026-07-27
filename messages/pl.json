@@ -89,7 +89,6 @@
     "promoteStationHelper": "Zwiększ widoczność swojej sieci ładowania w naszym katalogu i raportach",
     "evCatalogEyebrow": "Katalog EV",
     "evCatalogTitle": "Przeglądaj modele pojazdów",
-    "evCatalogDescription": "Przeszukuj marki i modele, a potem otwórz strony szczegółów z baterią, zasięgiem, ładowaniem, źródłem i świeżością danych.",
     "stationSearchEyebrow": "Wyszukiwanie stacji",
     "stationSearchTitle": "Znajdź infrastrukturę ładowania",
     "stationSearchDescription": "Filtruj stacje według lokalizacji, złącza, minimalnej mocy i operatora, korzystając z zaimportowanych danych EIPA.",
