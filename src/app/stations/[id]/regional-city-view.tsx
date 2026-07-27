@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import { pl } from "date-fns/locale";
+import { enUS, pl } from "date-fns/locale";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -150,7 +150,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {t("operatorOutdatedLabel")} /{" "}
                             {formatDistanceToNow(
                               new Date(operatorStats.newestUpdateDate),
-                              { locale: pl },
+                              { locale: locale === "pl" ? pl : enUS },
                             )}
                           </p>
                         </div>
@@ -159,10 +159,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       {operatorStats && (
                         <p className="mt-3 text-sm font-medium text-[var(--foreground)]">
                           {t("operatorMaxPowerLabel", {
-                            power: operatorStats.topConnectors[0]?.type.split(" ").pop()?.replace(
-                              / kW$/,
-                              "",
-                            ) ?? "?",
+                            power: operatorStats.topConnectors[0]?.type.match(/\d+/)?.[0] ?? "?",
                           })}
                         </p>
                       )}

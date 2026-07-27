@@ -306,7 +306,7 @@
     "stationsCta": "Przeglądaj stacje",
     "operatorCompletenessLabel": "kompletne",
     "operatorOutdatedLabel": "Nieaktualne",
-    "operatorMaxPowerLabel": "max do {{power}} kW",
+    "operatorMaxPowerLabel": "max do {power} kW",
     "operatorConnectorsLabel": "Złącza"
   },
   "contact": {

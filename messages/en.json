@@ -306,7 +306,7 @@
     "stationsCta": "Browse stations",
     "operatorCompletenessLabel": "complete",
     "operatorOutdatedLabel": "Outdated",
-    "operatorMaxPowerLabel": "up to {{power}} kW",
+    "operatorMaxPowerLabel": "up to {power} kW",
     "operatorConnectorsLabel": "Connectors"
   },
   "contact": {

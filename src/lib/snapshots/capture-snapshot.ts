@@ -4,6 +4,7 @@ import { buildOperatorIntelligenceRows } from "@/features/charging/operator-inte
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
 import { calculateOperatorCityStats, type OperatorStatsMap } from "@/features/charging/operator-stats";
 import { buildRegionalCityWhere } from "@/features/charging/regional-stations";
+import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { prisma } from "@/lib/db/prisma";
 import { buildDailySnapshot } from "@/lib/snapshots/build-snapshot";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
@@ -63,18 +64,19 @@ const generateOperatorStats = async (): Promise<OperatorStatsMap> => {
         ],
       },
       select: {
-        operator: { select: { name: true } },
+        operator: { select: { name: true, normalizedName: true } },
       },
       distinct: ["operatorId"],
     });
 
-    const uniqueOperatorNames = [...new Set(operators.map((s) => s.operator?.name).filter(Boolean) as string[])];
+    const uniqueOperators = [...new Set(operators.map((s) => s.operator).filter(Boolean) as Array<{ name: string; normalizedName: string | null }>)];
 
     operatorStatsMap[city.slug] = {};
 
-    for (const operatorName of uniqueOperatorNames) {
-      operatorStatsMap[city.slug][operatorName] =
-        await calculateOperatorCityStats(city.slug, operatorName);
+    for (const operator of uniqueOperators) {
+      const formattedName = formatStationOperatorLabel(operator);
+      operatorStatsMap[city.slug][formattedName] =
+        await calculateOperatorCityStats(city.slug, operator.name);
     }
   }
 

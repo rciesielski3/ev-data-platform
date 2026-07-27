@@ -29,7 +29,6 @@ export const calculateOperatorCityStats = async (
   let where: Prisma.ChargingStationWhereInput;
 
   if (city) {
-    // Use regional city where clause if city is found
     where = {
       AND: [
         buildRegionalCityWhere(city),
@@ -37,7 +36,6 @@ export const calculateOperatorCityStats = async (
       ],
     };
   } else {
-    // Fallback to direct city match for backward compatibility
     where = {
       operator: { name: operatorName },
       city: citySlug,
