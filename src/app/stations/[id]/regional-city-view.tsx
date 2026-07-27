@@ -113,7 +113,10 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {stats.operatorBreakdown.map((operator) => (
-                  <Card key={operator.name}>
+                  <div
+                    key={operator.name}
+                    className="border border-[var(--card-border)] rounded-[18px] p-5 bg-emerald-50 shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  >
                     <h3 className="text-lg font-semibold text-[var(--foreground)]">
                       {operator.name}
                     </h3>
@@ -123,12 +126,12 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       })}
                     </p>
                     <Link
-                      href={`/stations?operator=${encodeURIComponent(operator.name)}`}
+                      href={`/stations?city=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
                       className="mt-3 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-900"
                     >
                       {t("viewStationsLink")}
                     </Link>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </section>
