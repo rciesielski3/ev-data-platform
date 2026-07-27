@@ -10,13 +10,19 @@ const resolveOpenEvJsonUrl = async () => {
     return process.env.OPENEV_DATA_URL;
   }
 
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github+json",
+    "User-Agent": "ev-data-platform-importer",
+  };
+
+  if (process.env.GITHUB_TOKEN) {
+    headers.Authorization = `token ${process.env.GITHUB_TOKEN}`;
+  }
+
   const response = await fetch(
     "https://api.github.com/repos/open-ev-data/open-ev-data-dataset/releases/latest",
     {
-      headers: {
-        Accept: "application/vnd.github+json",
-        "User-Agent": "ev-data-platform-importer",
-      },
+      headers,
       next: { revalidate: 0 },
     },
   );
