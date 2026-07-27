@@ -1,3 +1,8 @@
+import type { Prisma } from "@prisma/client";
+
+import { buildRegionalCityWhere, findRegionalCity } from "@/features/charging/regional-stations";
+import { prisma } from "@/lib/db/prisma";
+
 export type OperatorConnectorSummary = {
   type: string;
   count: number;
@@ -15,17 +20,32 @@ export type OperatorStatsMap = Record<
   Record<string, OperatorCityStats>
 >;
 
-import { prisma } from "@/lib/db/prisma";
-
 export const calculateOperatorCityStats = async (
   citySlug: string,
   operatorName: string,
 ): Promise<OperatorCityStats> => {
-  const stations = await prisma.chargingStation.findMany({
-    where: {
+  const city = findRegionalCity(citySlug);
+
+  let where: Prisma.ChargingStationWhereInput;
+
+  if (city) {
+    // Use regional city where clause if city is found
+    where = {
+      AND: [
+        buildRegionalCityWhere(city),
+        { operator: { name: operatorName } },
+      ],
+    };
+  } else {
+    // Fallback to direct city match for backward compatibility
+    where = {
       operator: { name: operatorName },
       city: citySlug,
-    },
+    };
+  }
+
+  const stations = await prisma.chargingStation.findMany({
+    where,
     select: {
       sourceUpdatedAt: true,
       connectors: {
