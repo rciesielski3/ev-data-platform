@@ -150,4 +150,25 @@ describe("calculateOperatorCityStats", () => {
 
     expect(result.maxPowerKw).toBeNull();
   });
+
+  it("should calculate max power with fractional values (3.7, 7.4, 22.5 kW)", async () => {
+    const mockStations: MockStation[] = [
+      {
+        sourceUpdatedAt: new Date("2026-07-15T10:00:00Z"),
+        connectors: [
+          { powerKw: 3.7, connectorType: "Type 2" },
+          { powerKw: 7.4, connectorType: "Type 2" },
+          { powerKw: 22.5, connectorType: "Type 2" },
+        ],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStats("krakow", "TestOp");
+
+    expect(result.maxPowerKw).toBe(22.5);
+  });
 });
