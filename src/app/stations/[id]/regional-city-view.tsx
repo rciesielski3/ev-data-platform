@@ -3,6 +3,7 @@ import { cache } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
+import { ArrowRightIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -144,12 +145,12 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       </h3>
 
                       {operatorStats && (
-                        <div className="mt-3 space-y-2">
-                          <p className="text-sm text-[var(--muted)]">
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
-                          </p>
-                          <p className="text-xs text-[var(--muted)]">
+                          </span>
+                          <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
                             {t("operatorOutdatedLabel")} /{" "}
                             {operatorStats.newestUpdateDate
                               ? formatDistanceToNow(
@@ -157,7 +158,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                                   { locale: locale === "pl" ? pl : enUS },
                                 )
                               : t("noDataLabel")}
-                          </p>
+                          </span>
                         </div>
                       )}
 
@@ -171,28 +172,36 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
 
                       {operatorStats?.topConnectors?.length > 0 && (
                         <div className="mt-3">
-                          <p className="text-xs font-semibold text-[var(--muted)] uppercase">
+                          <p className="text-xs font-semibold text-[var(--muted)] uppercase mb-2">
                             {t("operatorConnectorsLabel")}
                           </p>
-                          <p className="mt-1 text-sm text-[var(--foreground)]">
-                            {operatorStats.topConnectors
-                              .map((c: { type: string; count: number }) => c.type)
-                              .join(" • ")}
-                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {operatorStats.topConnectors.map((c: { type: string; count: number }) => (
+                              <span
+                                key={c.type}
+                                className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-700"
+                              >
+                                {c.type}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       )}
 
-                      <p className="muted mt-3">
-                        {t("operatorStationCount", {
-                          count: operator.stationCount,
-                        })}
-                      </p>
-                      <Link
-                        href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                        className="mt-3 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-900"
-                      >
-                        {t("viewStationsLink")}
-                      </Link>
+                      <div className="mt-6 flex items-end justify-between">
+                        <p className="muted">
+                          {t("operatorStationCount", {
+                            count: operator.stationCount,
+                          })}
+                        </p>
+                        <Link
+                          href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
+                          className="group flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all hover:scale-110 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                          aria-label={t("viewStationsLink")}
+                        >
+                          <ArrowRightIcon className="h-5 w-5" />
+                        </Link>
+                      </div>
                     </div>
                   );
                 })}
