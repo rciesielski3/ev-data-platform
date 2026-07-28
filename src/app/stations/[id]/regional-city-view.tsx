@@ -138,7 +138,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                   return (
                     <div
                       key={operator.name}
-                      className="border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      className="group border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                       <h3 className="text-lg font-semibold text-[var(--foreground)]">
                         {operator.name}
@@ -150,7 +150,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
                           </span>
-                          <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+                          <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
                             {t("operatorOutdatedLabel")} /{" "}
                             {operatorStats.newestUpdateDate
                               ? formatDistanceToNow(
@@ -163,11 +163,11 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       )}
 
                       {operatorStats && (
-                        <p className="mt-3 text-sm font-medium text-[var(--foreground)]">
+                        <span className="mt-3 inline-flex items-center rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
                           {t("operatorMaxPowerLabel", {
                             power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
                           })}
-                        </p>
+                        </span>
                       )}
 
                       {operatorStats?.topConnectors?.length > 0 && (
@@ -196,7 +196,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                         </p>
                         <Link
                           href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                          className="group flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all hover:scale-110 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                          className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:border-emerald-500 group-hover:text-emerald-600 group-hover:bg-emerald-50"
                           aria-label={t("viewStationsLink")}
                         >
                           <ArrowRightIcon className="h-5 w-5" />
