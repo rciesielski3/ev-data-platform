@@ -20,6 +20,7 @@ import {
 import type { OperatorStatsMap, OperatorCityStats } from "@/features/charging/operator-stats";
 import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 const getRegionalCityStations = cache((city: RegionalCity) =>
@@ -53,6 +54,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
 
   let stats: RegionalCityStats | { error: true };
   let cityOperatorStats: Record<string, OperatorCityStats> = {};
+  let todaySnapshot: { snapshotDate: Date } | null = null;
 
   try {
     const stations = await getRegionalCityStations(city);
@@ -61,18 +63,21 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
     const today = new Date();
     const utcMidnight = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0));
 
-    const todaySnapshot = await prisma.dailySnapshot.findFirst({
+    const snapshotResult = await prisma.dailySnapshot.findFirst({
       where: {
         snapshotDate: {
           gte: utcMidnight,
         },
       },
       orderBy: { snapshotDate: "desc" },
-      select: { operatorStats: true },
+      select: { operatorStats: true, snapshotDate: true },
     });
 
-    const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
-    cityOperatorStats = operatorStatsMap[city.slug] ?? {};
+    if (snapshotResult) {
+      todaySnapshot = { snapshotDate: snapshotResult.snapshotDate };
+      const operatorStatsMap = (snapshotResult.operatorStats ?? {}) as OperatorStatsMap;
+      cityOperatorStats = operatorStatsMap[city.slug] ?? {};
+    }
   } catch {
     stats = { error: true };
   }
@@ -185,6 +190,23 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                               </span>
                             ))}
                           </div>
+                        </div>
+                      )}
+
+                      {operatorStats && (
+                        <div className="mt-4 pt-3 border-t border-slate-200 text-xs text-[var(--muted)]">
+                          <p>
+                            Zaimportowano{" "}
+                            {formatDisplayDate(
+                              todaySnapshot?.snapshotDate,
+                              locale === "pl" ? "pl" : "en",
+                            )}{" "}
+                            / źródło{" "}
+                            {formatDisplayDate(
+                              operatorStats.newestUpdateDate,
+                              locale === "pl" ? "pl" : "en",
+                            )}
+                          </p>
                         </div>
                       )}
 
