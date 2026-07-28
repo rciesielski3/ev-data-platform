@@ -11,7 +11,7 @@ export type OperatorConnectorSummary = {
 export type OperatorCityStats = {
   stationCount: number;
   completenessPercent: number;
-  newestUpdateDate: string;
+  newestUpdateDate: string | null;
   topConnectors: OperatorConnectorSummary[];
 };
 
@@ -95,7 +95,7 @@ export const calculateOperatorCityStats = async (
   return {
     stationCount: stations.length,
     completenessPercent,
-    newestUpdateDate: newestUpdateDate?.toISOString() ?? new Date().toISOString(),
+    newestUpdateDate: newestUpdateDate?.toISOString() ?? null,
     topConnectors,
   };
 };

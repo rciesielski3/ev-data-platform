@@ -13,7 +13,8 @@
     "previous": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {totalPages}",
-    "comingSoonBadge": "Coming soon"
+    "comingSoonBadge": "Coming soon",
+    "noDataLabel": "No data"
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",

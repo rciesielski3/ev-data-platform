@@ -148,10 +148,12 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                           </p>
                           <p className="text-xs text-[var(--muted)]">
                             {t("operatorOutdatedLabel")} /{" "}
-                            {formatDistanceToNow(
-                              new Date(operatorStats.newestUpdateDate),
-                              { locale: locale === "pl" ? pl : enUS },
-                            )}
+                            {operatorStats.newestUpdateDate
+                              ? formatDistanceToNow(
+                                  new Date(operatorStats.newestUpdateDate),
+                                  { locale: locale === "pl" ? pl : enUS },
+                                )
+                              : t("noDataLabel")}
                           </p>
                         </div>
                       )}
