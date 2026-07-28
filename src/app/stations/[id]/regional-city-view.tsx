@@ -159,7 +159,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       {operatorStats && (
                         <p className="mt-3 text-sm font-medium text-[var(--foreground)]">
                           {t("operatorMaxPowerLabel", {
-                            power: operatorStats.topConnectors[0]?.type.match(/(\d+)\s*kW/)?.[1] ?? "?",
+                            power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
                           })}
                         </p>
                       )}
