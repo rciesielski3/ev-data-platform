@@ -13,7 +13,8 @@
     "previous": "Poprzednia",
     "next": "Następna",
     "pageOf": "Strona {page} z {totalPages}",
-    "comingSoonBadge": "Wkrótce"
+    "comingSoonBadge": "Wkrótce",
+    "noDataLabel": "Brak danych"
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",
@@ -303,7 +304,11 @@
     "viewStationsLink": "Zobacz stacje →",
     "ctaTitle": "Gotowy do ładowania?",
     "ctaDescription": "Wyszukaj stacje ładowania {location} na naszej interaktywnej mapie.",
-    "stationsCta": "Przeglądaj stacje"
+    "stationsCta": "Przeglądaj stacje",
+    "operatorCompletenessLabel": "kompletne",
+    "operatorOutdatedLabel": "Nieaktualne",
+    "operatorMaxPowerLabel": "max do {power} kW",
+    "operatorConnectorsLabel": "Złącza"
   },
   "contact": {
     "title": "Skontaktuj się z nami",

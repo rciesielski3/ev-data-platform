@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import { enUS, pl } from "date-fns/locale";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Button from "@/components/ui/Button";
@@ -14,6 +16,7 @@ import {
   buildRegionalStationsHref,
   type RegionalCityStats,
 } from "@/features/charging/regional-stations";
+import type { OperatorStatsMap, OperatorCityStats } from "@/features/charging/operator-stats";
 import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -48,10 +51,27 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
   const location = buildRegionalCityLocation(city, locale);
 
   let stats: RegionalCityStats | { error: true };
+  let cityOperatorStats: Record<string, OperatorCityStats> = {};
 
   try {
     const stations = await getRegionalCityStations(city);
     stats = buildRegionalCityStats(stations);
+
+    const today = new Date();
+    const utcMidnight = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0));
+
+    const todaySnapshot = await prisma.dailySnapshot.findFirst({
+      where: {
+        snapshotDate: {
+          gte: utcMidnight,
+        },
+      },
+      orderBy: { snapshotDate: "desc" },
+      select: { operatorStats: true },
+    });
+
+    const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
+    cityOperatorStats = operatorStatsMap[city.slug] ?? {};
   } catch {
     stats = { error: true };
   }
@@ -112,27 +132,70 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                 {t("operatorsTitle", { location })}
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                {stats.operatorBreakdown.map((operator) => (
-                  <div
-                    key={operator.name}
-                    className="border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-                  >
-                    <h3 className="text-lg font-semibold text-[var(--foreground)]">
-                      {operator.name}
-                    </h3>
-                    <p className="muted mt-1">
-                      {t("operatorStationCount", {
-                        count: operator.stationCount,
-                      })}
-                    </p>
-                    <Link
-                      href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                      className="mt-3 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                {stats.operatorBreakdown.map((operator) => {
+                  const operatorStats = cityOperatorStats[operator.name];
+                  return (
+                    <div
+                      key={operator.name}
+                      className="border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
-                      {t("viewStationsLink")}
-                    </Link>
-                  </div>
-                ))}
+                      <h3 className="text-lg font-semibold text-[var(--foreground)]">
+                        {operator.name}
+                      </h3>
+
+                      {operatorStats && (
+                        <div className="mt-3 space-y-2">
+                          <p className="text-sm text-[var(--muted)]">
+                            {operatorStats.completenessPercent}%{" "}
+                            {t("operatorCompletenessLabel")}
+                          </p>
+                          <p className="text-xs text-[var(--muted)]">
+                            {t("operatorOutdatedLabel")} /{" "}
+                            {operatorStats.newestUpdateDate
+                              ? formatDistanceToNow(
+                                  new Date(operatorStats.newestUpdateDate),
+                                  { locale: locale === "pl" ? pl : enUS },
+                                )
+                              : t("noDataLabel")}
+                          </p>
+                        </div>
+                      )}
+
+                      {operatorStats && (
+                        <p className="mt-3 text-sm font-medium text-[var(--foreground)]">
+                          {t("operatorMaxPowerLabel", {
+                            power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
+                          })}
+                        </p>
+                      )}
+
+                      {operatorStats?.topConnectors?.length > 0 && (
+                        <div className="mt-3">
+                          <p className="text-xs font-semibold text-[var(--muted)] uppercase">
+                            {t("operatorConnectorsLabel")}
+                          </p>
+                          <p className="mt-1 text-sm text-[var(--foreground)]">
+                            {operatorStats.topConnectors
+                              .map((c: { type: string; count: number }) => c.type)
+                              .join(" • ")}
+                          </p>
+                        </div>
+                      )}
+
+                      <p className="muted mt-3">
+                        {t("operatorStationCount", {
+                          count: operator.stationCount,
+                        })}
+                      </p>
+                      <Link
+                        href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
+                        className="mt-3 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                      >
+                        {t("viewStationsLink")}
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
             </section>
           )}

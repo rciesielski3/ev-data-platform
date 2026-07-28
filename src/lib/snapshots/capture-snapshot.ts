@@ -2,9 +2,13 @@ import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { buildOperatorIntelligenceRows } from "@/features/charging/operator-intelligence";
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
+import { calculateOperatorCityStats, type OperatorStatsMap } from "@/features/charging/operator-stats";
+import { buildRegionalCityWhere } from "@/features/charging/regional-stations";
+import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { prisma } from "@/lib/db/prisma";
 import { buildDailySnapshot } from "@/lib/snapshots/build-snapshot";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 
 export type CaptureSnapshotResult = {
   snapshotDate: Date;
@@ -48,6 +52,37 @@ const getLastSuccessfulImportRunId = async () => {
   return run?.id ?? null;
 };
 
+const generateOperatorStats = async (): Promise<OperatorStatsMap> => {
+  const operatorStatsMap: OperatorStatsMap = {};
+
+  for (const city of REGIONAL_CITIES) {
+    const operators = await prisma.chargingStation.findMany({
+      where: {
+        AND: [
+          buildRegionalCityWhere(city),
+          { operator: { isNot: null } },
+        ],
+      },
+      select: {
+        operator: { select: { name: true, normalizedName: true } },
+      },
+      distinct: ["operatorId"],
+    });
+
+    const uniqueOperators = [...new Set(operators.map((s) => s.operator).filter(Boolean) as Array<{ name: string; normalizedName: string | null }>)];
+
+    operatorStatsMap[city.slug] = {};
+
+    for (const operator of uniqueOperators) {
+      const formattedName = formatStationOperatorLabel(operator);
+      operatorStatsMap[city.slug][formattedName] =
+        await calculateOperatorCityStats(city.slug, operator.name);
+    }
+  }
+
+  return operatorStatsMap;
+};
+
 /**
  * Captures (or re-captures) the daily infrastructure snapshot for `forDate`
  * (defaults to today, normalized to UTC midnight). Upserts on `snapshotDate`,
@@ -60,11 +95,12 @@ export const captureSnapshot = async (
   const snapshotDate = toUtcMidnight(forDate);
 
   try {
-    const [stations, latestImportRun, lastSuccessfulImportRunId] =
+    const [stations, latestImportRun, lastSuccessfulImportRunId, regionOperatorStats] =
       await Promise.all([
         getStationsForSnapshot(),
         getLatestImportRun(),
         getLastSuccessfulImportRunId(),
+        generateOperatorStats(),
       ]);
 
     const provinceRows = buildProvinceIntelligenceRows(stations);
@@ -80,7 +116,7 @@ export const captureSnapshot = async (
         totalHpcStationCount: snapshot.totalHpcStationCount,
         knownPowerConnectorCount: snapshot.knownPowerConnectorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
-        operatorStats: snapshot.operatorStats as Prisma.InputJsonValue,
+        operatorStats: regionOperatorStats as Prisma.InputJsonValue,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,
@@ -91,7 +127,7 @@ export const captureSnapshot = async (
         totalHpcStationCount: snapshot.totalHpcStationCount,
         knownPowerConnectorCount: snapshot.knownPowerConnectorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
-        operatorStats: snapshot.operatorStats as Prisma.InputJsonValue,
+        operatorStats: regionOperatorStats as Prisma.InputJsonValue,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,
@@ -113,7 +149,7 @@ export const captureSnapshot = async (
           totalHpcStationCount: 0,
           knownPowerConnectorCount: 0,
           provinceMetrics: [],
-          operatorStats: [],
+          operatorStats: {},
           latestImportStatus: null,
           lastSuccessfulImportRunId: null,
           error: message,
