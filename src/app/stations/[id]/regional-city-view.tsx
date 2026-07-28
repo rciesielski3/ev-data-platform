@@ -154,7 +154,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
                           </span>
-                          <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
                             {t("operatorOutdatedLabel")} /{" "}
                             {operatorStats.newestUpdateDate
                               ? formatDistanceToNow(
