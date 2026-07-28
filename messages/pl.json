@@ -911,5 +911,13 @@
         }
       ]
     }
+  },
+  "hero": {
+    "discoveryTitle": "Odkryj infrastrukturę ładowania EV",
+    "discoverySubtitle": "Znajdź ładowarkę blisko ciebie"
+  },
+  "dateFormat": {
+    "imported": "Zaimportowano {date}",
+    "source": "źródło {date}"
   }
 }
