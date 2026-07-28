@@ -57,10 +57,13 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
     const stations = await getRegionalCityStations(city);
     stats = buildRegionalCityStats(stations);
 
+    const today = new Date();
+    const utcMidnight = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0));
+
     const todaySnapshot = await prisma.dailySnapshot.findFirst({
       where: {
         snapshotDate: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          gte: utcMidnight,
         },
       },
       orderBy: { snapshotDate: "desc" },
