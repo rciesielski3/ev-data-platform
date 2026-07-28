@@ -911,5 +911,13 @@
         }
       ]
     }
+  },
+  "hero": {
+    "discoveryTitle": "Discover EV charging infrastructure",
+    "discoverySubtitle": "Find a charger near you"
+  },
+  "dateFormat": {
+    "imported": "Imported {date}",
+    "source": "source {date}"
   }
 }

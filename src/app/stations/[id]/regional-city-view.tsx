@@ -139,7 +139,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                   return (
                     <div
                       key={operator.name}
-                      className="border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      className="group relative border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                       <h3 className="text-lg font-semibold text-[var(--foreground)]">
                         {operator.name}
@@ -164,7 +164,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       )}
 
                       {operatorStats && (
-                        <Badge className="mt-3 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
+                        <Badge className="absolute -top-3 -right-3 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md">
                           {t("operatorMaxPowerLabel", {
                             power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
                           })}
@@ -197,7 +197,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                         </p>
                         <Link
                           href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                          className="group flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all hover:scale-110 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
+                          className="flex h-10 w-10 items-center justify-center rounded-full transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600"
                           aria-label={t("viewStationsLink")}
                         >
                           <ArrowRightIcon className="h-5 w-5" />
