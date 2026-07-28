@@ -6,6 +6,7 @@ import { enUS, pl } from "date-fns/locale";
 import { ArrowRightIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
@@ -163,11 +164,11 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       )}
 
                       {operatorStats && (
-                        <p className="mt-3 text-sm font-medium text-[var(--foreground)]">
+                        <Badge className="mt-3 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
                           {t("operatorMaxPowerLabel", {
                             power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
                           })}
-                        </p>
+                        </Badge>
                       )}
 
                       {operatorStats?.topConnectors?.length > 0 && (
