@@ -308,7 +308,9 @@
     "operatorCompletenessLabel": "kompletne",
     "operatorOutdatedLabel": "Nieaktualne",
     "operatorMaxPowerLabel": "max do {power} kW",
-    "operatorConnectorsLabel": "Złącza"
+    "operatorConnectorsLabel": "Złącza",
+    "importedLabel": "Zaimportowano {date}",
+    "sourceLabel": "źródło {date}"
   },
   "contact": {
     "title": "Skontaktuj się z nami",
