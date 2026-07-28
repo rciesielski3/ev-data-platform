@@ -105,4 +105,49 @@ describe("calculateOperatorCityStats", () => {
       result.topConnectors[1]?.count ?? 0,
     );
   });
+
+  it("calculates max power across all connectors", async () => {
+    const mockStations: MockStation[] = [
+      {
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [
+          { powerKw: 22, connectorType: "Type 2" },
+          { powerKw: 11, connectorType: "AC" },
+        ],
+      },
+      {
+        sourceUpdatedAt: new Date("2026-07-26T11:00:00Z"),
+        connectors: [{ powerKw: 150, connectorType: "CCS2" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStats("warsaw", "TestOp");
+
+    expect(result.maxPowerKw).toBe(150);
+  });
+
+  it("handles null powerKw values and returns null when all are null", async () => {
+    const mockStations: MockStation[] = [
+      {
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [{ powerKw: null, connectorType: "Type 2" }],
+      },
+      {
+        sourceUpdatedAt: new Date("2026-07-26T11:00:00Z"),
+        connectors: [{ powerKw: null, connectorType: "AC" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStats("warsaw", "TestOp");
+
+    expect(result.maxPowerKw).toBeNull();
+  });
 });
