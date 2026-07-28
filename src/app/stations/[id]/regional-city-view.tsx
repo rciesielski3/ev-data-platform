@@ -21,6 +21,7 @@ import {
 import type { OperatorStatsMap, OperatorCityStats } from "@/features/charging/operator-stats";
 import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 const getRegionalCityStations = cache((city: RegionalCity) =>
@@ -54,6 +55,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
 
   let stats: RegionalCityStats | { error: true };
   let cityOperatorStats: Record<string, OperatorCityStats> = {};
+  let snapshotDate: Date | null = null;
 
   try {
     const stations = await getRegionalCityStations(city);
@@ -69,9 +71,10 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
         },
       },
       orderBy: { snapshotDate: "desc" },
-      select: { operatorStats: true },
+      select: { operatorStats: true, snapshotDate: true },
     });
 
+    snapshotDate = todaySnapshot?.snapshotDate ?? null;
     const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
     cityOperatorStats = operatorStatsMap[city.slug] ?? {};
   } catch {
@@ -164,7 +167,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       )}
 
                       {operatorStats && (
-                        <Badge className="absolute -top-3 -right-3 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md">
+                        <Badge className="absolute top-4 right-4 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md">
                           {t("operatorMaxPowerLabel", {
                             power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
                           })}
@@ -189,20 +192,31 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                         </div>
                       )}
 
-                      <div className="mt-6 flex items-end justify-between">
-                        <p className="muted">
-                          {t("operatorStationCount", {
-                            count: operator.stationCount,
-                          })}
-                        </p>
-                        <Link
-                          href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                          className="flex h-10 w-10 items-center justify-center rounded-full transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600"
-                          aria-label={t("viewStationsLink")}
-                        >
-                          <ArrowRightIcon className="h-5 w-5" />
-                        </Link>
-                      </div>
+                      <p className="muted mt-3">
+                        {t("operatorStationCount", {
+                          count: operator.stationCount,
+                        })}
+                      </p>
+
+                      {operatorStats && (
+                        <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
+                          <p className="text-xs text-[var(--muted)]">
+                            Zaimportowano{" "}
+                            {formatDisplayDate(snapshotDate || new Date(), locale)} / źródło{" "}
+                            {formatDisplayDate(
+                              operatorStats.newestUpdateDate,
+                              locale,
+                            )}
+                          </p>
+                          <Link
+                            href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
+                            className="flex h-5 w-5 items-center justify-center transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600"
+                            aria-label={t("viewStationsLink")}
+                          >
+                            <ArrowRightIcon className="h-5 w-5" />
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
