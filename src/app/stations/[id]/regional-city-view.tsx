@@ -21,6 +21,7 @@ import {
 import type { OperatorStatsMap, OperatorCityStats } from "@/features/charging/operator-stats";
 import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
+import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
 const getRegionalCityStations = cache((city: RegionalCity) =>
@@ -54,6 +55,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
 
   let stats: RegionalCityStats | { error: true };
   let cityOperatorStats: Record<string, OperatorCityStats> = {};
+  let snapshotDate: Date | null = null;
 
   try {
     const stations = await getRegionalCityStations(city);
@@ -69,9 +71,10 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
         },
       },
       orderBy: { snapshotDate: "desc" },
-      select: { operatorStats: true },
+      select: { operatorStats: true, snapshotDate: true },
     });
 
+    snapshotDate = todaySnapshot?.snapshotDate ?? null;
     const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
     cityOperatorStats = operatorStatsMap[city.slug] ?? {};
   } catch {
@@ -151,7 +154,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
                           </span>
-                          <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+                          <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700">
                             {t("operatorOutdatedLabel")} /{" "}
                             {operatorStats.newestUpdateDate
                               ? formatDistanceToNow(
@@ -189,20 +192,34 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                         </div>
                       )}
 
-                      <div className="mt-6 flex items-end justify-between">
-                        <p className="muted">
-                          {t("operatorStationCount", {
-                            count: operator.stationCount,
-                          })}
-                        </p>
-                        <Link
-                          href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                          className="group flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all hover:scale-110 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50"
-                          aria-label={t("viewStationsLink")}
-                        >
-                          <ArrowRightIcon className="h-5 w-5" />
-                        </Link>
-                      </div>
+                      <p className="muted mt-3">
+                        {t("operatorStationCount", {
+                          count: operator.stationCount,
+                        })}
+                      </p>
+
+                      {operatorStats && (
+                        <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
+                          <p className="text-xs text-[var(--muted)]">
+                            Zaimportowano{" "}
+                            {formatDisplayDate(
+                              snapshotDate || new Date(),
+                              locale === "pl" ? "pl" : "en",
+                            )}{" "}
+                            / źródło{" "}
+                            {formatDisplayDate(
+                              operatorStats.newestUpdateDate,
+                              locale === "pl" ? "pl" : "en",
+                            )}
+                          </p>
+                          <Link
+                            href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
+                            aria-label={t("viewStationsLink")}
+                          >
+                            <ArrowRightIcon className="h-4 w-4 text-[var(--muted)]" />
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
