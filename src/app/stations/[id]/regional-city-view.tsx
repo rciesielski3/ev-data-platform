@@ -210,7 +210,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                           </p>
                           <Link
                             href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                            className="flex h-5 w-5 items-center justify-center transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600"
+                            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600 group-hover:border-emerald-500 group-hover:bg-emerald-50"
                             aria-label={t("viewStationsLink")}
                           >
                             <ArrowRightIcon className="h-5 w-5" />
