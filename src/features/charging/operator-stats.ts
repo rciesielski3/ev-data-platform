@@ -12,6 +12,7 @@ export type OperatorCityStats = {
   stationCount: number;
   completenessPercent: number;
   newestUpdateDate: string | null;
+  maxPowerKw: number | null;
   topConnectors: OperatorConnectorSummary[];
 };
 
@@ -60,6 +61,7 @@ export const calculateOperatorCityStats = async (
       stationCount: 0,
       completenessPercent: 0,
       newestUpdateDate: new Date().toISOString(),
+      maxPowerKw: null,
       topConnectors: [],
     };
   }
@@ -92,10 +94,18 @@ export const calculateOperatorCityStats = async (
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
+  const maxPowerKw = stations.reduce((max, station) => {
+    return station.connectors.reduce((stationMax, connector) => {
+      if (connector.powerKw == null) return stationMax;
+      return stationMax === null ? connector.powerKw : Math.max(stationMax, connector.powerKw);
+    }, max);
+  }, null as number | null);
+
   return {
     stationCount: stations.length,
     completenessPercent,
     newestUpdateDate: newestUpdateDate?.toISOString() ?? null,
+    maxPowerKw,
     topConnectors,
   };
 };

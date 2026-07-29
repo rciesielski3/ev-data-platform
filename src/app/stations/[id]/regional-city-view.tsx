@@ -61,15 +61,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
     const stations = await getRegionalCityStations(city);
     stats = buildRegionalCityStats(stations);
 
-    const today = new Date();
-    const utcMidnight = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0));
-
     const todaySnapshot = await prisma.dailySnapshot.findFirst({
-      where: {
-        snapshotDate: {
-          gte: utcMidnight,
-        },
-      },
       orderBy: { snapshotDate: "desc" },
       select: { operatorStats: true, snapshotDate: true },
     });
@@ -144,7 +136,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       key={operator.name}
                       className="group relative border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
-                      <h3 className="text-lg font-semibold text-[var(--foreground)]">
+                      <h3 className="text-lg font-semibold text-[var(--foreground)] pr-16">
                         {operator.name}
                       </h3>
 
@@ -154,22 +146,21 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
                           </span>
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
-                            {t("operatorOutdatedLabel")} /{" "}
-                            {operatorStats.newestUpdateDate
-                              ? formatDistanceToNow(
-                                  new Date(operatorStats.newestUpdateDate),
-                                  { locale: locale === "pl" ? pl : enUS },
-                                )
-                              : t("noDataLabel")}
-                          </span>
+                          {operatorStats.newestUpdateDate && (
+                            <span className="text-xs text-[var(--muted)]">
+                              {formatDistanceToNow(
+                                new Date(operatorStats.newestUpdateDate),
+                                { locale: locale === "pl" ? pl : enUS, addSuffix: true },
+                              )}
+                            </span>
+                          )}
                         </div>
                       )}
 
-                      {operatorStats && (
+                      {operatorStats && operatorStats.maxPowerKw && (
                         <Badge className="absolute top-4 right-4 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md">
                           {t("operatorMaxPowerLabel", {
-                            power: operatorStats.topConnectors[0]?.type?.match(/(\d+)\s*kW/)?.[1] ?? "?",
+                            power: operatorStats.maxPowerKw,
                           })}
                         </Badge>
                       )}
@@ -201,16 +192,11 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       {operatorStats && (
                         <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
                           <p className="text-xs text-[var(--muted)]">
-                            Zaimportowano{" "}
-                            {formatDisplayDate(snapshotDate || new Date(), locale)} / źródło{" "}
-                            {formatDisplayDate(
-                              operatorStats.newestUpdateDate,
-                              locale,
-                            )}
+                            {t("importedLabel", { date: formatDisplayDate(snapshotDate || new Date(), locale) })} / {t("sourceLabel", { date: formatDisplayDate(operatorStats.newestUpdateDate, locale) })}
                           </p>
                           <Link
                             href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                            className="flex h-5 w-5 items-center justify-center transition-all group-hover:scale-110 group-hover:translate-x-1 group-hover:text-emerald-600"
+                            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:scale-105 group-hover:translate-x-1 group-hover:text-emerald-600 group-hover:border-emerald-600 group-hover:bg-emerald-50"
                             aria-label={t("viewStationsLink")}
                           >
                             <ArrowRightIcon className="h-5 w-5" />
