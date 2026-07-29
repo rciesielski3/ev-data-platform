@@ -29,7 +29,7 @@ const UNKNOWN_CONNECTOR: ConnectorKnowledge = {
   imagePath: UNKNOWN_CONNECTOR_IMAGE_PATH,
 };
 
-const CONNECTOR_KNOWLEDGE = {
+export const CONNECTOR_KNOWLEDGE = {
   ccs2: {
     key: "ccs2",
     label: "CCS2",
