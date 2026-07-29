@@ -103,6 +103,7 @@ const getStatus = async () => {
 const HomePage = async () => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("home");
+  const tHero = await getTranslations("hero");
   const tCommon = await getTranslations("common");
 
   let status: Awaited<ReturnType<typeof getStatus>> | { error: string };
@@ -128,7 +129,7 @@ const HomePage = async () => {
               size="lg"
               className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
-              Odkryj infrastrukturę ładowania EV
+              {tHero("discoveryTitle")}
             </Button>
             <Button
               as={Link}
@@ -137,7 +138,7 @@ const HomePage = async () => {
               size="lg"
               className="transition-transform hover:translate-y-[-4px] active:translate-y-[2px]"
             >
-              Znajdź ładowarkę blisko ciebie
+              {tHero("discoverySubtitle")}
             </Button>
           </>
         }
