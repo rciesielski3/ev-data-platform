@@ -10,6 +10,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
+import { CONNECTOR_KNOWLEDGE } from "@/features/charging/connectors";
 import {
   buildRegionalCityLocation,
   buildRegionalCityStats,
@@ -23,6 +24,25 @@ import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+
+function normalizeConnectorLabel(typeString: string): string {
+  // Extract connector type from strings like "Type 2 22 kW" or "CCS2 150 kW"
+  const normalized = typeString.toLowerCase()
+    .replace(/\s*\d+\s*kw\s*$/i, '') // Remove power suffix
+    .replace(/\s+/g, '');
+
+  // Map to CONNECTOR_KNOWLEDGE keys
+  const keyMap: Record<string, keyof typeof CONNECTOR_KNOWLEDGE> = {
+    type2: 'type2',
+    ccs2: 'ccs2',
+    chademo: 'chademo',
+    ccs: 'ccs2',
+    ccscombo2: 'ccs2',
+  };
+
+  const key = keyMap[normalized] || 'unknown';
+  return CONNECTOR_KNOWLEDGE[key as keyof typeof CONNECTOR_KNOWLEDGE].label;
+}
 
 const getRegionalCityStations = cache((city: RegionalCity) =>
   prisma.chargingStation.findMany({
@@ -176,7 +196,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                                 key={c.type}
                                 className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-700"
                               >
-                                {c.type}
+                                {normalizeConnectorLabel(c.type)}
                               </span>
                             ))}
                           </div>
