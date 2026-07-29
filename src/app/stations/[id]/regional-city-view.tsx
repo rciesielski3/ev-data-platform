@@ -167,7 +167,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                             {t("operatorCompletenessLabel")}
                           </span>
                           {operatorStats.newestUpdateDate && (
-                            <span className="text-xs text-[var(--muted)]">
+                            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700">
                               {formatDistanceToNow(
                                 new Date(operatorStats.newestUpdateDate),
                                 { locale: locale === "pl" ? pl : enUS, addSuffix: true },
