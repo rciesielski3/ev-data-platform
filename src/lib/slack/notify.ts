@@ -75,3 +75,86 @@ export const notifyImportFailure = async (
     );
   }
 };
+
+export const notifyPerCapitaRegression = async (
+  province: string,
+  drop: number,
+  metric: "per100k" | "per1000km2",
+): Promise<void> => {
+  if (!process.env.SLACK_WEBHOOK_URL) {
+    console.warn("[monitoring] SLACK_WEBHOOK_URL not set, skipping alert");
+    return;
+  }
+
+  const dropPercent = (drop * 100).toFixed(1);
+  const metricLabel = metric === "per100k" ? "100k population" : "1000km²";
+
+  const message = {
+    attachments: [
+      {
+        fallback: `Data Quality Alert: ${province}`,
+        color: "warning",
+        title: `⚠️ Data Quality Alert`,
+        text: `*Province:* ${province}\n*Metric:* Stations/${metricLabel}\n*Drop:* ${dropPercent}%\n*Action:* Review import logs; check data source`,
+        footer: "Data Quality Monitoring",
+        ts: Math.floor(Date.now() / 1000),
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(message),
+    });
+    if (!response.ok) {
+      console.error(`[monitoring] Slack returned ${response.status}`);
+    }
+  } catch (error) {
+    console.error(
+      `[monitoring] Failed to send Slack alert: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+};
+
+export const notifyStationCountRegression = async (
+  drop: number,
+  previousCount: number,
+  currentCount: number,
+): Promise<void> => {
+  if (!process.env.SLACK_WEBHOOK_URL) {
+    console.warn("[monitoring] SLACK_WEBHOOK_URL not set, skipping alert");
+    return;
+  }
+
+  const dropPercent = (drop * 100).toFixed(1);
+
+  const message = {
+    attachments: [
+      {
+        fallback: `Data Quality Alert: Station Count Drop`,
+        color: "warning",
+        title: `⚠️ Data Quality Alert`,
+        text: `*Previous Total:* ${previousCount}\n*Current Total:* ${currentCount}\n*Drop:* ${dropPercent}%\n*Action:* Check import completeness; verify data source availability`,
+        footer: "Data Quality Monitoring",
+        ts: Math.floor(Date.now() / 1000),
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(message),
+    });
+    if (!response.ok) {
+      console.error(`[monitoring] Slack returned ${response.status}`);
+    }
+  } catch (error) {
+    console.error(
+      `[monitoring] Failed to send Slack alert: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+};
