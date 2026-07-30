@@ -70,17 +70,21 @@ const getMapData = unstable_cache(
           take: MAP_STATION_LIMIT,
         }),
         prisma.chargingStation.count({ where }),
-        prisma.chargingStation.findMany({
-          distinct: ["province"],
-          select: { province: true },
+        prisma.chargingStation.groupBy({
+          by: ["province"],
           where: { province: { not: null } },
-          orderBy: { province: "asc" },
-        }),
-        prisma.chargingConnector.findMany({
-          distinct: ["connectorType"],
-          select: { connectorType: true },
-          orderBy: { connectorType: "asc" },
-        }),
+        }).then(results =>
+          results
+            .map((r) => ({ province: r.province }))
+            .sort((a, b) => (a.province ?? "").localeCompare(b.province ?? ""))
+        ),
+        prisma.chargingConnector.groupBy({
+          by: ["connectorType"],
+        }).then(results =>
+          results
+            .map((r) => ({ connectorType: r.connectorType }))
+            .sort((a, b) => a.connectorType.localeCompare(b.connectorType))
+        ),
       ]);
 
     const stationDtos = stations.map(formatStationMapDto);

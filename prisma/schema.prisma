@@ -138,6 +138,8 @@ model ChargingStation {
   @@index([latitude, longitude])
   @@index([city])
   @@index([countryCode])
+  @@index([operatorId])
+  @@index([sourceName])
 }
 
 model ChargingConnector {
@@ -155,6 +157,7 @@ model ChargingConnector {
 
   @@index([connectorType])
   @@index([stationId])
+  @@index([powerKw])
 }
 
 model EvBrand {
@@ -187,6 +190,8 @@ model EvModel {
 
   @@index([modelName])
   @@index([year])
+  @@index([sourceName])
+  @@index([brandId])
 }
 
 model EvSpec {

@@ -38,9 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [stations, vehicles] = await Promise.all([
     prisma.chargingStation.findMany({
       select: { id: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
+      take: 5000,
     }),
     prisma.evModel.findMany({
       select: { id: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
+      take: 5000,
     }),
   ]);
 

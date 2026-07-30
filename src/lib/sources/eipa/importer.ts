@@ -283,26 +283,25 @@ export type EipaImportResult = {
 
 
 const calculateProvinceMetrics = async (): Promise<ProvinceMetricsSnapshot[]> => {
-  const stations = await prisma.chargingStation.findMany({
-    select: { province: true },
-    where: { sourceName: SOURCE_NAME },
+  const provinceCounts = await prisma.chargingStation.groupBy({
+    by: ['province'],
+    where: {
+      sourceName: SOURCE_NAME,
+      province: { not: null },
+    },
+    _count: true,
   });
 
-  const stationsByProvince = new Map<string, number>();
-  for (const station of stations) {
-    if (!station.province) continue;
-    const count = stationsByProvince.get(station.province) ?? 0;
-    stationsByProvince.set(station.province, count + 1);
-  }
-
   const metrics: ProvinceMetricsSnapshot[] = [];
-  for (const [province, count] of stationsByProvince.entries()) {
-    const popAndArea = getProvincePopulationAndArea(province);
+  for (const row of provinceCounts) {
+    if (!row.province) continue;
+    const count = row._count;
+    const popAndArea = getProvincePopulationAndArea(row.province);
     const stationsPer100k = popAndArea ? (count / popAndArea.population) * 100000 : null;
     const stationsPer1000Km2 = popAndArea ? (count / popAndArea.areaKm2) * 1000 : null;
 
     metrics.push({
-      province,
+      province: row.province,
       stationCount: count,
       stationsPer100k,
       stationsPer1000Km2,

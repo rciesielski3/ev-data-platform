@@ -106,11 +106,11 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
 
   try {
     const dataset = await fetchOpenEvDataset();
-    const overrides = await prisma.evManualOverride.findMany();
-    const normalized = normalizeOpenEvDataset(dataset.vehicles, overrides);
+    const overrideRecords = await prisma.evManualOverride.findMany();
+    const normalized = normalizeOpenEvDataset(dataset.vehicles, overrideRecords);
     const { valid, invalid } = validateEvModels(normalized);
 
-    const overrideIds = new Set(overrides.map((entry) => entry.sourceRecordId));
+    const overrideIds = new Set(overrideRecords.map((entry) => entry.sourceRecordId));
     let upserted = 0;
 
     for (const model of valid) {
