@@ -475,7 +475,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
 
     // Calculate province metrics and check for regressions
     let provinceMetrics: ProvinceMetricsSnapshot[] = [];
-    let alerts: string[] = [];
+    const alerts: string[] = [];
 
     try {
       provinceMetrics = await calculateProvinceMetrics();

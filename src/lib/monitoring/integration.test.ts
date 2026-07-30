@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { IngestionStatus } from "@prisma/client";
 import { checkPerCapitaRegressions, checkStationCountRegression, aggregateProvinceMetricsFromRuns } from "./regression-detection";
 import { prisma } from "@/lib/db/prisma";
 

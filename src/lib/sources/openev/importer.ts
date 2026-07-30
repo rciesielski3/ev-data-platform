@@ -160,7 +160,7 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
     }
 
     // Check for model count regression and send alerts
-    let alerts: string[] = [];
+    const alerts: string[] = [];
 
     try {
       const countResult = await checkStationCountRegression(source.id, upserted);
