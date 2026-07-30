@@ -186,6 +186,17 @@ Then verify: `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, 
 
 ---
 
+## Performance
+
+See [Performance Audit Report (2026-07-30)](./docs/performance-audit-2026-07-30.md) for Core Web Vitals analysis, bundle size optimization roadmap, and prioritized recommendations to improve FCP/LCP on key pages.
+
+**Key Metrics:**
+- **Priority Pages:** `/map` (23.7s load), `/vehicles` (3.6s load), `/trends`/`/coverage`/`/stations` (query timeouts)
+- **Optimization Targets:** Lazy-load Leaflet component (Priority 1), paginate vehicles (Priority 2), add database indexes (Priority 3)
+- **Expected Impact:** 60-80% reduction in FCP/LCP, all metrics into "Good" range (<2.5s, <0.1 CLS)
+
+---
+
 ## Known Limitations
 
 - Growth trend charts are deferred: there is no historical snapshot data yet, and a single import would only support a misleading single-point trend line.
