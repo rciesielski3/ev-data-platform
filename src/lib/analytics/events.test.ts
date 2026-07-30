@@ -15,7 +15,8 @@ describe("analytics/events", () => {
     const mockWindow = {
       gtag: mockGtag,
     } as unknown as Window;
-    (global as unknown).window = mockWindow;
+    const globalAny = global as unknown as Record<string, unknown>;
+    globalAny.window = mockWindow;
   });
 
   it("should track blog post view", () => {
@@ -70,7 +71,8 @@ describe("analytics/events", () => {
   });
 
   it("should handle missing gtag gracefully", () => {
-    (global as unknown).window = {};
+    const globalAny = global as unknown as Record<string, unknown>;
+    globalAny.window = {};
 
     expect(() => {
       trackBlogPostView("test", "Test");
@@ -78,7 +80,8 @@ describe("analytics/events", () => {
   });
 
   it("should not throw if window is undefined", () => {
-    (global as unknown).window = undefined;
+    const globalAny = global as unknown as Record<string, unknown>;
+    globalAny.window = undefined;
 
     expect(() => {
       trackBlogPostView("test", "Test");
