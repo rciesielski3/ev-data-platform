@@ -13,6 +13,7 @@ import NavLinks, { type NavLink } from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { SITE_URL } from "@/lib/config/site";
 import { runStartupChecks } from "@/lib/config/startup-checks";
+import { GA4Script } from "@/components/analytics/GA4Script";
 
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -109,6 +110,7 @@ const RootLayout = async ({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <GA4Script />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]`}

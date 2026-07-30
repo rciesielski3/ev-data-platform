@@ -13,6 +13,9 @@ import { normalizeOpenEvDataset } from "@/lib/sources/openev/normalize";
 import type { NormalizedEvModel } from "@/lib/sources/openev/types";
 import { validateEvModels } from "@/lib/validators/ev";
 
+import { checkStationCountRegression } from "@/lib/monitoring/regression-detection";
+import { notifyStationCountRegression } from "@/lib/slack/notify";
+
 const SOURCE_NAME = DATA_SOURCES.OPENEV.key;
 
 const upsertBrand = async (model: NormalizedEvModel, importedAt: Date) =>
@@ -103,11 +106,11 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
 
   try {
     const dataset = await fetchOpenEvDataset();
-    const overrides = await prisma.evManualOverride.findMany();
-    const normalized = normalizeOpenEvDataset(dataset.vehicles, overrides);
+    const overrideRecords = await prisma.evManualOverride.findMany();
+    const normalized = normalizeOpenEvDataset(dataset.vehicles, overrideRecords);
     const { valid, invalid } = validateEvModels(normalized);
 
-    const overrideIds = new Set(overrides.map((entry) => entry.sourceRecordId));
+    const overrideIds = new Set(overrideRecords.map((entry) => entry.sourceRecordId));
     let upserted = 0;
 
     for (const model of valid) {
@@ -156,6 +159,28 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
       }
     }
 
+    // Check for model count regression and send alerts
+    const alerts: string[] = [];
+
+    try {
+      const countResult = await checkStationCountRegression(source.id, upserted);
+      if (countResult.detected && Math.abs(countResult.percentChange) > 5) {
+        alerts.push(
+          `OpenEV models dropped from ${countResult.previousTotal} to ${countResult.currentTotal} (${countResult.percentChange.toFixed(1)}%)`
+        );
+        await notifyStationCountRegression(
+          Math.abs(countResult.percentChange) / 100,
+          countResult.previousTotal,
+          countResult.currentTotal
+        );
+      }
+    } catch (error) {
+      console.warn(
+        "[OpenEV] model count regression check failed; continuing:",
+        error instanceof Error ? error.message : error
+      );
+    }
+
     await finishIngestionRun({
       runId: run.id,
       status,
@@ -166,6 +191,9 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
         datasetVersion: dataset.version ?? null,
         generatedAt: dataset.generated_at ?? null,
         invalidSample: invalid.slice(0, 20),
+        totalModelCount: upserted,
+        totalBrandCount: await prisma.evBrand.count(),
+        alerts: alerts.length > 0 ? alerts : undefined,
       },
       errorMessage,
     });
