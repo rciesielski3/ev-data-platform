@@ -107,3 +107,100 @@ This is a paragraph with [link](/url).
     expect(sections[1].type).toBe("paragraph");
   });
 });
+
+describe("Security: XSS Prevention in Markdown Links", () => {
+  it("allows valid http URLs", () => {
+    const content = "[link](http://example.com)";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    expect(paragraph?.content).toContain('<a href="http://example.com"');
+    expect(paragraph?.content).toContain("link</a>");
+  });
+
+  it("allows valid https URLs", () => {
+    const content = "[link](https://example.com)";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    expect(paragraph?.content).toContain('<a href="https://example.com"');
+    expect(paragraph?.content).toContain("link</a>");
+  });
+
+  it("allows relative paths", () => {
+    const content = "[link](/coverage)";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    expect(paragraph?.content).toContain('<a href="/coverage"');
+    expect(paragraph?.content).toContain("link</a>");
+  });
+
+  it("prevents javascript: protocol (XSS attack)", () => {
+    const content = "[click](javascript:alert('xss'))";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    // Should NOT contain a link tag with href
+    expect(paragraph?.content).not.toContain("<a href");
+    // Should preserve the link text as plain text
+    expect(paragraph?.content).toContain("click");
+  });
+
+  it("prevents data: protocol (XSS attack)", () => {
+    const content = "[click](data:text/html,<img src=x onerror=alert(1)>)";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    // Should NOT contain a link tag with href
+    expect(paragraph?.content).not.toContain("<a href");
+    // Should preserve the link text as plain text
+    expect(paragraph?.content).toContain("click");
+  });
+
+  it("prevents vbscript: protocol (legacy XSS)", () => {
+    const content = "[click](vbscript:msgbox('xss'))";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    // Should NOT contain a link tag with href
+    expect(paragraph?.content).not.toContain("<a href");
+    // Should preserve the link text as plain text
+    expect(paragraph?.content).toContain("click");
+  });
+
+  it("prevents protocol-less URLs with colons (edge case)", () => {
+    const content = "[click](java script:alert(1))";
+    const sections = parseMarkdown(content);
+    const paragraph = sections.find((s) => s.type === "paragraph");
+
+    // Should NOT contain a link tag with href
+    expect(paragraph?.content).not.toContain("<a href");
+    // Should preserve the link text as plain text
+    expect(paragraph?.content).toContain("click");
+  });
+
+  it("sanitizes links in list items", () => {
+    const content = `- Valid: [link](https://safe.com)
+- Invalid: [xss](javascript:void(0))
+- Relative: [path](/home)`;
+
+    const sections = parseMarkdown(content);
+    const listSection = sections.find((s) => s.type === "list");
+
+    expect(listSection).toBeDefined();
+    expect(listSection?.items).toHaveLength(3);
+
+    // Valid HTTPS link should contain href
+    expect(listSection?.items?.[0]).toContain('<a href="https://safe.com"');
+    expect(listSection?.items?.[0]).toContain("link</a>");
+
+    // Invalid javascript link should NOT contain href, but should have text
+    expect(listSection?.items?.[1]).not.toContain("<a href");
+    expect(listSection?.items?.[1]).toContain("xss");
+
+    // Relative path should contain href
+    expect(listSection?.items?.[2]).toContain('<a href="/home"');
+    expect(listSection?.items?.[2]).toContain("path</a>");
+  });
+});
