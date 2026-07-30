@@ -30,6 +30,10 @@ import {
   findUnknownEipaPaymentMethodIds,
 } from "@/lib/validators/payment-auth";
 
+import { checkPerCapitaRegressions, checkStationCountRegression, type ProvinceMetricsSnapshot } from "@/lib/monitoring/regression-detection";
+import { notifyPerCapitaRegression, notifyStationCountRegression } from "@/lib/slack/notify";
+import { getProvincePopulationAndArea } from "@/features/charging/province-population";
+
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
 const PROGRESS_STEP = 100;
 const UPSERT_BATCH_SIZE = 20;
@@ -277,6 +281,37 @@ export type EipaImportResult = {
   status: IngestionStatus;
 };
 
+
+const calculateProvinceMetrics = async (): Promise<ProvinceMetricsSnapshot[]> => {
+  const stations = await prisma.chargingStation.findMany({
+    select: { province: true },
+    where: { sourceName: SOURCE_NAME },
+  });
+
+  const stationsByProvince = new Map<string, number>();
+  for (const station of stations) {
+    if (!station.province) continue;
+    const count = stationsByProvince.get(station.province) ?? 0;
+    stationsByProvince.set(station.province, count + 1);
+  }
+
+  const metrics: ProvinceMetricsSnapshot[] = [];
+  for (const [province, count] of stationsByProvince.entries()) {
+    const popAndArea = getProvincePopulationAndArea(province);
+    const stationsPer100k = popAndArea ? (count / popAndArea.population) * 100000 : null;
+    const stationsPer1000Km2 = popAndArea ? (count / popAndArea.areaKm2) * 1000 : null;
+
+    metrics.push({
+      province,
+      stationCount: count,
+      stationsPer100k,
+      stationsPer1000Km2,
+    });
+  }
+
+  return metrics;
+};
+
 export const runEipaImport = async (): Promise<EipaImportResult> => {
   const source = await ensureDataSource(DATA_SOURCES.EIPA);
   const run = await startIngestionRun(source.id);
@@ -438,6 +473,48 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       }
     }
 
+    // Calculate province metrics and check for regressions
+    let provinceMetrics: ProvinceMetricsSnapshot[] = [];
+    let alerts: string[] = [];
+
+    try {
+      provinceMetrics = await calculateProvinceMetrics();
+
+      // Check per-capita regressions
+      const perCapitaResult = await checkPerCapitaRegressions(source.id, importedAt);
+      if (perCapitaResult.detected) {
+        for (const regression of perCapitaResult.regressions) {
+          const metricLabel = regression.metric === "stationsPer100k" ? "per100k" : "per1000km2";
+          alerts.push(
+            `Province ${regression.province}: ${regression.metric} dropped ${regression.percentChange.toFixed(1)}%`
+          );
+          await notifyPerCapitaRegression(
+            regression.province,
+            Math.abs(regression.percentChange) / 100,
+            metricLabel as "per100k" | "per1000km2"
+          );
+        }
+      }
+
+      // Check total station count regression
+      const countResult = await checkStationCountRegression(source.id, upserted);
+      if (countResult.detected) {
+        alerts.push(
+          `Total stations dropped from ${countResult.previousTotal} to ${countResult.currentTotal} (${countResult.percentChange.toFixed(1)}%)`
+        );
+        await notifyStationCountRegression(
+          Math.abs(countResult.percentChange) / 100,
+          countResult.previousTotal,
+          countResult.currentTotal
+        );
+      }
+    } catch (error) {
+      console.warn(
+        "[EIPA] province metrics or regression detection failed; continuing:",
+        error instanceof Error ? error.message : error
+      );
+    }
+
     await finishIngestionRun({
       runId: run.id,
       status,
@@ -450,6 +527,8 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
         skippedDynamic: true,
         validCount: valid.length,
         invalidSample: invalid.slice(0, 20),
+        provinceMetrics,
+        alerts: alerts.length > 0 ? alerts : undefined,
       },
       errorMessage,
     });
