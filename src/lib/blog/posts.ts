@@ -1,4 +1,6 @@
 import type { BlogPost } from "./types";
+import { getBlogPostBySlugPL, getAllBlogSlugsPL, getBlogPostsSortedPL } from "./posts-pl";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const blogPosts: BlogPost[] = [
   {
@@ -579,4 +581,30 @@ export const getBlogPostsSorted = (): BlogPost[] => {
   return [...blogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
+};
+
+export const getBlogPostBySlugLocalized = (
+  slug: string,
+  locale: SupportedLocale,
+): BlogPost | undefined => {
+  if (locale === "pl") {
+    return getBlogPostBySlugPL(slug);
+  }
+  return getBlogPostBySlug(slug);
+};
+
+export const getAllBlogSlugsLocalized = (locale: SupportedLocale): string[] => {
+  if (locale === "pl") {
+    return getAllBlogSlugsPL();
+  }
+  return getAllBlogSlugs();
+};
+
+export const getBlogPostsSortedLocalized = (
+  locale: SupportedLocale,
+): BlogPost[] => {
+  if (locale === "pl") {
+    return getBlogPostsSortedPL();
+  }
+  return getBlogPostsSorted();
 };
