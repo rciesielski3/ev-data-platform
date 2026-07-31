@@ -91,13 +91,18 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
 };
 
 /**
- * Convert markdown links to HTML links
- * Handles [text](/url) format
+ * Convert markdown links to HTML links with security validation
+ * Handles [text](/url) format and validates URLs to prevent XSS
  */
 const convertMarkdownLinks = (text: string): string => {
   return text.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-emerald-600 hover:text-emerald-700 underline">$1</a>',
+    (match, linkText, href) => {
+      // Only allow http://, https://, or relative paths (security: prevent javascript: and data: URLs)
+      if (!href.match(/^(https?:\/\/|\/)/)) {
+        return linkText; // Fallback to plain text if URL is invalid
+      }
+      return `<a href="${href}" class="text-emerald-600 hover:text-emerald-700 underline">${linkText}</a>`;
+    },
   );
 };
-
