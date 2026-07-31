@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { getBlogPostsSorted } from "@/lib/blog/posts";
+import { getLocale } from "next-intl/server";
+import { getBlogPostsSortedLocalized } from "@/lib/blog/posts";
 import { SITE_URL } from "@/lib/config/site";
+import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const metadata: Metadata = {
   title: "Blog | EVSource",
@@ -16,8 +18,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
-  const posts = getBlogPostsSorted();
+export default async function BlogPage() {
+  const locale = (await getLocale()) as SupportedLocale;
+  const posts = getBlogPostsSortedLocalized(locale);
 
   return (
     <main className="flex-1">

@@ -49,7 +49,7 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
       const listItems: string[] = [];
       while (i < lines.length && lines[i].match(/^\s*[-*+]\s+/)) {
         const item = lines[i].replace(/^\s*[-*+]\s+/, "");
-        listItems.push(convertMarkdownLinks(item));
+        listItems.push(convertMarkdownFormatting(item));
         i++;
       }
       sections.push({
@@ -65,7 +65,7 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
       const listItems: string[] = [];
       while (i < lines.length && lines[i].match(/^\s*\d+\.\s+/)) {
         const item = lines[i].replace(/^\s*\d+\.\s+/, "");
-        listItems.push(convertMarkdownLinks(item));
+        listItems.push(convertMarkdownFormatting(item));
         i++;
       }
       sections.push({
@@ -80,7 +80,7 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
     if (line.trim()) {
       sections.push({
         type: "paragraph",
-        content: convertMarkdownLinks(line),
+        content: convertMarkdownFormatting(line),
       });
     }
 
@@ -91,18 +91,29 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
 };
 
 /**
- * Convert markdown links to HTML links with security validation
- * Handles [text](/url) format and validates URLs to prevent XSS
+ * Convert markdown formatting to HTML with security validation
+ * Handles: [text](/url), **bold**, *italic*, __bold__, _italic_
+ * Validates URLs to prevent XSS (javascript:, data:, etc.)
  */
-const convertMarkdownLinks = (text: string): string => {
-  return text.replace(
+const convertMarkdownFormatting = (text: string): string => {
+  let result = text;
+
+  result = result.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
     (match, linkText, href) => {
-      // Only allow http://, https://, or relative paths (security: prevent javascript: and data: URLs)
       if (!href.match(/^(https?:\/\/|\/)/)) {
-        return linkText; // Fallback to plain text if URL is invalid
+        return linkText;
       }
       return `<a href="${href}" class="text-emerald-600 hover:text-emerald-700 underline">${linkText}</a>`;
     },
   );
+
+  result = result.replace(/\*\*([^\*]+)\*\*/g, "<strong>$1</strong>");
+  result = result.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+
+  result = result.replace(/\*([^\*]+)\*/g, "<em>$1</em>");
+  result = result.replace(/_([^_]+)_/g, "<em>$1</em>");
+
+  return result;
 };
+

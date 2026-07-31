@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import DOMPurify from "isomorphic-dompurify";
 import type { BlogPost } from "@/lib/blog/types";
 import { trackBlogPostView } from "@/lib/analytics/events";
 import { parseMarkdown } from "@/lib/blog/markdown";
@@ -54,7 +53,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               key={index}
               className="mb-4 text-slate-700 leading-relaxed"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(section.content || ""),
+                __html: section.content || "",
               }}
             />
           );
@@ -67,7 +66,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               className="mb-4 ml-6 list-decimal space-y-2 text-slate-700"
             >
               {section.items?.map((item, i) => (
-                <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
+                <li key={i}>{item}</li>
               ))}
             </ol>
           ) : (
@@ -76,7 +75,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               className="mb-4 ml-6 list-disc space-y-2 text-slate-700"
             >
               {section.items?.map((item, i) => (
-                <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
+                <li key={i}>{item}</li>
               ))}
             </ul>
           );

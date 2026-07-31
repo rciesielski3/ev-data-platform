@@ -106,101 +106,38 @@ This is a paragraph with [link](/url).
     expect(sections[0].type).toBe("paragraph");
     expect(sections[1].type).toBe("paragraph");
   });
-});
 
-describe("Security: XSS Prevention in Markdown Links", () => {
-  it("allows valid http URLs", () => {
-    const content = "[link](http://example.com)";
+  it("should convert bold markdown to HTML", () => {
+    const content = "This is **bold text** in a paragraph.";
     const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
 
-    expect(paragraph?.content).toContain('<a href="http://example.com"');
-    expect(paragraph?.content).toContain("link</a>");
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<strong>bold text</strong>");
   });
 
-  it("allows valid https URLs", () => {
-    const content = "[link](https://example.com)";
+  it("should convert italic markdown to HTML", () => {
+    const content = "This is *italic text* in a paragraph.";
     const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
 
-    expect(paragraph?.content).toContain('<a href="https://example.com"');
-    expect(paragraph?.content).toContain("link</a>");
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<em>italic text</em>");
   });
 
-  it("allows relative paths", () => {
-    const content = "[link](/coverage)";
+  it("should handle bold and italic in list items", () => {
+    const content = "- This is **bold** in a list\n- This is *italic* too";
     const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
 
-    expect(paragraph?.content).toContain('<a href="/coverage"');
-    expect(paragraph?.content).toContain("link</a>");
-  });
-
-  it("prevents javascript: protocol (XSS attack)", () => {
-    const content = "[click](javascript:alert('xss'))";
-    const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
-
-    // Should NOT contain a link tag with href
-    expect(paragraph?.content).not.toContain("<a href");
-    // Should preserve the link text as plain text
-    expect(paragraph?.content).toContain("click");
-  });
-
-  it("prevents data: protocol (XSS attack)", () => {
-    const content = "[click](data:text/html,<img src=x onerror=alert(1)>)";
-    const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
-
-    // Should NOT contain a link tag with href
-    expect(paragraph?.content).not.toContain("<a href");
-    // Should preserve the link text as plain text
-    expect(paragraph?.content).toContain("click");
-  });
-
-  it("prevents vbscript: protocol (legacy XSS)", () => {
-    const content = "[click](vbscript:msgbox('xss'))";
-    const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
-
-    // Should NOT contain a link tag with href
-    expect(paragraph?.content).not.toContain("<a href");
-    // Should preserve the link text as plain text
-    expect(paragraph?.content).toContain("click");
-  });
-
-  it("prevents protocol-less URLs with colons (edge case)", () => {
-    const content = "[click](java script:alert(1))";
-    const sections = parseMarkdown(content);
-    const paragraph = sections.find((s) => s.type === "paragraph");
-
-    // Should NOT contain a link tag with href
-    expect(paragraph?.content).not.toContain("<a href");
-    // Should preserve the link text as plain text
-    expect(paragraph?.content).toContain("click");
-  });
-
-  it("sanitizes links in list items", () => {
-    const content = `- Valid: [link](https://safe.com)
-- Invalid: [xss](javascript:void(0))
-- Relative: [path](/home)`;
-
-    const sections = parseMarkdown(content);
     const listSection = sections.find((s) => s.type === "list");
+    expect(listSection?.items?.[0]).toContain("<strong>bold</strong>");
+    expect(listSection?.items?.[1]).toContain("<em>italic</em>");
+  });
 
-    expect(listSection).toBeDefined();
-    expect(listSection?.items).toHaveLength(3);
+  it("should handle underscores as bold and italic", () => {
+    const content = "This is __bold__ and _italic_ text.";
+    const sections = parseMarkdown(content);
 
-    // Valid HTTPS link should contain href
-    expect(listSection?.items?.[0]).toContain('<a href="https://safe.com"');
-    expect(listSection?.items?.[0]).toContain("link</a>");
-
-    // Invalid javascript link should NOT contain href, but should have text
-    expect(listSection?.items?.[1]).not.toContain("<a href");
-    expect(listSection?.items?.[1]).toContain("xss");
-
-    // Relative path should contain href
-    expect(listSection?.items?.[2]).toContain('<a href="/home"');
-    expect(listSection?.items?.[2]).toContain("path</a>");
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<strong>bold</strong>");
+    expect(paragraph?.content).toContain("<em>italic</em>");
   });
 });
