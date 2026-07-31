@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
 import { SITE_URL } from "@/lib/config/site";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
@@ -35,6 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const regionalCityEntries: MetadataRoute.Sitemap = REGIONAL_CITIES.map((city) => ({
+    url: `${SITE_URL}/stations/${city.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.75,
+  }));
+
   const [stations, vehicles] = await Promise.all([
     prisma.chargingStation.findMany({
       select: { id: true, updatedAt: true },
@@ -62,5 +69,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...connectorEntries, ...stationEntries, ...vehicleEntries];
+  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...stationEntries, ...vehicleEntries];
 }
