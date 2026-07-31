@@ -106,4 +106,38 @@ This is a paragraph with [link](/url).
     expect(sections[0].type).toBe("paragraph");
     expect(sections[1].type).toBe("paragraph");
   });
+
+  it("should convert bold markdown to HTML", () => {
+    const content = "This is **bold text** in a paragraph.";
+    const sections = parseMarkdown(content);
+
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<strong>bold text</strong>");
+  });
+
+  it("should convert italic markdown to HTML", () => {
+    const content = "This is *italic text* in a paragraph.";
+    const sections = parseMarkdown(content);
+
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<em>italic text</em>");
+  });
+
+  it("should handle bold and italic in list items", () => {
+    const content = "- This is **bold** in a list\n- This is *italic* too";
+    const sections = parseMarkdown(content);
+
+    const listSection = sections.find((s) => s.type === "list");
+    expect(listSection?.items?.[0]).toContain("<strong>bold</strong>");
+    expect(listSection?.items?.[1]).toContain("<em>italic</em>");
+  });
+
+  it("should handle underscores as bold and italic", () => {
+    const content = "This is __bold__ and _italic_ text.";
+    const sections = parseMarkdown(content);
+
+    const paragraph = sections.find((s) => s.type === "paragraph");
+    expect(paragraph?.content).toContain("<strong>bold</strong>");
+    expect(paragraph?.content).toContain("<em>italic</em>");
+  });
 });
