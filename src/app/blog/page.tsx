@@ -1,9 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { getLocale } from "next-intl/server";
-import { getBlogPostsSortedLocalized } from "@/lib/blog/posts";
+import { useTranslations } from "next-intl";
 import { SITE_URL } from "@/lib/config/site";
-import type { SupportedLocale } from "@/lib/i18n/constants";
 
 export const metadata: Metadata = {
   title: "Blog | EVSource",
@@ -18,18 +16,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogPage() {
-  const locale = (await getLocale()) as SupportedLocale;
-  const posts = getBlogPostsSortedLocalized(locale);
+export default function BlogPage() {
+  const t = useTranslations("blog");
+  const postsData = t.raw("posts");
+  const posts = Object.entries(postsData).map(([slug, data]: [string, any]) => ({
+    slug,
+    title: data.title,
+    excerpt: data.excerpt,
+    keywords: data.keywords,
+    date: data.date,
+    author: data.author,
+  })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <main className="flex-1">
       <div className="mx-auto max-w-3xl px-6 py-12">
         <div className="mb-12">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight">Blog</h1>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight">{t("ui.pageHeading")}</h1>
           <p className="text-lg text-slate-600">
-            Insights on EV charging infrastructure, adoption trends, and fleet
-            electrification in Poland
+            {t("ui.pageDescription")}
           </p>
         </div>
 
@@ -48,7 +53,7 @@ export default async function BlogPage() {
               <p className="mb-4 text-slate-600">{post.excerpt}</p>
 
               <div className="mb-4 flex flex-wrap gap-2">
-                {post.keywords.slice(0, 3).map((keyword) => (
+                {post.keywords.slice(0, 3).map((keyword: string) => (
                   <span
                     key={keyword}
                     className="badge inline-block bg-slate-100 text-slate-700 text-xs"
@@ -67,7 +72,7 @@ export default async function BlogPage() {
                   })}
                 </time>
                 {post.author && (
-                  <span className="text-slate-500">by {post.author}</span>
+                  <span className="text-slate-500">{t("ui.authorByline", { author: post.author })}</span>
                 )}
               </div>
 
@@ -75,7 +80,7 @@ export default async function BlogPage() {
                 href={`/blog/${post.slug}`}
                 className="mt-4 inline-block text-emerald-600 font-medium hover:text-emerald-700"
               >
-                Read more →
+                {t("ui.readMore")}
               </Link>
             </article>
           ))}
