@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
-import { getBlogPostBySlugLocalized, getAllBlogSlugsLocalized } from "@/lib/blog/posts";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
 import { SITE_URL } from "@/lib/config/site";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import BlogPostContent from "./blog-post-content";
@@ -23,7 +23,8 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const { slug } = await params;
   const locale = (await getLocale()) as SupportedLocale;
-  const post = getBlogPostBySlugLocalized(slug, locale);
+  const t = await getTranslations("blog");
+  const post = (t.raw("posts") as Record<string, any>)[slug];
 
   if (!post) {
     return {
@@ -63,7 +64,8 @@ export const generateMetadata = async ({
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const locale = (await getLocale()) as SupportedLocale;
-  const post = getBlogPostBySlugLocalized(slug, locale);
+  const t = await getTranslations("blog");
+  const post = (t.raw("posts") as Record<string, any>)[slug];
 
   if (!post) {
     notFound();
@@ -78,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
             href="/blog"
             className="mb-4 inline-block text-emerald-600 hover:text-emerald-700 font-medium"
           >
-            ← Back to Blog
+            {t("ui.backToBlog")}
           </Link>
 
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-slate-900">
@@ -93,14 +95,14 @@ export default async function BlogPostPage({ params }: Props) {
                 day: "numeric",
               })}
             </time>
-            {post.author && <span>by {post.author}</span>}
+            {post.author && <span>{t("ui.authorByline", { author: post.author })}</span>}
             <span>
-              {Math.ceil(post.content.split(/\s+/).length / 200)} min read
+              {t("ui.minRead", { minutes: Math.ceil(post.content.split(/\s+/).length / 200) })}
             </span>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {post.keywords.map((keyword) => (
+            {post.keywords.map((keyword: string) => (
               <span
                 key={keyword}
                 className="badge inline-block bg-emerald-100 text-emerald-700 text-xs"
@@ -119,7 +121,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Related links */}
         <aside className="mt-12 border-t border-slate-200 pt-8">
           <h3 className="mb-4 text-lg font-semibold text-slate-900">
-            Explore More
+            {t("ui.exploreMore")}
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Link
@@ -127,10 +129,10 @@ export default async function BlogPostPage({ params }: Props) {
               className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
             >
               <h4 className="font-semibold text-emerald-600 mb-2">
-                Stations Directory
+                {t("ui.exploreSectionHeadings.stationsDirectory")}
               </h4>
               <p className="text-sm text-slate-600">
-                Explore charging stations across Poland
+                {t("ui.exploreSectionDescriptions.stationsDirectory")}
               </p>
             </Link>
             <Link
@@ -138,10 +140,10 @@ export default async function BlogPostPage({ params }: Props) {
               className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
             >
               <h4 className="font-semibold text-emerald-600 mb-2">
-                Key Insights
+                {t("ui.exploreSectionHeadings.keyInsights")}
               </h4>
               <p className="text-sm text-slate-600">
-                View charging infrastructure analytics
+                {t("ui.exploreSectionDescriptions.keyInsights")}
               </p>
             </Link>
             <Link
@@ -149,10 +151,10 @@ export default async function BlogPostPage({ params }: Props) {
               className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
             >
               <h4 className="font-semibold text-emerald-600 mb-2">
-                Coverage Analysis
+                {t("ui.exploreSectionHeadings.coverageAnalysis")}
               </h4>
               <p className="text-sm text-slate-600">
-                Regional coverage and statistics
+                {t("ui.exploreSectionDescriptions.coverageAnalysis")}
               </p>
             </Link>
             <Link
@@ -160,10 +162,10 @@ export default async function BlogPostPage({ params }: Props) {
               className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
             >
               <h4 className="font-semibold text-emerald-600 mb-2">
-                Operators
+                {t("ui.exploreSectionHeadings.operators")}
               </h4>
               <p className="text-sm text-slate-600">
-                Charging network operators and details
+                {t("ui.exploreSectionDescriptions.operators")}
               </p>
             </Link>
           </div>
