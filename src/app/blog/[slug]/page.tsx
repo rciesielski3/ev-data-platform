@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
 import { SITE_URL } from "@/lib/config/site";
-import type { SupportedLocale } from "@/lib/i18n/constants";
 import BlogPostContent from "./blog-post-content";
 
 interface Props {
@@ -22,8 +21,9 @@ export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
   const { slug } = await params;
-  const locale = (await getLocale()) as SupportedLocale;
+  await getLocale();
   const t = await getTranslations("blog");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post = (t.raw("posts") as Record<string, any>)[slug];
 
   if (!post) {
@@ -63,8 +63,9 @@ export const generateMetadata = async ({
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const locale = (await getLocale()) as SupportedLocale;
+  await getLocale();
   const t = await getTranslations("blog");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post = (t.raw("posts") as Record<string, any>)[slug];
 
   if (!post) {
