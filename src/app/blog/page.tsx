@@ -1,15 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import type { BlogPost } from "@/lib/blog/types";
 import { SITE_URL } from "@/lib/config/site";
-
-interface BlogPost {
-  title: string;
-  excerpt: string;
-  keywords: string[];
-  date: string;
-  author: string;
-}
 
 export const metadata: Metadata = {
   title: "Blog | EVSource",
@@ -26,14 +19,10 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const t = useTranslations("blog");
-  const postsData = t.raw("posts") as Record<string, BlogPost>;
-  const posts = Object.entries(postsData).map(([slug, data]) => ({
+  const postsData = t.raw("posts") as Record<string, Omit<BlogPost, "slug">>;
+  const posts: BlogPost[] = Object.entries(postsData).map(([slug, data]) => ({
+    ...data,
     slug,
-    title: data.title,
-    excerpt: data.excerpt,
-    keywords: data.keywords,
-    date: data.date,
-    author: data.author,
   })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (

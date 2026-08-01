@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
+import type { BlogPost } from "@/lib/blog/types";
 import { SITE_URL } from "@/lib/config/site";
 import BlogPostContent from "./blog-post-content";
 
@@ -23,15 +24,17 @@ export const generateMetadata = async ({
   const { slug } = await params;
   await getLocale();
   const t = await getTranslations("blog");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const post = (t.raw("posts") as Record<string, any>)[slug];
+  const postData = (t.raw("posts") as Record<string, Omit<BlogPost, "slug">>)[
+    slug
+  ];
 
-  if (!post) {
+  if (!postData) {
     return {
       title: "Not Found",
     };
   }
 
+  const post: BlogPost = { ...postData, slug };
   const url = `${SITE_URL}/blog/${post.slug}`;
 
   return {
@@ -65,12 +68,15 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   await getLocale();
   const t = await getTranslations("blog");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const post = (t.raw("posts") as Record<string, any>)[slug];
+  const postData = (t.raw("posts") as Record<string, Omit<BlogPost, "slug">>)[
+    slug
+  ];
 
-  if (!post) {
+  if (!postData) {
     notFound();
   }
+
+  const post: BlogPost = { ...postData, slug };
 
   return (
     <main className="flex-1">
