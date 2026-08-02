@@ -18,6 +18,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/coverage", priority: 0.8, changeFrequency: "daily" },
   { path: "/corridors", priority: 0.8, changeFrequency: "daily" },
   { path: "/connectors", priority: 0.8, changeFrequency: "daily" },
+  { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
 ];
 
@@ -45,11 +46,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [stations, vehicles] = await Promise.all([
     prisma.chargingStation.findMany({
       select: { id: true, updatedAt: true },
-      take: 500,
+      orderBy: { updatedAt: 'desc' },
+      take: 5000,
     }),
     prisma.evModel.findMany({
       select: { id: true, updatedAt: true },
-      take: 500,
+      orderBy: { updatedAt: 'desc' },
+      take: 5000,
     }),
   ]);
 
