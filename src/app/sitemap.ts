@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
 import { SITE_URL } from "@/lib/config/site";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
@@ -17,6 +18,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/coverage", priority: 0.8, changeFrequency: "daily" },
   { path: "/corridors", priority: 0.8, changeFrequency: "daily" },
   { path: "/connectors", priority: 0.8, changeFrequency: "daily" },
+  { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
 ];
 
@@ -33,6 +35,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}/connectors/${type}`,
     changeFrequency: "weekly",
     priority: 0.7,
+  }));
+
+  const regionalCityEntries: MetadataRoute.Sitemap = REGIONAL_CITIES.map((city) => ({
+    url: `${SITE_URL}/stations/${city.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.75,
   }));
 
   const [stations, vehicles] = await Promise.all([
@@ -62,5 +70,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...connectorEntries, ...stationEntries, ...vehicleEntries];
+  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...stationEntries, ...vehicleEntries];
 }
