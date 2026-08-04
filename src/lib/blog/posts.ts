@@ -583,6 +583,11 @@ export const getBlogPostsSorted = (): BlogPost[] => {
   );
 };
 
+/**
+ * @deprecated Blog posts are now fetched from the message system via useTranslations("blog")
+ * This function remains for backwards compatibility but will be removed in a future update.
+ * Components should use useTranslations("blog").raw("posts") instead.
+ */
 export const getBlogPostBySlugLocalized = (
   slug: string,
   locale: SupportedLocale,
@@ -593,6 +598,11 @@ export const getBlogPostBySlugLocalized = (
   return getBlogPostBySlug(slug);
 };
 
+/**
+ * @deprecated Blog posts are now fetched from the message system via useTranslations("blog")
+ * This function remains for backwards compatibility but will be removed in a future update.
+ * Components should use useTranslations("blog").raw("posts") instead.
+ */
 export const getAllBlogSlugsLocalized = (locale: SupportedLocale): string[] => {
   if (locale === "pl") {
     return getAllBlogSlugsPL();
@@ -600,6 +610,11 @@ export const getAllBlogSlugsLocalized = (locale: SupportedLocale): string[] => {
   return getAllBlogSlugs();
 };
 
+/**
+ * @deprecated Blog posts are now fetched from the message system via useTranslations("blog")
+ * This function remains for backwards compatibility but will be removed in a future update.
+ * Components should use useTranslations("blog").raw("posts") instead.
+ */
 export const getBlogPostsSortedLocalized = (
   locale: SupportedLocale,
 ): BlogPost[] => {
