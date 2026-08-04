@@ -21,41 +21,10 @@ export type OperatorStatsMap = Record<
   Record<string, OperatorCityStats>
 >;
 
-export const calculateOperatorCityStats = async (
-  citySlug: string,
-  operatorName: string,
-): Promise<OperatorCityStats> => {
-  const city = findRegionalCity(citySlug);
-
-  let where: Prisma.ChargingStationWhereInput;
-
-  if (city) {
-    where = {
-      AND: [
-        buildRegionalCityWhere(city),
-        { operator: { name: operatorName } },
-      ],
-    };
-  } else {
-    where = {
-      operator: { name: operatorName },
-      city: citySlug,
-    };
-  }
-
-  const stations = await prisma.chargingStation.findMany({
-    where,
-    select: {
-      sourceUpdatedAt: true,
-      connectors: {
-        select: {
-          powerKw: true,
-          connectorType: true,
-        },
-      },
-    },
-  });
-
+const calculateStatsFromStations = (stations: Array<{
+  sourceUpdatedAt: Date | null;
+  connectors: Array<{ powerKw: number | null; connectorType: string }>;
+}>): OperatorCityStats => {
   if (stations.length === 0) {
     return {
       stationCount: 0,
@@ -108,4 +77,109 @@ export const calculateOperatorCityStats = async (
     maxPowerKw,
     topConnectors,
   };
+};
+
+export const calculateOperatorCityStats = async (
+  citySlug: string,
+  operatorName: string,
+): Promise<OperatorCityStats> => {
+  const city = findRegionalCity(citySlug);
+
+  let where: Prisma.ChargingStationWhereInput;
+
+  if (city) {
+    where = {
+      AND: [
+        buildRegionalCityWhere(city),
+        { operator: { name: operatorName } },
+      ],
+    };
+  } else {
+    where = {
+      operator: { name: operatorName },
+      city: citySlug,
+    };
+  }
+
+  const stations = await prisma.chargingStation.findMany({
+    where,
+    select: {
+      sourceUpdatedAt: true,
+      connectors: {
+        select: {
+          powerKw: true,
+          connectorType: true,
+        },
+      },
+    },
+  });
+
+  return calculateStatsFromStations(stations);
+};
+
+export const calculateOperatorCityStatsBatch = async (
+  citySlug: string,
+  operatorNames: string[],
+): Promise<Record<string, OperatorCityStats>> => {
+  if (operatorNames.length === 0) {
+    return {};
+  }
+
+  const city = findRegionalCity(citySlug);
+
+  let where: Prisma.ChargingStationWhereInput;
+
+  if (city) {
+    where = {
+      AND: [
+        buildRegionalCityWhere(city),
+        { operator: { name: { in: operatorNames } } },
+      ],
+    };
+  } else {
+    where = {
+      operator: { name: { in: operatorNames } },
+      city: citySlug,
+    };
+  }
+
+  const stations = await prisma.chargingStation.findMany({
+    where,
+    select: {
+      operator: { select: { name: true } },
+      sourceUpdatedAt: true,
+      connectors: {
+        select: {
+          powerKw: true,
+          connectorType: true,
+        },
+      },
+    },
+  });
+
+  const stationsByOperator = new Map<string, Array<{
+    sourceUpdatedAt: Date | null;
+    connectors: Array<{ powerKw: number | null; connectorType: string }>;
+  }>>();
+
+  for (const station of stations) {
+    const operatorName = station.operator?.name;
+    if (!operatorName) continue;
+
+    if (!stationsByOperator.has(operatorName)) {
+      stationsByOperator.set(operatorName, []);
+    }
+    stationsByOperator.get(operatorName)!.push({
+      sourceUpdatedAt: station.sourceUpdatedAt,
+      connectors: station.connectors,
+    });
+  }
+
+  const result: Record<string, OperatorCityStats> = {};
+  for (const operatorName of operatorNames) {
+    const operatorStations = stationsByOperator.get(operatorName) ?? [];
+    result[operatorName] = calculateStatsFromStations(operatorStations);
+  }
+
+  return result;
 };

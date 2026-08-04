@@ -2,7 +2,7 @@ import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { buildOperatorIntelligenceRows } from "@/features/charging/operator-intelligence";
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
-import { calculateOperatorCityStats, type OperatorStatsMap } from "@/features/charging/operator-stats";
+import { calculateOperatorCityStatsBatch, type OperatorStatsMap } from "@/features/charging/operator-stats";
 import { buildRegionalCityWhere } from "@/features/charging/regional-stations";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { prisma } from "@/lib/db/prisma";
@@ -71,12 +71,19 @@ const generateOperatorStats = async (): Promise<OperatorStatsMap> => {
 
     const uniqueOperators = [...new Set(operators.map((s) => s.operator).filter(Boolean) as Array<{ name: string; normalizedName: string | null }>)];
 
-    operatorStatsMap[city.slug] = {};
+    const operatorNames = uniqueOperators.map((op) => op.name).filter(Boolean) as string[];
+    const stats = await calculateOperatorCityStatsBatch(city.slug, operatorNames);
 
+    operatorStatsMap[city.slug] = {};
     for (const operator of uniqueOperators) {
       const formattedName = formatStationOperatorLabel(operator);
-      operatorStatsMap[city.slug][formattedName] =
-        await calculateOperatorCityStats(city.slug, operator.name);
+      operatorStatsMap[city.slug][formattedName] = stats[operator.name] ?? {
+        stationCount: 0,
+        completenessPercent: 0,
+        newestUpdateDate: new Date().toISOString(),
+        maxPowerKw: null,
+        topConnectors: [],
+      };
     }
   }
 
