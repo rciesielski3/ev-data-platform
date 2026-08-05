@@ -103,6 +103,7 @@ model ChargingOperator {
 
   @@unique([sourceName, sourceRecordId])
   @@index([normalizedName])
+  @@index([name])
 }
 
 model ChargingStation {
