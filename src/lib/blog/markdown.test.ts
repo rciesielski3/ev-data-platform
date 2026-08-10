@@ -140,4 +140,98 @@ This is a paragraph with [link](/url).
     expect(paragraph?.content).toContain("<strong>bold</strong>");
     expect(paragraph?.content).toContain("<em>italic</em>");
   });
+
+  // XSS Security Tests
+  describe("XSS Prevention", () => {
+    it("should escape script tags in bold formatting", () => {
+      const content = "**<script>alert('xss')</script>**";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&lt;script&gt;");
+      expect(paragraph?.content).not.toContain("<script>");
+    });
+
+    it("should escape script tags in italic formatting", () => {
+      const content = "*<img src=x onerror=\"alert('xss')\">*";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&lt;img");
+      expect(paragraph?.content).not.toContain("<img");
+    });
+
+    it("should escape HTML injection in link text", () => {
+      const content = "[<img src=x onerror=\"alert('xss')\">](https://example.com)";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&lt;img");
+      expect(paragraph?.content).not.toContain("<img");
+    });
+
+    it("should escape HTML entities in regular text", () => {
+      const content = "This is 5 < 10 and 10 > 5";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&lt;");
+      expect(paragraph?.content).toContain("&gt;");
+      expect(paragraph?.content).not.toContain("< 10");
+      expect(paragraph?.content).not.toContain("> 5");
+    });
+
+    it("should escape ampersands in text", () => {
+      const content = "Tom & Jerry";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&amp;");
+    });
+
+    it("should escape quotes in link URLs", () => {
+      const content = '[link](https://example.com?q="xss")';
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      // Quotes should be escaped (either &quot; or &amp;quot;) to prevent attribute injection
+      expect(paragraph?.content).toMatch(/&(?:amp;)?quot;/);
+      expect(paragraph?.content).not.toContain('q="xss');
+    });
+
+    it("should escape script tags in list items", () => {
+      const content = "- Item with **<script>alert('xss')</script>**\n- Normal item";
+      const sections = parseMarkdown(content);
+
+      const listSection = sections.find((s) => s.type === "list");
+      expect(listSection?.items?.[0]).toContain("&lt;script&gt;");
+      expect(listSection?.items?.[0]).not.toContain("<script>");
+    });
+
+    it("should escape HTML in blockquotes", () => {
+      const content = "> This has **<script>alert('xss')</script>** content";
+      const sections = parseMarkdown(content);
+
+      const blockquote = sections.find((s) => s.type === "blockquote");
+      expect(blockquote?.content).toContain("&lt;script&gt;");
+      expect(blockquote?.content).not.toContain("<script>");
+    });
+
+    it("should reject javascript: protocol in links", () => {
+      const content = "[click me](javascript:alert('xss'))";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).not.toContain("href=");
+      expect(paragraph?.content).toContain("click me");
+    });
+
+    it("should reject data: protocol in links", () => {
+      const content = "[click me](data:text/html,<script>alert('xss')</script>)";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).not.toContain("href=");
+    });
+  });
 });

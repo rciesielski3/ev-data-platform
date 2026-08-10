@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap } from "leaflet";
 
+import { escapeHtml } from "@/lib/utils/escape-html";
 import {
   OSM_TILE_LAYER_ATTRIBUTION,
   OSM_TILE_LAYER_URL,
@@ -18,14 +19,6 @@ type StationMapClientProps = {
 
 const DEFAULT_CENTER: [number, number] = [51.7, 18.6];
 const DEFAULT_ZOOM = 6.3;
-
-const escapeHtml = (value: string) =>
-  value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 
 const StationMapClient = ({ groups }: StationMapClientProps) => {
   const t = useTranslations("map");
