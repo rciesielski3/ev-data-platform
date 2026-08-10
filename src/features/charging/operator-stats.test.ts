@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Mock } from "vitest";
-import { calculateOperatorCityStats } from "./operator-stats";
+import { calculateOperatorCityStats, calculateOperatorCityStatsBatch } from "./operator-stats";
 import { prisma } from "@/lib/db/prisma";
 
 vi.mock("@/lib/db/prisma");
@@ -8,6 +8,10 @@ vi.mock("@/lib/db/prisma");
 interface MockStation {
   sourceUpdatedAt: Date;
   connectors: Array<{ powerKw: number | null; connectorType: string }>;
+}
+
+interface MockStationWithOperator extends MockStation {
+  operator: { name: string } | null;
 }
 
 const mockPrisma = prisma as unknown as {
@@ -170,5 +174,227 @@ describe("calculateOperatorCityStats", () => {
     const result = await calculateOperatorCityStats("krakow", "TestOp");
 
     expect(result.maxPowerKw).toBe(22.5);
+  });
+});
+
+describe("calculateOperatorCityStatsBatch", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns empty object for empty operator list", async () => {
+    const result = await calculateOperatorCityStatsBatch("warsaw", []);
+
+    expect(result).toEqual({});
+    expect(mockPrisma.chargingStation.findMany).not.toHaveBeenCalled();
+  });
+
+  it("returns default stats for operators with no stations", async () => {
+    mockPrisma.chargingStation.findMany = vi.fn().mockResolvedValue([]);
+
+    const result = await calculateOperatorCityStatsBatch("warsaw", [
+      "Operator A",
+      "Operator B",
+    ]);
+
+    expect(result["Operator A"]).toMatchObject({
+      stationCount: 0,
+      completenessPercent: 0,
+      maxPowerKw: null,
+      topConnectors: [],
+    });
+    expect(result["Operator B"]).toMatchObject({
+      stationCount: 0,
+      completenessPercent: 0,
+      maxPowerKw: null,
+      topConnectors: [],
+    });
+  });
+
+  it("batches stations correctly by operator name", async () => {
+    const mockStations: MockStationWithOperator[] = [
+      {
+        operator: { name: "Operator A" },
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [{ powerKw: 22, connectorType: "Type 2" }],
+      },
+      {
+        operator: { name: "Operator B" },
+        sourceUpdatedAt: new Date("2026-07-26T11:00:00Z"),
+        connectors: [{ powerKw: 50, connectorType: "CCS2" }],
+      },
+      {
+        operator: { name: "Operator A" },
+        sourceUpdatedAt: new Date("2026-07-26T12:00:00Z"),
+        connectors: [{ powerKw: 11, connectorType: "AC" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStatsBatch("warsaw", [
+      "Operator A",
+      "Operator B",
+    ]);
+
+    expect(result["Operator A"].stationCount).toBe(2);
+    expect(result["Operator A"].maxPowerKw).toBe(22);
+    expect(result["Operator B"].stationCount).toBe(1);
+    expect(result["Operator B"].maxPowerKw).toBe(50);
+  });
+
+  it("handles null operators and filters them out", async () => {
+    const mockStations: MockStationWithOperator[] = [
+      {
+        operator: { name: "Operator A" },
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [{ powerKw: 22, connectorType: "Type 2" }],
+      },
+      {
+        operator: null,
+        sourceUpdatedAt: new Date("2026-07-26T11:00:00Z"),
+        connectors: [{ powerKw: 50, connectorType: "CCS2" }],
+      },
+      {
+        operator: { name: "Operator A" },
+        sourceUpdatedAt: new Date("2026-07-26T12:00:00Z"),
+        connectors: [{ powerKw: 11, connectorType: "AC" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStatsBatch("warsaw", [
+      "Operator A",
+    ]);
+
+    expect(result["Operator A"].stationCount).toBe(2);
+    expect(Object.keys(result)).toEqual(["Operator A"]);
+  });
+
+  it("provides default stats for operators with no matching stations", async () => {
+    const mockStations: MockStationWithOperator[] = [
+      {
+        operator: { name: "Operator A" },
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [{ powerKw: 22, connectorType: "Type 2" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStatsBatch("warsaw", [
+      "Operator A",
+      "Operator B",
+    ]);
+
+    expect(result["Operator A"].stationCount).toBe(1);
+    expect(result["Operator B"]).toMatchObject({
+      stationCount: 0,
+      completenessPercent: 0,
+      maxPowerKw: null,
+      topConnectors: [],
+    });
+  });
+
+  it("calculates stats identically for each operator as single-query function", async () => {
+    const date1 = new Date("2026-07-20T10:00:00Z");
+    const date2 = new Date("2026-07-26T14:00:00Z");
+
+    const mockBatchStations: MockStationWithOperator[] = [
+      {
+        operator: { name: "TestOp" },
+        sourceUpdatedAt: date1,
+        connectors: [
+          { powerKw: 22, connectorType: "Type 2" },
+          { powerKw: 11, connectorType: "AC" },
+        ],
+      },
+      {
+        operator: { name: "TestOp" },
+        sourceUpdatedAt: date2,
+        connectors: [{ powerKw: 50, connectorType: "CCS2" }],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockBatchStations);
+
+    const batchResult = await calculateOperatorCityStatsBatch("warsaw", [
+      "TestOp",
+    ]);
+
+    const mockSingleStations: MockStation[] = mockBatchStations.map((s) => ({
+      sourceUpdatedAt: s.sourceUpdatedAt,
+      connectors: s.connectors,
+    }));
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockSingleStations);
+
+    const singleResult = await calculateOperatorCityStats("warsaw", "TestOp");
+
+    expect(batchResult["TestOp"]).toMatchObject({
+      stationCount: singleResult.stationCount,
+      completenessPercent: singleResult.completenessPercent,
+      newestUpdateDate: singleResult.newestUpdateDate,
+      maxPowerKw: singleResult.maxPowerKw,
+    });
+  });
+
+  it("handles multiple operators with different data distributions", async () => {
+    const mockStations: MockStationWithOperator[] = [
+      {
+        operator: { name: "OpA" },
+        sourceUpdatedAt: new Date("2026-07-26T10:00:00Z"),
+        connectors: [{ powerKw: 22, connectorType: "Type 2" }],
+      },
+      {
+        operator: { name: "OpB" },
+        sourceUpdatedAt: new Date("2026-07-26T11:00:00Z"),
+        connectors: [{ powerKw: null, connectorType: "Type 2" }],
+      },
+      {
+        operator: { name: "OpB" },
+        sourceUpdatedAt: new Date("2026-07-26T12:00:00Z"),
+        connectors: [{ powerKw: 50, connectorType: "CCS2" }],
+      },
+      {
+        operator: { name: "OpC" },
+        sourceUpdatedAt: new Date("2026-07-26T09:00:00Z"),
+        connectors: [
+          { powerKw: 150, connectorType: "CCS2" },
+          { powerKw: 22, connectorType: "Type 2" },
+        ],
+      },
+    ];
+
+    mockPrisma.chargingStation.findMany = vi
+      .fn()
+      .mockResolvedValue(mockStations);
+
+    const result = await calculateOperatorCityStatsBatch("warsaw", [
+      "OpA",
+      "OpB",
+      "OpC",
+    ]);
+
+    expect(result["OpA"].stationCount).toBe(1);
+    expect(result["OpA"].maxPowerKw).toBe(22);
+
+    expect(result["OpB"].stationCount).toBe(2);
+    expect(result["OpB"].completenessPercent).toBe(50);
+    expect(result["OpB"].maxPowerKw).toBe(50);
+
+    expect(result["OpC"].stationCount).toBe(1);
+    expect(result["OpC"].maxPowerKw).toBe(150);
   });
 });
