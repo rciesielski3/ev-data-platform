@@ -3,6 +3,8 @@
  * Handles headings, paragraphs, lists, blockquotes, and inline links
  */
 
+import { escapeHtml } from "@/lib/utils/escape-html";
+
 export interface MarkdownSection {
   type: "heading" | "paragraph" | "list" | "blockquote";
   level?: number;
@@ -38,7 +40,7 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
     if (line.startsWith(">")) {
       sections.push({
         type: "blockquote",
-        content: line.substring(1).trim(),
+        content: convertMarkdownFormatting(line.substring(1).trim()),
       });
       i++;
       continue;
@@ -94,9 +96,10 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
  * Convert markdown formatting to HTML with security validation
  * Handles: [text](/url), **bold**, *italic*, __bold__, _italic_
  * Validates URLs to prevent XSS (javascript:, data:, etc.)
+ * Escapes all HTML entities to prevent injection attacks
  */
 const convertMarkdownFormatting = (text: string): string => {
-  let result = text;
+  let result = escapeHtml(text);
 
   result = result.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
@@ -104,7 +107,7 @@ const convertMarkdownFormatting = (text: string): string => {
       if (!href.match(/^(https?:\/\/|\/)/)) {
         return linkText;
       }
-      return `<a href="${href}" class="text-emerald-600 hover:text-emerald-700 underline">${linkText}</a>`;
+      return `<a href="${escapeHtml(href)}" class="text-emerald-600 hover:text-emerald-700 underline">${linkText}</a>`;
     },
   );
 
