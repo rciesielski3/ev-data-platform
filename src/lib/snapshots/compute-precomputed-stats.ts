@@ -71,6 +71,18 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
   // Track unique operators per city
   const operatorsPerCity = new Map<string, Set<string>>();
 
+  // Track unique operators per province
+  const operatorsPerProvince = new Map<string, Set<string>>();
+
+  // Track unique provinces per operator
+  const provincesPerOperator = new Map<string, Set<string>>();
+
+  // Track totals per operator for average calculation
+  const operatorTotals = new Map<
+    string,
+    { totalPowerKw: number; totalKnownConnectors: number }
+  >();
+
   // Aggregate
   for (const station of stations) {
     const city = REGIONAL_CITIES.find((c) => matchesCity(station.city, c.match));
@@ -118,9 +130,13 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
         provinceCount: 0,
         averagePowerKw: null,
       });
+      operatorTotals.set(opName, { totalPowerKw: 0, totalKnownConnectors: 0 });
+      provincesPerOperator.set(opName, new Set());
     }
 
     const opStats = operatorsMap.get(opName)!;
+    const opTotals = operatorTotals.get(opName)!;
+
     opStats.stationCount += 1;
     opStats.connectorCount += station.connectors.length;
 
@@ -133,9 +149,8 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
     ).length;
     opStats.knownPowerConnectorCount += knownConnectors;
 
-    if (knownConnectors > 0) {
-      opStats.averagePowerKw = totalKw / knownConnectors;
-    }
+    opTotals.totalPowerKw += totalKw;
+    opTotals.totalKnownConnectors += knownConnectors;
 
     if (station.connectors.length > 0) {
       const maxConnectorPower = Math.max(
@@ -149,6 +164,11 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
       }
     }
 
+    // Track unique provinces per operator
+    if (station.province) {
+      provincesPerOperator.get(opName)!.add(station.province);
+    }
+
     // Province aggregation
     const province = station.province;
     if (province) {
@@ -159,12 +179,28 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
           connectorCount: 0,
           perCapitaStations: 0,
         });
+        operatorsPerProvince.set(province, new Set());
       }
 
       const provStats = provincesMap.get(province)!;
+      const provOperators = operatorsPerProvince.get(province)!;
+
       provStats.stationCount += 1;
+      provOperators.add(opName);
+      provStats.operatorCount = provOperators.size;
+
       provStats.connectorCount += station.connectors.length;
     }
+  }
+
+  // Calculate final averages for operators
+  for (const [opName, opStats] of operatorsMap) {
+    const opTotals = operatorTotals.get(opName)!;
+    if (opTotals.totalKnownConnectors > 0) {
+      opStats.averagePowerKw =
+        opTotals.totalPowerKw / opTotals.totalKnownConnectors;
+    }
+    opStats.provinceCount = provincesPerOperator.get(opName)!.size;
   }
 
   return {
