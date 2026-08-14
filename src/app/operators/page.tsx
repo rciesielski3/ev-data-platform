@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { ActionSection } from "@/components/ui/ActionSection";
 import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
+import SnapshotDateBadge from "@/components/ui/SnapshotDateBadge";
+import SnapshotUnavailableFallback from "@/components/ui/SnapshotUnavailableFallback";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
 import { formatInteger } from "@/features/charging/insights";
@@ -81,6 +83,7 @@ const getSummary = (rows: OperatorIntelligenceRow[]) => {
 
 
 export default async function OperatorsPage() {
+  const locale = (await getLocale()) as "en" | "pl";
   const t = await getTranslations("operators");
   const tCommon = await getTranslations("common");
 
@@ -131,16 +134,15 @@ export default async function OperatorsPage() {
       />
 
       {snapshotDate && (
-        <p className="mb-4 text-sm text-gray-500">
-          {t("dataAsOf", { date: snapshotDate.toLocaleDateString() }) ||
-            `Data as of ${snapshotDate.toLocaleDateString()}`}
-        </p>
+        <div className="mb-4">
+          <SnapshotDateBadge date={snapshotDate} locale={locale} />
+        </div>
       )}
 
       {"error" in rows ? (
-        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{rows.error}</p>
-        </Notice>
+        <div className="mb-8">
+          <SnapshotUnavailableFallback message={rows.error} />
+        </div>
       ) : rows.length === 0 || summary === null ? (
         <Notice title={t("emptyTitle")}>
           <p className="muted mx-auto mt-2 max-w-2xl">{t("emptyBody")}</p>

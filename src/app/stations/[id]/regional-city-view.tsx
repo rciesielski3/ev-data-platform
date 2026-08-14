@@ -6,6 +6,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
+import SnapshotDateBadge from "@/components/ui/SnapshotDateBadge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
@@ -175,9 +176,9 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
       />
 
       {snapshotDate && (
-        <p className="mb-4 text-sm text-gray-500">
-          Data as of {formatDisplayDate(snapshotDate, locale)}
-        </p>
+        <div className="mb-4">
+          <SnapshotDateBadge date={snapshotDate} locale={locale} />
+        </div>
       )}
 
       {!("error" in stats) && (
