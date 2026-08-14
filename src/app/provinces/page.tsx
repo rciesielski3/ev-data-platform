@@ -8,18 +8,84 @@ import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { ActionSection } from "@/components/ui/ActionSection";
 import { type ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
-import { getProvinceIntelligenceRows } from "@/lib/db/cached-queries";
+import { getProvincePopulationAndArea } from "@/features/charging/province-population";
+import { prisma } from "@/lib/db/prisma";
+import type { ProvincePrecomputedStats } from "@/lib/snapshots/types";
 
-export const revalidate = 300;
+export const revalidate = 86400;
+
+async function getProvinceStatsFromSnapshot(): Promise<
+  Record<string, ProvincePrecomputedStats> | null
+> {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
+      select: { precomputedStats: true, snapshotDate: true },
+    });
+
+    if (!snapshot?.precomputedStats) {
+      return null;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
+    const provinces = precomputedStats.provinces as Record<string, ProvincePrecomputedStats> | undefined;
+    return provinces || null;
+  } catch (error) {
+    console.error("Failed to fetch province stats snapshot:", error);
+    return null;
+  }
+}
 
 export default async function ProvincesPage() {
   const t = await getTranslations("provinces");
   const tCommon = await getTranslations("common");
 
   let rows: ProvinceIntelligenceRow[] | { error: string };
+  let snapshotDate: Date | null = null;
 
   try {
-    rows = await getProvinceIntelligenceRows();
+    const provinceStats = await getProvinceStatsFromSnapshot();
+
+    if (provinceStats) {
+      // Transform snapshot data to ProvinceIntelligenceRow format
+      rows = Object.entries(provinceStats)
+        .map(([province, stats]) => {
+          const populationAndArea = getProvincePopulationAndArea(province);
+          const stationsPer1000Km2 =
+            populationAndArea !== null
+              ? (stats.stationCount / populationAndArea.areaKm2) * 1000
+              : null;
+
+          return {
+            province,
+            stationCount: stats.stationCount,
+            connectorCount: stats.connectorCount,
+            knownPowerConnectorCount: 0, // Not available in snapshot
+            hpcStationCount: 0, // Not available in snapshot
+            maxPowerKw: null, // Not available in snapshot
+            averagePowerKw: null, // Not available in snapshot
+            operatorCount: stats.operatorCount,
+            stationsPer100k: stats.perCapitaStations,
+            stationsPer1000Km2,
+          };
+        })
+        .sort(
+          (a, b) =>
+            b.stationCount - a.stationCount ||
+            b.connectorCount - a.connectorCount ||
+            a.province.localeCompare(b.province, "en", { sensitivity: "base" })
+        );
+
+      snapshotDate = new Date();
+      snapshotDate.setHours(0, 0, 0, 0);
+    } else {
+      // Fallback: show warning, don't crash
+      rows = { error: t("setupRequiredMessage") };
+    }
   } catch {
     rows = { error: t("setupRequiredMessage") };
   }
@@ -44,6 +110,12 @@ export default async function ProvincesPage() {
         title={t("title")}
         description={t("description")}
       />
+
+      {snapshotDate && (
+        <p className="text-sm text-gray-500">
+          Data as of {snapshotDate.toLocaleDateString()}
+        </p>
+      )}
 
       {"error" in rows ? (
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
