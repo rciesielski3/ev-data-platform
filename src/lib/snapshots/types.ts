@@ -30,4 +30,5 @@ export interface PrecomputedStats {
   regionalCities: Record<string, RegionalCityPrecomputedStats>; // city slug -> stats
   operators: Record<string, OperatorPrecomputedStats>; // normalized operator name -> stats
   provinces: Record<string, ProvincePrecomputedStats>; // province name -> stats
+  [key: string]: any; // Index signature for Prisma Json compatibility
 }

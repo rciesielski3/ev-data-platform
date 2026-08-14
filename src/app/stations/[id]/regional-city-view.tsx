@@ -105,11 +105,36 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
           )
           .slice(0, 4);
 
+        // Estimate maxPowerKw from powerDistribution
+        let maxPowerKw: number | null = null;
+        if (cityStats.powerDistribution.over150kw > 0) {
+          maxPowerKw = 150; // Conservative estimate for >150kW category
+        } else if (cityStats.powerDistribution.between22and150kw > 0) {
+          maxPowerKw = 150; // Use category max
+        } else if (cityStats.powerDistribution.under22kw > 0) {
+          maxPowerKw = 22; // Use category max
+        }
+
+        // Estimate averagePowerKw from powerDistribution
+        let averagePowerKw: number | null = null;
+        const totalConnectors =
+          cityStats.powerDistribution.under22kw +
+          cityStats.powerDistribution.between22and150kw +
+          cityStats.powerDistribution.over150kw;
+        if (totalConnectors > 0) {
+          // Use weighted midpoints: 11 for under22kw, 86 for between22and150kw, 150+ for over150kw
+          const weightedSum =
+            cityStats.powerDistribution.under22kw * 11 +
+            cityStats.powerDistribution.between22and150kw * 86 +
+            cityStats.powerDistribution.over150kw * 150;
+          averagePowerKw = Math.round((weightedSum / totalConnectors) * 10) / 10;
+        }
+
         stats = {
           stationCount: cityStats.stationCount,
           operatorBreakdown,
-          maxPowerKw: null, // Not available in regional city snapshot
-          averagePowerKw: null, // Not available in regional city snapshot
+          maxPowerKw,
+          averagePowerKw,
         };
         snapshotDate = today;
         cityOperatorStats = operatorStatsMap[city.slug] ?? {};

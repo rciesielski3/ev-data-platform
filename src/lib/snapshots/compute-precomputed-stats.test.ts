@@ -121,8 +121,8 @@ describe("computePrecomputedStats", () => {
         longitude: 21.0,
         operator: { normalizedName: "op-a" },
         connectors: [
-          { id: "c1", type: "Type 2", powerKw: 22 },
-          { id: "c2", type: "CCS2", powerKw: 150 },
+          { id: "c1", connectorType: "Type 2", powerKw: 22 },
+          { id: "c2", connectorType: "CCS2", powerKw: 150 },
         ],
       },
     ]);

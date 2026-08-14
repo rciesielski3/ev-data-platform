@@ -106,7 +106,7 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
       const cityOperators = operatorsPerCity.get(city.slug)!;
 
       cityStats.stationCount += 1;
-      cityOperators.add(station.operator.normalizedName);
+      cityOperators.add(station.operator?.normalizedName ?? "unknown");
       cityStats.operatorCount = cityOperators.size;
 
       for (const connector of station.connectors) {
@@ -120,7 +120,7 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
     }
 
     // Operator aggregation
-    const opName = station.operator.normalizedName;
+    const opName = station.operator?.normalizedName ?? "unknown";
     if (!operatorsMap.has(opName)) {
       operatorsMap.set(opName, {
         stationCount: 0,
