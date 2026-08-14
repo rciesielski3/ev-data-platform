@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cache } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
@@ -13,8 +12,6 @@ import PageHeader from "@/components/ui/PageHeader";
 import { CONNECTOR_KNOWLEDGE } from "@/features/charging/connectors";
 import {
   buildRegionalCityLocation,
-  buildRegionalCityStats,
-  buildRegionalCityWhere,
   buildRegionalMapHref,
   buildRegionalStationsHref,
   type RegionalCityStats,
@@ -24,6 +21,9 @@ import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import type { RegionalCityPrecomputedStats } from "@/lib/snapshots/types";
+
+export const revalidate = 86400; // 24 hours
 
 function normalizeConnectorLabel(typeString: string): string {
   // Extract connector type from strings like "Type 2 22 kW" or "CCS2 150 kW"
@@ -43,16 +43,6 @@ function normalizeConnectorLabel(typeString: string): string {
   const key = keyMap[normalized] || 'unknown';
   return CONNECTOR_KNOWLEDGE[key as keyof typeof CONNECTOR_KNOWLEDGE].label;
 }
-
-const getRegionalCityStations = cache((city: RegionalCity) =>
-  prisma.chargingStation.findMany({
-    where: buildRegionalCityWhere(city),
-    select: {
-      operator: { select: { name: true, normalizedName: true } },
-      connectors: { select: { powerKw: true } },
-    },
-  }),
-);
 
 export const generateRegionalCityMetadata = async (
   city: RegionalCity,
@@ -78,18 +68,59 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
   let snapshotDate: Date | null = null;
 
   try {
-    const stations = await getRegionalCityStations(city);
-    stats = buildRegionalCityStats(stations);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    const todaySnapshot = await prisma.dailySnapshot.findFirst({
-      orderBy: { snapshotDate: "desc" },
-      select: { operatorStats: true, snapshotDate: true },
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
+      select: { precomputedStats: true, operatorStats: true },
     });
 
-    snapshotDate = todaySnapshot?.snapshotDate ?? null;
-    const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
-    cityOperatorStats = operatorStatsMap[city.slug] ?? {};
-  } catch {
+    if (
+      snapshot?.precomputedStats &&
+      typeof snapshot.precomputedStats === "object"
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const precomputed = snapshot.precomputedStats as any;
+      const cityStats = precomputed.regionalCities?.[city.slug] as
+        | RegionalCityPrecomputedStats
+        | undefined;
+
+      if (cityStats) {
+        // Build operatorBreakdown from the operator stats map for this city
+        const operatorStatsMap = (snapshot?.operatorStats ?? {}) as OperatorStatsMap;
+        const cityOperatorEntries = Object.entries(
+          operatorStatsMap[city.slug] ?? {},
+        );
+
+        const operatorBreakdown = cityOperatorEntries
+          .map(([name, stats]) => ({
+            name,
+            stationCount: stats.stationCount ?? 0,
+          }))
+          .sort(
+            (a, b) =>
+              b.stationCount - a.stationCount ||
+              a.name.localeCompare(b.name, "en", { sensitivity: "base" }),
+          )
+          .slice(0, 4);
+
+        stats = {
+          stationCount: cityStats.stationCount,
+          operatorBreakdown,
+          maxPowerKw: null, // Not available in regional city snapshot
+          averagePowerKw: null, // Not available in regional city snapshot
+        };
+        snapshotDate = today;
+        cityOperatorStats = operatorStatsMap[city.slug] ?? {};
+      } else {
+        stats = { error: true };
+      }
+    } else {
+      stats = { error: true };
+    }
+  } catch (error) {
+    console.error("Failed to load regional city stats:", error);
     stats = { error: true };
   }
 
@@ -117,6 +148,12 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
           </Button>
         }
       />
+
+      {snapshotDate && (
+        <p className="mb-4 text-sm text-gray-500">
+          Data as of {formatDisplayDate(snapshotDate, locale)}
+        </p>
+      )}
 
       {!("error" in stats) && (
         <>
