@@ -52,7 +52,7 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
       connectors: {
         select: {
           id: true,
-          type: true,
+          connectorType: true,
           powerKw: true,
         },
       },
@@ -110,7 +110,7 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
       cityStats.operatorCount = cityOperators.size;
 
       for (const connector of station.connectors) {
-        const type = normalizeConnectorType(connector.type);
+        const type = normalizeConnectorType(connector.connectorType);
         cityStats.connectorsByType[type] =
           (cityStats.connectorsByType[type] || 0) + 1;
 
