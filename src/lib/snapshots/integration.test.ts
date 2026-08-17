@@ -36,9 +36,11 @@ describe("Snapshot Integration", () => {
         knownPowerConnectorCount: 0,
         provinceMetrics: {},
         operatorStats: {},
-        precomputedStats: stats,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        precomputedStats: stats as any,
       },
-      update: { precomputedStats: stats },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      update: { precomputedStats: stats as any },
     });
 
     const retrieved = await prisma.dailySnapshot.findUnique({
@@ -47,7 +49,8 @@ describe("Snapshot Integration", () => {
 
     expect(retrieved).toBeDefined();
     expect(retrieved?.precomputedStats).toBeDefined();
-    const retrieved_stats = retrieved?.precomputedStats as typeof stats;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const retrieved_stats = retrieved?.precomputedStats as any as typeof stats;
     // Verify structure is preserved
     expect(retrieved_stats).toHaveProperty("computedAt");
     expect(retrieved_stats).toHaveProperty("regionalCities");

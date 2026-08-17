@@ -29,10 +29,12 @@ const main = async () => {
           knownPowerConnectorCount: 0,
           provinceMetrics: {},
           operatorStats: {},
-          precomputedStats: stats,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          precomputedStats: stats as any,
         },
         update: {
-          precomputedStats: stats,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          precomputedStats: stats as any,
         },
       });
 

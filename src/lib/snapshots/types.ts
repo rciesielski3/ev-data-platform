@@ -25,10 +25,9 @@ export interface ProvincePrecomputedStats {
   perCapitaStations: number; // Stations per 100k residents
 }
 
-export interface PrecomputedStats {
+export type PrecomputedStats = {
   computedAt: string; // ISO 8601 timestamp
   regionalCities: Record<string, RegionalCityPrecomputedStats>; // city slug -> stats
   operators: Record<string, OperatorPrecomputedStats>; // normalized operator name -> stats
   provinces: Record<string, ProvincePrecomputedStats>; // province name -> stats
-  [key: string]: any; // Index signature for Prisma Json compatibility
-}
+};
