@@ -1,19 +1,48 @@
 import { Suspense } from "react";
 
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { ActionSection } from "@/components/ui/ActionSection";
 import { OperatorTablePaginated } from "@/components/ui/OperatorTablePaginated";
+import SnapshotDateBadge from "@/components/ui/SnapshotDateBadge";
+import SnapshotUnavailableFallback from "@/components/ui/SnapshotUnavailableFallback";
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
 import { formatInteger } from "@/features/charging/insights";
 import { localizeFallback } from "@/lib/display/localize-fallback";
-import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
+import type { OperatorPrecomputedStats } from "@/lib/snapshots/types";
+import { prisma } from "@/lib/db/prisma";
 
-export const revalidate = 300;
+export const revalidate = 86400; // 24 hours
+
+async function getOperatorStatsFromSnapshot(): Promise<
+  Record<string, OperatorPrecomputedStats> | null
+> {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
+      select: { precomputedStats: true, snapshotDate: true },
+    });
+
+    if (!snapshot?.precomputedStats) {
+      return null;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
+    const operators = precomputedStats.operators as Record<string, OperatorPrecomputedStats> | undefined;
+    return operators || null;
+  } catch (error) {
+    console.error("Failed to fetch operator stats snapshot:", error);
+    return null;
+  }
+}
 
 const getSummary = (rows: OperatorIntelligenceRow[]) => {
   const totalStations = rows.reduce((total, row) => total + row.stationCount, 0);
@@ -54,15 +83,45 @@ const getSummary = (rows: OperatorIntelligenceRow[]) => {
 
 
 export default async function OperatorsPage() {
+  const locale = (await getLocale()) as "en" | "pl";
   const t = await getTranslations("operators");
   const tCommon = await getTranslations("common");
 
   let rows: OperatorIntelligenceRow[] | { error: string };
+  let snapshotDate: Date | null = null;
 
   try {
-    rows = await getOperatorIntelligenceRows();
-  } catch {
-    rows = { error: t("setupRequiredMessage") };
+    const operatorStats = await getOperatorStatsFromSnapshot();
+
+    if (operatorStats) {
+      rows = Object.entries(operatorStats)
+        .map(([normalizedName, stats]) => ({
+          operatorName: normalizedName,
+          stationCount: stats.stationCount,
+          connectorCount: stats.connectorCount,
+          knownPowerConnectorCount: stats.knownPowerConnectorCount,
+          maxPowerKw: stats.maxPowerKw,
+          provinceCount: stats.provinceCount,
+          averagePowerKw: stats.averagePowerKw,
+          strongestStationName: null,
+        }))
+        .sort(
+          (left, right) =>
+            right.stationCount - left.stationCount ||
+            right.connectorCount - left.connectorCount ||
+            left.operatorName.localeCompare(right.operatorName, "en", {
+              sensitivity: "base",
+            }),
+        );
+
+      snapshotDate = new Date();
+      snapshotDate.setHours(0, 0, 0, 0);
+    } else {
+      rows = { error: t("snapshotUnavailable") || "Operator data unavailable. Please refresh." };
+    }
+  } catch (error) {
+    console.error("Failed to load operators:", error);
+    rows = { error: t("dataLoadError") || "Failed to load operator data." };
   }
 
   const summary = Array.isArray(rows) ? getSummary(rows) : null;
@@ -74,10 +133,16 @@ export default async function OperatorsPage() {
         description={t("description")}
       />
 
+      {snapshotDate && (
+        <div className="mb-4">
+          <SnapshotDateBadge date={snapshotDate} locale={locale} />
+        </div>
+      )}
+
       {"error" in rows ? (
-        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{rows.error}</p>
-        </Notice>
+        <div className="mb-8">
+          <SnapshotUnavailableFallback message={rows.error} />
+        </div>
       ) : rows.length === 0 || summary === null ? (
         <Notice title={t("emptyTitle")}>
           <p className="muted mx-auto mt-2 max-w-2xl">{t("emptyBody")}</p>

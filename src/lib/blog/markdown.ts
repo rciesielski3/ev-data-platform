@@ -95,8 +95,8 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
 /**
  * Convert markdown formatting to HTML with security validation
  * Handles: [text](/url), **bold**, *italic*, __bold__, _italic_
- * Validates URLs to prevent XSS (javascript:, data:, etc.)
- * Escapes all HTML entities to prevent injection attacks
+ * Escapes HTML entities first to prevent XSS injection attacks
+ * Validates URLs to prevent malicious protocols (javascript:, data:, etc.)
  */
 const convertMarkdownFormatting = (text: string): string => {
   let result = escapeHtml(text);

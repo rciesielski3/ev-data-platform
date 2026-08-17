@@ -246,6 +246,7 @@ model DailySnapshot {
   knownPowerConnectorCount   Int
   provinceMetrics            Json
   operatorStats              Json
+  precomputedStats           Json?
   latestImportStatus         IngestionStatus?
   lastSuccessfulImportRunId  String?
   error                      String?

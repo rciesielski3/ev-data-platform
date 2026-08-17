@@ -14,7 +14,8 @@
     "next": "Next",
     "pageOf": "Page {page} of {totalPages}",
     "comingSoonBadge": "Coming soon",
-    "noDataLabel": "No data"
+    "noDataLabel": "No data",
+    "snapshotUnavailable": "Data is currently unavailable. Please try again shortly."
   },
   "footer": {
     "copyright": "© {year} Adateo Rafał Ciesielski",

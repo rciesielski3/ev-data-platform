@@ -23,6 +23,8 @@ import { prisma } from "@/lib/db/prisma";
  * aggregation and builds the province intelligence rows.
  *
  * Memoized per request via React's `cache()`.
+ *
+ * @deprecated Use snapshot reads from daily precomputed snapshots instead.
  */
 export const getProvinceIntelligenceRows = cache(
   async (): Promise<ProvinceIntelligenceRow[]> => {
@@ -53,6 +55,8 @@ export const getProvinceIntelligenceRows = cache(
  * aggregation and builds the operator intelligence rows.
  *
  * Memoized per request via React's `cache()`.
+ *
+ * @deprecated Use snapshot reads from daily precomputed snapshots instead.
  */
 export const getOperatorIntelligenceRows = cache(
   async (): Promise<OperatorIntelligenceRow[]> => {
