@@ -40,7 +40,7 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
     if (line.startsWith(">")) {
       sections.push({
         type: "blockquote",
-        content: line.substring(1).trim(),
+        content: convertMarkdownFormatting(line.substring(1).trim()),
       });
       i++;
       continue;
@@ -95,7 +95,8 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
 /**
  * Convert markdown formatting to HTML with security validation
  * Handles: [text](/url), **bold**, *italic*, __bold__, _italic_
- * Escapes HTML entities first to prevent XSS, then applies markdown conversions
+ * Escapes HTML entities first to prevent XSS injection attacks
+ * Validates URLs to prevent malicious protocols (javascript:, data:, etc.)
  */
 const convertMarkdownFormatting = (text: string): string => {
   let result = escapeHtml(text);

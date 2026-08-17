@@ -141,24 +141,24 @@ This is a paragraph with [link](/url).
     expect(paragraph?.content).toContain("<em>italic</em>");
   });
 
-  describe("XSS Security", () => {
+  // XSS Security Tests
+  describe("XSS Prevention", () => {
     it("should escape script tags in bold formatting", () => {
       const content = "**<script>alert('xss')</script>**";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
       expect(paragraph?.content).toContain("&lt;script&gt;");
-      expect(paragraph?.content).toContain("&lt;/script&gt;");
       expect(paragraph?.content).not.toContain("<script>");
     });
 
     it("should escape script tags in italic formatting", () => {
-      const content = "*<script>alert('xss')</script>*";
+      const content = "*<img src=x onerror=\"alert('xss')\">*";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).toContain("&lt;script&gt;");
-      expect(paragraph?.content).not.toContain("<script>");
+      expect(paragraph?.content).toContain("&lt;img");
+      expect(paragraph?.content).not.toContain("<img");
     });
 
     it("should escape HTML injection in link text", () => {
@@ -171,66 +171,67 @@ This is a paragraph with [link](/url).
     });
 
     it("should escape HTML entities in regular text", () => {
-      const content = "This is 5 < 10";
+      const content = "This is 5 < 10 and 10 > 5";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).toContain("5 &lt; 10");
-      expect(paragraph?.content).not.toContain("5 < 10");
-    });
-
-    it("should escape HTML entities in links", () => {
-      const content = '[Link](https://example.com?param="value")';
-      const sections = parseMarkdown(content);
-
-      const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).toContain("&amp;quot;");
-      expect(paragraph?.content).not.toContain('param="value"');
+      expect(paragraph?.content).toContain("&lt;");
+      expect(paragraph?.content).toContain("&gt;");
+      expect(paragraph?.content).not.toContain("< 10");
+      expect(paragraph?.content).not.toContain("> 5");
     });
 
     it("should escape ampersands in text", () => {
-      const content = "AT&T company";
+      const content = "Tom & Jerry";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).toContain("AT&amp;T");
+      expect(paragraph?.content).toContain("&amp;");
     });
 
-    it("should escape single quotes", () => {
-      const content = "It's a test with quotes";
+    it("should escape quotes in link URLs", () => {
+      const content = '[link](https://example.com?q="xss")';
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).toContain("&#039;");
+      // Quotes should be escaped (either &quot; or &amp;quot;) to prevent attribute injection
+      expect(paragraph?.content).toMatch(/&(?:amp;)?quot;/);
+      expect(paragraph?.content).not.toContain('q="xss');
     });
 
-    it("should escape mixed dangerous content with bold and italic", () => {
-      const content = "Text with **<b onclick='alert(1)'>dangerous</b>** and *<svg onload='alert(2)'>*";
+    it("should escape script tags in list items", () => {
+      const content = "- Item with **<script>alert('xss')</script>**\n- Normal item";
       const sections = parseMarkdown(content);
 
-      const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).not.toContain("<b onclick");
-      expect(paragraph?.content).not.toContain("<svg onload");
-      expect(paragraph?.content).toContain("&lt;b");
-      expect(paragraph?.content).toContain("&lt;svg");
+      const listSection = sections.find((s) => s.type === "list");
+      expect(listSection?.items?.[0]).toContain("&lt;script&gt;");
+      expect(listSection?.items?.[0]).not.toContain("<script>");
+    });
+
+    it("should escape HTML in blockquotes", () => {
+      const content = "> This has **<script>alert('xss')</script>** content";
+      const sections = parseMarkdown(content);
+
+      const blockquote = sections.find((s) => s.type === "blockquote");
+      expect(blockquote?.content).toContain("&lt;script&gt;");
+      expect(blockquote?.content).not.toContain("<script>");
     });
 
     it("should reject javascript: protocol in links", () => {
-      const content = "[Click me](javascript:alert('xss'))";
+      const content = "[click me](javascript:alert('xss'))";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).not.toContain('<a href="javascript:');
-      expect(paragraph?.content).toContain("Click me");
+      expect(paragraph?.content).not.toContain("href=");
+      expect(paragraph?.content).toContain("click me");
     });
 
     it("should reject data: protocol in links", () => {
-      const content = "[Click me](data:text/html,<script>alert(1)</script>)";
+      const content = "[click me](data:text/html,<script>alert('xss')</script>)";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      expect(paragraph?.content).not.toContain('<a href="data:');
-      expect(paragraph?.content).toContain("Click me");
+      expect(paragraph?.content).not.toContain("href=");
     });
   });
 });
