@@ -141,10 +141,19 @@ This is a paragraph with [link](/url).
     expect(paragraph?.content).toContain("<em>italic</em>");
   });
 
-  // XSS Security Tests
-  describe("XSS Prevention", () => {
+  describe("XSS Security", () => {
     it("should escape script tags in bold formatting", () => {
       const content = "**<script>alert('xss')</script>**";
+      const sections = parseMarkdown(content);
+
+      const paragraph = sections.find((s) => s.type === "paragraph");
+      expect(paragraph?.content).toContain("&lt;script&gt;");
+      expect(paragraph?.content).toContain("&lt;/script&gt;");
+      expect(paragraph?.content).not.toContain("<script>");
+    });
+
+    it("should escape script tags in italic formatting", () => {
+      const content = "*<script>alert('xss')</script>*";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
@@ -152,7 +161,7 @@ This is a paragraph with [link](/url).
       expect(paragraph?.content).not.toContain("<script>");
     });
 
-    it("should escape script tags in italic formatting", () => {
+    it("should escape img tags with event handlers", () => {
       const content = "*<img src=x onerror=\"alert('xss')\">*";
       const sections = parseMarkdown(content);
 
@@ -194,7 +203,6 @@ This is a paragraph with [link](/url).
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
-      // Quotes should be escaped (either &quot; or &amp;quot;) to prevent attribute injection
       expect(paragraph?.content).toMatch(/&(?:amp;)?quot;/);
       expect(paragraph?.content).not.toContain('q="xss');
     });
@@ -232,6 +240,7 @@ This is a paragraph with [link](/url).
 
       const paragraph = sections.find((s) => s.type === "paragraph");
       expect(paragraph?.content).not.toContain("href=");
+      expect(paragraph?.content).toContain("click me");
     });
   });
 });
