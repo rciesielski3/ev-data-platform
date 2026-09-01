@@ -2,6 +2,53 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { checkPerCapitaRegressions, checkStationCountRegression, aggregateProvinceMetricsFromRuns } from "./regression-detection";
 import { prisma } from "@/lib/db/prisma";
 
+// Mock the prisma module
+vi.mock("@/lib/db/prisma", () => {
+  const sources = new Map([
+    [
+      "eipa",
+      {
+        id: "eipa-1",
+        key: "eipa",
+        label: "EIPA Data Source",
+        licenseStatus: "active",
+      },
+    ],
+  ]);
+  let nextId = 1;
+
+  return {
+    prisma: {
+      dataSource: {
+        findUnique: vi.fn(async (params) => {
+          if (params.where.key) {
+            return sources.get(params.where.key) || null;
+          }
+          if (params.where.id) {
+            return Array.from(sources.values()).find((s) => s.id === params.where.id) || null;
+          }
+          return null;
+        }),
+        create: vi.fn(async (params) => {
+          const newSource = {
+            id: `source-${nextId++}`,
+            ...params.data,
+          };
+          sources.set(newSource.key, newSource);
+          return newSource;
+        }),
+        delete: vi.fn(async (params) => {
+          const source = Array.from(sources.values()).find((s) => s.id === params.where.id);
+          if (source) {
+            sources.delete(source.key);
+          }
+          return source;
+        }),
+      },
+    },
+  };
+});
+
 describe("Data Quality Monitoring Integration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
