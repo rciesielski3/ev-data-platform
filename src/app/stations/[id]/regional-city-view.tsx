@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cache } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
@@ -7,14 +6,13 @@ import { ArrowRightIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
+import SnapshotDateBadge from "@/components/ui/SnapshotDateBadge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import PageHeader from "@/components/ui/PageHeader";
 import { CONNECTOR_KNOWLEDGE } from "@/features/charging/connectors";
 import {
   buildRegionalCityLocation,
-  buildRegionalCityStats,
-  buildRegionalCityWhere,
   buildRegionalMapHref,
   buildRegionalStationsHref,
   type RegionalCityStats,
@@ -24,6 +22,9 @@ import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import type { RegionalCityPrecomputedStats } from "@/lib/snapshots/types";
+
+export const revalidate = 86400; // 24 hours
 
 function normalizeConnectorLabel(typeString: string): string {
   // Extract connector type from strings like "Type 2 22 kW" or "CCS2 150 kW"
@@ -43,16 +44,6 @@ function normalizeConnectorLabel(typeString: string): string {
   const key = keyMap[normalized] || 'unknown';
   return CONNECTOR_KNOWLEDGE[key as keyof typeof CONNECTOR_KNOWLEDGE].label;
 }
-
-const getRegionalCityStations = cache((city: RegionalCity) =>
-  prisma.chargingStation.findMany({
-    where: buildRegionalCityWhere(city),
-    select: {
-      operator: { select: { name: true, normalizedName: true } },
-      connectors: { select: { powerKw: true } },
-    },
-  }),
-);
 
 export const generateRegionalCityMetadata = async (
   city: RegionalCity,
@@ -78,18 +69,84 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
   let snapshotDate: Date | null = null;
 
   try {
-    const stations = await getRegionalCityStations(city);
-    stats = buildRegionalCityStats(stations);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    const todaySnapshot = await prisma.dailySnapshot.findFirst({
-      orderBy: { snapshotDate: "desc" },
-      select: { operatorStats: true, snapshotDate: true },
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
+      select: { precomputedStats: true, operatorStats: true },
     });
 
-    snapshotDate = todaySnapshot?.snapshotDate ?? null;
-    const operatorStatsMap = (todaySnapshot?.operatorStats ?? {}) as OperatorStatsMap;
-    cityOperatorStats = operatorStatsMap[city.slug] ?? {};
-  } catch {
+    if (
+      snapshot?.precomputedStats &&
+      typeof snapshot.precomputedStats === "object"
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const precomputed = snapshot.precomputedStats as any;
+      const cityStats = precomputed.regionalCities?.[city.slug] as
+        | RegionalCityPrecomputedStats
+        | undefined;
+
+      if (cityStats) {
+        // Build operatorBreakdown from the operator stats map for this city
+        const operatorStatsMap = (snapshot?.operatorStats ?? {}) as OperatorStatsMap;
+        const cityOperatorEntries = Object.entries(
+          operatorStatsMap[city.slug] ?? {},
+        );
+
+        const operatorBreakdown = cityOperatorEntries
+          .map(([name, stats]) => ({
+            name,
+            stationCount: stats.stationCount ?? 0,
+          }))
+          .sort(
+            (a, b) =>
+              b.stationCount - a.stationCount ||
+              a.name.localeCompare(b.name, "en", { sensitivity: "base" }),
+          )
+          .slice(0, 4);
+
+        // Estimate maxPowerKw from powerDistribution
+        let maxPowerKw: number | null = null;
+        if (cityStats.powerDistribution.over150kw > 0) {
+          maxPowerKw = 150; // Conservative estimate for >150kW category
+        } else if (cityStats.powerDistribution.between22and150kw > 0) {
+          maxPowerKw = 150; // Use category max
+        } else if (cityStats.powerDistribution.under22kw > 0) {
+          maxPowerKw = 22; // Use category max
+        }
+
+        // Estimate averagePowerKw from powerDistribution
+        let averagePowerKw: number | null = null;
+        const totalConnectors =
+          cityStats.powerDistribution.under22kw +
+          cityStats.powerDistribution.between22and150kw +
+          cityStats.powerDistribution.over150kw;
+        if (totalConnectors > 0) {
+          // Use weighted midpoints: 11 for under22kw, 86 for between22and150kw, 150+ for over150kw
+          const weightedSum =
+            cityStats.powerDistribution.under22kw * 11 +
+            cityStats.powerDistribution.between22and150kw * 86 +
+            cityStats.powerDistribution.over150kw * 150;
+          averagePowerKw = Math.round((weightedSum / totalConnectors) * 10) / 10;
+        }
+
+        stats = {
+          stationCount: cityStats.stationCount,
+          operatorBreakdown,
+          maxPowerKw,
+          averagePowerKw,
+        };
+        snapshotDate = today;
+        cityOperatorStats = operatorStatsMap[city.slug] ?? {};
+      } else {
+        stats = { error: true };
+      }
+    } else {
+      stats = { error: true };
+    }
+  } catch (error) {
+    console.error("Failed to load regional city stats:", error);
     stats = { error: true };
   }
 
@@ -117,6 +174,12 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
           </Button>
         }
       />
+
+      {snapshotDate && (
+        <div className="mb-4">
+          <SnapshotDateBadge date={snapshotDate} locale={locale} />
+        </div>
+      )}
 
       {!("error" in stats) && (
         <>

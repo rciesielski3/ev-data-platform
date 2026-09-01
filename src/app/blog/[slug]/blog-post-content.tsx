@@ -66,7 +66,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               className="mb-4 ml-6 list-decimal space-y-2 text-slate-700"
             >
               {section.items?.map((item, i) => (
-                <li key={i}>{item}</li>
+                <li
+                  key={i}
+                  dangerouslySetInnerHTML={{
+                    __html: item,
+                  }}
+                />
               ))}
             </ol>
           ) : (
@@ -75,7 +80,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               className="mb-4 ml-6 list-disc space-y-2 text-slate-700"
             >
               {section.items?.map((item, i) => (
-                <li key={i}>{item}</li>
+                <li
+                  key={i}
+                  dangerouslySetInnerHTML={{
+                    __html: item,
+                  }}
+                />
               ))}
             </ul>
           );
@@ -86,9 +96,10 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             <blockquote
               key={index}
               className="mb-4 border-l-4 border-emerald-500 bg-slate-50 pl-4 italic text-slate-700"
-            >
-              {section.content || ""}
-            </blockquote>
+              dangerouslySetInnerHTML={{
+                __html: section.content || "",
+              }}
+            />
           );
         }
 
