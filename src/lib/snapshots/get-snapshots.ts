@@ -16,3 +16,8 @@ export const getSnapshotByDate = (date: Date) =>
   prisma.dailySnapshot.findUnique({
     where: { snapshotDate: date },
   });
+
+export const getLatestSnapshot = () =>
+  prisma.dailySnapshot.findFirst({
+    orderBy: { snapshotDate: "desc" },
+  });

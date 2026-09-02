@@ -14,6 +14,7 @@ import {
   type OperatorInsightRow,
 } from "@/features/charging/insights";
 import { prisma } from "@/lib/db/prisma";
+import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 
 export const revalidate = 3600;
 
@@ -118,17 +119,13 @@ const getHighestPowerStationRows = async (): Promise<HighestPowerStationRow[]> =
 
 const getInsightsData = async () => {
   const [
-    totalStations,
-    totalConnectors,
-    knownPowerConnectors,
+    snapshot,
     operatorRows,
     connectorRows,
     highestPowerStations,
     provinceRows,
   ] = await Promise.all([
-    prisma.chargingStation.count(),
-    prisma.chargingConnector.count(),
-    prisma.chargingConnector.count({ where: { powerKw: { not: null } } }),
+    getLatestSnapshot(),
     getOperatorRows(),
     prisma.chargingConnector.groupBy({
       by: ["connectorType"],
@@ -146,9 +143,9 @@ const getInsightsData = async () => {
   ]);
 
   return buildChargingInsights({
-    totalStations,
-    totalConnectors,
-    knownPowerConnectors,
+    totalStations: snapshot?.totalStationCount ?? 0,
+    totalConnectors: snapshot?.totalConnectorCount ?? 0,
+    knownPowerConnectors: snapshot?.knownPowerConnectorCount ?? 0,
     operatorRows,
     connectorRows: connectorRows.map((row) => ({
       connectorType: row.connectorType,
