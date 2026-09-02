@@ -25,6 +25,7 @@ import Notice from "@/components/ui/Notice";
 import StatStrip from "@/components/ui/StatStrip";
 import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
 import { prisma } from "@/lib/db/prisma";
+import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
@@ -42,14 +43,14 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const getStatus = async () => {
   const [
     evCount,
-    stationCount,
+    snapshot,
     operatorCount,
     provinces,
     latestEipaRun,
     latestOpenEvRun,
   ] = await Promise.all([
     prisma.evModel.count(),
-    prisma.chargingStation.count(),
+    getLatestSnapshot(),
     prisma.chargingOperator.count(),
     prisma.chargingStation.groupBy({
       by: ["province"],
@@ -90,7 +91,7 @@ const getStatus = async () => {
 
   return {
     evCount,
-    stationCount,
+    stationCount: snapshot?.totalStationCount ?? 0,
     operatorCount,
     provinceCount: provinces.length,
     ingestionRuns: {

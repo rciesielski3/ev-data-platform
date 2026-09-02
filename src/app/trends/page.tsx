@@ -6,8 +6,7 @@ import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { TrendsHero } from "@/components/ui/TrendsHero";
 import { buildTrendPoints } from "@/features/trends/trend-series";
-import { prisma } from "@/lib/db/prisma";
-import { getSnapshotsInRange } from "@/lib/snapshots/get-snapshots";
+import { getSnapshotsInRange, getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
 import { toDailySnapshotDto } from "@/lib/snapshots/snapshot-dto";
 
@@ -34,21 +33,13 @@ const getTrendPointsForRange = async (rangeDays: number) => {
 };
 
 const getTrendMetrics = async () => {
-  const [totalStations, totalHpcStations, totalConnectors] = await Promise.all([
-    prisma.chargingStation.count(),
-    prisma.chargingStation.count({
-      where: {
-        connectors: {
-          some: {
-            powerKw: { gte: 150 },
-          },
-        },
-      },
-    }),
-    prisma.chargingConnector.count(),
-  ]);
+  const snapshot = await getLatestSnapshot();
 
-  return { totalStations, totalHpcStations, totalConnectors };
+  return {
+    totalStations: snapshot?.totalStationCount ?? 0,
+    totalHpcStations: snapshot?.totalHpcStationCount ?? 0,
+    totalConnectors: snapshot?.totalConnectorCount ?? 0,
+  };
 };
 
 export default async function TrendsPage({
