@@ -19,23 +19,18 @@ const main = async () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      await prisma.dailySnapshot.upsert({
+      // Only update precomputed stats if snapshot exists (created by importer)
+      await prisma.dailySnapshot.update({
         where: { snapshotDate: today },
-        create: {
-          snapshotDate: today,
-          totalStationCount: 0,
-          totalConnectorCount: 0,
-          totalHpcStationCount: 0,
-          knownPowerConnectorCount: 0,
-          provinceMetrics: {},
-          operatorStats: {},
+        data: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           precomputedStats: stats as any,
         },
-        update: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          precomputedStats: stats as any,
-        },
+      }).catch((error) => {
+        // If snapshot doesn't exist, that's ok - it will be created by the next import
+        if (error.code !== 'P2025') { // P2025 = record not found
+          throw error;
+        }
       });
 
       console.log("Snapshot updated successfully");
