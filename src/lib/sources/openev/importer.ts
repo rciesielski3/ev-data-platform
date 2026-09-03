@@ -1,6 +1,7 @@
 import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
+import { captureSnapshot } from "@/lib/snapshots/capture-snapshot";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 import {
   checkForRecordCountRegression,
@@ -197,6 +198,17 @@ export const runOpenEvImport = async (): Promise<OpenEvImportResult> => {
       },
       errorMessage,
     });
+
+    if (status !== IngestionStatus.FAILED) {
+      try {
+        await captureSnapshot();
+      } catch (error) {
+        console.warn(
+          "[OpenEV] daily snapshot capture failed; import result is unaffected:",
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
 
     return {
       runId: run.id,
