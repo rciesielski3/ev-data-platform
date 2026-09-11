@@ -541,7 +541,6 @@
   },
   "connectorDetail": {
     "og_title": "{label} Złącze Ładowania - Poradnik | evsource.pl",
-    "og_description": "Informacje o złączu {label}. Kompatybilne samochody, stacje ładowania, wersje normy.",
     "backLink": "Wróć do złączy",
     "incompleteDataTitle": "Niepełne dane źródłowe",
     "incompleteDataBody": "Niektóre zaimportowane rekordy nie zawierają typu złącza, który można jednoznacznie zaklasyfikować. Ta strona pozwala wyjaśnić te rekordy bez wymyślania zgodności, mocy czy zasięgu regionalnego.",

@@ -541,7 +541,6 @@
   },
   "connectorDetail": {
     "og_title": "{label} Charging Connector - Guide | evsource.pl",
-    "og_description": "Information about the {label} connector. Compatible cars, charging stations, and standard versions.",
     "backLink": "Back to connectors",
     "incompleteDataTitle": "Incomplete source data",
     "incompleteDataBody": "Some imported records do not include a connector type that can be classified confidently. This page keeps those records explainable without inventing compatibility, power, or regional support.",
