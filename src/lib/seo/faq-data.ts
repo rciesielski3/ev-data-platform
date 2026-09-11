@@ -23,6 +23,28 @@ export const connectorFAQs: Partial<Record<ConnectorKey, ConnectorFaqEntry[]>> =
         "Ładowanie DC trwa 20-45 minut do 80% pojemności, w zależności od mocy stacji. Ładowanie AC zajmuje kilka godzin.",
     },
   ],
+  type2: [
+    {
+      question: "Co to jest złącze Type 2?",
+      answer:
+        "Type 2 (Mennekes) to europejski standard ładowania AC dla pojazdów elektrycznych. Obsługuje ładowanie jednofazowe i trójfazowe, a w Polsce jest najczęściej spotykanym typem złącza.",
+    },
+    {
+      question: "Jaką moc ładowania zapewnia Type 2?",
+      answer:
+        "Ładowarki AC z Type 2 oferują zwykle od 3,7 kW (jednofazowe) do 22 kW (trójfazowe). Moc zależy również od ładowarki pokładowej samochodu, która często ogranicza ją do 11 kW.",
+    },
+    {
+      question: "Które samochody obsługują Type 2?",
+      answer:
+        "Praktycznie każdy samochód elektryczny i hybryda plug-in sprzedawane w Europie mają gniazdo Type 2 do ładowania AC, w tym pojazdy Volkswagena, Renault, BMW, Tesli, Hyundaia i Kii.",
+    },
+    {
+      question: "Jak długo trwa ładowanie złączem Type 2?",
+      answer:
+        "Pełne naładowanie akumulatora ładowarką AC trwa zwykle od 4 do 8 godzin, dlatego Type 2 najlepiej sprawdza się przy postoju w pracy, w domu lub na parkingu miejskim.",
+    },
+  ],
   chademo: [
     {
       question: "Co to jest złącze CHAdeMO?",
