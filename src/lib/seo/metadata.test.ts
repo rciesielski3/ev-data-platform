@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateStationMetadata } from "./metadata";
+import { generateFAQSchema, generateStationMetadata } from "./metadata";
 
 describe("generateStationMetadata", () => {
   it("generates metadata with station name, location, and OG tags", () => {
@@ -46,5 +46,32 @@ describe("generateStationMetadata", () => {
     expect(schema).toBeDefined();
     expect(schema?.["@type"]).toBe("LocalBusiness");
     expect(schema?.name).toBe("EV Hub");
+  });
+});
+
+describe("generateFAQSchema", () => {
+  it("builds a FAQPage JSON-LD object from question/answer pairs", () => {
+    const schema = generateFAQSchema([
+      { question: "Co to jest złącze CCS2?", answer: "CCS2 to standard szybkiego ładowania DC." },
+      { question: "Jak długo trwa ładowanie CCS2?", answer: "20-45 minut do 80% pojemności." },
+    ]);
+
+    expect(schema["@context"]).toBe("https://schema.org");
+    expect(schema["@type"]).toBe("FAQPage");
+    expect(schema.mainEntity).toHaveLength(2);
+    expect(schema.mainEntity[0]).toEqual({
+      "@type": "Question",
+      name: "Co to jest złącze CCS2?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "CCS2 to standard szybkiego ładowania DC.",
+      },
+    });
+  });
+
+  it("returns an empty mainEntity array when given no FAQs", () => {
+    const schema = generateFAQSchema([]);
+
+    expect(schema.mainEntity).toEqual([]);
   });
 });
