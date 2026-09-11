@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -32,10 +33,12 @@ import { OG_IMAGE_PATH } from "@/lib/config/site";
 
 export const revalidate = 3600;
 
+const getCachedLatestSnapshot = cache(() => getLatestSnapshot());
+
 export const generateMetadata = async (): Promise<Metadata> => {
   const locale = await getLocale();
   const t = await getTranslations("home");
-  const snapshot = await getLatestSnapshot().catch(() => null);
+  const snapshot = await getCachedLatestSnapshot().catch(() => null);
 
   const hasSnapshotTotals =
     snapshot !== null &&
@@ -89,7 +92,7 @@ const getStatus = async () => {
     latestOpenEvRun,
   ] = await Promise.all([
     prisma.evModel.count(),
-    getLatestSnapshot(),
+    getCachedLatestSnapshot(),
     prisma.chargingOperator.count(),
     prisma.chargingStation.groupBy({
       by: ["province"],
