@@ -11,7 +11,7 @@ import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import NavLinks, { type NavLink } from "@/components/ui/NavLinks";
 import type { SupportedLocale } from "@/lib/i18n/constants";
-import { SITE_URL } from "@/lib/config/site";
+import { OG_IMAGE_PATH, SITE_URL } from "@/lib/config/site";
 import { runStartupChecks } from "@/lib/config/startup-checks";
 import { GA4Script } from "@/components/analytics/GA4Script";
 
@@ -49,7 +49,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
       siteName: "evsource.pl",
       images: [
         {
-          url: `${SITE_URL}/og-image-default.png`,
+          url: OG_IMAGE_PATH,
           width: 1200,
           height: 630,
           alt: "evsource.pl",
@@ -58,7 +58,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     twitter: {
       card: "summary_large_image",
-      images: [`${SITE_URL}/og-image-default.png`],
+      images: [OG_IMAGE_PATH],
     },
   };
 };
