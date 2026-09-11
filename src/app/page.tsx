@@ -28,14 +28,45 @@ import { prisma } from "@/lib/db/prisma";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { SITE_URL } from "@/lib/config/site";
 
 export const revalidate = 3600;
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("home");
+  const title =
+    t("title") ||
+    "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl";
+  const description =
+    t("description") ||
+    "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.";
+  const imageUrl = `${SITE_URL}/og-image-default.png`;
+
   return {
-    title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    description: t("description") || "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      url: SITE_URL,
+      title: "evsource.pl - Mapa Stacji Ładowania EV",
+      description:
+        "Znajdź stacje ładowania EV blisko siebie. 27,000+ stacji, 73,000+ złączy.",
+      siteName: "evsource.pl",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: "evsource.pl - Mapa EV",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "evsource.pl - Mapa Stacji Ładowania EV",
+      description: "Znajdź stacje ładowania EV blisko siebie.",
+      images: [imageUrl],
+    },
   };
 };
 

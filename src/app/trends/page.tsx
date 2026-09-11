@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -9,10 +10,33 @@ import { buildTrendPoints } from "@/features/trends/trend-series";
 import { getSnapshotsInRange, getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
 import { toDailySnapshotDto } from "@/lib/snapshots/snapshot-dto";
+import { SITE_URL } from "@/lib/config/site";
 
 import TrendsChartClient from "@/app/trends/trends-chart-client";
 
 export const revalidate = 300;
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("trends");
+  const title = t("title") || "Trend analizy - evsource.pl";
+  const description =
+    t("description") ||
+    "30-dniowe i 90-dniowe trendy rozwoju infrastruktury ładowania EV w Polsce.";
+  const imageUrl = `${SITE_URL}/og-image-default.png`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      url: `${SITE_URL}/trends`,
+      title: "Trendy Ładowania EV - evsource.pl",
+      description:
+        "Wzrost liczby stacji, konektorów i stanowisk HPC w Polsce. Dane na żywo.",
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+    },
+  };
+};
 
 const RANGE_DAYS = { "30": 30, "90": 90 } as const;
 type RangeKey = keyof typeof RANGE_DAYS;
