@@ -22,7 +22,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
 ];
 
-const CONNECTOR_TYPES = ["ccs2", "type2", "chademo", "unknown"];
+const CONNECTOR_TYPES = ["ccs2", "type2", "chademo"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({

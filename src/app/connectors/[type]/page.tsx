@@ -23,15 +23,19 @@ export const generateMetadata = async ({
   params: Promise<{ type: string }>;
 }): Promise<Metadata> => {
   const { type } = await params;
-  const faqContent = connectorFAQs[type as keyof typeof connectorFAQs];
+  const connector = getConnectorPageKnowledge(type);
 
-  const metadata = generateConnectorMetadata({ type, description: undefined });
+  const t = await getTranslations("connectorDetail");
+  const tKnowledge = await getTranslations("connectorKnowledge");
 
-  if (faqContent) {
-    const faqSchema = generateFAQSchema(faqContent);
-    metadata.other = {
-      "structured-data": JSON.stringify(faqSchema),
-    };
+  const metadata = generateConnectorMetadata({
+    type: connector.key,
+    title: t("og_title", { label: connector.label }),
+    description: tKnowledge(`${connector.key}.description`),
+  });
+
+  if (connector.key === "unknown") {
+    metadata.robots = { index: false, follow: true };
   }
 
   return metadata;
@@ -136,18 +140,10 @@ export default async function ConnectorDetailPage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: faqContent.map((faq) => ({
-                "@type": "Question",
-                name: faq.question,
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: faq.answer,
-                },
-              })),
-            }).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(generateFAQSchema(faqContent)).replace(
+              /</g,
+              "\\u003c",
+            ),
           }}
         />
       )}
