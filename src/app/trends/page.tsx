@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -9,10 +10,37 @@ import { buildTrendPoints } from "@/features/trends/trend-series";
 import { getSnapshotsInRange, getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { toUtcMidnight } from "@/lib/snapshots/snapshot-date";
 import { toDailySnapshotDto } from "@/lib/snapshots/snapshot-dto";
+import { OG_IMAGE_PATH } from "@/lib/config/site";
 
 import TrendsChartClient from "@/app/trends/trends-chart-client";
 
 export const revalidate = 300;
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("trends");
+  const ogTitle = t("og_title");
+  const ogDescription = t("og_description");
+
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates: { canonical: "/trends" },
+    openGraph: {
+      type: "website",
+      url: "/trends",
+      title: ogTitle,
+      description: ogDescription,
+      siteName: "evsource.pl",
+      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: ogTitle }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDescription,
+      images: [OG_IMAGE_PATH],
+    },
+  };
+};
 
 const RANGE_DAYS = { "30": 30, "90": 90 } as const;
 type RangeKey = keyof typeof RANGE_DAYS;

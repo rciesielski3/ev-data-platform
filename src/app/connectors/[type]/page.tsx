@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
@@ -7,11 +8,38 @@ import {
   getConnectorPageKnowledge,
 } from "@/features/charging/connector-pages";
 import BackLink from "@/components/ui/BackLink";
+import { connectorFAQs } from "@/lib/seo/faq-data";
+import { generateConnectorMetadata, generateFAQSchema } from "@/lib/seo/metadata";
 
 export const dynamic = "force-static";
+export const revalidate = 86400;
 
 export const generateStaticParams = () =>
   getConnectorPageEntries().map((connector) => ({ type: connector.key }));
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ type: string }>;
+}): Promise<Metadata> => {
+  const { type } = await params;
+  const connector = getConnectorPageKnowledge(type);
+
+  const t = await getTranslations("connectorDetail");
+  const tKnowledge = await getTranslations("connectorKnowledge");
+
+  const metadata = generateConnectorMetadata({
+    type: connector.key,
+    title: t("og_title", { label: connector.label }),
+    description: tKnowledge(`${connector.key}.description`),
+  });
+
+  if (connector.key === "unknown") {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+};
 
 const DetailRow = ({
   label,
@@ -34,6 +62,7 @@ export default async function ConnectorDetailPage({
   const { type } = await params;
   const connector = getConnectorPageKnowledge(type);
   const isUnknownConnector = connector.key === "unknown";
+  const faqContent = connectorFAQs[connector.key];
 
   const t = await getTranslations("connectorDetail");
   const tKnowledge = await getTranslations("connectorKnowledge");
@@ -106,6 +135,39 @@ export default async function ConnectorDetailPage({
           </dl>
         </section>
       </div>
+
+      {faqContent && (
+        <>
+          <section className="card mt-8 border-emerald-200 bg-emerald-50">
+            <h2 className="mb-6 text-xl font-semibold">{t("faq_title")}</h2>
+            <div className="space-y-6">
+              {faqContent.map((item) => (
+                <div
+                  key={item.question}
+                  className="border-b border-emerald-100 pb-4 last:border-b-0"
+                >
+                  <h3 className="mb-2 font-semibold text-emerald-900">
+                    {item.question}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-emerald-800">
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(generateFAQSchema(faqContent)).replace(
+                /</g,
+                "\\u003c",
+              ),
+            }}
+          />
+        </>
+      )}
     </main>
   );
 }

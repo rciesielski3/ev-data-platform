@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -28,14 +29,55 @@ import { prisma } from "@/lib/db/prisma";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { OG_IMAGE_PATH } from "@/lib/config/site";
 
 export const revalidate = 3600;
 
+const getCachedLatestSnapshot = cache(() => getLatestSnapshot());
+
 export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getLocale();
   const t = await getTranslations("home");
+  const snapshot = await getCachedLatestSnapshot().catch(() => null);
+
+  const hasSnapshotTotals =
+    snapshot !== null &&
+    snapshot.totalStationCount > 0 &&
+    snapshot.totalConnectorCount > 0;
+
+  const ogTitle = t("og_title");
+  const ogDescription = hasSnapshotTotals
+    ? t("og_description", {
+        stations: formatDisplayNumber(snapshot.totalStationCount, locale),
+        connectors: formatDisplayNumber(snapshot.totalConnectorCount, locale),
+      })
+    : t("description");
+
   return {
-    title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    description: t("description") || "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
+    title: t("title"),
+    description: t("description"),
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: "/",
+      title: ogTitle,
+      description: ogDescription,
+      siteName: "evsource.pl",
+      images: [
+        {
+          url: OG_IMAGE_PATH,
+          width: 1200,
+          height: 630,
+          alt: ogTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDescription,
+      images: [OG_IMAGE_PATH],
+    },
   };
 };
 
@@ -50,7 +92,7 @@ const getStatus = async () => {
     latestOpenEvRun,
   ] = await Promise.all([
     prisma.evModel.count(),
-    getLatestSnapshot(),
+    getCachedLatestSnapshot(),
     prisma.chargingOperator.count(),
     prisma.chargingStation.groupBy({
       by: ["province"],

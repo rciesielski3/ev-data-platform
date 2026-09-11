@@ -4,3 +4,5 @@ export const SITE_URL =
 export const SITE_EMAIL = "kontakt@evsource.pl";
 
 export const SITE_DOMAIN = new URL(SITE_URL).hostname;
+
+export const OG_IMAGE_PATH = "/og-image-default.png";
