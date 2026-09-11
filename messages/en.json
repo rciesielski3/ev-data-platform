@@ -552,7 +552,8 @@
     "currentTypeLabel": "AC/DC",
     "typicalPowerLabel": "Typical power range",
     "supportedRegionsLabel": "Supported regions",
-    "supportedBrandsLabel": "Supported vehicle brands"
+    "supportedBrandsLabel": "Supported vehicle brands",
+    "faq_title": "Frequently Asked Questions"
   },
   "connectorDetailError": {
     "title": "Connector details could not load",

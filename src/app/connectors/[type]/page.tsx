@@ -137,15 +137,36 @@ export default async function ConnectorDetailPage({
       </div>
 
       {faqContent && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateFAQSchema(faqContent)).replace(
-              /</g,
-              "\\u003c",
-            ),
-          }}
-        />
+        <>
+          <section className="card mt-8 border-emerald-200 bg-emerald-50">
+            <h2 className="mb-6 text-xl font-semibold">{t("faq_title")}</h2>
+            <div className="space-y-6">
+              {faqContent.map((item) => (
+                <div
+                  key={item.question}
+                  className="border-b border-emerald-100 pb-4 last:border-b-0"
+                >
+                  <h3 className="mb-2 font-semibold text-emerald-900">
+                    {item.question}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-emerald-800">
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(generateFAQSchema(faqContent)).replace(
+                /</g,
+                "\\u003c",
+              ),
+            }}
+          />
+        </>
       )}
     </main>
   );

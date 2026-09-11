@@ -552,7 +552,8 @@
     "currentTypeLabel": "AC/DC",
     "typicalPowerLabel": "Typowy zakres mocy",
     "supportedRegionsLabel": "Obsługiwane regiony",
-    "supportedBrandsLabel": "Obsługiwane marki pojazdów"
+    "supportedBrandsLabel": "Obsługiwane marki pojazdów",
+    "faq_title": "Często Zadawane Pytania"
   },
   "connectorDetailError": {
     "title": "Nie udało się wczytać szczegółów złącza",
