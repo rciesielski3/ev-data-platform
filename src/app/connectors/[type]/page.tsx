@@ -12,7 +12,7 @@ import { connectorFAQs } from "@/lib/seo/faq-data";
 import { generateConnectorMetadata, generateFAQSchema } from "@/lib/seo/metadata";
 
 export const dynamic = "force-static";
-export const revalidate = 86400; // 24 hours ISR
+export const revalidate = 86400;
 
 export const generateStaticParams = () =>
   getConnectorPageEntries().map((connector) => ({ type: connector.key }));
