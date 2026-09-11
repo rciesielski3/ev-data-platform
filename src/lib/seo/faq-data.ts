@@ -5,6 +5,8 @@ export type ConnectorFaqEntry = {
   answer: string;
 };
 
+// FAQ content is hardcoded Polish. Once /connectors/[type] supports per-locale rendering (breaking force-static),
+// move this to messages/{en,pl}.json for i18n parity with titles and descriptions.
 export const connectorFAQs: Partial<Record<ConnectorKey, ConnectorFaqEntry[]>> = {
   ccs2: [
     {
