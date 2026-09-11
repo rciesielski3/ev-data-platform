@@ -23,6 +23,8 @@ export type DailySnapshotTotals = {
   totalConnectorCount: number;
   totalHpcStationCount: number;
   knownPowerConnectorCount: number;
+  totalEvModelCount: number;
+  totalOperatorCount: number;
 };
 
 export type BuiltDailySnapshot = DailySnapshotTotals & {
@@ -53,7 +55,7 @@ export const toOperatorStats = (
     knownPowerConnectorCount: row.knownPowerConnectorCount,
   }));
 
-const sumTotals = (rows: ProvinceIntelligenceRow[]): DailySnapshotTotals =>
+const sumTotals = (rows: ProvinceIntelligenceRow[]): Omit<DailySnapshotTotals, 'totalEvModelCount' | 'totalOperatorCount'> =>
   rows.reduce(
     (totals, row) => ({
       totalStationCount: totals.totalStationCount + row.stationCount,
@@ -73,8 +75,12 @@ const sumTotals = (rows: ProvinceIntelligenceRow[]): DailySnapshotTotals =>
 export const buildDailySnapshot = (
   provinceRows: ProvinceIntelligenceRow[],
   operatorRows: OperatorIntelligenceRow[],
+  totalEvModelCount: number = 0,
+  totalOperatorCount: number = 0,
 ): BuiltDailySnapshot => ({
   ...sumTotals(provinceRows),
+  totalEvModelCount,
+  totalOperatorCount,
   provinceMetrics: toProvinceMetrics(provinceRows),
   operatorStats: toOperatorStats(operatorRows),
 });

@@ -93,9 +93,34 @@ const getStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =
         await Promise.all([
           prisma.chargingStation.findMany({
             where,
-            include: {
-              operator: true,
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              province: true,
+              latitude: true,
+              longitude: true,
+              address: true,
+              sourceUrl: true,
+              sourceUpdatedAt: true,
+              sourceName: true,
+              sourceRecordId: true,
+              externalCode: true,
+              importedAt: true,
+              updatedAt: true,
+              operator: {
+                select: {
+                  name: true,
+                  normalizedName: true,
+                },
+              },
               connectors: {
+                select: {
+                  id: true,
+                  connectorType: true,
+                  powerKw: true,
+                  cableAttached: true,
+                },
                 orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
               },
             },
@@ -104,11 +129,10 @@ const getStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =
             skip,
           }),
           prisma.chargingStation.count({ where }),
-          prisma.chargingConnector.findMany({
-            distinct: ["connectorType"],
-            select: { connectorType: true },
+          prisma.chargingConnector.groupBy({
+            by: ["connectorType"],
             orderBy: { connectorType: "asc" },
-          }),
+          }).then(results => results.map(r => ({ connectorType: r.connectorType }))),
           prisma.chargingOperator.findMany({
             select: { normalizedName: true, name: true },
             orderBy: { normalizedName: "asc" },

@@ -102,17 +102,19 @@ export const captureSnapshot = async (
   const snapshotDate = toUtcMidnight(forDate);
 
   try {
-    const [stations, latestImportRun, lastSuccessfulImportRunId, regionOperatorStats] =
+    const [stations, latestImportRun, lastSuccessfulImportRunId, regionOperatorStats, evModelCount, operatorCount] =
       await Promise.all([
         getStationsForSnapshot(),
         getLatestImportRun(),
         getLastSuccessfulImportRunId(),
         generateOperatorStats(),
+        prisma.evModel.count(),
+        prisma.chargingOperator.count(),
       ]);
 
     const provinceRows = buildProvinceIntelligenceRows(stations);
     const operatorRows = buildOperatorIntelligenceRows(stations);
-    const snapshot = buildDailySnapshot(provinceRows, operatorRows);
+    const snapshot = buildDailySnapshot(provinceRows, operatorRows, evModelCount, operatorCount);
 
     await prisma.dailySnapshot.upsert({
       where: { snapshotDate },
@@ -122,6 +124,8 @@ export const captureSnapshot = async (
         totalConnectorCount: snapshot.totalConnectorCount,
         totalHpcStationCount: snapshot.totalHpcStationCount,
         knownPowerConnectorCount: snapshot.knownPowerConnectorCount,
+        totalEvModelCount: snapshot.totalEvModelCount,
+        totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
         latestImportStatus: latestImportRun?.status ?? null,
@@ -133,6 +137,8 @@ export const captureSnapshot = async (
         totalConnectorCount: snapshot.totalConnectorCount,
         totalHpcStationCount: snapshot.totalHpcStationCount,
         knownPowerConnectorCount: snapshot.knownPowerConnectorCount,
+        totalEvModelCount: snapshot.totalEvModelCount,
+        totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
         latestImportStatus: latestImportRun?.status ?? null,
