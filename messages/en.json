@@ -44,6 +44,8 @@
   "home": {
     "title": "EV Charging Map Poland - Find Near You | evsource.pl",
     "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
+    "og_title": "EV Charging Map Poland - Find Near You | evsource.pl",
+    "og_description": "Find EV charging stations near you. {stations} stations and {connectors} connectors across Poland.",
     "setupMessage": "Database is not configured yet. Copy .env.example to .env and run prisma db push.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -538,6 +540,8 @@
     "viewDetailsLink": "View connector details"
   },
   "connectorDetail": {
+    "og_title": "{label} Charging Connector - Guide | evsource.pl",
+    "og_description": "Information about the {label} connector. Compatible cars, charging stations, and standard versions.",
     "backLink": "Back to connectors",
     "incompleteDataTitle": "Incomplete source data",
     "incompleteDataBody": "Some imported records do not include a connector type that can be classified confidently. This page keeps those records explainable without inventing compatibility, power, or regional support.",
@@ -581,6 +585,8 @@
   "insights": {
     "title": "EV Charging Statistics & Market Analysis – evsource.pl",
     "description": "Explore EV charging statistics and infrastructure analysis. Analyze station density, operator coverage, and market trends.",
+    "og_title": "EV Charging Insights - evsource.pl",
+    "og_description": "Statistical analysis of Poland's charging infrastructure: station density, operators, and market trends.",
     "browseStationsLink": "Browse stations",
     "setupRequiredMessage": "Charging insights are not available yet. Configure the database and run the charging station imports.",
     "emptyTitle": "No charging data yet",
@@ -770,6 +776,8 @@
   "trends": {
     "title": "Infrastructure Trends",
     "description": "Track how Poland's charging infrastructure has grown over time, based on daily snapshots captured after each import.",
+    "og_title": "EV Charging Trends - evsource.pl",
+    "og_description": "Growth in charging stations, connectors, and HPC bays across Poland. Live data.",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Trend data is not available yet. Configure the database and run the charging station imports.",
     "range30d": "Last 30 days",

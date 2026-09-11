@@ -44,6 +44,8 @@
   "home": {
     "title": "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
     "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
+    "og_title": "evsource.pl - Mapa Stacji Ładowania EV",
+    "og_description": "Znajdź stacje ładowania EV blisko siebie. {stations} stacji i {connectors} złączy w Polsce.",
     "setupMessage": "Baza danych nie jest jeszcze skonfigurowana. Skopiuj .env.example do .env i uruchom prisma db push.",
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
@@ -538,6 +540,8 @@
     "viewDetailsLink": "Zobacz szczegóły złącza"
   },
   "connectorDetail": {
+    "og_title": "{label} Złącze Ładowania - Poradnik | evsource.pl",
+    "og_description": "Informacje o złączu {label}. Kompatybilne samochody, stacje ładowania, wersje normy.",
     "backLink": "Wróć do złączy",
     "incompleteDataTitle": "Niepełne dane źródłowe",
     "incompleteDataBody": "Niektóre zaimportowane rekordy nie zawierają typu złącza, który można jednoznacznie zaklasyfikować. Ta strona pozwala wyjaśnić te rekordy bez wymyślania zgodności, mocy czy zasięgu regionalnego.",
@@ -581,6 +585,8 @@
   "insights": {
     "title": "Statystyki Ładowania EV & Analiza Rynku – evsource.pl",
     "description": "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji ładowania, pokrycie operatorów, rozkład rodzajów ładowarek i trendy rynku pojazdów elektrycznych.",
+    "og_title": "Analizy Ładowania EV - evsource.pl",
+    "og_description": "Analizy statystyczne infrastruktury ładowania w Polsce: gęstość stacji, operatorzy, trendy rynku.",
     "browseStationsLink": "Przeglądaj stacje",
     "setupRequiredMessage": "Statystyki ładowania nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
     "emptyTitle": "Brak jeszcze danych o ładowaniu",
@@ -770,6 +776,8 @@
   "trends": {
     "title": "Trendy infrastruktury",
     "description": "Śledź rozwój polskiej infrastruktury ładowania w czasie na podstawie codziennych zrzutów danych zapisywanych po każdym imporcie.",
+    "og_title": "Trendy Ładowania EV - evsource.pl",
+    "og_description": "Wzrost liczby stacji, złączy i stanowisk HPC w Polsce. Dane na żywo.",
     "viewInsightsLink": "Zobacz statystyki",
     "setupRequiredMessage": "Dane trendów nie są jeszcze dostępne. Skonfiguruj bazę danych i uruchom importy stacji ładowania.",
     "range30d": "Ostatnie 30 dni",

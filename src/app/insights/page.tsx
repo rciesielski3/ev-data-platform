@@ -15,33 +15,32 @@ import {
 } from "@/features/charging/insights";
 import { prisma } from "@/lib/db/prisma";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
-import { SITE_URL } from "@/lib/config/site";
+import { OG_IMAGE_PATH } from "@/lib/config/site";
 
 export const revalidate = 3600;
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("insights");
-  const title = t("title") || "EV Charging Statistics – evsource.pl";
-  const description =
-    t("description") ||
-    "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji, operatorów i trendy rynku.";
-  const imageUrl = `${SITE_URL}/og-image-default.png`;
+  const ogTitle = t("og_title");
+  const ogDescription = t("og_description");
 
   return {
-    title,
-    description,
+    title: t("title"),
+    description: t("description"),
+    alternates: { canonical: "/insights" },
     openGraph: {
       type: "website",
-      url: `${SITE_URL}/insights`,
-      title: "EV Charging Insights - evsource.pl",
-      description:
-        "Analizy statystyczne infrastruktury ładowania w Polsce: gęstość stacji, operatorzy, trendy.",
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      url: "/insights",
+      title: ogTitle,
+      description: ogDescription,
+      siteName: "evsource.pl",
+      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: ogTitle }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "EV Charging Insights - evsource.pl",
-      images: [imageUrl],
+      title: ogTitle,
+      description: ogDescription,
+      images: [OG_IMAGE_PATH],
     },
   };
 };
