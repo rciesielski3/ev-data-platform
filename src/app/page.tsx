@@ -42,16 +42,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const getStatus = async () => {
   const [
-    evCount,
     snapshot,
-    operatorCount,
     provinces,
     latestEipaRun,
     latestOpenEvRun,
   ] = await Promise.all([
-    prisma.evModel.count(),
     getLatestSnapshot(),
-    prisma.chargingOperator.count(),
     prisma.chargingStation.groupBy({
       by: ["province"],
 
@@ -90,9 +86,9 @@ const getStatus = async () => {
   ]);
 
   return {
-    evCount,
+    evCount: snapshot?.totalEvModelCount ?? 0,
     stationCount: snapshot?.totalStationCount ?? 0,
-    operatorCount,
+    operatorCount: snapshot?.totalOperatorCount ?? 0,
     provinceCount: provinces.length,
     ingestionRuns: {
       eipa: latestEipaRun,

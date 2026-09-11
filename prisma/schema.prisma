@@ -244,6 +244,8 @@ model DailySnapshot {
   totalConnectorCount        Int
   totalHpcStationCount       Int
   knownPowerConnectorCount   Int
+  totalEvModelCount          Int              @default(0)
+  totalOperatorCount         Int              @default(0)
   provinceMetrics            Json
   operatorStats              Json
   precomputedStats           Json?
