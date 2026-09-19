@@ -18,8 +18,11 @@ async function getProvinceStatsFromSnapshot(): Promise<
   Record<string, ProvincePrecomputedStats> | null
 > {
   try {
-    const snapshot = await prisma.dailySnapshot.findFirst({
-      orderBy: { snapshotDate: "desc" },
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
       select: { precomputedStats: true, snapshotDate: true },
     });
 
@@ -28,7 +31,8 @@ async function getProvinceStatsFromSnapshot(): Promise<
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const provinces = snapshot.provinceMetrics as Record<string, ProvincePrecomputedStats> | undefined;
+    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
+    const provinces = precomputedStats.provinces as Record<string, ProvincePrecomputedStats> | undefined;
     return provinces || null;
   } catch (error) {
     console.error("Failed to fetch province stats snapshot:", error);

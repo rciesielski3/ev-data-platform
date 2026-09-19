@@ -25,37 +25,19 @@ async function getOperatorStatsFromSnapshot(): Promise<
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const snapshot = await prisma.dailySnapshot.findFirst({
-      orderBy: { snapshotDate: "desc" },
-      select: { snapshotDate: true },
+    const snapshot = await prisma.dailySnapshot.findUnique({
+      where: { snapshotDate: today },
+      select: { precomputedStats: true, snapshotDate: true },
     });
 
-    if (!snapshot) {
+    if (!snapshot?.precomputedStats) {
       return null;
     }
 
-    // For operators page, we need to fetch from database directly
-    // since operatorStats contains region-based data, not a list of operators
-    const operators = await prisma.chargingOperator.findMany({
-      select: {
-        id: true,
-        name: true,
-        normalizedName: true,
-        stations: { select: { id: true, connectors: { select: { id: true, powerKw: true } } } },
-      },
-    });
-
-    if (!operators.length) return null;
-
-    return operators.reduce((acc, op) => {
-      const displayName = op.name || op.normalizedName;
-      acc[displayName] = {
-        stationCount: op.stations.length,
-        connectorCount: op.stations.reduce((sum, s) => sum + s.connectors.length, 0),
-        maxPowerKw: Math.max(...op.stations.flatMap(s => s.connectors.map(c => c.powerKw || 0))),
-      };
-      return acc;
-    }, {} as Record<string, OperatorPrecomputedStats>);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
+    const operators = precomputedStats.operators as Record<string, OperatorPrecomputedStats> | undefined;
+    return operators || null;
   } catch (error) {
     console.error("Failed to fetch operator stats snapshot:", error);
     return null;
