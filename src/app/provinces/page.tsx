@@ -28,6 +28,7 @@ async function getProvinceStatsFromSnapshot(): Promise<
     }
 
     // Transform array to object indexed by province
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const provinces = (snapshot.provinceMetrics as any[]).reduce((acc, metric) => {
       acc[metric.province] = metric;
       return acc;
