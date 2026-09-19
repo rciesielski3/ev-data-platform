@@ -18,22 +18,22 @@ async function getProvinceStatsFromSnapshot(): Promise<
   Record<string, ProvincePrecomputedStats> | null
 > {
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const snapshot = await prisma.dailySnapshot.findUnique({
-      where: { snapshotDate: today },
-      select: { precomputedStats: true, snapshotDate: true },
+    const snapshot = await prisma.dailySnapshot.findFirst({
+      orderBy: { snapshotDate: "desc" },
+      select: { provinceMetrics: true, snapshotDate: true },
     });
 
-    if (!snapshot?.precomputedStats) {
+    if (!snapshot?.provinceMetrics || !Array.isArray(snapshot.provinceMetrics)) {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
-    const provinces = precomputedStats.provinces as Record<string, ProvincePrecomputedStats> | undefined;
-    return provinces || null;
+    // Transform array to object indexed by province
+    const provinces = (snapshot.provinceMetrics as any[]).reduce((acc, metric) => {
+      acc[metric.province] = metric;
+      return acc;
+    }, {} as Record<string, ProvincePrecomputedStats>);
+    
+    return Object.keys(provinces).length > 0 ? provinces : null;
   } catch (error) {
     console.error("Failed to fetch province stats snapshot:", error);
     return null;

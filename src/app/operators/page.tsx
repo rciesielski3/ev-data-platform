@@ -25,19 +25,41 @@ async function getOperatorStatsFromSnapshot(): Promise<
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const snapshot = await prisma.dailySnapshot.findUnique({
-      where: { snapshotDate: today },
-      select: { precomputedStats: true, snapshotDate: true },
+    const snapshot = await prisma.dailySnapshot.findFirst({
+      orderBy: { snapshotDate: "desc" },
+      select: { snapshotDate: true },
     });
 
-    if (!snapshot?.precomputedStats) {
+    if (!snapshot) {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const precomputedStats = snapshot.precomputedStats as Record<string, any>;
-    const operators = precomputedStats.operators as Record<string, OperatorPrecomputedStats> | undefined;
-    return operators || null;
+    // For operators page, we need to fetch from database directly
+    // since operatorStats contains region-based data, not a list of operators
+    const operators = await prisma.chargingOperator.findMany({
+      select: {
+        id: true,
+        name: true,
+        normalizedName: true,
+        stations: { select: { id: true, province: true, connectors: { select: { id: true, powerKw: true } } } },
+      },
+    });
+
+    if (!operators.length) return null;
+
+    return operators.reduce((acc, op) => {
+      const displayName = op.name || op.normalizedName;
+      const connectors = op.stations.flatMap(s => s.connectors);
+      acc[displayName] = {
+        stationCount: op.stations.length,
+        connectorCount: connectors.length,
+        knownPowerConnectorCount: connectors.filter(c => c.powerKw).length,
+        maxPowerKw: connectors.length > 0 ? Math.max(...connectors.map(c => c.powerKw || 0)) : null,
+        averagePowerKw: connectors.length > 0 ? connectors.reduce((s, c) => s + (c.powerKw || 0), 0) / connectors.length : null,
+        provinceCount: new Set(op.stations.map(s => s.province)).size,
+      };
+      return acc;
+    }, {} as Record<string, OperatorPrecomputedStats>);
   } catch (error) {
     console.error("Failed to fetch operator stats snapshot:", error);
     return null;
