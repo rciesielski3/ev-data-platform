@@ -1076,6 +1076,42 @@
         "date": "2026-09-20",
         "author": "EVSource Team",
         "content": "# Planowanie Podróży EV\n\n## Planowanie Trasy\n\n1. Użyj Google Maps lub ABRP\n2. Dodaj stacje DC co 200-250 km\n3. Sprawdź dostępność online\n4. Zanotuj adresy i numery\n\n## Zanim Wyjedziesz\n\n- Naładuj do 100%\n- Sprawdź prognozę pogody\n- Powiadom kogoś o trasie\n- Pobierz mapy offline\n\n## Podczas Jazdy\n\n- Ładuj przy 80% (szybciej)\n- Ostatnią zatankowaniem przed opuszczeniem autostrady\n- Przygotuj jedzenie/napoje\n- Rozciągnij się w przystankach\n\n## Aplikacje\n\n- Google Maps\n- A Better Route Planner\n- PlugShare\n- ORLEN Charge, Energa\n\nMapa: /map"
+      },
+      "orlen-vs-energa": {
+        "title": "ORLEN Charge vs Energa: Porównanie Sieci Ładowania",
+        "excerpt": "Szczegółowe porównanie dwóch największych sieci ładowania w Polsce. Ceny, dostępność, jakość.",
+        "keywords": [
+          "ORLEN Charge",
+          "Energa ładowanie",
+          "porównanie sieci"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# ORLEN vs Energa\n\n## Ceny\n\nORLEN AC: 0.99 PLN/kWh\nEnerga AC: 0.85 PLN/kWh\n\nORLEN DC: 1.99 PLN/kWh\nEnerga DC: 1.79 PLN/kWh\n\n## Dostępność\n\nORLEN: Autostrady, miasta\nEnerga: Wszędzie, gęsta sieć\n\n## Aplikacja\n\nOba mają aplikacje\nORLEN: Lepsza integracja\nEnerga: Prostsze płacenie\n\n## Werdykt\n\nDla autostrad: ORLEN\nDla miast: Energa\n\nMapa: /map"
+      },
+      "tesla-supercharger-vs-others": {
+        "title": "Tesla Supercharger vs Inne Sieci: Czy Warto Kupić Teslę?",
+        "excerpt": "Porównanie Tesla Supercharger z sieciami publicznymi. Szybkość, dostępność, cena.",
+        "keywords": [
+          "Tesla Supercharger",
+          "porównanie ładowarek",
+          "Tesla vs inne"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Tesla vs Inne\n\n## Szybkość\n\nTesla: 150-250 kW (najszybsze)\nPubliczne: 50-150 kW (wolniejsze)\n\n## Dostępność\n\nTesla: 50+ stacji w Polsce\nPubliczne: 1000+ kombinacji sieci\n\n## Koszt\n\nTesla: 2.49 PLN/kWh\nORLEN: 1.99 PLN/kWh\nEnerga: 1.79 PLN/kWh\n\n## Dla Którego Modelu\n\nTesla: Właściciele Tesla\nInni: Wszyscy inni (lepsze ceny)\n\nMapa: /map"
+      },
+      "choosing-charging-network": {
+        "title": "Jak Wybrać Sieć Ładowania? Przewodnik Dla Nowych Właścicieli EV",
+        "excerpt": "Praktyczne wskazówki wyboru odpowiedniej sieci ładowania do Twoich potrzeb.",
+        "keywords": [
+          "wybór sieci ładowania",
+          "która sieć ładowania",
+          "najlepsza sieć"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Jak Wybrać Sieć\n\n## Twoje Potrzeby\n\n1. Głównie dom? Jednej sieci wystarczy\n2. Autostrady? ORLEN najlepszy\n3. Miasta? Energa wszędzie\n4. Wszędzie? Multi-sieć\n\n## Abonament vs Pay-as-you-go\n\nAbonament: Jeśli jeździsz 50k+/rok\nPay: Jeśli mniej\n\n## Rekomendacje\n\n### Pracownik biurowy\nDom + Energa (miasta)\n\n### Handlowiec\nHome + ORLEN (autostrady)\n\n### Wszędobyl\nHome + ORLEN + Energa\n\nMapa: /map"
       }
     }
   }

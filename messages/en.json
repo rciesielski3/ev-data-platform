@@ -1076,6 +1076,42 @@
         "date": "2026-09-20",
         "author": "EVSource Team",
         "content": "# Planning EV Road Trips\n\n## Route Planning\n\n1. Use Google Maps or ABRP\n2. Add DC stations every 200-250 km\n3. Check availability online\n4. Note addresses and numbers\n\n## Before You Leave\n\n- Charge to 100%\n- Check weather\n- Tell someone your route\n- Download offline maps\n\n## While Driving\n\n- Charge at 80% (faster)\n- Last stop at 80% before leaving highway\n- Bring food/drinks\n- Stretch at stops\n\n## Apps\n\n- Google Maps\n- A Better Route Planner\n- PlugShare\n- ORLEN Charge, Energa\n\nMap: /map"
+      },
+      "orlen-vs-energa": {
+        "title": "ORLEN Charge vs Energa: Charging Network Comparison",
+        "excerpt": "Detailed comparison of Poland's two largest charging networks. Prices, availability, quality.",
+        "keywords": [
+          "ORLEN Charge",
+          "Energa charging",
+          "network comparison"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# ORLEN vs Energa\n\n## Prices\n\nORLEN AC: 0.99 PLN/kWh\nEnerga AC: 0.85 PLN/kWh\n\nORLEN DC: 1.99 PLN/kWh\nEnerga DC: 1.79 PLN/kWh\n\n## Availability\n\nORLEN: Highways, cities\nEnerga: Everywhere, dense\n\n## App\n\nBoth have apps\nORLEN: Better integration\nEnerga: Simpler payment\n\n## Verdict\n\nFor highways: ORLEN\nFor cities: Energa\n\nMap: /map"
+      },
+      "tesla-supercharger-vs-others": {
+        "title": "Tesla Supercharger vs Public Networks: Worth It?",
+        "excerpt": "Compare Tesla Supercharger to public networks. Speed, availability, price.",
+        "keywords": [
+          "Tesla Supercharger",
+          "charger comparison",
+          "Tesla vs others"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Tesla vs Others\n\n## Speed\n\nTesla: 150-250 kW (fastest)\nPublic: 50-150 kW (slower)\n\n## Availability\n\nTesla: 50+ stations in Poland\nPublic: 1000+ network combinations\n\n## Cost\n\nTesla: 2.49 PLN/kWh\nORLEN: 1.99 PLN/kWh\nEnerga: 1.79 PLN/kWh\n\n## For Which Model\n\nTesla: Tesla owners\nOthers: Everyone else (better prices)\n\nMap: /map"
+      },
+      "choosing-charging-network": {
+        "title": "How to Choose a Charging Network? Guide for New EV Owners",
+        "excerpt": "Practical tips for choosing the right charging network for your needs.",
+        "keywords": [
+          "choose charging network",
+          "which network",
+          "best network"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# How to Choose\n\n## Your Needs\n\n1. Mostly home? One network\n2. Highways? ORLEN best\n3. Cities? Energa everywhere\n4. Everywhere? Multi-network\n\n## Subscription vs Pay-as-you-go\n\nSubscription: If 50k+/year\nPay: If less\n\n## Recommendations\n\n### Office worker\nHome + Energa (cities)\n\n### Salesman\nHome + ORLEN (highways)\n\n### Nomad\nHome + ORLEN + Energa\n\nMap: /map"
       }
     }
   }
