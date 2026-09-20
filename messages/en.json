@@ -1040,6 +1040,42 @@
         "date": "2026-09-20",
         "author": "EVSource Team",
         "content": "# Home vs Public\n\n## Convenience\n\nHome: Always available, no waiting\nPublic: Access when away from home\n\n## Costs\n\nHome at night: Cheapest\nPublic: 2-3x more expensive\n\n## When to Choose\n\nHome: For daily use\nPublic: For trips, top-ups\n\nStations: /map"
+      },
+      "ev-charging-speed": {
+        "title": "How Long Does It Take to Charge an EV?",
+        "excerpt": "Complete guide to charging times for different chargers, models, and weather conditions.",
+        "keywords": [
+          "charging time EV",
+          "how long to charge",
+          "charging speed"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# How Long Does Charging Take?\n\n## Times for Popular Models\n\n### Home charging (3.7 kW)\nNissan Leaf: 4-6h\nVolkswagen ID.4: 6-8h\nTesla Model 3: 7-9h\n\n### Public AC (11-22 kW)\n1-3 hours depending on power and battery size\n\n### Fast DC (50+ kW)\n20-45 minutes to 80%\n\n## Factors\n\n- Battery capacity\n- Charger power\n- Temperature (cold = slower)\n- Battery condition\n\nCheck nearby: /map"
+      },
+      "ev-winter-charging": {
+        "title": "Charging Your EV in Winter: Practical Tips",
+        "excerpt": "How to efficiently charge in cold weather. Tips for energy savings and battery protection.",
+        "keywords": [
+          "winter charging",
+          "EV winter",
+          "cold weather charging"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Charging EV in Winter\n\n## Challenges\n\nCold reduces range by 20-40%\nBattery charges slower\nClimate control uses energy\n\n## Tips\n\n### Before Trip\n- Preheat while charging\n- Charge to 100%\n- Plan with buffer\n\n### While Driving\n- Use regenerative braking\n- Drive smoothly\n- Avoid peak loads\n\n### Charging\n- Charge in warm garage if possible\n- Charge to 80% normally\n- Full 100% only for long trips\n\nMap: /map"
+      },
+      "ev-road-trip": {
+        "title": "Planning Electric Car Road Trips: Long-Distance Guide",
+        "excerpt": "Guide to planning efficient and comfortable long-distance EV trips.",
+        "keywords": [
+          "electric car road trip",
+          "long distance EV",
+          "EV travel"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Planning EV Road Trips\n\n## Route Planning\n\n1. Use Google Maps or ABRP\n2. Add DC stations every 200-250 km\n3. Check availability online\n4. Note addresses and numbers\n\n## Before You Leave\n\n- Charge to 100%\n- Check weather\n- Tell someone your route\n- Download offline maps\n\n## While Driving\n\n- Charge at 80% (faster)\n- Last stop at 80% before leaving highway\n- Bring food/drinks\n- Stretch at stops\n\n## Apps\n\n- Google Maps\n- A Better Route Planner\n- PlugShare\n- ORLEN Charge, Energa\n\nMap: /map"
       }
     }
   }

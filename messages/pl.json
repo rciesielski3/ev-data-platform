@@ -1040,6 +1040,42 @@
         "date": "2026-09-20",
         "author": "EVSource Team",
         "content": "# Domowe vs Publiczne\n\n## Wygoda\n\nDomowe: Zawsze dostępne, bez czekania\nPubliczne: Dostęp gdy jesteś poza domem\n\n## Koszty\n\nDomowe nocą: Najtańsze\nPubliczne: 2-3x droższe\n\n## Kiedy Wybrać\n\nDomowe: Dla codziennego użytku\nPubliczne: Dla podróży, uzupełnień\n\nStacje: /map"
+      },
+      "ev-charging-speed": {
+        "title": "Ile Czasu Zajmuje Ładowanie Samochodu Elektrycznego?",
+        "excerpt": "Kompletny poradnik czasów ładowania dla różnych ładowarek, modeli i warunków pogodowych.",
+        "keywords": [
+          "czas ładowania EV",
+          "ile czasu ładowanie",
+          "szybkość ładowania"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ile Czasu Zajmuje Ładowanie?\n\n## Czasy dla Popularnych Modeli\n\n### Ładowanie domowe (3.7 kW)\nNissan Leaf: 4-6h\nVolkswagen ID.4: 6-8h\nTesla Model 3: 7-9h\n\n### Publiczne AC (11-22 kW)\n1-3 godziny w zależności od mocy i pojemności baterii\n\n### Szybkie DC (50+ kW)\n20-45 minut do 80%\n\n## Czynniki Wpływające\n\n- Pojemność baterii\n- Moc ładowarki\n- Temperatura (zimno = wolniej)\n- Stan baterii\n\nSprawdź na mapie: /map"
+      },
+      "ev-winter-charging": {
+        "title": "Ładowanie Samochodu Elektrycznego Zimą: Praktyczne Wskazówki",
+        "excerpt": "Jak efektywnie ładować EV w zimnie. Wskazówki na oszczędność energii i ochronę baterii.",
+        "keywords": [
+          "ładowanie zimą",
+          "EV w zimie",
+          "zimowe ładowanie"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ładowanie EV Zimą\n\n## Wyzwania\n\nZimno zmniejsza zasięg o 20-40%\nBateria ładuje się wolniej\nKlimatyzacja zużywa energię\n\n## Wskazówki\n\n### Przed Wyjazdem\n- Rozgrzej samochód podczas ładowania\n- Pełne ładowanie do 100%\n- Zaplanuj trasę z marginесem\n\n### Podczas Jazdy\n- Włącz regeneracyjne hamowanie\n- Jazda spokojniej\n- Unikaj szczytowych obciążeń\n\n### Ładowanie\n- Ładuj w ciepłym garażu jeśli możliwe\n- Ładuj do 80% normalnie\n- Całe 100% tylko przed długą podróżą\n\nMapa: /map"
+      },
+      "ev-road-trip": {
+        "title": "Planowanie Podróży Samochodem Elektrycznym: Poradnik Długodystansowy",
+        "excerpt": "Przewodnik planowania efektywnych i wygodnych podróży EV na długie dystanse.",
+        "keywords": [
+          "podróż samochodem elektrycznym",
+          "długa podróż EV",
+          "road trip"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Planowanie Podróży EV\n\n## Planowanie Trasy\n\n1. Użyj Google Maps lub ABRP\n2. Dodaj stacje DC co 200-250 km\n3. Sprawdź dostępność online\n4. Zanotuj adresy i numery\n\n## Zanim Wyjedziesz\n\n- Naładuj do 100%\n- Sprawdź prognozę pogody\n- Powiadom kogoś o trasie\n- Pobierz mapy offline\n\n## Podczas Jazdy\n\n- Ładuj przy 80% (szybciej)\n- Ostatnią zatankowaniem przed opuszczeniem autostrady\n- Przygotuj jedzenie/napoje\n- Rozciągnij się w przystankach\n\n## Aplikacje\n\n- Google Maps\n- A Better Route Planner\n- PlugShare\n- ORLEN Charge, Energa\n\nMapa: /map"
       }
     }
   }
