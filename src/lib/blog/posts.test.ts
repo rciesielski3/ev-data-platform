@@ -7,8 +7,8 @@ import {
 } from "./posts";
 
 describe("blog/posts", () => {
-  it("should have 3 blog posts", () => {
-    expect(blogPosts).toHaveLength(3);
+  it("should have 13 blog posts", () => {
+    expect(blogPosts).toHaveLength(13);
   });
 
   it("should have all required blog post fields", () => {
@@ -39,17 +39,25 @@ describe("blog/posts", () => {
 
   it("should return all blog slugs", () => {
     const slugs = getAllBlogSlugs();
-    expect(slugs).toHaveLength(3);
+    expect(slugs).toHaveLength(13);
+    // Original posts
     expect(slugs).toContain("charging-network-comparison");
     expect(slugs).toContain("ev-adoption-by-region");
     expect(slugs).toContain("fleet-operator-guide");
+    // Phase 2D: How-to guides
+    expect(slugs).toContain("how-to-charge-ev");
+    expect(slugs).toContain("ev-charging-costs");
+    expect(slugs).toContain("home-ev-charging");
+    // Phase 2D: Comparisons
+    expect(slugs).toContain("orlen-vs-energa");
+    expect(slugs).toContain("tesla-supercharger-vs-others");
+    expect(slugs).toContain("choosing-charging-network");
   });
 
   it("should sort blog posts by date descending", () => {
     const sorted = getBlogPostsSorted();
-    expect(sorted[0].date).toBe("2026-07-30");
-    expect(sorted[1].date).toBe("2026-07-29");
-    expect(sorted[2].date).toBe("2026-07-28");
+    expect(sorted[0].date).toBe("2026-09-20"); // Latest Phase 2D posts
+    expect(sorted[sorted.length - 1].date).toBe("2026-07-28"); // Oldest (fleet-operator-guide)
   });
 
   it("should have valid internal links in content", () => {
@@ -62,9 +70,12 @@ describe("blog/posts", () => {
   });
 
   it("should have frontmatter keywords in all posts", () => {
-    const keywords = ["charging network comparison", "EV adoption Poland", "fleet operator charging"];
-    blogPosts.forEach((post, index) => {
-      expect(post.keywords).toContain(keywords[index]);
+    blogPosts.forEach((post) => {
+      expect(Array.isArray(post.keywords)).toBe(true);
+      expect(post.keywords.length).toBeGreaterThan(0);
     });
+    // Spot-check a few posts have expected keywords
+    const first = blogPosts.find(p => p.slug === "charging-network-comparison");
+    expect(first?.keywords).toContain("charging network comparison");
   });
 });

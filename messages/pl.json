@@ -992,6 +992,126 @@
         "date": "2026-07-28",
         "author": "EVSource Team",
         "content": "\n# Przewodnik operatora floty: Elektryfikacja swojej komercyjnej floty pojazdów w Polsce\n\nElektryfikacja flot to jedno z najistotniejszych możliwości zmniejszenia kosztów transportu i wpływu na środowisko. Niniejszy przewodnik dostarcza operatorom flot praktycznych informacji do planowania, wdrażania i zarządzania flotami pojazdów elektrycznych w Polsce.\n\n## Dlaczego elektryfikacja flot jest ważna\n\nOperacje flotowe stanowią 30-40% emisji pojazdów handlowych Polski. Przejście na pojazdy elektryczne oferuje operatorom flot atrakcyjne korzyści finansowe i operacyjne.\n\n### Korzyści ekonomiczne\n- **Zmniejszenie kosztów paliwa**: Koszty elektryczności są 60-70% niższe za kilometr niż diesel\n- **Oszczędności na utrzymaniu**: EV mają 50% niższe koszty konserwacji (brak wymiany oleju, mniej ruchomych części)\n- **Ulgi podatkowe**: Preferencyjne traktowanie podatkowe pojazdów elektrycznych\n- **Efektywność energetyczna**: Bezpośrednia konwersja energii jest 3-4x bardziej wydajna niż silniki spalinowe\n\n### Korzyści operacyjne\n- **Zmniejszony czas przestoju**: Uproszczone harmonogramy konserwacji i mniej napraw\n- **Zmniejszenie hałasu**: Umożliwia dostawy wczesnym rankiem i późnym wieczorem w miastach\n- **Przewidywalne koszty**: Stabilna wycena elektryczności vs zmienne rynki paliw\n- **Wizerunek korporacyjny**: Floty elektryczne wzmacniają reputację marki i wygrywają umowy\n\n### Wpływ na środowisko\n- **Zerowe emisje bezpośrednie**: Brak emisji z rury wydechowej poprawia jakość powietrza w miastach\n- **Zmniejszony ślad węglowy**: 50-70% niższe emisje w cyklu życia vs pojazdy spalinowe\n- **Zgodność regulacyjna**: Pozycjonowanie dla coraz bardziej surowych przepisów emisyjnych\n\n## Strategia elektryfikacji floty\n\n### 1. Oceń potrzeby floty\n\nZacznij od analizy bieżących operacji:\n\n**Analiza tras**:\n- Codzienne odległości jazdy dla każdej klasy pojazdu\n- Pokrycie geograficzne (miasto, region, długie dystanse)\n- Wzorce użycia szczytowego i sezonowości\n- Lokalizacje magazynów i możliwości ładowania\n\n**Wymagania pojazdów**:\n- Potrzebne pojemności ładunkowe\n- Wymagania prędkości i wydajności\n- Warunki środowiskowe (pogoda, teren)\n- Konkretne wymagania branżowe (chłodzenie, sprzęt specjalny)\n\n**Analiza kosztów**:\n- Obecne zużycie paliwa i koszty\n- Wydatki na utrzymanie\n- Nabycie pojazdu i amortyzacja\n- Ubezpieczenie i koszty operacyjne\n\n### 2. Dopasowanie pojazdów do tras\n\nRóżne typy EV nadają się do różnych operacji:\n\n**Urbane floty dostawcze**:\n- Lekkie dostawcze (5-10 kWh dziennie) idealne do ostatniej mili\n- Krótkie zasięgi (150-200 km) odpowiednie dla codziennych tras miejskich\n- Pojazdy zdolne do szybkiego ładowania do tankowania w środku dnia\n- Ładowanie w magazynie w nocy dla pełnego naładowania baterii\n\n**Dystrybutorzy regionalni**:\n- Pojazdy o zasięgu średnim (300-400 km) do obwodów regionalnych\n- Zdolność ładowania podwójnego (szybkie ładowanie i ładowanie w magazynie)\n- Pojazdy o większej pojemności ładunkowej\n- Planowanie tras wokół infrastruktury ładowania\n\n**Operacje długodystansowe**:\n- Pojazdy o dużej pojemności (400+ km zasięgu) z szybkim ładowaniem DC\n- Kompatybilne z sieciami ładowania autostradowego\n- Dłuższe postoje ładowania zintegrowane z okresami odpoczynku\n- Zaawansowana telemetria do optymalizacji tras\n\n**Usługi specjalistyczne**:\n- Elektryczne autobusy do usług publicznych i transportu wahadłowego\n- Chłodzone elektryczne dostawcze do logistyki żywności\n- Elektryczne ciężarówki do transportu towarowego (technologia wschodzące)\n\n### 3. Planowanie infrastruktury ładowania\n\nPomyślna elektryfikacja wymaga strategicznego planowania infrastruktury:\n\n**Ładowanie w magazynie**:\n- Fundament elektryfikacji floty\n- Większość ładowania odbywało się w nocy z tanim prądem\n- Opcje: Standard 3,7 kW, przyspieszony 11-22 kW, lub szybkie ładowanie DC\n- Typowy ROI: 5-7 lat dla flot średnich\n\n**Dostęp do sieci publicznej**:\n- Niezbędny dla operacji regionalnych i długodystansowych\n- Umowy dostępu do wielosieci zmniejszają tarcie operacyjne\n- Backup ładowania gdy ładowanie w magazynie niedostępne\n- Umożliwia ładowanie na miejscu klienta\n\n**Ładowanie w miejscu pracy**:\n- Strategiczne lokalizacje gdzie pojazdy się zatrzymują (biura, punkty dostawy)\n- Rozszerza efektywny zasięg poprzez tankowanie w środku dnia\n- Może być oferowane jako wymierny dodatek\n- Poprawia relacje z klientami\n\n**Partnerstwa infrastrukturalne ładowania**:\n- Relacje operatorów sieci są krytyczne dla operacji flot\n- Negocjuj rabaty cenowe oparte na wolumenie (30-50% rabatów powszechne)\n- Upewnij się integrację API z systemami zarządzania flotą\n- Ustanów umowy dostępu priorytetowego\n\n## Poznaj dostępne opcje ładowania\n\nSieci ładowania Polski oferują różne możliwości dla operacji flot. Nasz [przewodnik porównania sieci ładowania](/blog/charging-network-comparison) zawiera szczegółową analizę głównych operatorów i ich funkcji przyjaznych flotą.\n\nUżyj naszego [katalogu stacji](/stations) do:\n- Identyfikacji punktów ładowania wzdłuż bieżących tras\n- Oceny opcji ładowania w magazynie i w miejscu pracy\n- Oceny pokrycia geograficznego\n- Planowania inwestycji infrastrukturalnych\n\n## Harmonogram wdrażania\n\n### Faza 1: Planowanie (miesiące 1-3)\n- Ocena floty i analiza tras\n- Wybór pojazdu i technologii\n- Planowanie infrastruktury ładowania\n- Modelowanie finansowe i analiza ROI\n\n### Faza 2: Program pilotażowy (miesiące 4-6)\n- Wdrażanie 2-5 pojazdów w trasach docelowych\n- Monitorowanie wydajności i wskaźników operacyjnych\n- Zbieranie opinii kierowców\n- Optymalizacja tras i procedur ładowania\n\n### Faza 3: Ekspansja (miesiące 7-12)\n- Skalowanie pomyślnych tras pilotażowych\n- Rozszerzenie infrastruktury ładowania w razie potrzeby\n- Integracja telemetrii i systemów zarządzania flotą\n- Szkolenie zespołów operacyjnych\n\n### Faza 4: Pełne wdrażanie (rok 2+)\n- Ukończenie przejścia floty dla odpowiednich klas pojazdów\n- Optymalizacja poprzez ciągłe monitorowanie\n- Ulepszanie infrastruktury ładowania na podstawie doświadczenia\n- Przechwycenie pełnych korzyści ekonomicznych\n\n## Analiza całkowitego kosztu posiadania\n\nPojazdy elektryczne mają wyższe początkowe koszty nabycia, ale drastycznie niższe koszty operacyjne:\n\n**Typowe porównanie TCO na 5 lat** (Średnia dostawcza):\n- Pojazd diesla: 180 000-220 000 PLN\n- Pojazd elektryczny: 200 000-240 000 PLN (przed zachętami)\n- Po zachętach podatkowych: 160 000-180 000 PLN\n- Punkt zwrotu: zwykle 18-24 miesiące\n\n**Kluczowe czynniki TCO**:\n1. Koszty paliwa/elektryczności (największy obszar oszczędności)\n2. Koszty utrzymania (znaczące oszczędności dla EV)\n3. Nabycie pojazdu i amortyzacja\n4. Inwestycja w infrastrukturę ładowania\n5. Programy podatkowe i zachęty\n\n## Szkolenie kierowców i przyjęcie\n\nPomyślna elektryfikacja floty wymaga wsparcia kierowców:\n\n**Tematy szkolenia kierowców**:\n- Zasięg EV i rzeczywista dynamika jazdy\n- Optymalne procedury ładowania\n- Korzystanie z systemu telemetrii\n- Raportowanie problemów i rozwiązywanie problemów\n- Techniki regeneracyjnego hamowania\n\n**Rozwiązywanie obaw**:\n- \"Niepokój o zasięg\" łagodzony poprzez planowanie tras\n- Obawy o wydajność przezwyciężone poprzez jazdy testowe\n- Obawy o ładowanie rozwiązane jasne procedury\n- Obawy o niezawodność rozwiązane poprzez gwarancje producenta\n\n**Programy motywacyjne**:\n- Premie za wydajność za efektywną jazdę\n- Uznanie za wczesny sukces przyjęcia\n- Awans kariery dla przywódców elektryfikacji floty\n\n## Monitorowanie i optymalizacja\n\nNowoczesne systemy zarządzania flotą zapewniają bezprecedensową widoczność:\n\n**Kluczowe wskaźniki do śledzenia**:\n- Efektywność energetyczna (kWh za kilometr)\n- Wskaźniki wykorzystania ładowania\n- Dostępność pojazdu i czas bezpłatnego działania\n- Koszt za kilometr\n- Wydajność trasy i możliwości optymalizacji\n- Opinia kierowcy i zadowolenie\n\n**Integracja telemetrii**:\n- Lokalizacja pojazdu w czasie rzeczywistym i status\n- Wzorce zużycia energii\n- Alerty konserwacji predykcyjnej\n- Rekomendacje optymalizacji ładowania\n\n## Krajobraz regulacyjny i polityczny\n\nOperatorzy flot w Polsce korzystają z polityk wspierających:\n- **Zachęty zakupowe**: Zwolnienia z podatku i dotacje dla komercyjnych EV\n- **Wsparcie infrastruktury**: Finansowanie rządowe dla publicznych sieci ładowania\n- **Strefy niskiej emisji**: Preferencyjny dostęp dla pojazdów elektrycznych\n- **Korzyści samochodów firmowych**: Preferencyjne traktowanie podatkowe dla samochodów firmowych EV\n\nBądź na bieżąco ze zmianami politycznymi, które mogą wpłynąć na ROI elektryfikacji.\n\n## Częste wyzwania i rozwiązania\n\n### Ograniczenia zasięgu\n**Wyzwanie**: Ograniczony zasięg dla niektórych klas pojazdów\n**Rozwiązanie**: Dopasuj zasięg pojazdu do rzeczywistych wymagań tras; planuj wieloetapowe trasy; strategicznie wykorzystuj sieci ładowania\n\n### Czas ładowania\n**Wyzwanie**: Dłuższy czas tankowaia vs diesel\n**Rozwiązanie**: Zintegruj ładowanie w naturalne przerwy (nocne, posiłki); wykorzystaj szybkie ładowanie dla tras czułych na czas; optymalizuj harmonogramy\n\n### Inwestycja początkowa\n**Wyzwanie**: Wyższe koszty nabycia pojazdu\n**Rozwiązanie**: Oblicz pełny TCO w tym paliwo/elektryczność i utrzymanie; poznaj opcje leasingu; zabezpiecz zachęty rządowe\n\n### Luki infrastrukturalne\n**Wyzwanie**: Infrastruktura ładowania nie jest jeszcze kompleksowa\n**Rozwiązanie**: Inwestuj w ładowanie w magazynie dla podstawowych operacji; strategicznie korzystaj z sieci publicznych; partneruj z dostawcami ładowania\n\n## Storie sukcesu operatorów flot\n\nWiodący operatorzy flot w Polsce demonstrują rentowność elektryfikacji:\n- Firmy logistyczne elektryfikowały 30-50% miejskich flot dostawczych\n- Usługi komunalne coraz częściej wdrażają elektryczne autobusy i dostawcze\n- Usługi specjalistyczne pionierskie alternatywy elektryczne\n\nTi operatorzy potwierdzają rentowność ekonomiczną, lepszą niezawodność i wzmocniony wizerunek korporacyjny poprzez elektryfikację.\n\n## Rozpocznij\n\n### Krok 1: Oceń operacje\nUżyj naszej [analizy pokrycia](/coverage) i [katalogu stacji](/stations), aby ocenić dostępność ładowania w Twoich obszarach serwisowych.\n\n### Krok 2: Wybierz pojazdy\nBadaj opcje pojazdów elektrycznych dla Twoich głównych klas pojazdów. Weź pod uwagę:\n- Wymagania zasięgu w rzeczywistych warunkach\n- Potrzeby pojemności ładunkowej\n- Kompatybilność czasu ładowania\n- Całkowity koszt posiadania\n\n### Krok 3: Zaplanuj infrastrukturę ładowania\nOpracuj plan ładowania, który równoważy:\n- Ładowanie w magazynie dla operacji podstawowych\n- Dostęp do sieci publicznej dla operacji regionalnych\n- Ładowanie w miejscu pracy w kluczowych lokalizacjach\n\n### Krok 4: Stwórz model finansowy\nOblicz oczekiwany ROI w tym:\n- Oszczędności na paliwie/elektryczności\n- Zmniejszenie kosztów utrzymania\n- Amortyzacja pojazdu\n- Inwestycja w infrastrukturę\n- Zachęty rządowe\n\n### Krok 5: Zacznij od pilota\nWdrażaj 2-5 pojazdy w korzystnych trasach, aby udowodnić model przed pełną ekspansją.\n\n## Podsumowanie\n\nElektryfikacja floty stanowi jedną z najistotniejszych możliwości dla polskich przedsiębiorstw, aby zmniejszyć koszty, poprawić niezawodność i wzmocnić wydajność środowiskową jednocześnie. Dzięki kompleksowemu rozwojowi infrastruktury ładowania i polityce wspierającej operatorzy flot wszystkich rozmiarów mogą pomyślnie przejść na pojazdy elektryczne.\n\nEkonomika jest atrakcyjna: elektryfikowane floty osiągają pozytywny ROI w 2-3 latach, zmniejszając jednocześnie złożoność operacyjną i wpływ na środowisko. Przyszłościowi operatorzy flot pozycjonujący się dzisiaj na jutrzejszy transport elektryczny będą przechwycić przewagę pierwszego gracza w efektywności kosztów i różnicowaniu rynkowym.\n\nAby uzyskać szczegółowe informacje o infrastrukturze ładowania, pokryciu regionalnym i profilach operatorów, zapoznaj się z naszą [kompleksową bazą danych](/stations) i [profilami operatorów](/operators).\n"
+      },
+      "how-to-charge-ev": {
+        "title": "Jak Ładować Samochód Elektryczny: Pełny Przewodnik Dla Właścicieli EV",
+        "excerpt": "Naucz się efektywnie ładować samochód elektryczny. Przewodnik obejmuje metody ładowania, wskazówki oszczędności i odpowiedzi na pytania właścicieli.",
+        "keywords": [
+          "ładowanie samochodu elektrycznego",
+          "jak ładować EV",
+          "stacje ładowania"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Jak Ładować Samochód Elektryczny\n\n## Metody Ładowania\n\n### Ładowanie Domowe (3.7-11 kW)\nNajwygodniejsza opcja. Wallbox bezpieczny i szybki.\n\n### Publiczne (11-22 kW)\nDostępne wszędzie. Idealne do uzupełnienia energii.\n\n### Szybkie DC\nDla długich podróży między miastami.\n\n## Praktyka\n\n- Ładuj nocą w domu (taniej)\n- Do 80% dziennie (lepsze dla baterii)\n- Tankownice DC co 200-250 km\n\nMapa: /map"
+      },
+      "ev-charging-costs": {
+        "title": "Ile Kosztuje Ładowanie EV? Pełna Analiza",
+        "excerpt": "Porównanie kosztów ładowania domowego, publicznych stacji i samochodów spalinowych.",
+        "keywords": [
+          "koszt ładowania EV",
+          "cena elektryczności",
+          "taryfy nocne"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ile Kosztuje Ładowanie?\n\n## Domowe\n\nStandardowa: 7.50-12 PLN/100km\nNocna: 3.75-7 PLN/100km (50% taniej!)\n\n## Publiczne\n\nAC: 8-15 PLN/sesję\nDC: 20-50 PLN/sesję\n\n## vs Spalinowe\n\nDiesel: 42 PLN/100km\nBenzyna: 52 PLN/100km\nEV nocą: 4.80 PLN/100km\n\nOszczędność: 33-47 PLN/100km!\n\nStacje: /map"
+      },
+      "home-ev-charging": {
+        "title": "Ładowanie w Domu: Pełny Przewodnik Instalacji",
+        "excerpt": "Jak zainstalować wallbox i oszczędzać przez nocne tankowienie.",
+        "keywords": [
+          "ładowanie w domu",
+          "wallbox",
+          "instalacja"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ładowanie w Domu\n\n## Typy\n\n### Schuko (2.3 kW)\n8-12 godzin.\n\n### AC 3.7 kW\nStandard, 6-8 h, koszt: 3-7.5k PLN.\n\n### AC 11 kW\nSzybkie, 2-3 h.\n\n## Instalacja\n\n1. Zasilanie\n2. Wallbox\n3. Elektryk\n4. Dotacja\n5. Taryfa nocna\n\n## Oszczędy\n\nROI: 2-3 lata\nOszczęda: 1-2k rocznie\n\nMapa: /map"
+      },
+      "ev-home-vs-public": {
+        "title": "Ładowanie w Domu vs Publiczne: Które Wybrać?",
+        "excerpt": "Porównanie wygody, kosztów i praktyczności domowego ładowania versus sieci publicznych.",
+        "keywords": [
+          "ładowanie domowe",
+          "publiczne stacje",
+          "porównanie ładowania"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Domowe vs Publiczne\n\n## Wygoda\n\nDomowe: Zawsze dostępne, bez czekania\nPubliczne: Dostęp gdy jesteś poza domem\n\n## Koszty\n\nDomowe nocą: Najtańsze\nPubliczne: 2-3x droższe\n\n## Kiedy Wybrać\n\nDomowe: Dla codziennego użytku\nPubliczne: Dla podróży, uzupełnień\n\nStacje: /map"
+      },
+      "ev-charging-speed": {
+        "title": "Ile Czasu Zajmuje Ładowanie Samochodu Elektrycznego?",
+        "excerpt": "Kompletny poradnik czasów ładowania dla różnych ładowarek, modeli i warunków pogodowych.",
+        "keywords": [
+          "czas ładowania EV",
+          "ile czasu ładowanie",
+          "szybkość ładowania"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ile Czasu Zajmuje Ładowanie?\n\n## Czasy dla Popularnych Modeli\n\n### Ładowanie domowe (3.7 kW)\nNissan Leaf: 4-6h\nVolkswagen ID.4: 6-8h\nTesla Model 3: 7-9h\n\n### Publiczne AC (11-22 kW)\n1-3 godziny w zależności od mocy i pojemności baterii\n\n### Szybkie DC (50+ kW)\n20-45 minut do 80%\n\n## Czynniki Wpływające\n\n- Pojemność baterii\n- Moc ładowarki\n- Temperatura (zimno = wolniej)\n- Stan baterii\n\nSprawdź na mapie: /map"
+      },
+      "ev-winter-charging": {
+        "title": "Ładowanie Samochodu Elektrycznego Zimą: Praktyczne Wskazówki",
+        "excerpt": "Jak efektywnie ładować EV w zimnie. Wskazówki na oszczędność energii i ochronę baterii.",
+        "keywords": [
+          "ładowanie zimą",
+          "EV w zimie",
+          "zimowe ładowanie"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Ładowanie EV Zimą\n\n## Wyzwania\n\nZimno zmniejsza zasięg o 20-40%\nBateria ładuje się wolniej\nKlimatyzacja zużywa energię\n\n## Wskazówki\n\n### Przed Wyjazdem\n- Rozgrzej samochód podczas ładowania\n- Pełne ładowanie do 100%\n- Zaplanuj trasę z marginесem\n\n### Podczas Jazdy\n- Włącz regeneracyjne hamowanie\n- Jazda spokojniej\n- Unikaj szczytowych obciążeń\n\n### Ładowanie\n- Ładuj w ciepłym garażu jeśli możliwe\n- Ładuj do 80% normalnie\n- Całe 100% tylko przed długą podróżą\n\nMapa: /map"
+      },
+      "ev-road-trip": {
+        "title": "Planowanie Podróży Samochodem Elektrycznym: Poradnik Długodystansowy",
+        "excerpt": "Przewodnik planowania efektywnych i wygodnych podróży EV na długie dystanse.",
+        "keywords": [
+          "podróż samochodem elektrycznym",
+          "długa podróż EV",
+          "road trip"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Planowanie Podróży EV\n\n## Planowanie Trasy\n\n1. Użyj Google Maps lub ABRP\n2. Dodaj stacje DC co 200-250 km\n3. Sprawdź dostępność online\n4. Zanotuj adresy i numery\n\n## Zanim Wyjedziesz\n\n- Naładuj do 100%\n- Sprawdź prognozę pogody\n- Powiadom kogoś o trasie\n- Pobierz mapy offline\n\n## Podczas Jazdy\n\n- Ładuj przy 80% (szybciej)\n- Ostatnią zatankowaniem przed opuszczeniem autostrady\n- Przygotuj jedzenie/napoje\n- Rozciągnij się w przystankach\n\n## Aplikacje\n\n- Google Maps\n- A Better Route Planner\n- PlugShare\n- ORLEN Charge, Energa\n\nMapa: /map"
+      },
+      "orlen-vs-energa": {
+        "title": "ORLEN Charge vs Energa: Porównanie Sieci Ładowania",
+        "excerpt": "Szczegółowe porównanie dwóch największych sieci ładowania w Polsce. Ceny, dostępność, jakość.",
+        "keywords": [
+          "ORLEN Charge",
+          "Energa ładowanie",
+          "porównanie sieci"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# ORLEN vs Energa\n\n## Ceny\n\nORLEN AC: 0.99 PLN/kWh\nEnerga AC: 0.85 PLN/kWh\n\nORLEN DC: 1.99 PLN/kWh\nEnerga DC: 1.79 PLN/kWh\n\n## Dostępność\n\nORLEN: Autostrady, miasta\nEnerga: Wszędzie, gęsta sieć\n\n## Aplikacja\n\nOba mają aplikacje\nORLEN: Lepsza integracja\nEnerga: Prostsze płacenie\n\n## Werdykt\n\nDla autostrad: ORLEN\nDla miast: Energa\n\nMapa: /map"
+      },
+      "tesla-supercharger-vs-others": {
+        "title": "Tesla Supercharger vs Inne Sieci: Czy Warto Kupić Teslę?",
+        "excerpt": "Porównanie Tesla Supercharger z sieciami publicznymi. Szybkość, dostępność, cena.",
+        "keywords": [
+          "Tesla Supercharger",
+          "porównanie ładowarek",
+          "Tesla vs inne"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Tesla vs Inne\n\n## Szybkość\n\nTesla: 150-250 kW (najszybsze)\nPubliczne: 50-150 kW (wolniejsze)\n\n## Dostępność\n\nTesla: 50+ stacji w Polsce\nPubliczne: 1000+ kombinacji sieci\n\n## Koszt\n\nTesla: 2.49 PLN/kWh\nORLEN: 1.99 PLN/kWh\nEnerga: 1.79 PLN/kWh\n\n## Dla Którego Modelu\n\nTesla: Właściciele Tesla\nInni: Wszyscy inni (lepsze ceny)\n\nMapa: /map"
+      },
+      "choosing-charging-network": {
+        "title": "Jak Wybrać Sieć Ładowania? Przewodnik Dla Nowych Właścicieli EV",
+        "excerpt": "Praktyczne wskazówki wyboru odpowiedniej sieci ładowania do Twoich potrzeb.",
+        "keywords": [
+          "wybór sieci ładowania",
+          "która sieć ładowania",
+          "najlepsza sieć"
+        ],
+        "date": "2026-09-20",
+        "author": "EVSource Team",
+        "content": "# Jak Wybrać Sieć\n\n## Twoje Potrzeby\n\n1. Głównie dom? Jednej sieci wystarczy\n2. Autostrady? ORLEN najlepszy\n3. Miasta? Energa wszędzie\n4. Wszędzie? Multi-sieć\n\n## Abonament vs Pay-as-you-go\n\nAbonament: Jeśli jeździsz 50k+/rok\nPay: Jeśli mniej\n\n## Rekomendacje\n\n### Pracownik biurowy\nDom + Energa (miasta)\n\n### Handlowiec\nHome + ORLEN (autostrady)\n\n### Wszędobyl\nHome + ORLEN + Energa\n\nMapa: /map"
       }
     }
   }
