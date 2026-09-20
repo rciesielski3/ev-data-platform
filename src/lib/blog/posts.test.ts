@@ -40,11 +40,18 @@ describe("blog/posts", () => {
   it("should return all blog slugs", () => {
     const slugs = getAllBlogSlugs();
     expect(slugs).toHaveLength(13);
+    // Original posts
     expect(slugs).toContain("charging-network-comparison");
     expect(slugs).toContain("ev-adoption-by-region");
     expect(slugs).toContain("fleet-operator-guide");
+    // Phase 2D: How-to guides
     expect(slugs).toContain("how-to-charge-ev");
     expect(slugs).toContain("ev-charging-costs");
+    expect(slugs).toContain("home-ev-charging");
+    // Phase 2D: Comparisons
+    expect(slugs).toContain("orlen-vs-energa");
+    expect(slugs).toContain("tesla-supercharger-vs-others");
+    expect(slugs).toContain("choosing-charging-network");
   });
 
   it("should sort blog posts by date descending", () => {
