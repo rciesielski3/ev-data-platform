@@ -272,3 +272,37 @@ model GaUser {
 
   @@index([userId])
 }
+
+model GscKeyword {
+  id                String        @id @default(cuid())
+  siteUrl           String
+  query             String
+  currentPosition   Float
+  currentClicks     Int           @default(0)
+  currentImpressions Int          @default(0)
+  currentCtr        Float         @default(0)
+  lastUpdated       DateTime      @updatedAt
+  createdAt         DateTime      @default(now())
+
+  snapshots         GscSnapshot[]
+
+  @@unique([siteUrl, query])
+  @@index([siteUrl, lastUpdated])
+}
+
+model GscSnapshot {
+  id                String        @id @default(cuid())
+  keywordId         String
+  keyword           GscKeyword    @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+
+  date              DateTime
+  position          Float
+  clicks            Int
+  impressions       Int
+  ctr               Float
+
+  @@unique([keywordId, date])
+  @@index([date])
+
+  createdAt         DateTime      @default(now())
+}
