@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken';
-import { GscQuery } from './types';
+import { GscQuery, GscAuthConfig, GscApiResponse } from './types';
 import { getGscClient } from './auth';
 
 const GSC_API_URL = 'https://www.googleapis.com/webmasters/v3/sites';
@@ -42,7 +42,7 @@ const getAccessToken = async (): Promise<string> => {
     return TOKEN_CACHE.token;
   }
 
-  const credentials = getGscClient();
+  const credentials: GscAuthConfig = getGscClient();
   const header = { alg: 'RS256', typ: 'JWT' };
   const payload = {
     iss: credentials.client_email,
@@ -108,6 +108,6 @@ export const fetchGscData = async (startDate: Date, endDate: Date): Promise<GscQ
     throw new GscClientError(`GSC API error: ${response.statusText}`, response.status);
   }
 
-  const data = (await response.json()) as { rows?: GscQuery[] };
+  const data = (await response.json()) as GscApiResponse;
   return data.rows || [];
 };
