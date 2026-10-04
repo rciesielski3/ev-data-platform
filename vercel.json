@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/compute-snapshot-stats",
       "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/sync-gsc",
+      "schedule": "0 19 * * *"
     }
   ]
 }
