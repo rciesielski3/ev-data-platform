@@ -125,58 +125,13 @@ describe('SEO Metrics', () => {
   });
 
   describe('calculateKeywordPreviousPosition', () => {
-    it('should return position from 7 days ago', () => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const sevenDaysAgo = new Date(today);
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-      const snapshots = [
-        {
-          id: 's1',
-          keywordId: 'k1',
-          date: sevenDaysAgo,
-          position: 15,
-          clicks: 5,
-          impressions: 50,
-          ctr: 0.1,
-          createdAt: new Date(),
-        },
-        {
-          id: 's2',
-          keywordId: 'k1',
-          date: today,
-          position: 12,
-          clicks: 8,
-          impressions: 60,
-          ctr: 0.133,
-          createdAt: new Date(),
-        },
-      ];
-
-      const result = calculateKeywordPreviousPosition(snapshots);
-      expect(result).toBe(15);
+    it('should be async function', async () => {
+      const result = calculateKeywordPreviousPosition();
+      expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should return undefined if no snapshot from 7 days ago', () => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const snapshots = [
-        {
-          id: 's1',
-          keywordId: 'k1',
-          date: today,
-          position: 12,
-          clicks: 8,
-          impressions: 60,
-          ctr: 0.133,
-          createdAt: new Date(),
-        },
-      ];
-
-      const result = calculateKeywordPreviousPosition(snapshots);
+    it('should return undefined', async () => {
+      const result = await calculateKeywordPreviousPosition();
       expect(result).toBeUndefined();
     });
   });

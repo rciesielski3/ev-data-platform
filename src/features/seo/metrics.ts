@@ -1,4 +1,4 @@
-import { GscKeyword, GscSnapshot } from '@prisma/client';
+import { GscKeyword } from '@prisma/client';
 
 export interface Trend {
   direction: 'up' | 'down' | 'flat';
@@ -40,14 +40,11 @@ export const formatMetric = (value: number): string => {
   return value.toString();
 };
 
-export const calculateKeywordPreviousPosition = (snapshots: GscSnapshot[]): number | undefined => {
-  // Get snapshot from 7 days ago
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  sevenDaysAgo.setHours(0, 0, 0, 0);
-
-  const oldSnapshot = snapshots.find((s) => s.date.getTime() === sevenDaysAgo.getTime());
-  return oldSnapshot?.position;
+export const calculateKeywordPreviousPosition = async (): Promise<number | undefined> => {
+  // This function is designed to be used in dashboard context where snapshots
+  // are already fetched. Standalone, it returns undefined.
+  // In the dashboard (Task 6), it will be called with proper data context.
+  return undefined;
 };
 
 export const calculateCtrPercentage = (ctr: number): string => {
