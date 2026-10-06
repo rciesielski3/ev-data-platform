@@ -40,11 +40,20 @@ export const formatMetric = (value: number): string => {
   return value.toString();
 };
 
-export const calculateKeywordPreviousPosition = async (): Promise<number | undefined> => {
-  // This function is designed to be used in dashboard context where snapshots
-  // are already fetched. Standalone, it returns undefined.
-  // In the dashboard (Task 6), it will be called with proper data context.
-  return undefined;
+export const calculateKeywordPreviousPosition = (snapshots: { date: Date; position: number }[]): number | undefined => {
+  // Get snapshot from 7 days ago using UTC to ensure timezone consistency
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
+  sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+
+  // Compare using UTC timestamps to avoid timezone mismatches
+  const oldSnapshot = snapshots.find((s) => {
+    const snapshotDate = new Date(s.date);
+    snapshotDate.setUTCHours(0, 0, 0, 0);
+    return snapshotDate.getTime() === sevenDaysAgo.getTime();
+  });
+
+  return oldSnapshot?.position;
 };
 
 export const calculateCtrPercentage = (ctr: number): string => {

@@ -125,14 +125,59 @@ describe('SEO Metrics', () => {
   });
 
   describe('calculateKeywordPreviousPosition', () => {
-    it('should be async function', async () => {
-      const result = calculateKeywordPreviousPosition();
-      expect(result).toBeInstanceOf(Promise);
+    it('should return position from 7 days ago', () => {
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
+      const sevenDaysAgo = new Date(today);
+      sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
+
+      const snapshots = [
+        {
+          date: sevenDaysAgo,
+          position: 15,
+        },
+        {
+          date: today,
+          position: 12,
+        },
+      ];
+
+      const result = calculateKeywordPreviousPosition(snapshots);
+      expect(result).toBe(15);
     });
 
-    it('should return undefined', async () => {
-      const result = await calculateKeywordPreviousPosition();
+    it('should return undefined if no snapshot from 7 days ago', () => {
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
+      const snapshots = [
+        {
+          date: today,
+          position: 12,
+        },
+      ];
+
+      const result = calculateKeywordPreviousPosition(snapshots);
       expect(result).toBeUndefined();
+    });
+
+    it('should handle UTC timezone correctly', () => {
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
+      const sevenDaysAgo = new Date(today);
+      sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
+
+      const snapshots = [
+        {
+          date: sevenDaysAgo,
+          position: 20,
+        },
+      ];
+
+      const result = calculateKeywordPreviousPosition(snapshots);
+      expect(result).toBe(20);
     });
   });
 
