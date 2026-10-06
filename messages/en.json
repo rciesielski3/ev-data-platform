@@ -1114,5 +1114,24 @@
         "content": "# How to Choose\n\n## Your Needs\n\n1. Mostly home? One network\n2. Highways? ORLEN best\n3. Cities? Energa everywhere\n4. Everywhere? Multi-network\n\n## Subscription vs Pay-as-you-go\n\nSubscription: If 50k+/year\nPay: If less\n\n## Recommendations\n\n### Office worker\nHome + Energa (cities)\n\n### Salesman\nHome + ORLEN (highways)\n\n### Nomad\nHome + ORLEN + Energa\n\nMap: /map"
       }
     }
+  },
+  "seo": {
+    "dashboard": {
+      "title": "SEO Performance Dashboard",
+      "description": "Weekly tracking of keyword rankings and organic traffic metrics"
+    },
+    "summary": {
+      "keywords": "Total Keywords",
+      "impressions": "Avg Impressions (7d)",
+      "clicks": "Avg Clicks (7d)",
+      "ctr": "Avg CTR"
+    },
+    "topKeywords": {
+      "title": "Top 10 Keywords by Clicks"
+    },
+    "underperformers": {
+      "title": "Keywords Losing Rank (Position Drop >5)",
+      "recommendation": "Recommend: optimize content"
+    }
   }
 }

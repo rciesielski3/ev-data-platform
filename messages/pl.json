@@ -1114,5 +1114,24 @@
         "content": "# Jak Wybrać Sieć\n\n## Twoje Potrzeby\n\n1. Głównie dom? Jednej sieci wystarczy\n2. Autostrady? ORLEN najlepszy\n3. Miasta? Energa wszędzie\n4. Wszędzie? Multi-sieć\n\n## Abonament vs Pay-as-you-go\n\nAbonament: Jeśli jeździsz 50k+/rok\nPay: Jeśli mniej\n\n## Rekomendacje\n\n### Pracownik biurowy\nDom + Energa (miasta)\n\n### Handlowiec\nHome + ORLEN (autostrady)\n\n### Wszędobyl\nHome + ORLEN + Energa\n\nMapa: /map"
       }
     }
+  },
+  "seo": {
+    "dashboard": {
+      "title": "Pulpit SEO",
+      "description": "Cotygodniowe śledzenie rankingów słów kluczowych i metryk ruchu organicznego"
+    },
+    "summary": {
+      "keywords": "Razem słów kluczowych",
+      "impressions": "Średnie wyświetlenia (7d)",
+      "clicks": "Średnie kliknięcia (7d)",
+      "ctr": "Średni CTR"
+    },
+    "topKeywords": {
+      "title": "Top 10 słów kluczowych po kliknięciach"
+    },
+    "underperformers": {
+      "title": "Słowa kluczowe tracące ranking (zmiana pozycji >5)",
+      "recommendation": "Rekomendacja: zoptymalizuj zawartość"
+    }
   }
 }
