@@ -14,6 +14,7 @@ vi.mock('../../lib/db/prisma', () => ({
     },
     gscSnapshot: {
       upsert: vi.fn(),
+      deleteMany: vi.fn(),
     },
   },
 }));
@@ -54,21 +55,26 @@ describe('syncGscData', () => {
       ctr: 0.1,
       createdAt: new Date(),
     });
+    vi.mocked(prisma.gscSnapshot.deleteMany).mockResolvedValueOnce({ count: 0 });
 
     const result = await syncGscData();
 
     expect(result.keywordsUpserted).toBe(1);
     expect(result.snapshotsCreated).toBe(1);
+    expect(result.snapshotsDeleted).toBe(0);
   });
 
   it('should handle empty GSC response', async () => {
     const { fetchGscData } = await import('../../lib/gsc/client');
+    const { prisma } = await import('../../lib/db/prisma');
 
     vi.mocked(fetchGscData).mockResolvedValueOnce([]);
+    vi.mocked(prisma.gscSnapshot.deleteMany).mockResolvedValueOnce({ count: 0 });
 
     const result = await syncGscData();
 
     expect(result.keywordsUpserted).toBe(0);
     expect(result.snapshotsCreated).toBe(0);
+    expect(result.snapshotsDeleted).toBe(0);
   });
 });

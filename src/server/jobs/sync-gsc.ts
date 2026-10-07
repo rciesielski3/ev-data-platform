@@ -49,7 +49,7 @@ export const syncGscData = async () => {
 
     // Create snapshot for today
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setUTCHours(0, 0, 0, 0);
 
     await prisma.gscSnapshot.upsert({
       where: { keywordId_date: { keywordId: keyword.id, date: today } },
@@ -72,7 +72,22 @@ export const syncGscData = async () => {
     snapshotsCreated += 1;
   }
 
-  console.log(`[GSC Sync] Upserted ${keywordsUpserted} keywords, created ${snapshotsCreated} snapshots`);
+  // Delete snapshots older than 7 days
+  const cutoffDate = new Date();
+  cutoffDate.setUTCHours(0, 0, 0, 0);
+  cutoffDate.setUTCDate(cutoffDate.getUTCDate() - 7);
 
-  return { keywordsUpserted, snapshotsCreated };
+  const deleteResult = await prisma.gscSnapshot.deleteMany({
+    where: {
+      date: {
+        lt: cutoffDate,
+      },
+    },
+  });
+
+  const snapshotsDeleted = deleteResult.count;
+
+  console.log(`[GSC Sync] Upserted ${keywordsUpserted} keywords, created ${snapshotsCreated} snapshots, deleted ${snapshotsDeleted} old snapshots`);
+
+  return { keywordsUpserted, snapshotsCreated, snapshotsDeleted };
 };
