@@ -306,3 +306,15 @@ model GscSnapshot {
 
   createdAt         DateTime      @default(now())
 }
+
+model GscMetrics {
+  id                String        @id @default(cuid())
+  siteUrl           String        @unique
+  totalKeywords     Int
+  avgImpressions    Float
+  avgClicks         Float
+  avgCtr            Float
+  lastCalculated    DateTime      @default(now())
+
+  @@index([siteUrl])
+}

@@ -87,7 +87,45 @@ export const syncGscData = async () => {
 
   const snapshotsDeleted = deleteResult.count;
 
-  console.log(`[GSC Sync] Upserted ${keywordsUpserted} keywords, created ${snapshotsCreated} snapshots, deleted ${snapshotsDeleted} old snapshots`);
+  // Calculate and upsert metrics
+  const keywords = await prisma.gscKeyword.findMany({
+    where: { siteUrl },
+  });
 
-  return { keywordsUpserted, snapshotsCreated, snapshotsDeleted };
+  const totalKeywords = keywords.length;
+  const avgImpressions = totalKeywords > 0
+    ? keywords.reduce((sum, k) => sum + k.currentImpressions, 0) / totalKeywords
+    : 0;
+  const avgClicks = totalKeywords > 0
+    ? keywords.reduce((sum, k) => sum + k.currentClicks, 0) / totalKeywords
+    : 0;
+  const avgCtr = totalKeywords > 0
+    ? keywords.reduce((sum, k) => sum + k.currentClicks, 0) / keywords.reduce((sum, k) => sum + k.currentImpressions, 0)
+    : 0;
+
+  let metricsUpdated = 0;
+  if (totalKeywords > 0) {
+    await prisma.gscMetrics.upsert({
+      where: { siteUrl },
+      update: {
+        totalKeywords,
+        avgImpressions,
+        avgClicks,
+        avgCtr,
+        lastCalculated: new Date(),
+      },
+      create: {
+        siteUrl,
+        totalKeywords,
+        avgImpressions,
+        avgClicks,
+        avgCtr,
+      },
+    });
+    metricsUpdated = 1;
+  }
+
+  console.log(`[GSC Sync] Upserted ${keywordsUpserted} keywords, created ${snapshotsCreated} snapshots, deleted ${snapshotsDeleted} old snapshots, updated metrics`);
+
+  return { keywordsUpserted, snapshotsCreated, snapshotsDeleted, metricsUpdated };
 };

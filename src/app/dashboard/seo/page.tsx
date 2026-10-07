@@ -8,7 +8,7 @@ import {
   findUnderperformers,
   KeywordWithPrevious,
 } from "@/features/seo/metrics";
-import { GscKeyword, GscSnapshot } from "@prisma/client";
+import { GscKeyword, GscSnapshot, GscMetrics } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -62,39 +62,27 @@ async function enrichKeywordsWithTrends(
   );
 }
 
-function calculateSummaryMetrics(keywords: KeywordWithPrevious[]) {
-  const totalKeywords = keywords.length;
-  const totalImpressions = keywords.reduce(
-    (sum, k) => sum + k.currentImpressions,
-    0
-  );
-  const totalClicks = keywords.reduce((sum, k) => sum + k.currentClicks, 0);
-  const avgImpressions =
-    totalKeywords > 0 ? totalImpressions / totalKeywords : 0;
-  const avgClicks = totalKeywords > 0 ? totalClicks / totalKeywords : 0;
-  const avgCtr = totalKeywords > 0 ? totalClicks / totalImpressions : 0;
-
-  return {
-    totalKeywords,
-    avgImpressions,
-    avgClicks,
-    avgCtr,
-  };
+async function fetchMetrics() {
+  const siteUrl = process.env.GOOGLE_GSC_SITE_URL;
+  if (!siteUrl) return null;
+  return prisma.gscMetrics.findUnique({ where: { siteUrl } });
 }
 
 export default async function SEODashboardPage() {
   const t = await getTranslations("seo");
 
   let keywords: KeywordWithPrevious[] = [];
+  let metrics: GscMetrics | null = null;
 
   try {
     const rawKeywords = await fetchKeywordsWithSnapshots();
     keywords = await enrichKeywordsWithTrends(rawKeywords);
+    metrics = await fetchMetrics();
   } catch (error) {
-    console.error("Failed to fetch keywords:", error);
+    console.error("Failed to fetch data:", error);
   }
 
-  const summary = calculateSummaryMetrics(keywords);
+  const summary = metrics || { totalKeywords: 0, avgImpressions: 0, avgClicks: 0, avgCtr: 0 };
   const topPerformers = keywords.slice(0, 10);
   const underperformers = findUnderperformers(keywords, 5);
 
