@@ -53,7 +53,7 @@
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.29.0",
-    "eslint-config-next": "^15.5.20",
+    "eslint-config-next": "^15.5.27",
     "husky": "^9.1.7",
     "jsonwebtoken": "^9.0.3",
     "postcss": "^8.5.19",
