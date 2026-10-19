@@ -1,8 +1,7 @@
 name: Import EIPA charging stations
 
 on:
-  schedule:
-    - cron: "0 5,17 * * *"
+  # Cron paused: Neon free-tier CU quota exhausted until 2026-11-01. Re-enable with: cron: "0 5,17 * * *"
   workflow_dispatch:
 
 jobs:
