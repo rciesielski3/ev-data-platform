@@ -196,7 +196,8 @@ const StationsPage = async ({
 
   try {
     data = await getStationsData(filters);
-  } catch {
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
     data = { error: t("setupRequiredMessage") };
   }
 

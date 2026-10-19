@@ -73,7 +73,7 @@ export const generateMetadata = async ({
   const vehicle = await getVehicleById(id);
 
   if (!vehicle) {
-    return {};
+    return { robots: { index: false, follow: false } };
   }
 
   const t = await getTranslations("vehicleDetail");

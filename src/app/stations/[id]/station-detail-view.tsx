@@ -55,7 +55,7 @@ export const generateStationDetailMetadata = async (
   const station = await getStationById(id);
 
   if (!station) {
-    return {};
+    return { robots: { index: false, follow: false } };
   }
 
   const t = await getTranslations("stationDetail");
