@@ -12,13 +12,15 @@ import {
   buildSummarySentence,
 } from "@/features/charging/station-summary";
 import { buildStationPlaceJsonLd } from "@/features/charging/station-seo";
+import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
 import { prisma } from "@/lib/db/prisma";
 import { localizeFallback } from "@/lib/display/localize-fallback";
+import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
-const getStationById = cache((id: string) =>
+const getCachedStationById = cache((id: string) =>
   prisma.chargingStation.findUnique({
     where: { id },
     include: {
@@ -34,6 +36,16 @@ const getStationById = cache((id: string) =>
     },
   }),
 );
+
+const getStationById = async (id: string) => {
+  try {
+    return await getCachedStationById(id);
+  } catch {
+    console.warn("station detail: database unavailable, serving snapshot");
+    const snapshot = await loadFallbackStations();
+    return buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);
+  }
+};
 
 export const generateStationDetailMetadata = async (
   id: string,

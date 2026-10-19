@@ -11,6 +11,7 @@ import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { buildStationQuality } from "@/features/charging/data-quality";
+import { buildFallbackStationsData } from "@/features/charging/fallback-stations";
 import { geocodeStationLocation } from "@/features/charging/geocoding";
 import {
   buildOperatorFilterOptions,
@@ -29,6 +30,7 @@ import {
 } from "@/features/charging/station-quality-badge";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
+import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -73,7 +75,7 @@ export const generateMetadata = async ({
 
 const PAGE_SIZE = 20;
 
-const getStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =>
+const getCachedStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =>
   unstable_cache(
     async () => {
       const geocodedLocation = await geocodeStationLocation(filters.location);
@@ -165,6 +167,16 @@ const getStationsData = (filters: ReturnType<typeof parseStationSearchParams>) =
     ],
     { revalidate: 3600 },
   )();
+
+const getStationsData = async (filters: ReturnType<typeof parseStationSearchParams>) => {
+  try {
+    return await getCachedStationsData(filters);
+  } catch {
+    console.warn("stations: database unavailable, serving snapshot");
+    const snapshot = await loadFallbackStations();
+    return buildFallbackStationsData(snapshot.stations, filters, PAGE_SIZE, snapshot.generatedAt);
+  }
+};
 
 const StationsPage = async ({
   searchParams,

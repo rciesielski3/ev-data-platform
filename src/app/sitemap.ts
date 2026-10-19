@@ -3,8 +3,9 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db/prisma";
 import { SITE_URL } from "@/lib/config/site";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
+import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
+import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
@@ -23,6 +24,37 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
 ];
 
 const CONNECTOR_TYPES = ["ccs2", "type2", "chademo"];
+
+const loadSitemapRecords = async (): Promise<{
+  stations: { id: string; updatedAt: Date }[];
+  vehicles: { id: string; updatedAt: Date }[];
+}> => {
+  try {
+    const [stations, vehicles] = await Promise.all([
+      prisma.chargingStation.findMany({
+        select: { id: true, updatedAt: true },
+        orderBy: { updatedAt: "desc" },
+        take: 5000,
+      }),
+      prisma.evModel.findMany({
+        select: { id: true, updatedAt: true },
+        orderBy: { updatedAt: "desc" },
+        take: 5000,
+      }),
+    ]);
+    return { stations, vehicles };
+  } catch {
+    console.warn("sitemap: database unavailable, serving snapshot ids");
+    const [stationSnapshot, vehicleSnapshot] = await Promise.all([loadFallbackStations(), loadFallbackVehicles()]);
+    return {
+      stations: stationSnapshot.stations.map((station) => ({
+        id: station.id,
+        updatedAt: new Date(station.sourceUpdatedAt ?? stationSnapshot.generatedAt),
+      })),
+      vehicles: vehicleSnapshot.vehicles.map((vehicle) => ({ id: vehicle.id, updatedAt: new Date(vehicleSnapshot.generatedAt) })),
+    };
+  }
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
@@ -43,18 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  const [stations, vehicles] = await Promise.all([
-    prisma.chargingStation.findMany({
-      select: { id: true, updatedAt: true },
-      orderBy: { updatedAt: 'desc' },
-      take: 5000,
-    }),
-    prisma.evModel.findMany({
-      select: { id: true, updatedAt: true },
-      orderBy: { updatedAt: 'desc' },
-      take: 5000,
-    }),
-  ]);
+  const { stations, vehicles } = await loadSitemapRecords();
 
   const stationEntries: MetadataRoute.Sitemap = stations.map((station) => ({
     url: `${SITE_URL}/stations/${station.id}`,
