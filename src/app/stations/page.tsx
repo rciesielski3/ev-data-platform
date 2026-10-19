@@ -30,6 +30,7 @@ import {
 } from "@/features/charging/station-quality-badge";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -171,7 +172,8 @@ const getCachedStationsData = (filters: ReturnType<typeof parseStationSearchPara
 const getStationsData = async (filters: ReturnType<typeof parseStationSearchParams>) => {
   try {
     return await getCachedStationsData(filters);
-  } catch {
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("stations: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
     return buildFallbackStationsData(snapshot.stations, filters, PAGE_SIZE, snapshot.generatedAt);

@@ -26,6 +26,7 @@ import StatStrip from "@/components/ui/StatStrip";
 import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
 import { buildFallbackStationTotals } from "@/features/charging/fallback-stations";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
@@ -146,17 +147,21 @@ const HomePage = async () => {
   const t = await getTranslations("home");
   const tHero = await getTranslations("hero");
 
-  let snapshotAt: string | null = null;
-  const status: Awaited<ReturnType<typeof getStatus>> = await getStatus().catch(async () => {
-    console.warn("home: database unavailable, serving snapshot totals");
-    const [stationSnapshot, vehicleSnapshot] = await Promise.all([loadFallbackStations(), loadFallbackVehicles()]);
-    snapshotAt = stationSnapshot.generatedAt;
-    return {
-      ...buildFallbackStationTotals(stationSnapshot.stations),
-      evCount: vehicleSnapshot.vehicles.length,
-      ingestionRuns: { eipa: null, openev: null },
-    };
-  });
+  const { status, snapshotAt } = await getStatus()
+    .then((loaded) => ({ status: loaded, snapshotAt: null as string | null }))
+    .catch(async (error: unknown) => {
+      if (!isDatabaseUnavailableError(error)) throw error;
+      console.warn("home: database unavailable, serving snapshot totals");
+      const [stationSnapshot, vehicleSnapshot] = await Promise.all([loadFallbackStations(), loadFallbackVehicles()]);
+      return {
+        status: {
+          ...buildFallbackStationTotals(stationSnapshot.stations),
+          evCount: vehicleSnapshot.vehicles.length,
+          ingestionRuns: { eipa: null, openev: null },
+        } satisfies Awaited<ReturnType<typeof getStatus>>,
+        snapshotAt: stationSnapshot.generatedAt,
+      };
+    });
 
   return (
     <main className="flex flex-1 flex-col">

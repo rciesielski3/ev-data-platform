@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { SITE_URL } from "@/lib/config/site";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
-import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
-import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 
 export const revalidate = 3600;
 
@@ -43,16 +42,10 @@ const loadSitemapRecords = async (): Promise<{
       }),
     ]);
     return { stations, vehicles };
-  } catch {
-    console.warn("sitemap: database unavailable, serving snapshot ids");
-    const [stationSnapshot, vehicleSnapshot] = await Promise.all([loadFallbackStations(), loadFallbackVehicles()]);
-    return {
-      stations: stationSnapshot.stations.map((station) => ({
-        id: station.id,
-        updatedAt: new Date(station.sourceUpdatedAt ?? stationSnapshot.generatedAt),
-      })),
-      vehicles: vehicleSnapshot.vehicles.map((vehicle) => ({ id: vehicle.id, updatedAt: new Date(vehicleSnapshot.generatedAt) })),
-    };
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    console.warn("sitemap: database unavailable, serving static routes only");
+    return { stations: [], vehicles: [] };
   }
 };
 

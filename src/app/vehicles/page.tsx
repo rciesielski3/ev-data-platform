@@ -21,6 +21,7 @@ import {
 } from "@/features/ev/vehicle-search";
 import { buildFallbackVehiclesData } from "@/features/ev/fallback-vehicles";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
@@ -149,7 +150,8 @@ export default async function VehiclesPage({
 
   let topBrands: Awaited<ReturnType<typeof getTopVehicleBrands>> = [];
 
-  const { vehicles, total, brands } = await getVehiclesData(filters).catch(async () => {
+  const { vehicles, total, brands } = await getVehiclesData(filters).catch(async (error: unknown) => {
+    if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicles: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();
     return buildFallbackVehiclesData(snapshot.vehicles, filters, PAGE_SIZE, snapshot.generatedAt);

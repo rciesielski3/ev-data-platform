@@ -1,5 +1,7 @@
 "use client";
 
+import "./globals.css";
+
 const GlobalError = ({ reset }: { error: Error & { digest?: string }; reset: () => void }) => (
   <html lang="pl">
     <body className="flex min-h-screen items-center justify-center bg-gray-100 p-6 font-sans text-gray-900">

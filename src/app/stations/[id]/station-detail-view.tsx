@@ -16,6 +16,7 @@ import { buildFallbackStationDetail } from "@/features/charging/fallback-station
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -40,7 +41,8 @@ const getCachedStationById = cache((id: string) =>
 const getStationById = async (id: string) => {
   try {
     return await getCachedStationById(id);
-  } catch {
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("station detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
     return buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);

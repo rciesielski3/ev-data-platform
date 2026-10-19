@@ -16,6 +16,7 @@ import {
 import { buildFallbackVehicleDetail } from "@/features/ev/fallback-vehicles";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
@@ -46,7 +47,8 @@ const decodeRouteId = (id: string) => {
 const getVehicleById = async (id: string) => {
   try {
     return await getCachedVehicleById(id);
-  } catch {
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicle detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();
     return buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt);
