@@ -11,6 +11,8 @@ const mockPrisma = prisma as unknown as {
   chargingStation: { findMany: Mock };
   ingestionRun: { findFirst: Mock };
   dailySnapshot: { upsert: Mock };
+  evModel: { count: Mock };
+  chargingOperator: { count: Mock };
 };
 
 const station = (overrides: Record<string, unknown> = {}) => ({
@@ -30,6 +32,8 @@ describe("captureSnapshot", () => {
       .fn()
       .mockResolvedValue({ id: "run-1", status: IngestionStatus.SUCCESS });
     mockPrisma.dailySnapshot.upsert = vi.fn().mockResolvedValue({});
+    mockPrisma.evModel.count = vi.fn().mockResolvedValue(0);
+    mockPrisma.chargingOperator.count = vi.fn().mockResolvedValue(0);
   });
 
   it("captures totals derived from station/connector data and upserts on snapshotDate", async () => {
