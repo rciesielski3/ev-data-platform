@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -20,9 +19,12 @@ import {
   parseVehicleSearchParams,
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
+import { buildFallbackVehiclesData } from "@/features/ev/fallback-vehicles";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
+import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { ArrowRightIcon } from "lucide-react";
 
@@ -33,13 +35,6 @@ const isFilteredView = (
 ): boolean => Boolean(filters.q || filters.brand) || filters.page > 1;
 
 const PAGE_SIZE = 24;
-
-type VehicleListItem = Prisma.EvModelGetPayload<{
-  include: {
-    brand: true;
-    specs: true;
-  };
-}>;
 
 const getVehiclesData = (filters: ReturnType<typeof parseVehicleSearchParams>) =>
   unstable_cache(
@@ -153,24 +148,19 @@ export default async function VehiclesPage({
 
   const filters = parseVehicleSearchParams(await searchParams);
 
-  let data:
-    | {
-        vehicles: VehicleListItem[];
-        total: number;
-      }
-    | { error: string };
   let topBrands: Awaited<ReturnType<typeof getTopVehicleBrands>> = [];
 
-  try {
-    const { vehicles, total, brands } = await getVehiclesData(filters);
-    data = { vehicles, total };
-    topBrands = brands;
-  } catch {
-    data = { error: t("setupRequiredMessage") };
-  }
+  const { vehicles, total, brands } = await getVehiclesData(filters).catch(async (error: unknown) => {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    console.warn("vehicles: database unavailable, serving snapshot");
+    const snapshot = await loadFallbackVehicles();
+    return buildFallbackVehiclesData(snapshot.vehicles, filters, PAGE_SIZE, snapshot.generatedAt);
+  });
+  const data = { vehicles, total };
+  topBrands = brands;
 
-  const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
-  const vehicleCount = "error" in data ? 0 : data.total;
+  const totalPages = Math.ceil(data.total / PAGE_SIZE);
+  const vehicleCount = data.total;
 
   const getActiveBrandLabel = () => {
     if (!filters.brand) return t("allBrandsLabel");
@@ -178,7 +168,7 @@ export default async function VehiclesPage({
     const brand = topBrands.find((b) => b.slug === filters.brand);
     if (brand?.name) return brand.name;
 
-    if ("error" in data || data.vehicles.length === 0) return "—";
+    if (data.vehicles.length === 0) return "—";
     return data.vehicles[0]?.brand.name || "—";
   };
 
@@ -188,11 +178,7 @@ export default async function VehiclesPage({
     <main className="mx-auto max-w-5xl px-6 py-12">
       <PageHeader
         title={t("title")}
-        description={
-          "error" in data
-            ? t("descriptionError")
-            : t("descriptionWithCount", { count: data.total })
-        }
+        description={t("descriptionWithCount", { count: data.total })}
         actions={
           <form className="flex w-full max-w-xl items-center gap-2">
             <input
@@ -274,11 +260,7 @@ export default async function VehiclesPage({
         </div>
       )}
 
-      {"error" in data ? (
-        <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-          <p>{data.error}</p>
-        </Notice>
-      ) : data.vehicles.length === 0 ? (
+      {data.vehicles.length === 0 ? (
         <Notice title={t("noResultsTitle")}>
           <p className="muted mt-2">{t("noResultsBody")}</p>
         </Notice>

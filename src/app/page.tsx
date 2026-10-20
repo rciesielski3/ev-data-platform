@@ -22,12 +22,15 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Hero from "@/components/ui/Hero";
-import Notice from "@/components/ui/Notice";
 import StatStrip from "@/components/ui/StatStrip";
 import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
+import { buildFallbackStationTotals } from "@/features/charging/fallback-stations";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
+import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
+import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
-import { formatDisplayNumber } from "@/lib/display/data-display";
+import { formatDisplayDate, formatDisplayNumber } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { OG_IMAGE_PATH } from "@/lib/config/site";
 
@@ -143,15 +146,22 @@ const HomePage = async () => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("home");
   const tHero = await getTranslations("hero");
-  const tCommon = await getTranslations("common");
 
-  let status: Awaited<ReturnType<typeof getStatus>> | { error: string };
-
-  try {
-    status = await getStatus();
-  } catch {
-    status = { error: t("setupMessage") };
-  }
+  const { status, snapshotAt } = await getStatus()
+    .then((loaded) => ({ status: loaded, snapshotAt: null as string | null }))
+    .catch(async (error: unknown) => {
+      if (!isDatabaseUnavailableError(error)) throw error;
+      console.warn("home: database unavailable, serving snapshot totals");
+      const [stationSnapshot, vehicleSnapshot] = await Promise.all([loadFallbackStations(), loadFallbackVehicles()]);
+      return {
+        status: {
+          ...buildFallbackStationTotals(stationSnapshot.stations),
+          evCount: vehicleSnapshot.vehicles.length,
+          ingestionRuns: { eipa: null, openev: null },
+        } satisfies Awaited<ReturnType<typeof getStatus>>,
+        snapshotAt: stationSnapshot.generatedAt,
+      };
+    });
 
   return (
     <main className="flex flex-1 flex-col">
@@ -182,8 +192,7 @@ const HomePage = async () => {
           </>
         }
         importStatusBadges={
-          !("error" in status) &&
-          (status.ingestionRuns.eipa || status.ingestionRuns.openev) ? (
+          status.ingestionRuns.eipa || status.ingestionRuns.openev ? (
             <>
               {status.ingestionRuns.eipa && (
                 <ImportStatusBadge
@@ -210,36 +219,34 @@ const HomePage = async () => {
         }
       />
 
-      {"error" in status ? (
-        <div className="mx-auto w-full max-w-6xl px-6 pb-16">
-          <Notice title={tCommon("setupRequiredTitle")} tone="warning">
-            <p>{status.error}</p>
-          </Notice>
-        </div>
-      ) : (
-        <StatStrip
-          stats={[
-            {
-              value: formatDisplayNumber(status.stationCount, locale),
-              label: t("statStations"),
-            },
-            {
-              value: formatDisplayNumber(status.operatorCount, locale),
-              label: t("statOperators"),
-            },
-            {
-              value: formatDisplayNumber(status.evCount, locale),
-              label: t("statEvModels"),
-            },
-            {
-              value: t("statProvincesValue", {
-                count: status.provinceCount,
-              }),
-              label: t("statProvinces"),
-            },
-          ]}
-        />
+      {snapshotAt && (
+        <p className="muted mx-auto max-w-5xl px-6 pt-6 text-center text-sm">
+          {t("snapshotAsOf", { date: formatDisplayDate(snapshotAt, locale) })}
+        </p>
       )}
+
+      <StatStrip
+        stats={[
+          {
+            value: formatDisplayNumber(status.stationCount, locale),
+            label: t("statStations"),
+          },
+          {
+            value: formatDisplayNumber(status.operatorCount, locale),
+            label: t("statOperators"),
+          },
+          {
+            value: formatDisplayNumber(status.evCount, locale),
+            label: t("statEvModels"),
+          },
+          {
+            value: t("statProvincesValue", {
+              count: status.provinceCount,
+            }),
+            label: t("statProvinces"),
+          },
+        ]}
+      />
 
       <section className="section-accent mx-auto max-w-6xl px-6 py-16">
         <div className="mx-auto mb-10 max-w-xl text-center">

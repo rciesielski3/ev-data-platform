@@ -13,17 +13,20 @@ import {
   buildVehicleProductJsonLd,
   buildVehicleSeoHighlights,
 } from "@/features/ev/vehicle-seo";
+import { buildFallbackVehicleDetail } from "@/features/ev/fallback-vehicles";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
 import { prisma } from "@/lib/db/prisma";
+import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
+import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import Badge from "@/components/ui/Badge";
 import BackLink from "@/components/ui/BackLink";
 
 export const dynamic = "force-dynamic";
 
-const getVehicleById = cache((id: string) =>
+const getCachedVehicleById = cache((id: string) =>
   prisma.evModel.findUnique({
     where: { id },
     include: {
@@ -32,6 +35,25 @@ const getVehicleById = cache((id: string) =>
     },
   }),
 );
+
+const decodeRouteId = (id: string) => {
+  try {
+    return decodeURIComponent(id);
+  } catch {
+    return id;
+  }
+};
+
+const getVehicleById = async (id: string) => {
+  try {
+    return await getCachedVehicleById(id);
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    console.warn("vehicle detail: database unavailable, serving snapshot");
+    const snapshot = await loadFallbackVehicles();
+    return buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt);
+  }
+};
 
 const buildVehicleSeoName = (vehicle: {
   brand: { name: string };
@@ -51,7 +73,7 @@ export const generateMetadata = async ({
   const vehicle = await getVehicleById(id);
 
   if (!vehicle) {
-    return {};
+    return { robots: { index: false, follow: false } };
   }
 
   const t = await getTranslations("vehicleDetail");
