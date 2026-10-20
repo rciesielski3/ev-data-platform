@@ -1,5 +1,5 @@
 const UNAVAILABLE_ERROR_NAMES = ["PrismaClientInitializationError"];
-const UNAVAILABLE_ERROR_CODES = ["P1001", "P1017"];
+const UNAVAILABLE_ERROR_CODES = ["P1001", "P1002", "P1008", "P1017"];
 
 export const isDatabaseUnavailableError = (error: unknown): boolean => {
   if (typeof error !== "object" || error === null) return false;

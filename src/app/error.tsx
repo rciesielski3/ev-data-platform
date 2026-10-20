@@ -1,11 +1,16 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import ErrorState from "@/components/ui/ErrorState";
 
-const AppError = ({ reset }: { error: Error & { digest?: string }; reset: () => void }) => {
+const AppError = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) => {
   const t = useTranslations("common");
+
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">

@@ -9,8 +9,10 @@ describe("isDatabaseUnavailableError", () => {
     expect(isDatabaseUnavailableError(withName("PrismaClientInitializationError"))).toBe(true);
   });
 
-  it("detects unreachable-server and auth-failure codes", () => {
+  it("detects unreachable-server, timeout and auth-failure codes", () => {
     expect(isDatabaseUnavailableError({ code: "P1001" })).toBe(true);
+    expect(isDatabaseUnavailableError({ code: "P1002" })).toBe(true);
+    expect(isDatabaseUnavailableError({ code: "P1008" })).toBe(true);
     expect(isDatabaseUnavailableError({ code: "P1017" })).toBe(true);
   });
 
