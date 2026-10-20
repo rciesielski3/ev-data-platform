@@ -1,17 +1,30 @@
+import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db/prisma";
 
+export const dynamic = "force-dynamic";
+
+const getStatusData = unstable_cache(
+  async () => {
+    const [evCount, stationCount, latestRuns] = await Promise.all([
+      prisma.evModel.count(),
+      prisma.chargingStation.count(),
+      prisma.ingestionRun.findMany({
+        orderBy: { startedAt: "desc" },
+        take: 5,
+        include: { source: true },
+      }),
+    ]);
+
+    return { evCount, stationCount, latestRuns };
+  },
+  ["api-status"],
+  { revalidate: 300 },
+);
+
 export const GET = async () => {
-  const [evCount, stationCount, latestRuns] = await Promise.all([
-    prisma.evModel.count(),
-    prisma.chargingStation.count(),
-    prisma.ingestionRun.findMany({
-      orderBy: { startedAt: "desc" },
-      take: 5,
-      include: { source: true },
-    }),
-  ]);
+  const { evCount, stationCount, latestRuns } = await getStatusData();
 
   return NextResponse.json({
     evModels: evCount,
