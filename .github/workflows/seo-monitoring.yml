@@ -2,8 +2,8 @@ name: SEO Monitoring
 
 on:
   schedule:
-    # Run daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    # Run weekly on Mondays at 2 AM UTC
+    - cron: '0 2 * * 1'
   workflow_dispatch:
 
 jobs:

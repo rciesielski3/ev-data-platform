@@ -9,6 +9,7 @@ import {
 } from "@/lib/db/cached-queries";
 
 vi.mock("@/lib/db/prisma");
+vi.mock("next/cache", () => ({ unstable_cache: <T extends (...args: never[]) => unknown>(fn: T) => fn }));
 
 const mockPrisma = prisma as unknown as {
   chargingStation: {
