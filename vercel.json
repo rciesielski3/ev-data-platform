@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/sync-gsc",
-      "schedule": "0 19 * * *"
+      "schedule": "0 2 * * *"
     }
   ]
 }
