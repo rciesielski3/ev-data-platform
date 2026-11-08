@@ -43,9 +43,9 @@
     "corridors": "Corridors"
   },
   "home": {
-    "title": "EV Charging Map Poland - Find Near You | evsource.pl",
-    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
-    "og_title": "EV Charging Map Poland - Find Near You | evsource.pl",
+    "title": "EV Charging Stations in Poland - EIPA/UDT Data | EVSource",
+    "description": "Overview of EV charging stations in Poland built on the official EIPA/UDT register: station, connector and operator counts in one place.",
+    "og_title": "EV Charging Stations in Poland | EVSource",
     "og_description": "Find EV charging stations near you. {stations} stations and {connectors} connectors across Poland.",
     "heroBadge": "EV data for Poland",
     "lastImportedAt": "Last imported",
@@ -174,8 +174,8 @@
     "backLink": "Back to vehicles"
   },
   "stations": {
-    "title": "EV Charging Stations Map Poland - Find Near You | evsource.pl",
-    "description": "Interactive map of EV charging infrastructure across Poland. Find stations, filters, operator details, and provincial coverage analysis.",
+    "title": "Search EV Charging Stations by City and Power | EVSource",
+    "description": "Find EV charging stations in Poland. Filter by city, operator and charging power, and browse results in a clear list built on EIPA/UDT data.",
     "viewInsightsLink": "View insights",
     "browseCatalogLink": "Browse EV catalog",
     "setupRequiredMessage": "Data is temporarily unavailable. Please try again later.",
@@ -283,7 +283,11 @@
       "Payment/authentication": "Payment/authentication"
     },
     "metaTitle": "{name} – {city} | EVSource",
-    "metaTitleFallback": "{name} | EVSource"
+    "metaTitleFallback": "{name} | EVSource",
+    "metaTitleWithPower": "{name} – {city} ({power}) | EVSource",
+    "metaTitleFallbackWithPower": "{name} ({power}) | EVSource",
+    "metaTitleOperator": "EV charger {operator}",
+    "metaTitleGeneric": "EV charging station"
   },
   "stationDetailError": {
     "title": "Station details unavailable",
@@ -492,8 +496,8 @@
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
-    "title": "Interactive EV Charging Map Poland | Find Near You | evsource.pl",
-    "description": "Interactive map of EV charging infrastructure across Poland. Filters, charging times, and availability. Find a charger near you.",
+    "title": "EV Charging Map Poland - Interactive | EVSource",
+    "description": "Interactive map of EV chargers in Poland based on the EIPA/UDT register. Browse stations on the map, apply filters, and check operator and connectors.",
     "searchListLink": "Search list",
     "viewInsightsLink": "View insights",
     "setupRequiredMessage": "Data is temporarily unavailable. Please try again later.",
