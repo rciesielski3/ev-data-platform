@@ -12,6 +12,10 @@ import {
   buildSummarySentence,
 } from "@/features/charging/station-summary";
 import { buildStationPlaceJsonLd } from "@/features/charging/station-seo";
+import {
+  buildStationMetaTitle,
+  pickReadableStationName,
+} from "@/features/charging/station-title";
 import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
@@ -32,7 +36,10 @@ const getCachedStationById = cache((id: string) =>
         },
       },
       connectors: {
-        orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+        orderBy: [
+          { powerKw: { sort: "desc", nulls: "last" } },
+          { connectorType: "asc" },
+        ],
       },
     },
   }),
@@ -59,31 +66,22 @@ export const generateStationDetailMetadata = async (
   }
 
   const t = await getTranslations("stationDetail");
-  const tCommon = await getTranslations("common");
   const locale = await getLocale();
-  const details = buildStationDetails(station, locale as SupportedLocale);
-  const name =
-    details.title === "Charging station"
-      ? tCommon("chargingStationFallback")
-      : details.title;
-
-  const summarySentence = buildSummarySentence(
-    buildStationSummaryParts({
-      operatorName:
-        station.operator?.name ?? station.operator?.normalizedName ?? null,
-      city: station.city,
-      connectorTypes: station.connectors.map((c) => c.connectorType),
-      maxPowerKw: station.connectors[0]?.powerKw ?? null,
-    }),
-    t,
-    locale,
-  );
+  const summaryParts = buildStationSummaryParts({
+    operatorName:
+      station.operator?.name ?? station.operator?.normalizedName ?? null,
+    city: station.city,
+    connectorTypes: station.connectors.map((c) => c.connectorType),
+    maxPowerKw: station.connectors[0]?.powerKw ?? null,
+  });
 
   return {
-    title: station.city
-      ? t("metaTitle", { name, city: station.city })
-      : t("metaTitleFallback", { name }),
-    description: summarySentence,
+    title: buildStationMetaTitle(
+      summaryParts,
+      pickReadableStationName([station.name]),
+      t,
+    ),
+    description: buildSummarySentence(summaryParts, t, locale),
     alternates: { canonical: `/stations/${id}` },
   };
 };

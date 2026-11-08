@@ -28,8 +28,8 @@ export const revalidate = 600;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("map");
   return {
-    title: t("title") || "Interaktywna Mapa Ładowarek EV w Polsce | Znajdź Blisko Ciebie | evsource.pl",
-    description: t("description") || "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko ciebie.",
+    title: t("title") || "Mapa ładowarek EV w Polsce - interaktywna | EVSource",
+    description: t("description") || "Interaktywna mapa ładowarek EV w Polsce oparta na rejestrze EIPA/UDT. Przeglądaj stacje na mapie, filtruj je i sprawdź operatora oraz złącza.",
   };
 };
 
