@@ -6,6 +6,7 @@ import {
 } from "@/app/stations/[id]/regional-city-view";
 import {
   generateStationDetailMetadata,
+  redirectLegacyStationId,
   StationDetailView,
 } from "@/app/stations/[id]/station-detail-view";
 import { findRegionalCity } from "@/features/charging/regional-stations";
@@ -29,9 +30,12 @@ export const generateMetadata = async ({
   const { id } = await params;
   const city = findRegionalCity(id);
 
-  return city
-    ? generateRegionalCityMetadata(city)
-    : generateStationDetailMetadata(id);
+  if (city) return generateRegionalCityMetadata(city);
+
+  // Redirect must run before any Suspense boundary streams: a loading.tsx
+  // above this segment turns the redirect into a 200 meta refresh.
+  await redirectLegacyStationId(id);
+  return generateStationDetailMetadata(id);
 };
 
 const StationOrRegionalPage = async ({
@@ -42,7 +46,10 @@ const StationOrRegionalPage = async ({
   const { id } = await params;
   const city = findRegionalCity(id);
 
-  return city ? <RegionalCityView city={city} /> : <StationDetailView id={id} />;
+  if (city) return <RegionalCityView city={city} />;
+
+  await redirectLegacyStationId(id);
+  return <StationDetailView id={id} />;
 };
 
 export default StationOrRegionalPage;

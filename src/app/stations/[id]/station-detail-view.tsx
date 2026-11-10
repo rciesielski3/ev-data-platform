@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
@@ -24,6 +24,7 @@ import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { DATA_SOURCES } from "@/lib/sources/constants";
 
 const getCachedStationById = cache((id: string) =>
   prisma.chargingStation.findUnique({
@@ -44,6 +45,17 @@ const getCachedStationById = cache((id: string) =>
     },
   }),
 );
+
+const findStationIdBySourceRecordId = (sourceRecordId: string) =>
+  prisma.chargingStation.findUnique({
+    where: {
+      sourceName_sourceRecordId: {
+        sourceName: DATA_SOURCES.EIPA.key,
+        sourceRecordId,
+      },
+    },
+    select: { id: true },
+  });
 
 const getStationById = async (id: string) => {
   try {
@@ -117,6 +129,15 @@ const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
   "source timestamp": "freshnessSourceTimestamp",
   "import date": "freshnessImportDate",
   unknown: "freshnessUnknownSource",
+};
+
+export const redirectLegacyStationId = async (id: string) => {
+  if (await getStationById(id)) return;
+  const aliased = await findStationIdBySourceRecordId(id).catch((error) => {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    return null;
+  });
+  if (aliased) permanentRedirect(`/stations/${aliased.id}`);
 };
 
 export const StationDetailView = async ({ id }: { id: string }) => {
