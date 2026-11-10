@@ -86,10 +86,13 @@ export const generateMetadata = async ({
     chargingCost,
   });
 
+  const alternates = { canonical: `/vehicles/${id}` };
+
   if (highlights.length === 0) {
     return {
       title: t("metaTitleFallback", { vehicleName }),
       description: t("metaDescriptionFallback", { vehicleName }),
+      alternates,
     };
   }
 
@@ -107,6 +110,7 @@ export const generateMetadata = async ({
       vehicleName,
       highlights: highlightText,
     }),
+    alternates,
   };
 };
 
