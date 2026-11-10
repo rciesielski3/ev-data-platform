@@ -58,21 +58,24 @@ const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
   }),
 );
 
-const getStationById = async (id: string) => {
+const loadStation = async (id: string) => {
   try {
-    return await getCachedStationById(id);
+    return { station: await getCachedStationById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("station detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
-    return buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);
+    return {
+      station: buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt),
+      fromSnapshot: true,
+    };
   }
 };
 
 export const generateStationDetailMetadata = async (
   id: string,
 ): Promise<Metadata> => {
-  const station = await getStationById(id);
+  const { station, fromSnapshot } = await loadStation(id);
 
   if (!station) {
     return { robots: { index: false, follow: false } };
@@ -95,7 +98,9 @@ export const generateStationDetailMetadata = async (
       t,
     ),
     description: buildSummarySentence(summaryParts, t, locale),
-    alternates: { canonical: `/stations/${id}` },
+    ...(fromSnapshot
+      ? { robots: { index: false, follow: true } }
+      : { alternates: { canonical: `/stations/${id}` } }),
   };
 };
 
@@ -133,7 +138,8 @@ const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
 };
 
 export const redirectLegacyStationId = async (id: string) => {
-  if (!/^\d+$/.test(id) || (await getStationById(id))) return;
+  const { station } = await loadStation(id);
+  if (!/^\d+$/.test(id) || station) return;
   const aliased = await findStationIdBySourceRecordId(id).catch((error) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     return null;
@@ -146,7 +152,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
   const t = await getTranslations("stationDetail");
   const tCommon = await getTranslations("common");
 
-  const station = await getStationById(id);
+  const { station } = await loadStation(id);
 
   if (!station) {
     notFound();
