@@ -32,8 +32,6 @@ export const generateMetadata = async ({
 
   if (city) return generateRegionalCityMetadata(city);
 
-  // Redirect must run before any Suspense boundary streams: a loading.tsx
-  // above this segment turns the redirect into a 200 meta refresh.
   await redirectLegacyStationId(id);
   return generateStationDetailMetadata(id);
 };
@@ -48,6 +46,8 @@ const StationOrRegionalPage = async ({
 
   if (city) return <RegionalCityView city={city} />;
 
+  // No loading.tsx may wrap this segment: a Suspense boundary above the
+  // redirect turns it into a 200 meta refresh (the list lives in (list) for this).
   await redirectLegacyStationId(id);
   return <StationDetailView id={id} />;
 };

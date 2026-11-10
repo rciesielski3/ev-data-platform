@@ -46,7 +46,7 @@ const getCachedStationById = cache((id: string) =>
   }),
 );
 
-const findStationIdBySourceRecordId = (sourceRecordId: string) =>
+const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
   prisma.chargingStation.findUnique({
     where: {
       sourceName_sourceRecordId: {
@@ -55,7 +55,8 @@ const findStationIdBySourceRecordId = (sourceRecordId: string) =>
       },
     },
     select: { id: true },
-  });
+  }),
+);
 
 const getStationById = async (id: string) => {
   try {
@@ -132,7 +133,7 @@ const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
 };
 
 export const redirectLegacyStationId = async (id: string) => {
-  if (await getStationById(id)) return;
+  if (!/^\d+$/.test(id) || (await getStationById(id))) return;
   const aliased = await findStationIdBySourceRecordId(id).catch((error) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     return null;
