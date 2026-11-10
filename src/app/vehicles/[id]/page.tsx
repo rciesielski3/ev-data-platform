@@ -44,14 +44,17 @@ const decodeRouteId = (id: string) => {
   }
 };
 
-const getVehicleById = async (id: string) => {
+const loadVehicle = async (id: string) => {
   try {
-    return await getCachedVehicleById(id);
+    return { vehicle: await getCachedVehicleById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicle detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();
-    return buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt);
+    return {
+      vehicle: buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt),
+      fromSnapshot: true,
+    };
   }
 };
 
@@ -70,11 +73,15 @@ export const generateMetadata = async ({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> => {
   const { id } = await params;
-  const vehicle = await getVehicleById(id);
+  const { vehicle, fromSnapshot } = await loadVehicle(id);
 
   if (!vehicle) {
     return { robots: { index: false, follow: false } };
   }
+
+  const indexing = fromSnapshot
+    ? { robots: { index: false, follow: true } }
+    : { alternates: { canonical: `/vehicles/${id}` } };
 
   const t = await getTranslations("vehicleDetail");
   const vehicleName = buildVehicleSeoName(vehicle);
@@ -86,13 +93,11 @@ export const generateMetadata = async ({
     chargingCost,
   });
 
-  const alternates = { canonical: `/vehicles/${id}` };
-
   if (highlights.length === 0) {
     return {
       title: t("metaTitleFallback", { vehicleName }),
       description: t("metaDescriptionFallback", { vehicleName }),
-      alternates,
+      ...indexing,
     };
   }
 
@@ -110,7 +115,7 @@ export const generateMetadata = async ({
       vehicleName,
       highlights: highlightText,
     }),
-    alternates,
+    ...indexing,
   };
 };
 
@@ -137,7 +142,7 @@ export default async function VehicleDetailPage({
   const t = await getTranslations("vehicleDetail");
   const tCommon = await getTranslations("common");
 
-  const vehicle = await getVehicleById(id);
+  const { vehicle } = await loadVehicle(id);
 
   if (!vehicle) {
     notFound();
