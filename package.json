@@ -42,7 +42,7 @@
     "react-dom": "^19.3.0",
     "recharts": "^3.9.0",
     "simple-icons": "^16.34.0",
-    "zod": "^3.25.67"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
