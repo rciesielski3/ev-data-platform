@@ -40,7 +40,9 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "languageSwitcherLabel": "Change language",
-    "corridors": "Corridors"
+    "corridors": "Corridors",
+    "connectors": "Connectors",
+    "guides": "Guides"
   },
   "home": {
     "title": "EV Charging Stations in Poland - EIPA/UDT Data | EVSource",
