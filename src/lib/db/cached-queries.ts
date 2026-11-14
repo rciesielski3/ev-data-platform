@@ -1,5 +1,7 @@
 import { cache } from "react";
 
+import { unstable_cache } from "next/cache";
+
 import {
   buildProvinceIntelligenceRows,
   type ProvinceIntelligenceRow,
@@ -11,22 +13,14 @@ import {
 import type { CorridorStationInput } from "@/features/corridors/gap-detection";
 import { prisma } from "@/lib/db/prisma";
 
-// These helpers wrap the shared Prisma query + row-building call in React's
-// `cache()`. `cache()` memoizes per request/render (App Router request
-// dedup) - it is NOT a cross-request cache - so multiple callers within the
-// same request (e.g. a page and an export route hit during the same
-// navigation, or two sections of the same page) share a single Prisma
-// round-trip instead of each re-running the full station scan.
-
 /**
  * Fetches every charging station with the fields needed for province-level
- * aggregation and builds the province intelligence rows.
- *
- * Memoized per request via React's `cache()`.
+ * aggregation and builds the province intelligence rows. Cached across
+ * requests for one hour so visitors do not trigger a full station scan.
  *
  * @deprecated Use snapshot reads from daily precomputed snapshots instead.
  */
-export const getProvinceIntelligenceRows = cache(
+export const getProvinceIntelligenceRows = unstable_cache(
   async (): Promise<ProvinceIntelligenceRow[]> => {
     const stations = await prisma.chargingStation.findMany({
       select: {
@@ -48,17 +42,18 @@ export const getProvinceIntelligenceRows = cache(
 
     return buildProvinceIntelligenceRows(stations);
   },
+  ["province-intelligence-rows"],
+  { revalidate: 3600 },
 );
 
 /**
  * Fetches every charging station with the fields needed for operator-level
- * aggregation and builds the operator intelligence rows.
- *
- * Memoized per request via React's `cache()`.
+ * aggregation and builds the operator intelligence rows. Cached across
+ * requests for one hour so visitors do not trigger a full station scan.
  *
  * @deprecated Use snapshot reads from daily precomputed snapshots instead.
  */
-export const getOperatorIntelligenceRows = cache(
+export const getOperatorIntelligenceRows = unstable_cache(
   async (): Promise<OperatorIntelligenceRow[]> => {
     const stations = await prisma.chargingStation.findMany({
       select: {
@@ -83,6 +78,8 @@ export const getOperatorIntelligenceRows = cache(
 
     return buildOperatorIntelligenceRows(stations);
   },
+  ["operator-intelligence-rows"],
+  { revalidate: 3600 },
 );
 
 /**
