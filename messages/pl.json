@@ -40,7 +40,9 @@
     "openMenu": "Otwórz menu",
     "closeMenu": "Zamknij menu",
     "languageSwitcherLabel": "Zmień język",
-    "corridors": "Korytarze"
+    "corridors": "Korytarze",
+    "connectors": "Złącza",
+    "guides": "Poradniki"
   },
   "home": {
     "title": "Stacje ładowania EV w Polsce - rejestr EIPA/UDT | EVSource",
