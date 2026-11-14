@@ -65,10 +65,9 @@ const loadStation = async (id: string) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("station detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
-    return {
-      station: buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt),
-      fromSnapshot: true,
-    };
+    const station = buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);
+    if (!station) throw error;
+    return { station, fromSnapshot: true };
   }
 };
 
