@@ -51,10 +51,9 @@ const loadVehicle = async (id: string) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicle detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();
-    return {
-      vehicle: buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt),
-      fromSnapshot: true,
-    };
+    const vehicle = buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt);
+    if (!vehicle) throw error;
+    return { vehicle, fromSnapshot: true };
   }
 };
 
