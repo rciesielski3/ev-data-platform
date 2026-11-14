@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { SITE_URL } from "@/lib/config/site";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
+import { getAllBlogSlugs } from "@/lib/blog/posts";
 
 export const revalidate = 3600;
 
@@ -18,6 +19,9 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/coverage", priority: 0.8, changeFrequency: "daily" },
   { path: "/corridors", priority: 0.8, changeFrequency: "daily" },
   { path: "/connectors", priority: 0.8, changeFrequency: "daily" },
+  { path: "/trends", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/state-of-charging", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/reports", priority: 0.6, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
 ];
@@ -33,7 +37,6 @@ const loadSitemapRecords = async (): Promise<{
       prisma.chargingStation.findMany({
         select: { id: true, updatedAt: true },
         orderBy: { updatedAt: "desc" },
-        take: 5000,
       }),
       prisma.evModel.findMany({
         select: { id: true, updatedAt: true },
@@ -68,6 +71,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
+  const blogEntries: MetadataRoute.Sitemap = getAllBlogSlugs().map((slug) => ({
+    url: `${SITE_URL}/blog/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   const { stations, vehicles } = await loadSitemapRecords();
 
   const stationEntries: MetadataRoute.Sitemap = stations.map((station) => ({
@@ -84,5 +93,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...stationEntries, ...vehicleEntries];
+  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...blogEntries, ...stationEntries, ...vehicleEntries];
 }
