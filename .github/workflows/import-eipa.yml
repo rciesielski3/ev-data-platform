@@ -2,7 +2,7 @@ name: Import EIPA charging stations
 
 on:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 5 */3 * *"
   workflow_dispatch:
 
 jobs:
