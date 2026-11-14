@@ -43,9 +43,9 @@
     "corridors": "Korytarze"
   },
   "home": {
-    "title": "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
-    "og_title": "evsource.pl - Mapa Stacji Ładowania EV",
+    "title": "Stacje ładowania EV w Polsce - rejestr EIPA/UDT | EVSource",
+    "description": "Przegląd stacji ładowania EV w Polsce na podstawie oficjalnego rejestru EIPA/UDT. Liczba stacji, złączy i operatorów w jednym miejscu.",
+    "og_title": "Stacje ładowania EV w Polsce | EVSource",
     "og_description": "Znajdź stacje ładowania EV blisko siebie. {stations} stacji i {connectors} złączy w Polsce.",
     "heroBadge": "Dane EV dla Polski",
     "lastImportedAt": "Ostatni import",
@@ -174,8 +174,8 @@
     "backLink": "Wróć do pojazdów"
   },
   "stations": {
-    "title": "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Wyszukaj stacje, filtry, szczegóły operatorów, analizy pokrycia wojewódzkiego.",
+    "title": "Stacje ładowania EV: szukaj według miasta i mocy | EVSource",
+    "description": "Znajdź stacje ładowania EV w Polsce. Filtruj według miasta, operatora i mocy ładowania, a wyniki przeglądaj na czytelnej liście z danych EIPA/UDT.",
     "viewInsightsLink": "Zobacz statystyki",
     "browseCatalogLink": "Przeglądaj katalog EV",
     "setupRequiredMessage": "Dane są chwilowo niedostępne. Spróbuj ponownie później.",
@@ -283,7 +283,11 @@
       "Payment/authentication": "Płatność/autoryzacja"
     },
     "metaTitle": "{name} – {city} | EVSource",
-    "metaTitleFallback": "{name} | EVSource"
+    "metaTitleFallback": "{name} | EVSource",
+    "metaTitleWithPower": "{name} – {city} ({power}) | EVSource",
+    "metaTitleFallbackWithPower": "{name} ({power}) | EVSource",
+    "metaTitleOperator": "Ładowarka {operator}",
+    "metaTitleGeneric": "Stacja ładowania EV"
   },
   "stationDetailError": {
     "title": "Szczegóły stacji niedostępne",
@@ -492,8 +496,8 @@
     "unknownExplanation": "Brak daty potwierdzenia danych dla tej stacji."
   },
   "map": {
-    "title": "Interaktywna Mapa Ładowarek EV w Polsce | Znajdź Blisko Ciebie | evsource.pl",
-    "description": "Interaktywna mapa infrastruktury ładowania pojazdów elektrycznych w Polsce. Filtry, czasy ładowania, dostępność. Znajdź ładowarkę blisko ciebie.",
+    "title": "Mapa ładowarek EV w Polsce - interaktywna | EVSource",
+    "description": "Interaktywna mapa ładowarek EV w Polsce oparta na rejestrze EIPA/UDT. Przeglądaj stacje na mapie, filtruj je i sprawdź operatora oraz złącza.",
     "searchListLink": "Lista wyszukiwania",
     "viewInsightsLink": "Zobacz statystyki",
     "setupRequiredMessage": "Dane są chwilowo niedostępne. Spróbuj ponownie później.",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
@@ -12,6 +12,10 @@ import {
   buildSummarySentence,
 } from "@/features/charging/station-summary";
 import { buildStationPlaceJsonLd } from "@/features/charging/station-seo";
+import {
+  buildStationMetaTitle,
+  pickReadableStationName,
+} from "@/features/charging/station-title";
 import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
@@ -20,6 +24,7 @@ import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { DATA_SOURCES } from "@/lib/sources/constants";
 
 const getCachedStationById = cache((id: string) =>
   prisma.chargingStation.findUnique({
@@ -32,59 +37,70 @@ const getCachedStationById = cache((id: string) =>
         },
       },
       connectors: {
-        orderBy: [{ powerKw: "desc" }, { connectorType: "asc" }],
+        orderBy: [
+          { powerKw: { sort: "desc", nulls: "last" } },
+          { connectorType: "asc" },
+        ],
       },
     },
   }),
 );
 
-const getStationById = async (id: string) => {
+const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
+  prisma.chargingStation.findUnique({
+    where: {
+      sourceName_sourceRecordId: {
+        sourceName: DATA_SOURCES.EIPA.key,
+        sourceRecordId,
+      },
+    },
+    select: { id: true },
+  }),
+);
+
+const loadStation = async (id: string) => {
   try {
-    return await getCachedStationById(id);
+    return { station: await getCachedStationById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("station detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
-    return buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);
+    return {
+      station: buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt),
+      fromSnapshot: true,
+    };
   }
 };
 
 export const generateStationDetailMetadata = async (
   id: string,
 ): Promise<Metadata> => {
-  const station = await getStationById(id);
+  const { station, fromSnapshot } = await loadStation(id);
 
   if (!station) {
     return { robots: { index: false, follow: false } };
   }
 
   const t = await getTranslations("stationDetail");
-  const tCommon = await getTranslations("common");
   const locale = await getLocale();
-  const details = buildStationDetails(station, locale as SupportedLocale);
-  const name =
-    details.title === "Charging station"
-      ? tCommon("chargingStationFallback")
-      : details.title;
-
-  const summarySentence = buildSummarySentence(
-    buildStationSummaryParts({
-      operatorName:
-        station.operator?.name ?? station.operator?.normalizedName ?? null,
-      city: station.city,
-      connectorTypes: station.connectors.map((c) => c.connectorType),
-      maxPowerKw: station.connectors[0]?.powerKw ?? null,
-    }),
-    t,
-    locale,
-  );
+  const summaryParts = buildStationSummaryParts({
+    operatorName:
+      station.operator?.name ?? station.operator?.normalizedName ?? null,
+    city: station.city,
+    connectorTypes: station.connectors.map((c) => c.connectorType),
+    maxPowerKw: station.connectors[0]?.powerKw ?? null,
+  });
 
   return {
-    title: station.city
-      ? t("metaTitle", { name, city: station.city })
-      : t("metaTitleFallback", { name }),
-    description: summarySentence,
-    alternates: { canonical: `/stations/${id}` },
+    title: buildStationMetaTitle(
+      summaryParts,
+      pickReadableStationName([station.name]),
+      t,
+    ),
+    description: buildSummarySentence(summaryParts, t, locale),
+    ...(fromSnapshot
+      ? { robots: { index: false, follow: true } }
+      : { alternates: { canonical: `/stations/${id}` } }),
   };
 };
 
@@ -121,12 +137,22 @@ const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
   unknown: "freshnessUnknownSource",
 };
 
+export const redirectLegacyStationId = async (id: string) => {
+  const { station } = await loadStation(id);
+  if (!/^\d+$/.test(id) || station) return;
+  const aliased = await findStationIdBySourceRecordId(id).catch((error) => {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    return null;
+  });
+  if (aliased) permanentRedirect(`/stations/${aliased.id}`);
+};
+
 export const StationDetailView = async ({ id }: { id: string }) => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stationDetail");
   const tCommon = await getTranslations("common");
 
-  const station = await getStationById(id);
+  const { station } = await loadStation(id);
 
   if (!station) {
     notFound();

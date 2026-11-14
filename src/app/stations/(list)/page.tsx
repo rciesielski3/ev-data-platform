@@ -60,16 +60,16 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-      description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
+      title: t("title") || "Stacje ładowania EV: szukaj według miasta i mocy | EVSource",
+      description: t("description") || "Znajdź stacje ładowania EV w Polsce. Filtruj według miasta, operatora i mocy ładowania, a wyniki przeglądaj na czytelnej liście z danych EIPA/UDT.",
       alternates: { canonical: "/stations" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: t("title") || "Mapa Stacji Ładowania EV w Polsce - Wyszukaj Blisko Ciebie | evsource.pl",
-    description: t("description") || "Wyszukaj stacje ładowania EV w Polsce. Mapa interaktywna, filtry, szczegóły operatorów. Odnajdź ładowarkę blisko ciebie.",
+    title: t("title") || "Stacje ładowania EV: szukaj według miasta i mocy | EVSource",
+    description: t("description") || "Znajdź stacje ładowania EV w Polsce. Filtruj według miasta, operatora i mocy ładowania, a wyniki przeglądaj na czytelnej liście z danych EIPA/UDT.",
     alternates: { canonical: "/stations" },
   };
 };
