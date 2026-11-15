@@ -1,11 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
-  buildBreadcrumbJsonLd,
   generateConnectorMetadata,
   generateFAQSchema,
   generatePageMetadata,
 } from "./metadata";
-import { SITE_URL } from "@/lib/config/site";
 
 describe("generateConnectorMetadata", () => {
   it("uses the supplied title and description across canonical, OG and Twitter tags", () => {
@@ -67,17 +65,3 @@ describe("generatePageMetadata", () => {
   });
 });
 
-describe("buildBreadcrumbJsonLd", () => {
-  it("numbers items and prefixes paths with the site url", () => {
-    const schema = buildBreadcrumbJsonLd([
-      { name: "evsource.pl", path: "" },
-      { name: "Operatorzy", path: "/operators" },
-    ]);
-
-    expect(schema["@type"]).toBe("BreadcrumbList");
-    expect(schema.itemListElement).toEqual([
-      { "@type": "ListItem", position: 1, name: "evsource.pl", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Operatorzy", item: `${SITE_URL}/operators` },
-    ]);
-  });
-});

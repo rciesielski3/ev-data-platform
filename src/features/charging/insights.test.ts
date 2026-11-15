@@ -32,6 +32,23 @@ describe("buildChargingInsights", () => {
     expect(insights.isEmpty).toBe(true);
   });
 
+  it("merges operator rows that share a name regardless of casing", () => {
+    const insights = buildChargingInsights({
+      ...baseInput,
+      totalStations: 100,
+      operatorRows: [
+        { operatorName: "GreenWay", stationCount: 60 },
+        { operatorName: "Other", stationCount: 30 },
+        { operatorName: "Greenway", stationCount: 10 },
+      ],
+    });
+
+    expect(insights.topOperators.map(({ label, stationCount }) => ({ label, stationCount }))).toEqual([
+      { label: "GreenWay", stationCount: 70 },
+      { label: "Other", stationCount: 30 },
+    ]);
+  });
+
   it("sorts operator totals by station count and name", () => {
     const insights = buildChargingInsights({
       ...baseInput,

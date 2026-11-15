@@ -88,7 +88,7 @@ describe("getOperatorCityHref", () => {
   });
 
   it("returns null for cities without a regional page", () => {
-    expect(getOperatorCityHref("Radom")).toBeNull();
+    expect(getOperatorCityHref("Pcim")).toBeNull();
   });
 });
 

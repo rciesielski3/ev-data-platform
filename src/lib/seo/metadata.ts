@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { OG_IMAGE_PATH, SITE_URL } from "@/lib/config/site";
+import { OG_IMAGE_PATH } from "@/lib/config/site";
 
 export interface ConnectorMetadataInput {
   type: string;
@@ -43,19 +43,6 @@ export const generateConnectorMetadata = ({
   description,
 }: ConnectorMetadataInput): Metadata =>
   generatePageMetadata({ path: `/connectors/${type}`, title, description });
-
-export const buildBreadcrumbJsonLd = (
-  items: Array<{ name: string; path: string }>,
-) => ({
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: items.map((item, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: item.name,
-    item: `${SITE_URL}${item.path}`,
-  })),
-});
 
 export const generateFAQSchema = (
   faqs: Array<{ question: string; answer: string }>,

@@ -18,7 +18,9 @@ import {
   getOperatorPageHref,
 } from "@/features/charging/operator-pages";
 import { getOperatorPages } from "@/lib/db/cached-queries";
-import { buildBreadcrumbJsonLd, generatePageMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/config/site";
+import { buildBreadcrumbSchema, serializeJsonLd } from "@/lib/seo/article-schema";
+import { generatePageMetadata } from "@/lib/seo/metadata";
 
 export const revalidate = 86400;
 
@@ -86,13 +88,13 @@ const OperatorLandingPage = async ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            buildBreadcrumbJsonLd([
-              { name: "evsource.pl", path: "" },
-              { name: t("breadcrumbOperators"), path: "/operators" },
-              { name, path: getOperatorPageHref(page.slug) },
+          __html: serializeJsonLd(
+            buildBreadcrumbSchema([
+              { name: "evsource.pl", url: SITE_URL },
+              { name: t("breadcrumbOperators"), url: `${SITE_URL}/operators` },
+              { name, url: `${SITE_URL}${getOperatorPageHref(page.slug)}` },
             ]),
-          ).replace(/</g, "\\u003c"),
+          ),
         }}
       />
 

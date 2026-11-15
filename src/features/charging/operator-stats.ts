@@ -1,7 +1,6 @@
-import type { Prisma } from "@prisma/client";
-
-import { buildRegionalCityWhere, findRegionalCity } from "@/features/charging/regional-stations";
-import { prisma } from "@/lib/db/prisma";
+import { matchesRegionalCity } from "@/features/charging/regional-stations";
+import { formatStationOperatorLabel } from "@/features/charging/station-search";
+import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 
 export type OperatorConnectorSummary = {
   type: string;
@@ -79,106 +78,36 @@ const calculateStatsFromStations = (stations: Array<{
   };
 };
 
-export const calculateOperatorCityStats = async (
-  citySlug: string,
-  operatorName: string,
-): Promise<OperatorCityStats> => {
-  const city = findRegionalCity(citySlug);
-
-  let where: Prisma.ChargingStationWhereInput;
-
-  if (city) {
-    where = {
-      AND: [
-        buildRegionalCityWhere(city),
-        { operator: { name: operatorName } },
-      ],
-    };
-  } else {
-    where = {
-      operator: { name: operatorName },
-      city: citySlug,
-    };
-  }
-
-  const stations = await prisma.chargingStation.findMany({
-    where,
-    select: {
-      sourceUpdatedAt: true,
-      connectors: {
-        select: {
-          powerKw: true,
-          connectorType: true,
-        },
-      },
-    },
-  });
-
-  return calculateStatsFromStations(stations);
+export type RegionalOperatorStationInput = {
+  city: string | null;
+  province: string | null;
+  sourceUpdatedAt: Date | null;
+  operator: { name: string | null; normalizedName: string | null } | null;
+  connectors: Array<{ powerKw: number | null; connectorType: string }>;
 };
 
-export const calculateOperatorCityStatsBatch = async (
-  citySlug: string,
-  operatorNames: string[],
-): Promise<Record<string, OperatorCityStats>> => {
-  if (operatorNames.length === 0) {
-    return {};
-  }
+export const buildRegionalOperatorStats = (
+  stations: RegionalOperatorStationInput[],
+): OperatorStatsMap => {
+  const result: OperatorStatsMap = {};
 
-  const city = findRegionalCity(citySlug);
+  for (const city of REGIONAL_CITIES) {
+    const stationsByOperator = new Map<string, RegionalOperatorStationInput[]>();
 
-  let where: Prisma.ChargingStationWhereInput;
-
-  if (city) {
-    where = {
-      AND: [
-        buildRegionalCityWhere(city),
-        { operator: { name: { in: operatorNames } } },
-      ],
-    };
-  } else {
-    where = {
-      operator: { name: { in: operatorNames } },
-      city: citySlug,
-    };
-  }
-
-  const stations = await prisma.chargingStation.findMany({
-    where,
-    select: {
-      operator: { select: { name: true } },
-      sourceUpdatedAt: true,
-      connectors: {
-        select: {
-          powerKw: true,
-          connectorType: true,
-        },
-      },
-    },
-  });
-
-  const stationsByOperator = new Map<string, Array<{
-    sourceUpdatedAt: Date | null;
-    connectors: Array<{ powerKw: number | null; connectorType: string }>;
-  }>>();
-
-  for (const station of stations) {
-    const operatorName = station.operator?.name;
-    if (!operatorName) continue;
-
-    if (!stationsByOperator.has(operatorName)) {
-      stationsByOperator.set(operatorName, []);
+    for (const station of stations) {
+      if (!station.operator || !matchesRegionalCity(station, city)) continue;
+      const label = formatStationOperatorLabel(station.operator);
+      const group = stationsByOperator.get(label) ?? [];
+      group.push(station);
+      stationsByOperator.set(label, group);
     }
-    stationsByOperator.get(operatorName)!.push({
-      sourceUpdatedAt: station.sourceUpdatedAt,
-      connectors: station.connectors,
-    });
-  }
 
-  const result: Record<string, OperatorCityStats> = {};
-  for (const operatorName of operatorNames) {
-    const operatorStations = stationsByOperator.get(operatorName) ?? [];
-    result[operatorName] = calculateStatsFromStations(operatorStations);
+    result[city.slug] = Object.fromEntries(
+      Array.from(stationsByOperator, ([label, operatorStations]) => [
+        label,
+        calculateStatsFromStations(operatorStations),
+      ]),
+    );
   }
 
   return result;
