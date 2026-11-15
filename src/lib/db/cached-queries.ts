@@ -7,6 +7,10 @@ import {
   type ProvinceIntelligenceRow,
 } from "@/features/charging/province-intelligence";
 import {
+  buildOperatorPages,
+  type OperatorPage,
+} from "@/features/charging/operator-pages";
+import {
   buildOperatorIntelligenceRows,
   type OperatorIntelligenceRow,
 } from "@/features/charging/operator-intelligence";
@@ -80,6 +84,26 @@ export const getOperatorIntelligenceRows = unstable_cache(
   },
   ["operator-intelligence-rows"],
   { revalidate: 3600 },
+);
+
+export const getOperatorPages = unstable_cache(
+  async (): Promise<OperatorPage[]> => {
+    const stations = await prisma.chargingStation.findMany({
+      select: {
+        id: true,
+        name: true,
+        city: true,
+        province: true,
+        operator: { select: { name: true, normalizedName: true } },
+        connectors: { select: { connectorType: true, powerKw: true } },
+      },
+      orderBy: { id: "asc" },
+    });
+
+    return buildOperatorPages(stations);
+  },
+  ["operator-pages"],
+  { revalidate: 86400 },
 );
 
 /**

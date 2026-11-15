@@ -148,6 +148,40 @@ describe("buildOperatorIntelligenceRows", () => {
     });
   });
 
+  it("ignores blank, unknown and differently cased provinces", () => {
+    const rows = buildOperatorIntelligenceRows([
+      station({ id: "station-1", province: "Mazowieckie" }),
+      station({ id: "station-2", province: "mazowieckie " }),
+      station({ id: "station-3", province: "Unknown province" }),
+      station({ id: "station-4", province: " " }),
+    ]);
+
+    expect(rows[0]).toMatchObject({ stationCount: 4, provinceCount: 1 });
+  });
+
+  it("merges separate operator records that share a name instead of overwriting them", () => {
+    const rows = buildOperatorIntelligenceRows([
+      station({
+        id: "station-1",
+        operator: { name: "GreenWay Polska Sp. z o.o.", normalizedName: "eipa-operator-5" },
+      }),
+      station({
+        id: "station-2",
+        operator: { name: "GreenWay Polska Sp. z o.o.", normalizedName: "eipa-operator-1834" },
+      }),
+      station({
+        id: "station-3",
+        operator: { name: "GREENWAY POLSKA SP. Z O.O.", normalizedName: "eipa-operator-1850" },
+      }),
+    ]);
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      operatorName: "GreenWay Polska Sp. z o.o.",
+      stationCount: 3,
+    });
+  });
+
   it("does not inflate station counts for stations with multiple connectors", () => {
     const rows = buildOperatorIntelligenceRows([
       station({

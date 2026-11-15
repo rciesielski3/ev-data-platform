@@ -7,33 +7,42 @@ export interface ConnectorMetadataInput {
   description: string;
 }
 
+export interface PageMetadataInput {
+  path: string;
+  title: string;
+  description: string;
+}
+
+export const generatePageMetadata = ({
+  path,
+  title,
+  description,
+}: PageMetadataInput): Metadata => ({
+  title,
+  description,
+  alternates: { canonical: path },
+  openGraph: {
+    type: "website",
+    url: path,
+    title,
+    description,
+    siteName: "evsource.pl",
+    images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [OG_IMAGE_PATH],
+  },
+});
+
 export const generateConnectorMetadata = ({
   type,
   title,
   description,
-}: ConnectorMetadataInput): Metadata => {
-  const url = `/connectors/${type}`;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      type: "website",
-      url,
-      title,
-      description,
-      siteName: "evsource.pl",
-      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: title }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [OG_IMAGE_PATH],
-    },
-  };
-};
+}: ConnectorMetadataInput): Metadata =>
+  generatePageMetadata({ path: `/connectors/${type}`, title, description });
 
 export const generateFAQSchema = (
   faqs: Array<{ question: string; answer: string }>,
