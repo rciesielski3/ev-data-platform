@@ -18,6 +18,11 @@ import {
   fetchEipaStations,
 } from "@/lib/sources/eipa/fetch";
 import { normalizeEipaStations } from "@/lib/sources/eipa/normalize";
+import {
+  getPruneSkipReason,
+  getStaleStationIds,
+  isPruneDryRun,
+} from "@/lib/sources/eipa/prune";
 import type {
   EipaDictionary,
   EipaOperator,
@@ -37,6 +42,7 @@ import { getProvincePopulationAndArea } from "@/features/charging/province-popul
 const SOURCE_NAME = DATA_SOURCES.EIPA.key;
 const PROGRESS_STEP = 100;
 const UPSERT_BATCH_SIZE = 20;
+const PRUNE_BATCH_SIZE = 1000;
 
 const chunk = <T>(items: T[], size: number): T[][] => {
   const chunks: T[][] = [];
@@ -273,12 +279,68 @@ const upsertStation = async (
   return savedStation;
 };
 
+type PruneResult =
+  | { skipped: string }
+  | { dryRun: boolean; stations: number; operators: number };
+
+const getPreviousFetchedCount = async (sourceId: string) => {
+  const previousRun = await prisma.ingestionRun.findFirst({
+    where: {
+      sourceId,
+      status: { in: [IngestionStatus.SUCCESS, IngestionStatus.PARTIAL] },
+      recordsFetched: { gt: 0 },
+    },
+    orderBy: { startedAt: "desc" },
+    select: { recordsFetched: true },
+  });
+  return previousRun?.recordsFetched ?? null;
+};
+
+const pruneStaleStations = async (
+  fetchedSourceRecordIds: string[],
+): Promise<PruneResult> => {
+  const dryRun = isPruneDryRun();
+  const existing = await prisma.chargingStation.findMany({
+    where: { sourceName: SOURCE_NAME, isManualOverride: false },
+    select: { id: true, sourceRecordId: true },
+  });
+  const staleIds = getStaleStationIds(existing, fetchedSourceRecordIds);
+
+  if (dryRun) {
+    const operators = await prisma.chargingOperator.count({
+      where: { sourceName: SOURCE_NAME, stations: { none: {} } },
+    });
+    console.log(
+      `[EIPA] prune dry run: would delete ${staleIds.length}/${existing.length} stations not in this export (sample: ${staleIds.slice(0, 10).join(", ")}); ${operators} operators already have no stations`,
+    );
+    return { dryRun, stations: staleIds.length, operators };
+  }
+
+  let stations = 0;
+  for (const ids of chunk(staleIds, PRUNE_BATCH_SIZE)) {
+    const deleted = await prisma.chargingStation.deleteMany({
+      where: { id: { in: ids } },
+    });
+    stations += deleted.count;
+  }
+
+  const { count: operators } = await prisma.chargingOperator.deleteMany({
+    where: { sourceName: SOURCE_NAME, stations: { none: {} } },
+  });
+
+  console.log(
+    `[EIPA] pruned ${stations}/${existing.length} stations not in this export and ${operators} operators left without stations`,
+  );
+  return { dryRun, stations, operators };
+};
+
 export type EipaImportResult = {
   runId: string;
   fetched: number;
   upserted: number;
   failed: number;
   status: IngestionStatus;
+  prune: PruneResult;
 };
 
 
@@ -472,6 +534,28 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       }
     }
 
+    let prune: PruneResult;
+    try {
+      const skipReason = getPruneSkipReason({
+        importLimit,
+        status,
+        fetchedCount: normalized.length,
+        previousFetchedCount: await getPreviousFetchedCount(source.id),
+      });
+      if (skipReason) {
+        console.warn(`[EIPA] skipping stale station prune: ${skipReason}`);
+        prune = { skipped: skipReason };
+      } else {
+        prune = await pruneStaleStations(
+          normalized.map((station) => station.sourceRecordId),
+        );
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn("[EIPA] stale station prune failed; import result is unaffected:", message);
+      prune = { skipped: `prune failed: ${message}` };
+    }
+
     // Calculate province metrics and check for regressions
     let provinceMetrics: ProvinceMetricsSnapshot[] = [];
     const alerts: string[] = [];
@@ -528,6 +612,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
         invalidSample: invalid.slice(0, 20),
         provinceMetrics,
         alerts: alerts.length > 0 ? alerts : undefined,
+        prune,
       },
       errorMessage,
     });
@@ -552,6 +637,7 @@ export const runEipaImport = async (): Promise<EipaImportResult> => {
       upserted,
       failed: invalid.length,
       status,
+      prune,
     };
   } catch (error) {
     console.timeEnd("[EIPA] total import");
