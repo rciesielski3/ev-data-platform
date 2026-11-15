@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
@@ -7,6 +8,7 @@ import {
   formatInteger,
   formatPercent,
 } from "@/features/charging/insights";
+import { findRegionalProvince } from "@/features/charging/regional-stations";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 
 type ProvincesDetailsProps = {
@@ -80,40 +82,52 @@ const ProvinceTable = ({
         </tr>
       </thead>
       <tbody className="divide-y divide-slate-100">
-        {rows.map((row) => (
-          <tr key={row.province} className="align-top">
-            <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
-              {localizeProvinceLabel(row.province)}
-            </th>
-            <td className="px-4 py-4 text-slate-700">
-              {formatInteger(row.stationCount)}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatInteger(row.connectorCount)}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatInteger(row.knownPowerConnectorCount)}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatInteger(row.hpcStationCount)}
-              <span className="ml-1 text-slate-400">
-                ({formatHpcShare(row)})
-              </span>
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatPowerMetric(row.maxPowerKw) || unknownLabel}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatPowerMetric(row.averagePowerKw) || unknownLabel}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatInteger(row.operatorCount)}
-            </td>
-            <td className="px-4 py-4 text-slate-700">
-              {formatPerCapita(row, unknownLabel)}
-            </td>
-          </tr>
-        ))}
+        {rows.map((row) => {
+          const regionalPage = findRegionalProvince(row.province);
+          return (
+            <tr key={row.province} className="align-top">
+              <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+                {regionalPage ? (
+                  <Link
+                    href={`/stations/${regionalPage.slug}`}
+                    className="text-emerald-700 hover:text-emerald-900 hover:underline"
+                  >
+                    {localizeProvinceLabel(row.province)}
+                  </Link>
+                ) : (
+                  localizeProvinceLabel(row.province)
+                )}
+              </th>
+              <td className="px-4 py-4 text-slate-700">
+                {formatInteger(row.stationCount)}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatInteger(row.connectorCount)}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatInteger(row.knownPowerConnectorCount)}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatInteger(row.hpcStationCount)}
+                <span className="ml-1 text-slate-400">
+                  ({formatHpcShare(row)})
+                </span>
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatPowerMetric(row.maxPowerKw) || unknownLabel}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatPowerMetric(row.averagePowerKw) || unknownLabel}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatInteger(row.operatorCount)}
+              </td>
+              <td className="px-4 py-4 text-slate-700">
+                {formatPerCapita(row, unknownLabel)}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   </div>

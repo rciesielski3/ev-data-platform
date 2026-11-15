@@ -1,11 +1,35 @@
 import type { Prisma } from "@prisma/client";
 
+import type { OperatorCityStats } from "@/features/charging/operator-stats";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { REGIONAL_CITIES, type RegionalCity } from "@/lib/config/regional-cities";
 
 export const findRegionalCity = (slug: string): RegionalCity | undefined =>
   REGIONAL_CITIES.find((city) => city.slug === slug);
+
+const normalizeLocationValue = (value: string) => value.trim().toLowerCase();
+
+export const matchesRegionalCity = (
+  station: { city?: string | null; province?: string | null },
+  city: RegionalCity,
+): boolean => {
+  const value = city.match.type === "province" ? station.province : station.city;
+  if (!value) return false;
+  const normalized = normalizeLocationValue(value);
+  return city.match.values.some(
+    (candidate) => normalizeLocationValue(candidate) === normalized,
+  );
+};
+
+export const findRegionalProvince = (
+  province: string,
+): RegionalCity | undefined =>
+  REGIONAL_CITIES.find(
+    (city) =>
+      city.match.type === "province" &&
+      matchesRegionalCity({ province }, city),
+  );
 
 export const buildRegionalCityWhere = (
   city: RegionalCity,
@@ -112,5 +136,35 @@ export const buildRegionalCityStats = (
       knownPowerConnectorCount > 0
         ? roundToOneDecimal(totalPowerKw / knownPowerConnectorCount)
         : null,
+  };
+};
+
+export type RegionalOperatorSummary = {
+  stationCount: number;
+  operatorCount: number;
+  operatorBreakdown: RegionalCityOperatorBreakdown[];
+  maxPowerKw: number | null;
+};
+
+export const summarizeRegionalOperatorStats = (
+  operatorStats: Record<string, OperatorCityStats>,
+): RegionalOperatorSummary => {
+  const entries = Object.entries(operatorStats);
+  const powers = entries
+    .map(([, stats]) => stats.maxPowerKw)
+    .filter((power): power is number => power !== null && power !== undefined);
+
+  return {
+    stationCount: entries.reduce((sum, [, stats]) => sum + stats.stationCount, 0),
+    operatorCount: entries.length,
+    operatorBreakdown: entries
+      .map(([name, stats]) => ({ name, stationCount: stats.stationCount }))
+      .sort(
+        (a, b) =>
+          b.stationCount - a.stationCount ||
+          a.name.localeCompare(b.name, "en", { sensitivity: "base" }),
+      )
+      .slice(0, TOP_OPERATOR_COUNT),
+    maxPowerKw: powers.length > 0 ? Math.max(...powers) : null,
   };
 };
