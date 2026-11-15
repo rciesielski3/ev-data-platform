@@ -13,6 +13,7 @@ import {
   type HighestPowerStationRow,
   type OperatorInsightRow,
 } from "@/features/charging/insights";
+import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 import { prisma } from "@/lib/db/prisma";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 import { OG_IMAGE_PATH } from "@/lib/config/site";
@@ -49,37 +50,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const INSIGHT_LIMIT = 10;
 const HIGHEST_POWER_CANDIDATE_LIMIT = 80;
 
-const getOperatorRows = async (): Promise<OperatorInsightRow[]> => {
-  const operatorCounts = await prisma.chargingStation.groupBy({
-    by: ["operatorId"],
-    _count: { id: true },
-    orderBy: { _count: { id: "desc" } },
-    take: INSIGHT_LIMIT * 2,
-  });
-
-  const operatorIds = operatorCounts
-    .map((row) => row.operatorId)
-    .filter((operatorId): operatorId is string => Boolean(operatorId));
-
-  const operators =
-    operatorIds.length > 0
-      ? await prisma.chargingOperator.findMany({
-          where: { id: { in: operatorIds } },
-          select: { id: true, name: true, normalizedName: true },
-        })
-      : [];
-  const operatorNames = new Map(
-    operators.map((operator) => [
-      operator.id,
-      operator.name ?? operator.normalizedName,
-    ]),
-  );
-
-  return operatorCounts.map((row) => ({
-    operatorName: row.operatorId ? operatorNames.get(row.operatorId) ?? null : null,
-    stationCount: row._count.id,
-  }));
-};
+const getOperatorRows = async (): Promise<OperatorInsightRow[]> =>
+  (await getOperatorIntelligenceRows())
+    .map(({ operatorName, stationCount }) => ({ operatorName, stationCount }))
+    .sort((left, right) => right.stationCount - left.stationCount)
+    .slice(0, INSIGHT_LIMIT * 2);
 
 const getHighestPowerStationRows = async (): Promise<HighestPowerStationRow[]> => {
   const connectors = await prisma.chargingConnector.findMany({

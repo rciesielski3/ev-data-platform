@@ -1,3 +1,4 @@
+import { toOperatorGroupKey } from "@/features/charging/operator-intelligence";
 import { formatConnectorLabel } from "@/features/charging/connectors";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 
@@ -76,14 +77,19 @@ export const formatConnectorPower = (powerKw: number) =>
   `${Number.isInteger(powerKw) ? powerKw.toFixed(0) : powerKw.toFixed(1)} kW`;
 
 export const buildChargingInsights = (input: ChargingInsightsInput) => {
-  const operatorTotals = new Map<string, number>();
+  const operatorTotals = new Map<string, { label: string; stationCount: number }>();
 
   for (const row of input.operatorRows) {
     const label = formatOperatorInsightLabel(row.operatorName);
-    operatorTotals.set(label, (operatorTotals.get(label) ?? 0) + row.stationCount);
+    const key = toOperatorGroupKey(label);
+    const existing = operatorTotals.get(key);
+    operatorTotals.set(key, {
+      label: existing?.label ?? label,
+      stationCount: (existing?.stationCount ?? 0) + row.stationCount,
+    });
   }
 
-  const topOperators = Array.from(operatorTotals, ([label, stationCount]) => ({
+  const topOperators = Array.from(operatorTotals.values(), ({ label, stationCount }) => ({
     label,
     stationCount,
     stationShare: formatPercent(stationCount, input.totalStations),
