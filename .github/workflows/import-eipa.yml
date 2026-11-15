@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 5 */3 * *"
   workflow_dispatch:
+    inputs:
+      prune_dry_run:
+        description: "Log stale stations that would be pruned without deleting them"
+        type: boolean
+        default: false
 
 jobs:
   import-eipa:
@@ -23,3 +28,4 @@ jobs:
       - run: npm run import:eipa
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          EIPA_PRUNE_DRY_RUN: ${{ inputs.prune_dry_run && '1' || '' }}
