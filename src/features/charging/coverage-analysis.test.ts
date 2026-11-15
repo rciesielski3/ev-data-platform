@@ -188,6 +188,19 @@ describe("buildCoverageAnalysisFromRows", () => {
     expect(analysis.lowestHpcCoverageProvinces).toHaveLength(2);
   });
 
+  it("does not count the unknown province as a voivodeship", () => {
+    const rows = buildProvinceIntelligenceRows([
+      { province: "Mazowieckie", connectors: [], operator: null },
+      { province: null, connectors: [], operator: null },
+    ]);
+
+    const analysis = buildCoverageAnalysisFromRows(rows);
+
+    expect(analysis.totals.provinceCount).toBe(1);
+    expect(analysis.totals.stationCount).toBe(2);
+    expect(analysis.provinceRows).toHaveLength(2);
+  });
+
   it("reports isEmpty and zeroed totals when there is no station data", () => {
     const analysis = buildCoverageAnalysisFromRows([]);
 

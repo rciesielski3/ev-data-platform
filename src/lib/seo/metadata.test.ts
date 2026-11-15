@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { generateConnectorMetadata, generateFAQSchema } from "./metadata";
+import {
+  generateConnectorMetadata,
+  generateFAQSchema,
+  generatePageMetadata,
+} from "./metadata";
 
 describe("generateConnectorMetadata", () => {
   it("uses the supplied title and description across canonical, OG and Twitter tags", () => {
@@ -47,3 +51,17 @@ describe("generateFAQSchema", () => {
     expect(schema.mainEntity).toEqual([]);
   });
 });
+
+describe("generatePageMetadata", () => {
+  it("uses the path as canonical and Open Graph url", () => {
+    const metadata = generatePageMetadata({
+      path: "/operators/orlen",
+      title: "Stacje ładowania ORLEN",
+      description: "Opis",
+    });
+
+    expect(metadata.alternates?.canonical).toBe("/operators/orlen");
+    expect((metadata.openGraph as Record<string, unknown>).url).toBe("/operators/orlen");
+  });
+});
+

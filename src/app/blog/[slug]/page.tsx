@@ -5,6 +5,11 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
 import type { BlogPost } from "@/lib/blog/types";
 import { SITE_URL } from "@/lib/config/site";
+import {
+  buildArticleSchema,
+  buildBreadcrumbSchema,
+  serializeJsonLd,
+} from "@/lib/seo/article-schema";
 import BlogPostContent from "./blog-post-content";
 
 interface Props {
@@ -66,8 +71,10 @@ export const generateMetadata = async ({
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  await getLocale();
+  const locale = await getLocale();
   const t = await getTranslations("blog");
+  const tNav = await getTranslations("nav");
+  const tNotFound = await getTranslations("notFound");
   const postData = (t.raw("posts") as Record<string, Omit<BlogPost, "slug">>)[
     slug
   ];
@@ -77,9 +84,30 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   const post: BlogPost = { ...postData, slug };
+  const url = `${SITE_URL}/blog/${post.slug}`;
+  const articleJsonLd = buildArticleSchema({
+    title: post.title,
+    description: post.excerpt,
+    url,
+    datePublished: post.date,
+    inLanguage: locale,
+  });
+  const breadcrumbJsonLd = buildBreadcrumbSchema([
+    { name: tNotFound("home"), url: SITE_URL },
+    { name: tNav("guides"), url: `${SITE_URL}/blog` },
+    { name: post.title, url },
+  ]);
 
   return (
     <main className="flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
       <div className="mx-auto max-w-3xl px-6 py-12">
         {/* Header */}
         <header className="mb-8">

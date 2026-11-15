@@ -1,6 +1,7 @@
 import {
   buildProvinceIntelligenceRows,
   type ProvinceIntelligenceRow,
+  UNKNOWN_PROVINCE,
   type ProvinceIntelligenceStationInput,
 } from "@/features/charging/province-intelligence";
 
@@ -124,7 +125,8 @@ export const buildCoverageAnalysisFromRows = (
 
   const totals = rows.reduce(
     (accumulator, row) => ({
-      provinceCount: accumulator.provinceCount + 1,
+      provinceCount:
+        accumulator.provinceCount + (row.province === UNKNOWN_PROVINCE ? 0 : 1),
       stationCount: accumulator.stationCount + row.stationCount,
       connectorCount: accumulator.connectorCount + row.connectorCount,
       knownPowerConnectorCount:

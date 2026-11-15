@@ -6,6 +6,7 @@ import {
   getProvinceIntelligenceRows,
   getOperatorIntelligenceRows,
   getCorridorStations,
+  getOperatorPages,
 } from "@/lib/db/cached-queries";
 
 vi.mock("@/lib/db/prisma");
@@ -171,6 +172,45 @@ describe("cached-queries", () => {
 
       expect(result).toBeDefined();
       expect(Array.isArray(result)).toBe(true);
+    });
+  });
+
+  describe("getOperatorPages", () => {
+    it("selects only the columns the operator pages render", async () => {
+      mockPrisma.chargingStation.findMany = vi.fn().mockResolvedValue([]);
+
+      await getOperatorPages();
+
+      expect(mockPrisma.chargingStation.findMany).toHaveBeenCalledWith({
+        select: {
+          id: true,
+          name: true,
+          city: true,
+          province: true,
+          operator: { select: { name: true, normalizedName: true } },
+          connectors: { select: { connectorType: true, powerKw: true } },
+        },
+        orderBy: { id: "asc" },
+      });
+    });
+
+    it("builds operator pages from the station rows", async () => {
+      mockPrisma.chargingStation.findMany = vi.fn().mockResolvedValue(
+        Array.from({ length: 10 }, (_, index) => ({
+          id: `station-${index}`,
+          name: null,
+          city: "Warszawa",
+          province: "mazowieckie",
+          operator: { name: "ORLEN S.A.", normalizedName: "eipa-operator-44" },
+          connectors: [{ connectorType: "ccs2", powerKw: 150 }],
+        })),
+      );
+
+      const result = await getOperatorPages();
+
+      expect(result).toMatchObject([
+        { slug: "orlen", stationCount: 10, maxPowerKw: 150, dcConnectorCount: 10 },
+      ]);
     });
   });
 

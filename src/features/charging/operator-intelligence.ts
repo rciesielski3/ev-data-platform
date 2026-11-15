@@ -1,3 +1,4 @@
+import { toKnownProvinceKey } from "@/features/charging/province-intelligence";
 import {
   formatStationOperatorLabel,
   type OperatorFilterOptionInput,
@@ -51,6 +52,9 @@ const roundPower = (value: number) => Math.round(value * 10) / 10;
 const compareLabels = (left: string, right: string) =>
   left.localeCompare(right, "en", { sensitivity: "base" });
 
+export const toOperatorGroupKey = (operatorName: string) =>
+  operatorName.toLocaleLowerCase("en");
+
 export const buildOperatorIntelligenceRows = (
   stations: OperatorIntelligenceStationInput[],
 ): OperatorIntelligenceRow[] => {
@@ -62,7 +66,7 @@ export const buildOperatorIntelligenceRows = (
     // brand (e.g. "GreenWay" vs "Greenway") collapse into one row, matching
     // the convention used in province-intelligence.ts / station-search.ts.
     // The first-encountered casing is kept as the displayed label.
-    const operatorKey = operatorName.toLocaleLowerCase("en");
+    const operatorKey = toOperatorGroupKey(operatorName);
     const accumulator =
       operators.get(operatorKey) ??
       {
@@ -78,7 +82,7 @@ export const buildOperatorIntelligenceRows = (
 
     accumulator.stationIds.add(station.id);
 
-    const province = cleanText(station.province);
+    const province = toKnownProvinceKey(station.province);
     if (province) {
       accumulator.provinces.add(province);
     }

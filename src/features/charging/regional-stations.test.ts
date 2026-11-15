@@ -7,6 +7,9 @@ import {
   buildRegionalMapHref,
   buildRegionalStationsHref,
   findRegionalCity,
+  findRegionalProvince,
+  matchesRegionalCity,
+  summarizeRegionalOperatorStats,
 } from "@/features/charging/regional-stations";
 
 describe("findRegionalCity", () => {
@@ -148,5 +151,72 @@ describe("buildRegionalCityStats", () => {
       { name: "C", stationCount: 3 },
       { name: "D", stationCount: 2 },
     ]);
+  });
+});
+
+describe("matchesRegionalCity", () => {
+  it("matches city entries on the station city, ignoring case and whitespace", () => {
+    const city = findRegionalCity("bielsko-biala")!;
+
+    expect(matchesRegionalCity({ city: " bielsko-biała " }, city)).toBe(true);
+    expect(matchesRegionalCity({ city: "Biała" }, city)).toBe(false);
+    expect(matchesRegionalCity({ city: null }, city)).toBe(false);
+  });
+
+  it("matches province entries on the station province", () => {
+    const city = findRegionalCity("wojewodztwo-lodzkie")!;
+
+    expect(matchesRegionalCity({ city: "Łódź", province: "Łódzkie" }, city)).toBe(true);
+    expect(matchesRegionalCity({ city: "Łódź", province: null }, city)).toBe(false);
+  });
+});
+
+describe("findRegionalProvince", () => {
+  it("finds the regional page for a province value", () => {
+    expect(findRegionalProvince("śląskie")?.slug).toBe("slask");
+    expect(findRegionalProvince("mazowieckie")?.slug).toBe("wojewodztwo-mazowieckie");
+  });
+
+  it("returns undefined for unknown provinces", () => {
+    expect(findRegionalProvince("unknown")).toBeUndefined();
+  });
+});
+
+describe("summarizeRegionalOperatorStats", () => {
+  const operator = (stationCount: number, maxPowerKw: number | null) => ({
+    stationCount,
+    completenessPercent: 100,
+    newestUpdateDate: null,
+    maxPowerKw,
+    topConnectors: [],
+  });
+
+  it("totals stations, counts all operators and keeps the top four", () => {
+    const summary = summarizeRegionalOperatorStats({
+      A: operator(1, 22),
+      B: operator(5, 300),
+      C: operator(3, null),
+      D: operator(2, 50),
+      E: operator(4, 150),
+    });
+
+    expect(summary.stationCount).toBe(15);
+    expect(summary.operatorCount).toBe(5);
+    expect(summary.maxPowerKw).toBe(300);
+    expect(summary.operatorBreakdown.map((entry) => entry.name)).toEqual([
+      "B",
+      "E",
+      "C",
+      "D",
+    ]);
+  });
+
+  it("handles a region without operators", () => {
+    expect(summarizeRegionalOperatorStats({})).toEqual({
+      stationCount: 0,
+      operatorCount: 0,
+      operatorBreakdown: [],
+      maxPowerKw: null,
+    });
   });
 });
