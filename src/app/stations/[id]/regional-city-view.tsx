@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
 import { ArrowRightIcon } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Badge from "@/components/ui/Badge";
@@ -15,16 +16,34 @@ import {
   buildRegionalCityLocation,
   buildRegionalMapHref,
   buildRegionalStationsHref,
-  type RegionalCityStats,
+  summarizeRegionalOperatorStats,
+  type RegionalOperatorSummary,
 } from "@/features/charging/regional-stations";
-import type { OperatorStatsMap, OperatorCityStats } from "@/features/charging/operator-stats";
+import type { OperatorCityStats } from "@/features/charging/operator-stats";
 import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
-import type { RegionalCityPrecomputedStats } from "@/lib/snapshots/types";
 
-export const revalidate = 86400; // 24 hours
+const loadRegionalOperatorStats = unstable_cache(
+  async (slug: string) => {
+    const [row] = await prisma.$queryRaw<
+      { snapshotDate: Date; operatorStats: Record<string, OperatorCityStats> }[]
+    >`
+      SELECT "snapshotDate", "operatorStats" -> ${slug} AS "operatorStats"
+      FROM "DailySnapshot"
+      WHERE "error" IS NULL AND jsonb_exists("operatorStats", ${slug})
+      ORDER BY "snapshotDate" DESC
+      LIMIT 1
+    `;
+
+    return row
+      ? { snapshotDate: row.snapshotDate.toISOString(), operatorStats: row.operatorStats }
+      : null;
+  },
+  ["regional-operator-stats"],
+  { revalidate: 21600 },
+);
 
 function normalizeConnectorLabel(typeString: string): string {
   // Extract connector type from strings like "Type 2 22 kW" or "CCS2 150 kW"
@@ -64,90 +83,20 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
   const locale = (await getLocale()) as SupportedLocale;
   const location = buildRegionalCityLocation(city, locale);
 
-  let stats: RegionalCityStats | { error: true };
+  let stats: RegionalOperatorSummary | { error: true } = { error: true };
   let cityOperatorStats: Record<string, OperatorCityStats> = {};
   let snapshotDate: Date | null = null;
 
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const snapshot = await loadRegionalOperatorStats(city.slug);
 
-    const snapshot = await prisma.dailySnapshot.findUnique({
-      where: { snapshotDate: today },
-      select: { precomputedStats: true, operatorStats: true },
-    });
-
-    if (
-      snapshot?.precomputedStats &&
-      typeof snapshot.precomputedStats === "object"
-    ) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const precomputed = snapshot.precomputedStats as any;
-      const cityStats = precomputed.regionalCities?.[city.slug] as
-        | RegionalCityPrecomputedStats
-        | undefined;
-
-      if (cityStats) {
-        // Build operatorBreakdown from the operator stats map for this city
-        const operatorStatsMap = (snapshot?.operatorStats ?? {}) as OperatorStatsMap;
-        const cityOperatorEntries = Object.entries(
-          operatorStatsMap[city.slug] ?? {},
-        );
-
-        const operatorBreakdown = cityOperatorEntries
-          .map(([name, stats]) => ({
-            name,
-            stationCount: stats.stationCount ?? 0,
-          }))
-          .sort(
-            (a, b) =>
-              b.stationCount - a.stationCount ||
-              a.name.localeCompare(b.name, "en", { sensitivity: "base" }),
-          )
-          .slice(0, 4);
-
-        // Estimate maxPowerKw from powerDistribution
-        let maxPowerKw: number | null = null;
-        if (cityStats.powerDistribution.over150kw > 0) {
-          maxPowerKw = 150; // Conservative estimate for >150kW category
-        } else if (cityStats.powerDistribution.between22and150kw > 0) {
-          maxPowerKw = 150; // Use category max
-        } else if (cityStats.powerDistribution.under22kw > 0) {
-          maxPowerKw = 22; // Use category max
-        }
-
-        // Estimate averagePowerKw from powerDistribution
-        let averagePowerKw: number | null = null;
-        const totalConnectors =
-          cityStats.powerDistribution.under22kw +
-          cityStats.powerDistribution.between22and150kw +
-          cityStats.powerDistribution.over150kw;
-        if (totalConnectors > 0) {
-          // Use weighted midpoints: 11 for under22kw, 86 for between22and150kw, 150+ for over150kw
-          const weightedSum =
-            cityStats.powerDistribution.under22kw * 11 +
-            cityStats.powerDistribution.between22and150kw * 86 +
-            cityStats.powerDistribution.over150kw * 150;
-          averagePowerKw = Math.round((weightedSum / totalConnectors) * 10) / 10;
-        }
-
-        stats = {
-          stationCount: cityStats.stationCount,
-          operatorBreakdown,
-          maxPowerKw,
-          averagePowerKw,
-        };
-        snapshotDate = today;
-        cityOperatorStats = operatorStatsMap[city.slug] ?? {};
-      } else {
-        stats = { error: true };
-      }
-    } else {
-      stats = { error: true };
+    if (snapshot) {
+      cityOperatorStats = snapshot.operatorStats;
+      stats = summarizeRegionalOperatorStats(cityOperatorStats);
+      snapshotDate = new Date(snapshot.snapshotDate);
     }
   } catch (error) {
     console.error("Failed to load regional city stats:", error);
-    stats = { error: true };
   }
 
   return (
@@ -192,7 +141,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
             </Card>
             <Card className="text-center">
               <div className="text-3xl font-bold text-emerald-600">
-                {stats.operatorBreakdown.length}
+                {stats.operatorCount}
               </div>
               <p className="muted mt-1">{t("statsOperatorsLabel")}</p>
             </Card>
