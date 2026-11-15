@@ -1,27 +1,7 @@
 import type { ReactNode } from "react";
 
 import { findRegionalCity } from "@/features/charging/regional-stations";
-import { SITE_URL } from "@/lib/config/site";
-
-const buildBreadcrumbJsonLd = (city: { slug: string; name: string }) => ({
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "evsource.pl", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Stacje ładowania",
-      item: `${SITE_URL}/stations`,
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: city.name,
-      item: `${SITE_URL}/stations/${city.slug}`,
-    },
-  ],
-});
+import { buildBreadcrumbJsonLd } from "@/lib/seo/metadata";
 
 const StationsIdLayout = async ({
   children,
@@ -42,7 +22,13 @@ const StationsIdLayout = async ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildBreadcrumbJsonLd(city)).replace(
+          __html: JSON.stringify(
+            buildBreadcrumbJsonLd([
+              { name: "evsource.pl", path: "" },
+              { name: "Stacje ładowania", path: "/stations" },
+              { name: city.name, path: `/stations/${city.slug}` },
+            ]),
+          ).replace(
             /</g,
             "\\u003c",
           ),

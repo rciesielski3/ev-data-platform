@@ -44,6 +44,13 @@ type ProvinceAccumulator = {
   operators: Set<string>;
 };
 
+export const toKnownProvinceKey = (
+  province: string | null | undefined,
+): string | null => {
+  const key = province?.trim().toLocaleLowerCase("pl");
+  return key && key !== UNKNOWN_PROVINCE.toLocaleLowerCase("pl") ? key : null;
+};
+
 const normalizeProvince = (province: string | null | undefined) => {
   const trimmed = province?.trim();
   return trimmed ? trimmed : UNKNOWN_PROVINCE;

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import Card from "@/components/ui/Card";
@@ -17,8 +18,10 @@ type OperatorTableHeaders = {
   strongestStation: string;
 };
 
+type OperatorTableRow = OperatorIntelligenceRow & { href?: string | null };
+
 type OperatorTablePaginatedProps = {
-  rows: OperatorIntelligenceRow[];
+  rows: OperatorTableRow[];
   title: string;
   subtitle: string;
   headers: OperatorTableHeaders;
@@ -30,7 +33,7 @@ const OperatorTable = ({
   headers,
   unknownLabel,
 }: {
-  rows: OperatorIntelligenceRow[];
+  rows: OperatorTableRow[];
   headers: OperatorTableHeaders;
   unknownLabel: string;
 }) => (
@@ -68,7 +71,13 @@ const OperatorTable = ({
         {rows.map((row) => (
           <tr key={row.operatorName}>
             <th scope="row" className="py-4 pr-4 text-left font-medium text-slate-950">
-              {row.operatorName}
+              {row.href ? (
+                <Link href={row.href} className="text-emerald-700 hover:text-emerald-900 hover:underline">
+                  {row.operatorName}
+                </Link>
+              ) : (
+                row.operatorName
+              )}
             </th>
             <td className="px-4 py-4 text-right text-slate-700">
               {formatInteger(row.stationCount)}

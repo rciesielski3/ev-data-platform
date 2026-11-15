@@ -1,3 +1,4 @@
+import { toKnownProvinceKey } from "@/features/charging/province-intelligence";
 import {
   formatStationOperatorLabel,
   type OperatorFilterOptionInput,
@@ -78,7 +79,7 @@ export const buildOperatorIntelligenceRows = (
 
     accumulator.stationIds.add(station.id);
 
-    const province = cleanText(station.province);
+    const province = toKnownProvinceKey(station.province);
     if (province) {
       accumulator.provinces.add(province);
     }

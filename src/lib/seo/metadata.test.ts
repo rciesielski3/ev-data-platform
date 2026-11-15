@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { generateConnectorMetadata, generateFAQSchema } from "./metadata";
+import {
+  buildBreadcrumbJsonLd,
+  generateConnectorMetadata,
+  generateFAQSchema,
+  generatePageMetadata,
+} from "./metadata";
+import { SITE_URL } from "@/lib/config/site";
 
 describe("generateConnectorMetadata", () => {
   it("uses the supplied title and description across canonical, OG and Twitter tags", () => {
@@ -45,5 +51,33 @@ describe("generateFAQSchema", () => {
     const schema = generateFAQSchema([]);
 
     expect(schema.mainEntity).toEqual([]);
+  });
+});
+
+describe("generatePageMetadata", () => {
+  it("uses the path as canonical and Open Graph url", () => {
+    const metadata = generatePageMetadata({
+      path: "/operators/orlen",
+      title: "Stacje ładowania ORLEN",
+      description: "Opis",
+    });
+
+    expect(metadata.alternates?.canonical).toBe("/operators/orlen");
+    expect((metadata.openGraph as Record<string, unknown>).url).toBe("/operators/orlen");
+  });
+});
+
+describe("buildBreadcrumbJsonLd", () => {
+  it("numbers items and prefixes paths with the site url", () => {
+    const schema = buildBreadcrumbJsonLd([
+      { name: "evsource.pl", path: "" },
+      { name: "Operatorzy", path: "/operators" },
+    ]);
+
+    expect(schema["@type"]).toBe("BreadcrumbList");
+    expect(schema.itemListElement).toEqual([
+      { "@type": "ListItem", position: 1, name: "evsource.pl", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Operatorzy", item: `${SITE_URL}/operators` },
+    ]);
   });
 });

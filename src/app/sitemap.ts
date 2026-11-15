@@ -5,6 +5,8 @@ import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { SITE_URL } from "@/lib/config/site";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import { getAllBlogSlugs } from "@/lib/blog/posts";
+import { getOperatorPages } from "@/lib/db/cached-queries";
+import { getOperatorPageHref } from "@/features/charging/operator-pages";
 
 export const revalidate = 3600;
 
@@ -52,6 +54,21 @@ const loadSitemapRecords = async (): Promise<{
   }
 };
 
+const loadOperatorSitemapEntries = async (): Promise<MetadataRoute.Sitemap> => {
+  try {
+    const pages = await getOperatorPages();
+    return pages.map((page) => ({
+      url: `${SITE_URL}${getOperatorPageHref(page.slug)}`,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
+  } catch (error) {
+    if (!isDatabaseUnavailableError(error)) throw error;
+    console.warn("sitemap: database unavailable, skipping operator pages");
+    return [];
+  }
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${SITE_URL}${route.path}`,
@@ -93,5 +110,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...blogEntries, ...stationEntries, ...vehicleEntries];
+  const operatorEntries = await loadOperatorSitemapEntries();
+
+  return [...staticEntries, ...connectorEntries, ...regionalCityEntries, ...blogEntries, ...stationEntries, ...vehicleEntries, ...operatorEntries];
 }

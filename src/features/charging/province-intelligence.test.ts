@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildProvinceIntelligenceRows,
+  toKnownProvinceKey,
   UNKNOWN_PROVINCE,
 } from "@/features/charging/province-intelligence";
 
@@ -211,5 +212,17 @@ describe("buildProvinceIntelligenceRows", () => {
       expect(unknown?.stationsPer100k).toBeNull();
       expect(unknown?.stationsPer1000Km2).toBeNull();
     });
+  });
+});
+
+describe("toKnownProvinceKey", () => {
+  it("folds case and whitespace for known provinces", () => {
+    expect(toKnownProvinceKey(" Mazowieckie ")).toBe("mazowieckie");
+  });
+
+  it("returns null for blank and unknown provinces", () => {
+    expect(toKnownProvinceKey(null)).toBeNull();
+    expect(toKnownProvinceKey("  ")).toBeNull();
+    expect(toKnownProvinceKey(UNKNOWN_PROVINCE)).toBeNull();
   });
 });

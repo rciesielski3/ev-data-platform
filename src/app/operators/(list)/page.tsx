@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Card from "@/components/ui/Card";
@@ -12,59 +13,11 @@ import SnapshotUnavailableFallback from "@/components/ui/SnapshotUnavailableFall
 import { type OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import { MetricCard } from "@/features/charging/metric-card";
 import { formatInteger } from "@/features/charging/insights";
+import { buildOperatorPageHrefLookup } from "@/features/charging/operator-pages";
 import { localizeFallback } from "@/lib/display/localize-fallback";
-import type { OperatorPrecomputedStats } from "@/lib/snapshots/types";
-import { prisma } from "@/lib/db/prisma";
+import { getOperatorIntelligenceRows, getOperatorPages } from "@/lib/db/cached-queries";
 
 export const revalidate = 86400; // 24 hours
-
-async function getOperatorStatsFromSnapshot(): Promise<
-  Record<string, OperatorPrecomputedStats> | null
-> {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const snapshot = await prisma.dailySnapshot.findFirst({
-      orderBy: { snapshotDate: "desc" },
-      select: { snapshotDate: true },
-    });
-
-    if (!snapshot) {
-      return null;
-    }
-
-    // For operators page, we need to fetch from database directly
-    // since operatorStats contains region-based data, not a list of operators
-    const operators = await prisma.chargingOperator.findMany({
-      select: {
-        id: true,
-        name: true,
-        normalizedName: true,
-        stations: { select: { id: true, province: true, connectors: { select: { id: true, powerKw: true } } } },
-      },
-    });
-
-    if (!operators.length) return null;
-
-    return operators.reduce((acc, op) => {
-      const displayName = op.name || op.normalizedName;
-      const connectors = op.stations.flatMap(s => s.connectors);
-      acc[displayName] = {
-        stationCount: op.stations.length,
-        connectorCount: connectors.length,
-        knownPowerConnectorCount: connectors.filter(c => c.powerKw).length,
-        maxPowerKw: connectors.length > 0 ? Math.max(...connectors.map(c => c.powerKw || 0)) : null,
-        averagePowerKw: connectors.length > 0 ? connectors.reduce((s, c) => s + (c.powerKw || 0), 0) / connectors.length : null,
-        provinceCount: new Set(op.stations.map(s => s.province)).size,
-      };
-      return acc;
-    }, {} as Record<string, OperatorPrecomputedStats>);
-  } catch (error) {
-    console.error("Failed to fetch operator stats snapshot:", error);
-    return null;
-  }
-}
 
 const getSummary = (rows: OperatorIntelligenceRow[]) => {
   const totalStations = rows.reduce((total, row) => total + row.stationCount, 0);
@@ -109,33 +62,18 @@ export default async function OperatorsPage() {
   const t = await getTranslations("operators");
   const tCommon = await getTranslations("common");
 
-  let rows: OperatorIntelligenceRow[] | { error: string };
+  let rows: (OperatorIntelligenceRow & { href: string | null })[] | { error: string };
   let snapshotDate: Date | null = null;
 
   try {
-    const operatorStats = await getOperatorStatsFromSnapshot();
+    const [operatorRows, operatorPages] = await Promise.all([
+      getOperatorIntelligenceRows(),
+      getOperatorPages(),
+    ]);
 
-    if (operatorStats) {
-      rows = Object.entries(operatorStats)
-        .map(([normalizedName, stats]) => ({
-          operatorName: normalizedName,
-          stationCount: stats.stationCount,
-          connectorCount: stats.connectorCount,
-          knownPowerConnectorCount: stats.knownPowerConnectorCount,
-          maxPowerKw: stats.maxPowerKw,
-          provinceCount: stats.provinceCount,
-          averagePowerKw: stats.averagePowerKw,
-          strongestStationName: null,
-        }))
-        .sort(
-          (left, right) =>
-            right.stationCount - left.stationCount ||
-            right.connectorCount - left.connectorCount ||
-            left.operatorName.localeCompare(right.operatorName, "en", {
-              sensitivity: "base",
-            }),
-        );
-
+    if (operatorRows.length > 0) {
+      const hrefFor = buildOperatorPageHrefLookup(operatorPages);
+      rows = operatorRows.map((row) => ({ ...row, href: hrefFor(row.operatorName) }));
       snapshotDate = new Date();
       snapshotDate.setHours(0, 0, 0, 0);
     } else {
@@ -222,9 +160,18 @@ export default async function OperatorsPage() {
                     key={row.operatorName}
                     className="flex items-baseline justify-between gap-4"
                   >
-                    <span className="font-medium text-slate-900">
-                      {localizeFallback(row.operatorName, tCommon)}
-                    </span>
+                    {row.href ? (
+                      <Link
+                        href={row.href}
+                        className="font-medium text-emerald-700 hover:text-emerald-900 hover:underline"
+                      >
+                        {localizeFallback(row.operatorName, tCommon)}
+                      </Link>
+                    ) : (
+                      <span className="font-medium text-slate-900">
+                        {localizeFallback(row.operatorName, tCommon)}
+                      </span>
+                    )}
                     <span className="text-sm text-slate-500">
                       {formatInteger(row.stationCount)} {t("stationsUnit")}
                     </span>
