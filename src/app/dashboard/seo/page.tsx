@@ -54,7 +54,7 @@ async function enrichKeywordsWithTrends(
 ): Promise<KeywordWithPrevious[]> {
   return Promise.all(
     keywords.map(async (keyword) => {
-      const previousPosition = await calculateKeywordPreviousPosition(keyword.snapshots);
+      const previousPosition = calculateKeywordPreviousPosition(keyword.snapshots);
       return {
         ...keyword,
         previousPosition,
