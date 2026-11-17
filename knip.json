@@ -1,0 +1,4 @@
+{
+  "entry": ["src/server/jobs/*.ts", "src/app/**/route.ts"],
+  "ignoreDependencies": ["eslint-config-next", "@swc/helpers"]
+}
