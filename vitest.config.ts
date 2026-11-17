@@ -6,6 +6,11 @@ export default defineConfig({
     environment: "node",
     exclude: ["**/node_modules/**", "**/.worktrees/**", "**/.claude/worktrees/**", "**/dist/**"],
     setupFiles: ["./vitest.setup.ts"],
+    coverage: {
+      provider: "v8",
+      include: ["src/lib/**/*.ts", "src/features/**/*.ts"],
+      exclude: ["**/*.test.ts"],
+    },
   },
   resolve: {
     alias: {
