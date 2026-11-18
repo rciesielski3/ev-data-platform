@@ -24,6 +24,7 @@ import Card from "@/components/ui/Card";
 import Hero from "@/components/ui/Hero";
 import StatStrip from "@/components/ui/StatStrip";
 import { ImportStatusBadge } from "@/components/ui/ImportStatusBadge";
+import { readChargePointTotals } from "@/features/charging/charge-points";
 import { buildFallbackStationTotals } from "@/features/charging/fallback-stations";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
@@ -133,6 +134,7 @@ const getStatus = async () => {
   return {
     evCount: snapshot?.totalEvModelCount ?? 0,
     stationCount: snapshot?.totalStationCount ?? 0,
+    chargePoints: readChargePointTotals(snapshot?.precomputedStats),
     operatorCount: snapshot?.totalOperatorCount ?? 0,
     provinceCount: provinces.length,
     ingestionRuns: {
@@ -146,6 +148,7 @@ const HomePage = async () => {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("home");
   const tHero = await getTranslations("hero");
+  const tChargePoints = await getTranslations("chargePoints");
 
   const { status, snapshotAt } = await getStatus()
     .then((loaded) => ({ status: loaded, snapshotAt: null as string | null }))
@@ -157,6 +160,7 @@ const HomePage = async () => {
         status: {
           ...buildFallbackStationTotals(stationSnapshot.stations),
           evCount: vehicleSnapshot.vehicles.length,
+          chargePoints: null,
           ingestionRuns: { eipa: null, openev: null },
         } satisfies Awaited<ReturnType<typeof getStatus>>,
         snapshotAt: stationSnapshot.generatedAt,
@@ -231,6 +235,18 @@ const HomePage = async () => {
             value: formatDisplayNumber(status.stationCount, locale),
             label: t("statStations"),
           },
+          ...(status.chargePoints
+            ? [
+                {
+                  value: formatDisplayNumber(status.chargePoints.total, locale),
+                  label: tChargePoints("statLabel"),
+                  detail: tChargePoints("split", {
+                    ac: formatDisplayNumber(status.chargePoints.ac, locale),
+                    dc: formatDisplayNumber(status.chargePoints.dc, locale),
+                  }),
+                },
+              ]
+            : []),
           {
             value: formatDisplayNumber(status.operatorCount, locale),
             label: t("statOperators"),

@@ -827,6 +827,12 @@
     "stationsPer100kHeader": "Stacje / 100 tys.",
     "stateOfChargingLink": "Zobacz pełny raport"
   },
+  "chargePoints": {
+    "statLabel": "Punktów ładowania",
+    "label": "Punkty ładowania",
+    "split": "AC {ac} · DC {dc}",
+    "helper": "Punkty ładowania w EIPA: AC {ac} · DC {dc}. Punkt liczymy jako DC, jeśli ma choć jedno złącze DC."
+  },
   "stateOfCharging": {
     "badge": "Stan polskiej infrastruktury",
     "title": "Stan ładowania w Polsce",

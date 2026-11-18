@@ -1,5 +1,6 @@
 import { IngestionStatus, Prisma } from "@prisma/client";
 
+import { buildChargePointTotals } from "@/features/charging/charge-points";
 import { buildOperatorIntelligenceRows } from "@/features/charging/operator-intelligence";
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
 import { buildRegionalOperatorStats } from "@/features/charging/operator-stats";
@@ -32,6 +33,8 @@ const getStationsForSnapshot = () =>
           id: true,
           powerKw: true,
           connectorType: true,
+          chargingMode: true,
+          sourcePointId: true,
         },
       },
     },
@@ -77,6 +80,9 @@ export const captureSnapshot = async (
     const provinceRows = buildProvinceIntelligenceRows(stations);
     const operatorRows = buildOperatorIntelligenceRows(stations);
     const snapshot = buildDailySnapshot(provinceRows, operatorRows, evModelCount, operatorCount);
+    const precomputedStats = {
+      chargePoints: buildChargePointTotals(stations.flatMap((station) => station.connectors)),
+    };
 
     await prisma.dailySnapshot.upsert({
       where: { snapshotDate },
@@ -90,6 +96,7 @@ export const captureSnapshot = async (
         totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
+        precomputedStats,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,
@@ -103,6 +110,7 @@ export const captureSnapshot = async (
         totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
+        precomputedStats,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,
