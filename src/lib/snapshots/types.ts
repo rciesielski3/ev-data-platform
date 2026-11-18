@@ -1,3 +1,6 @@
+import type { StationDotMap } from "@/features/home/station-dots";
+import type { StationInsights } from "@/features/home/station-insights";
+
 export interface RegionalCityPrecomputedStats {
   stationCount: number;
   connectorsByType: Record<string, number>; // "Type 2" -> 45, "CCS2" -> 12, etc.
@@ -30,4 +33,5 @@ export type PrecomputedStats = {
   regionalCities: Record<string, RegionalCityPrecomputedStats>; // city slug -> stats
   operators: Record<string, OperatorPrecomputedStats>; // normalized operator name -> stats
   provinces: Record<string, ProvincePrecomputedStats>; // province name -> stats
+  home?: { stationMap: StationDotMap; insights: StationInsights };
 };

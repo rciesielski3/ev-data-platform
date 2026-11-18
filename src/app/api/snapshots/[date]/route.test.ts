@@ -48,6 +48,7 @@ describe("GET /api/snapshots/[date]", () => {
     expect(body.date).toBe("2026-06-29");
     expect(mockPrisma.dailySnapshot.findUnique).toHaveBeenCalledWith({
       where: { snapshotDate: new Date("2026-06-29T00:00:00.000Z") },
+      omit: { precomputedStats: true },
     });
   });
 

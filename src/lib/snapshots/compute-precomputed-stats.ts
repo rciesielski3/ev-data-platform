@@ -1,4 +1,8 @@
+import type { Prisma } from "@prisma/client";
+
 import { prisma } from "@/lib/db/prisma";
+import { buildStationDots } from "@/features/home/station-dots";
+import { buildStationInsights } from "@/features/home/station-insights";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
 import type {
   PrecomputedStats,
@@ -36,6 +40,7 @@ function matchesCity(
 
 export async function computePrecomputedStats(): Promise<PrecomputedStats> {
   const stations = await prisma.chargingStation.findMany({
+    orderBy: { id: "asc" },
     select: {
       id: true,
       name: true,
@@ -208,5 +213,25 @@ export async function computePrecomputedStats(): Promise<PrecomputedStats> {
     regionalCities: Object.fromEntries(regionalCitiesMap),
     operators: Object.fromEntries(operatorsMap),
     provinces: Object.fromEntries(provincesMap),
+    home: {
+      stationMap: buildStationDots(stations),
+      insights: buildStationInsights(stations),
+    },
   };
 }
+
+export const storePrecomputedStats = async (stats: PrecomputedStats) => {
+  const latest = await prisma.dailySnapshot.findFirst({
+    orderBy: { snapshotDate: "desc" },
+    select: { id: true },
+  });
+
+  if (!latest) return false;
+
+  await prisma.dailySnapshot.update({
+    where: { id: latest.id },
+    data: { precomputedStats: stats as unknown as Prisma.InputJsonValue },
+  });
+
+  return true;
+};
