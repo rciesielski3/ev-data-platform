@@ -834,6 +834,12 @@
     "stationsPer100kHeader": "Stations / 100k",
     "stateOfChargingLink": "View full snapshot"
   },
+  "chargePoints": {
+    "statLabel": "Charge points",
+    "label": "Charge points",
+    "split": "AC {ac} · DC {dc}",
+    "helper": "EIPA charge points: AC {ac} · DC {dc}. A point counts as DC if any of its connectors is DC."
+  },
   "stateOfCharging": {
     "badge": "State of Polish infrastructure",
     "title": "State of EV Charging in Poland",
