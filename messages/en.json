@@ -9,6 +9,7 @@
     "unknownConnector": "Unknown connector",
     "unknownProvince": "Unknown province",
     "chargingStationFallback": "Charging station",
+    "pagination": "Pagination",
     "locationUnavailable": "Location details unavailable",
     "noConnectorDetails": "No connector details",
     "previous": "Previous",
@@ -57,7 +58,7 @@
       "evCatalog": "EV Catalog"
     },
     "heroHeadline": "The complete picture of Poland's charging infrastructure, in one place",
-    "heroSubhead": "Normalized, quality-scored data on charging stations and EV models — collected across all 16 provinces, ready to analyze.",
+    "heroSubhead": "Normalized, quality-scored data on charging stations and EV models - collected across all 16 provinces, ready to analyze.",
     "heroPrimaryCta": "Explore the station map",
     "heroSecondaryCta": "For charging network operators →",
     "statStations": "Charging stations",
@@ -68,13 +69,13 @@
     "valuePropsTitle": "Why EVSource",
     "valuePropsSubtitle": "Three things that set our data apart from other sources.",
     "valueQualityTitle": "Quality-scored data",
-    "valueQualityBody": "Every station and vehicle record carries a completeness and freshness score — you know what you can rely on.",
+    "valueQualityBody": "Every station and vehicle record carries a completeness and freshness score - you know what you can rely on.",
     "valueNormalizedTitle": "One normalized structure",
-    "valueNormalizedBody": "EIPA/UDT and OpenEV Data are unified into one consistent model — no manual source-format cleanup needed.",
+    "valueNormalizedBody": "EIPA/UDT and OpenEV Data are unified into one consistent model - no manual source-format cleanup needed.",
     "valueBenchmarkTitle": "Built for benchmarking",
-    "valueBenchmarkBody": "Province coverage, operator share, and connector mix — a reference point for network planning.",
+    "valueBenchmarkBody": "Province coverage, operator share, and connector mix - a reference point for network planning.",
     "exploreTitle": "Explore the data",
-    "exploreSubtitle": "Dive into EV data — from maps to analytics",
+    "exploreSubtitle": "Dive into EV data - from maps to analytics",
     "infrastructureIntelligenceTitle": "Infrastructure Analysis",
     "infrastructureIntelligenceSubtitle": "Discover deep insights and charging network development trends across Poland",
     "coverageAnalysisTitle": "Geographic Coverage",
@@ -84,11 +85,11 @@
     "provinceBreakdownTitle": "Province Breakdown",
     "provinceBreakdownHelper": "Detailed statistics for every Polish province",
     "trendsAnalysisTitle": "Infrastructure Trends",
-    "trendsAnalysisHelper": "Track charging network evolution over time — historical data and forecasts",
+    "trendsAnalysisHelper": "Track charging network evolution over time - historical data and forecasts",
     "forOperatorsTitle": "For Operators",
     "forOperatorsSubtitle": "B2B solutions for charging network operators",
     "reportsTitle": "Infrastructure reports",
-    "reportsHelper": "Dedicated reports for network operators — advanced analytics",
+    "reportsHelper": "Dedicated reports for network operators - advanced analytics",
     "operatorContactTitle": "B2B Contact",
     "operatorContactHelper": "Talk to our team about solutions for your network",
     "promoteStationTitle": "Promote Your Station",
@@ -110,14 +111,14 @@
     "reportsEyebrow": "Benchmark reports",
     "reportsDescription": "Explore sample benchmarking reports and discover custom infrastructure analysis for charging network operators.",
     "b2bCtaTitle": "Analytics and reports for charging network operators",
-    "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing — let's talk about what you need.",
+    "b2bCtaBody": "A benchmark report built on full market coverage, or a featured spot in the operator listing - let's talk about what you need.",
     "b2bCtaButton": "Get in touch",
     "chargingCardTitle": "Check Charging Time for Your Model",
     "chargingCardDescription": "Compare electric vehicles and learn how long their charging takes on different connector types.",
     "snapshotAsOf": "Fallback data from {date}. The database is temporarily unavailable."
   },
   "vehicles": {
-    "title": "Compare Electric Vehicle Models – evsource.pl",
+    "title": "Compare Electric Vehicle Models - evsource.pl",
     "description": "Compare 2000+ electric vehicle models. Range, battery capacity, charging time, prices and specifications for all available EVs.",
     "descriptionWithCount": "Browse {count} electric vehicles in our database.",
     "activeFilter": "Active filter",
@@ -163,8 +164,8 @@
     "dataSourceLabel": "Data source: {source}",
     "originalSourceLink": "Original source",
     "lastImportedLabel": "Last imported: {date}",
-    "metaTitle": "{vehicleName} — {highlights} | EVSource",
-    "metaTitleFallback": "{vehicleName} — specs, range and charging | EVSource",
+    "metaTitle": "{vehicleName} - {highlights} | EVSource",
+    "metaTitleFallback": "{vehicleName} - specs, range and charging | EVSource",
     "metaDescription": "Check {vehicleName}: {highlights}. Full technical specs, battery and charging performance.",
     "metaDescriptionFallback": "Check the full technical specs for {vehicleName}: range, battery, AC/DC charging power and more.",
     "metaHighlightRange": "WLTP range {rangeKm} km",
@@ -332,9 +333,9 @@
       "Connector power": "Connector power",
       "Payment/authentication": "Payment/authentication"
     },
-    "metaTitle": "{name} – {city} | EVSource",
+    "metaTitle": "{name} - {city} | EVSource",
     "metaTitleFallback": "{name} | EVSource",
-    "metaTitleWithPower": "{name} – {city} ({power}) | EVSource",
+    "metaTitleWithPower": "{name} - {city} ({power}) | EVSource",
     "metaTitleFallbackWithPower": "{name} ({power}) | EVSource",
     "metaTitleOperator": "EV charger {operator}",
     "metaTitleGeneric": "EV charging station"
@@ -345,7 +346,7 @@
     "backLink": "Back to stations"
   },
   "operatorPage": {
-    "metaTitle": "{name} EV charging stations – {count, plural, one {# location} other {# locations}} in Poland | evsource.pl",
+    "metaTitle": "{name} EV charging stations - {count, plural, one {# location} other {# locations}} in Poland | evsource.pl",
     "metaDescription": "{name} chargers in Poland: {stations, plural, one {# station} other {# stations}} and {connectors, plural, one {# connector} other {# connectors}}{hasPower, select, yes {, up to {power} kW} other {}}.{hasCities, select, yes { Most stations in {cities}.} other {}} Data from the EIPA/UDT registry.",
     "title": "{name} charging stations",
     "badge": "Charging network operator",
@@ -438,7 +439,7 @@
     "trustTitle": "Trust",
     "trustBody": "Certified, government-sourced data increases credibility. Your infrastructure is backed by official EIPA/UDT Poland records.",
     "simpleTitle": "Simple",
-    "simpleBody": "No integration required—we handle the listing and updates. Just let us know about your network.",
+    "simpleBody": "No integration required-we handle the listing and updates. Just let us know about your network.",
     "pricingTitle": "Pricing & commitment",
     "pricingPeriod": "per year",
     "pricingFeature1": "Search visibility",
@@ -568,7 +569,7 @@
     "daysOld": "{count, plural, one {# day old} other {# days old}}",
     "completePercent": "{percent}% complete",
     "freshExplanation": "Data confirmed within the last {days} days.",
-    "staleExplanation": "Data hasn't been confirmed in over {days} days — it may be out of date.",
+    "staleExplanation": "Data hasn't been confirmed in over {days} days - it may be out of date.",
     "unknownExplanation": "No data-confirmation date is available for this station."
   },
   "map": {
@@ -622,7 +623,7 @@
     "body": "Charging station map data is temporarily unavailable. Try again, or check that the charging imports have completed."
   },
   "connectors": {
-    "title": "EV Charging Connector Types – Comparison – evsource.pl",
+    "title": "EV Charging Connector Types - Comparison - evsource.pl",
     "description": "Compare EV charging connector types: CCS2, Type 2, CHAdeMO. Learn which connector works with your vehicle.",
     "viewDetailsLink": "View connector details"
   },
@@ -670,7 +671,7 @@
     }
   },
   "insights": {
-    "title": "EV Charging Statistics & Market Analysis – evsource.pl",
+    "title": "EV Charging Statistics & Market Analysis - evsource.pl",
     "description": "Explore EV charging statistics and infrastructure analysis. Analyze station density, operator coverage, and market trends.",
     "og_title": "EV Charging Insights - evsource.pl",
     "og_description": "Statistical analysis of Poland's charging infrastructure: station density, operators, and market trends.",
@@ -829,7 +830,7 @@
     "knownPowerHeader": "Known power",
     "powerAvailabilityHeader": "Power availability",
     "lowestPerCapitaCoverageTitle": "Weakest access per resident",
-    "lowestPerCapitaCoverageSubtitle": "Stations per 100k residents — accounts for population density, not just raw station counts. Population source: GUS (Statistics Poland), estimated figures.",
+    "lowestPerCapitaCoverageSubtitle": "Stations per 100k residents - accounts for population density, not just raw station counts. Population source: GUS (Statistics Poland), estimated figures.",
     "perCapitaMetric": "{value} / 100k",
     "stationsPer100kHeader": "Stations / 100k",
     "stateOfChargingLink": "View full snapshot"
@@ -843,7 +844,7 @@
   "stateOfCharging": {
     "badge": "State of Polish infrastructure",
     "title": "State of EV Charging in Poland",
-    "description": "A national snapshot of Poland's EV charging infrastructure — station count, fast-charging share, and per-resident access, based on EIPA/UDT data.",
+    "description": "A national snapshot of Poland's EV charging infrastructure - station count, fast-charging share, and per-resident access, based on EIPA/UDT data.",
     "asOfDate": "As of {date}, source: EIPA/UDT Poland.",
     "totalStationsLabel": "Charging stations",
     "totalStationsHelper": "Total stations in the EIPA/UDT database.",
@@ -970,26 +971,26 @@
   "stationsPage": {
     "searchSection": {
       "heading": "Find Charging Stations Near You",
-      "body1": "Our interactive map contains one of the largest EV charging networks across Poland. Using our advanced filters, you can easily find a charger that meets your needs. Search by location, connector type (Type 2, CCS, CHAdeMO), power (11 kW to 350 kW), and network operator. Geolocation lets you discover stations near you within a 10 km radius. Detailed information for each station — address, available connectors, charging power, operator, and opening hours — helps you choose the perfect place to charge.",
-      "body2Prefix": "All charging network operators in Poland are regulated by UDT (Technical Inspection Authority) and EIPA (Electric Infrastructure Inventory of Alternative Fuels — national charging registry). Our database is updated regularly to ensure you have access to the most current information.",
+      "body1": "Our interactive map contains one of the largest EV charging networks across Poland. Using our advanced filters, you can easily find a charger that meets your needs. Search by location, connector type (Type 2, CCS, CHAdeMO), power (11 kW to 350 kW), and network operator. Geolocation lets you discover stations near you within a 10 km radius. Detailed information for each station - address, available connectors, charging power, operator, and opening hours - helps you choose the perfect place to charge.",
+      "body2Prefix": "All charging network operators in Poland are regulated by UDT (Technical Inspection Authority) and EIPA (Electric Infrastructure Inventory of Alternative Fuels - national charging registry). Our database is updated regularly to ensure you have access to the most current information.",
       "body2LinkWarsawText": "Check charging stations in Warsaw",
       "body2Suffix": "or select a city from the list below to see stations in your area."
     },
     "chargingTypesSection": {
       "heading": "Types of Chargers: AC vs DC vs 400kW",
-      "body1": "The EV charger market in Poland offers different power types tailored to drivers' needs. AC chargers (alternating current) operate at single-phase voltage (3.7 kW, 7.4 kW) or three-phase (11 kW, 22 kW) — ideal for overnight charging at home or work. DC chargers (direct current), also called fast chargers, provide power from 50 kW to 350 kW and allow charging batteries to 80% in 20–40 minutes. 400kW chargers are the newest technology, available primarily on highways.",
+      "body1": "The EV charger market in Poland offers different power types tailored to drivers' needs. AC chargers (alternating current) operate at single-phase voltage (3.7 kW, 7.4 kW) or three-phase (11 kW, 22 kW) - ideal for overnight charging at home or work. DC chargers (direct current), also called fast chargers, provide power from 50 kW to 350 kW and allow charging batteries to 80% in 20-40 minutes. 400kW chargers are the newest technology, available primarily on highways.",
       "body2Prefix": "Charging time depends on the charger's power and your vehicle's battery capacity. A car with a 60 kWh battery charges on a 22 kW charger in about 3 hours, and on a 150 kW charger in about 30 minutes. In our database, you can filter stations by minimum power to find the right charger for your vehicle.",
       "body2LinkText": "Check charging times for your vehicle models →"
     },
     "pricingSection": {
       "heading": "How Much Does Charging Cost?",
       "body1": "The cost of EV charging in Poland depends on the network operator and type of charging. Most operators (ORLEN Charging, Energa, GreenWay) offer monthly subscriptions plus per-minute or per-kWh fees. Home AC charging is typically less expensive than public fast-charging stations. Some operators offer special rates for regular users.",
-      "body2": "Prices vary significantly depending on location (city vs. highway) and time of day. Many networks offer cheaper charging at night. Our station details include operator information and tariffs — search for your local station to learn exact prices."
+      "body2": "Prices vary significantly depending on location (city vs. highway) and time of day. Many networks offer cheaper charging at night. Our station details include operator information and tariffs - search for your local station to learn exact prices."
     },
     "operatorsSection": {
       "heading": "Charging Operator Comparison",
       "body1": "Poland has several major charging network operators. ORLEN Charging is one of the leading networks nationwide, offering both AC and fast DC charging. Energa has solid infrastructure focusing on cities and commercial routes. GreenWay concentrates on major cities and highway stations with modern 400kW technology. Smaller operators like ElectroMobility+ and Inergy are expanding locally.",
-      "body2": "Each operator has different pricing strategies and availability — some offer free charging for new users, while others have flexible subscription options. On our map, you can filter stations by operator to compare availability and rates.",
+      "body2": "Each operator has different pricing strategies and availability - some offer free charging for new users, while others have flexible subscription options. On our map, you can filter stations by operator to compare availability and rates.",
       "body2InsightsLinkText": "More operator information →",
       "body2FaqText": "Have questions?",
       "body2FaqLinkText": "Check our FAQ"
@@ -1007,11 +1008,11 @@
         },
         {
           "question": "What are charger operating hours?",
-          "answer": "Most public chargers are available 24/7. Some operators may have limited hours in small towns. Details for each station are in its profile — click the right arrow icon to see full information."
+          "answer": "Most public chargers are available 24/7. Some operators may have limited hours in small towns. Details for each station are in its profile - click the right arrow icon to see full information."
         },
         {
           "question": "Can I reserve a charger?",
-          "answer": "Charger reservations depend on the operator. Most networks (ORLEN Charging, Energa, GreenWay) allow reservations through a mobile app 15–30 minutes before arrival. Check the operator's app for details."
+          "answer": "Charger reservations depend on the operator. Most networks (ORLEN Charging, Energa, GreenWay) allow reservations through a mobile app 15-30 minutes before arrival. Check the operator's app for details."
         }
       ]
     }

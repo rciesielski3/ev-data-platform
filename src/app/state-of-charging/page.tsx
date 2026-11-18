@@ -38,12 +38,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const SkeletonRow = () => (
-  <div className="h-5 animate-pulse rounded bg-slate-100" />
+  <div className="h-5 animate-pulse rounded-xl bg-forest/5" />
 );
 
 const TopOperatorsSkeleton = () => (
   <Card as="article" className="mb-8">
-    <div className="h-6 w-48 animate-pulse rounded bg-slate-200" />
+    <div className="h-6 w-48 animate-pulse rounded-2xl bg-forest/10" />
     <div className="mt-4 space-y-3">
       {Array.from({ length: TOP_OPERATOR_LIMIT }, (_, index) => (
         <SkeletonRow key={`operator-skeleton-${index}`} />
@@ -69,30 +69,38 @@ const TopOperatorsSection = async ({
       });
     })
     .slice(0, TOP_OPERATOR_LIMIT);
+  const maxOperatorStations = Math.max(1, ...topOperators.map((operator) => operator.stationCount));
 
   return (
     <Card as="article" className="mb-8">
-      <h2 className="text-lg font-semibold text-slate-950">
+      <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
         {t("topOperatorsTitle")}
       </h2>
       <p className="muted mt-1 text-sm">{t("topOperatorsSubtitle")}</p>
-      <ol className="mt-4 space-y-3">
+      <ol className="mt-5 space-y-4">
         {topOperators.map((operator, index) => (
-          <li
-            key={operator.operatorName}
-            className="flex items-baseline justify-between gap-4"
-          >
-            <span className="flex items-baseline gap-3">
-              <span className="text-xs font-medium text-slate-400">
-                {index + 1}
+          <li key={operator.operatorName}>
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="flex items-baseline gap-3">
+                <span className="text-xs font-medium text-forest/70">
+                  {index + 1}
+                </span>
+                <span className="font-medium text-forest">
+                  {localizeFallback(operator.operatorName, tCommon)}
+                </span>
               </span>
-              <span className="font-medium text-slate-900">
-                {localizeFallback(operator.operatorName, tCommon)}
+              <span className="text-sm text-forest/70">
+                {t("operatorStationCount", { count: operator.stationCount })}
               </span>
-            </span>
-            <span className="text-sm text-slate-500">
-              {t("operatorStationCount", { count: operator.stationCount })}
-            </span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-forest/10" aria-hidden="true">
+              <div
+                className={`h-full rounded-full ${index === 0 ? "bg-sun" : "bg-forest"}`}
+                style={{
+                  width: `${Math.max(2, (operator.stationCount / maxOperatorStations) * 100)}%`,
+                }}
+              />
+            </div>
           </li>
         ))}
       </ol>
@@ -128,7 +136,7 @@ const ProvinceCoverageSection = async ({
   return (
     <section className="mb-8 grid gap-4 lg:grid-cols-2">
       <Card as="article">
-        <h2 className="text-lg font-semibold text-slate-950">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
           {t("perCapitaLeadersTitle")}
         </h2>
         <ol className="mt-4 space-y-3">
@@ -138,14 +146,14 @@ const ProvinceCoverageSection = async ({
               className="flex items-baseline justify-between gap-4"
             >
               <span className="flex items-baseline gap-3">
-                <span className="text-xs font-medium text-slate-400">
+                <span className="text-xs font-medium text-forest/70">
                   {index + 1}
                 </span>
-                <span className="font-medium text-slate-900">
+                <span className="font-medium text-forest">
                   {localizeProvinceLabel(row.province)}
                 </span>
               </span>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-forest/70">
                 {row.stationsPer100k === null
                   ? tCommon("notAvailable")
                   : t("perCapitaMetric", {
@@ -158,7 +166,7 @@ const ProvinceCoverageSection = async ({
       </Card>
 
       <Card as="article">
-        <h2 className="text-lg font-semibold text-slate-950">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
           {t("perCapitaLaggardsTitle")}
         </h2>
         <ol className="mt-4 space-y-3">
@@ -168,14 +176,14 @@ const ProvinceCoverageSection = async ({
               className="flex items-baseline justify-between gap-4"
             >
               <span className="flex items-baseline gap-3">
-                <span className="text-xs font-medium text-slate-400">
+                <span className="text-xs font-medium text-forest/70">
                   {index + 1}
                 </span>
-                <span className="font-medium text-slate-900">
+                <span className="font-medium text-forest">
                   {localizeProvinceLabel(row.province)}
                 </span>
               </span>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-forest/70">
                 {row.stationsPer100k === null
                   ? tCommon("notAvailable")
                   : t("perCapitaMetric", {
@@ -211,7 +219,7 @@ export default async function StateOfChargingPage() {
   } catch (error) {
     console.error("Failed to fetch state of charging snapshot data:", error);
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12">
+      <main className="page-shell pb-20 pt-12 sm:pt-16">
         <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{t("setupRequiredMessage")}</p>
@@ -232,7 +240,7 @@ export default async function StateOfChargingPage() {
       : 0;
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader title={t("title")} description={t("description")} />
 
       <p className="muted mb-8 text-sm">

@@ -15,22 +15,22 @@ export default async function DashboardLayout({
   const t = await getTranslations("nav");
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="min-h-screen bg-cream">
+      <nav className="border-b border-forest/10 bg-paper sticky top-0 z-40">
+        <div className="page-shell py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
-              <Link href="/" className="text-xl font-bold">
+              <Link href="/" className="font-display text-xl font-semibold tracking-tight text-forest">
                 {t("brand")}
               </Link>
               <Link
                 href="/dashboard/seo"
-                className="text-gray-700 hover:text-gray-900"
+                className="text-forest/80 hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-forest"
               >
                 SEO Dashboard
               </Link>
             </div>
-            <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
+            <Link href="/" className="text-sm text-forest/70 hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-forest">
               Back to site
             </Link>
           </div>

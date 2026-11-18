@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useRef } from "react";
+
+import { useCloseOnScroll } from "@/components/ui/use-close-on-scroll";
 
 type NavDropdownItem = {
   href: string;
@@ -19,10 +22,13 @@ type NavDropdownProps = {
 const NavDropdown = ({ label, items, isOpen, onToggle }: NavDropdownProps) => {
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const isGroupActive = items.some(
     (item) =>
       pathname === item.href || pathname.startsWith(`${item.href}/`),
   );
+
+  useCloseOnScroll(isOpen, onToggle);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -30,6 +36,7 @@ const NavDropdown = ({ label, items, isOpen, onToggle }: NavDropdownProps) => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onToggle();
+        triggerRef.current?.focus();
       }
     };
 
@@ -49,23 +56,34 @@ const NavDropdown = ({ label, items, isOpen, onToggle }: NavDropdownProps) => {
   }, [isOpen, onToggle]);
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div
+      className="relative"
+      ref={containerRef}
+      onBlur={(event) => {
+        if (isOpen && !event.currentTarget.contains(event.relatedTarget)) onToggle();
+      }}
+    >
       <button
+        ref={triggerRef}
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        aria-haspopup="true"
-        className={`rounded-full px-3 py-1 transition-colors ${
-          isGroupActive
-            ? "bg-emerald-600 text-white"
-            : "text-slate-600 hover:text-emerald-700"
+        className={`flex items-center gap-1 rounded-full px-4 py-2 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${
+          isGroupActive || isOpen
+            ? "bg-forest/10 text-forest"
+            : "text-forest/80 hover:bg-forest/10 hover:text-forest"
         }`}
       >
         {label}
+        <ChevronDown
+          size={14}
+          aria-hidden="true"
+          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-2 min-w-40 rounded-md border border-slate-200 bg-white py-1 shadow-lg">
+        <div className="absolute left-0 top-full z-30 mt-3 min-w-52 rounded-2xl border border-forest/10 bg-paper p-1.5 shadow-xl shadow-forest/15">
           {items.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -76,10 +94,10 @@ const NavDropdown = ({ label, items, isOpen, onToggle }: NavDropdownProps) => {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 onClick={onToggle}
-                className={`block px-4 py-2 text-sm transition-colors ${
+                className={`block rounded-xl px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+                    ? "bg-forest/10 font-medium text-forest"
+                    : "text-forest/80 hover:bg-forest/10 hover:text-forest"
                 }`}
               >
                 {item.label}

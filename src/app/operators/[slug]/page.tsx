@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BatteryChargingIcon, MapPinIcon, PlugIcon, ZapIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import BackLink from "@/components/ui/BackLink";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { getConnectorPageHref } from "@/features/charging/connector-pages";
@@ -74,17 +74,18 @@ const OperatorLandingPage = async ({
   const allStationsHref = `/stations?operator=${encodeURIComponent(page.operatorName)}`;
 
   const stats = [
-    { label: t("statStations"), value: formatInteger(page.stationCount) },
-    { label: t("statConnectors"), value: formatInteger(page.connectorCount) },
+    { Icon: MapPinIcon, label: t("statStations"), value: formatInteger(page.stationCount) },
+    { Icon: PlugIcon, label: t("statConnectors"), value: formatInteger(page.connectorCount) },
     {
+      Icon: BatteryChargingIcon,
       label: t("statMaxPower"),
       value: page.maxPowerKw === null ? t("statUnknown") : formatConnectorPower(page.maxPowerKw),
     },
-    { label: t("statDcShare"), value: `${getDcConnectorShare(page)}%` },
+    { Icon: ZapIcon, label: t("statDcShare"), value: `${getDcConnectorShare(page)}%` },
   ];
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="page-shell max-w-5xl pb-20 pt-12 sm:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -100,12 +101,12 @@ const OperatorLandingPage = async ({
 
       <BackLink href="/operators" label={t("backLink")} />
 
-      <header className="mb-8">
-        <Badge>{t("badge")}</Badge>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
+      <header className="mb-10">
+        <span className="badge">{t("badge")}</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-forest sm:text-5xl">
           {t("title", { name })}
         </h1>
-        <p className="muted mt-3 max-w-3xl text-lg">
+        <p className="muted mt-4 max-w-3xl text-lg">
           {t("intro", {
             legalName: page.operatorName,
             stations: page.stationCount,
@@ -116,30 +117,39 @@ const OperatorLandingPage = async ({
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.label} className="text-center">
-            <div className="text-3xl font-bold text-emerald-600">{stat.value}</div>
-            <p className="muted mt-1">{stat.label}</p>
+        {stats.map(({ Icon, label, value }, index) => (
+          <Card key={label} className="group">
+            <span
+              className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 motion-safe:group-hover:-rotate-6 ${
+                index % 2 === 0 ? "bg-forest text-sun" : "bg-sun text-forest"
+              }`}
+            >
+              <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+            </span>
+            <div className="mt-5 font-display text-4xl font-semibold tracking-tight text-forest">
+              {value}
+            </div>
+            <p className="muted mt-1 text-sm">{label}</p>
           </Card>
         ))}
       </section>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
         {page.topCities.length > 0 && (
           <Card as="section">
-            <h2 className="text-xl font-semibold">{t("citiesTitle", { name })}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-forest">{t("citiesTitle", { name })}</h2>
             <p className="muted mt-1 text-sm">{t("citiesSubtitle")}</p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-5 divide-y divide-forest/10">
               {page.topCities.map((city) => {
                 const cityHref = getOperatorCityHref(city.name);
                 return (
-                  <li key={city.name} className="flex items-baseline justify-between gap-4">
+                  <li key={city.name} className="flex items-baseline justify-between gap-4 py-3 first:pt-0 last:pb-0">
                     {cityHref ? (
-                      <Link href={cityHref} className="font-medium text-emerald-700 hover:text-emerald-900 hover:underline">
+                      <Link href={cityHref} className="font-medium text-forest underline-offset-4 hover:underline focus-visible:outline-forest">
                         {city.name}
                       </Link>
                     ) : (
-                      <span className="font-medium text-slate-900">{city.name}</span>
+                      <span className="font-medium text-forest">{city.name}</span>
                     )}
                     <span className="muted text-sm">
                       {t("cityStationCount", { count: city.stationCount })}
@@ -153,17 +163,17 @@ const OperatorLandingPage = async ({
 
         {page.connectorMix.length > 0 && (
           <Card as="section">
-            <h2 className="text-xl font-semibold">{t("connectorsTitle", { name })}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-forest">{t("connectorsTitle", { name })}</h2>
             <p className="muted mt-1 text-sm">{t("connectorsSubtitle")}</p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-5 divide-y divide-forest/10">
               {page.connectorMix.map((connector) => (
-                <li key={connector.key} className="flex items-baseline justify-between gap-4">
+                <li key={connector.key} className="flex items-baseline justify-between gap-4 py-3 first:pt-0 last:pb-0">
                   {connector.key === "unknown" ? (
-                    <span className="font-medium text-slate-900">{tCommon("unknown")}</span>
+                    <span className="font-medium text-forest">{tCommon("unknown")}</span>
                   ) : (
                     <Link
                       href={getConnectorPageHref(connector.key)}
-                      className="font-medium text-emerald-700 hover:text-emerald-900 hover:underline"
+                      className="font-medium text-forest underline-offset-4 hover:underline focus-visible:outline-forest"
                     >
                       {CONNECTOR_KNOWLEDGE[connector.key].label}
                     </Link>
@@ -178,25 +188,25 @@ const OperatorLandingPage = async ({
         )}
       </div>
 
-      <Card as="section" className="mt-10">
-        <h2 className="text-xl font-semibold">{t("stationsTitle", { name })}</h2>
+      <Card as="section" className="mt-8">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest">{t("stationsTitle", { name })}</h2>
         <p className="muted mt-1 text-sm">
           {t("stationsSubtitle", { shown: page.stations.length, total: page.stationCount })}
         </p>
-        <ul className="mt-4 divide-y divide-slate-100">
+        <ul className="mt-5 divide-y divide-forest/10">
           {page.stations.map((station) => (
             <li key={station.id} className="flex flex-wrap items-baseline justify-between gap-2 py-3">
               <Link
                 href={`/stations/${station.id}`}
-                className="font-medium text-emerald-700 hover:text-emerald-900 hover:underline"
+                className="font-medium text-forest underline-offset-4 hover:underline focus-visible:outline-forest"
               >
                 {station.name ?? tCommon("chargingStationFallback")}
                 {station.city ? `, ${station.city}` : ""}
               </Link>
               {station.maxPowerKw !== null && (
-                <Badge>
+                <span className="badge">
                   {t("stationMaxPower", { power: formatConnectorPower(station.maxPowerKw) })}
-                </Badge>
+                </span>
               )}
             </li>
           ))}

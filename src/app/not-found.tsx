@@ -1,52 +1,39 @@
 import Link from "next/link";
-import { SearchX } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+
+import Button from "@/components/ui/Button";
 
 export default async function NotFound() {
   const t = await getTranslations("notFound");
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center px-6 text-center">
-      <div className="rounded-full bg-emerald-100 p-4">
-        <SearchX className="h-10 w-10 text-emerald-700" />
-      </div>
+    <main className="page-shell flex min-h-[70vh] flex-col items-center justify-center py-20 text-center">
+      <p
+        aria-hidden="true"
+        className="font-display text-[8rem] font-semibold leading-none tracking-tight text-forest sm:text-[12rem]"
+      >
+        4<span className="text-sun">0</span>4
+      </p>
 
-      <h1 className="mt-6 text-5xl font-bold text-slate-900">404</h1>
-
-      <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+      <h1 className="mt-6 font-display text-3xl font-semibold tracking-tight text-forest sm:text-4xl">
         {t("title")}
-      </h2>
+      </h1>
 
-      <p className="mt-3 max-w-lg text-slate-600">{t("description")}</p>
+      <p className="muted mt-3 max-w-lg text-lg">{t("description")}</p>
 
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link
-          href="/"
-          className="rounded-md bg-emerald-600 px-5 py-3 font-medium text-white transition hover:bg-emerald-700"
-        >
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <Button as={Link} href="/" size="lg">
           {t("home")}
-        </Link>
-
-        <Link
-          href="/stations"
-          className="rounded-md border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
-        >
+        </Button>
+        <Button as={Link} href="/stations" variant="secondary" size="lg">
           {t("stations")}
-        </Link>
-
-        <Link
-          href="/vehicles"
-          className="rounded-md border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
-        >
+        </Button>
+        <Button as={Link} href="/vehicles" variant="secondary" size="lg">
           {t("vehicles")}
-        </Link>
-
-        <Link
-          href="/reports/sample"
-          className="rounded-md border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
-        >
+        </Button>
+        <Button as={Link} href="/reports/sample" variant="secondary" size="lg">
           {t("reports")}
-        </Link>
+        </Button>
       </div>
     </main>
   );

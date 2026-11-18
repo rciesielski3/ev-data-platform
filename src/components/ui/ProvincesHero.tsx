@@ -18,7 +18,7 @@ export const ProvincesHero = async ({
   const t = await getTranslations("provinces");
 
   return (
-    <section className="mb-8 grid gap-4 md:grid-cols-4">
+    <section className="mb-10 grid gap-4 md:grid-cols-4">
       <MetricCard
         index={0}
         label={t("provincesMetricLabel")}

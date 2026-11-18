@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useLocale } from "next-intl";
 import CountUp from "react-countup";
 
@@ -9,25 +9,20 @@ type Props = {
   className?: string;
 };
 
-export default function AnimatedCount({ end, className }: Props) {
+const AnimatedCount = ({ end, className }: Props) => {
   const locale = useLocale();
-  const formatter = new Intl.NumberFormat(locale);
-  const [start, setStart] = useState<number | null>(null);
-
-  useEffect(() => {
-    setStart((prevStart) => prevStart ?? end);
-  }, [end]);
-
-  // On first mount, start is null, so show the end value immediately
-  if (start === null) {
-    return <span className={className}>{formatter.format(end)}</span>;
-  }
+  const formatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
+  const [reducedMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   return (
     <CountUp
-      start={start}
+      start={0}
       end={end}
-      duration={0.8}
+      duration={reducedMotion ? 0 : 1.4}
+      enableScrollSpy
+      scrollSpyOnce
       formattingFn={(value) => formatter.format(value)}
     >
       {({ countUpRef }) => (
@@ -37,4 +32,6 @@ export default function AnimatedCount({ end, className }: Props) {
       )}
     </CountUp>
   );
-}
+};
+
+export default AnimatedCount;

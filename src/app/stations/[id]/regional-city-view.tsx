@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, pl } from "date-fns/locale";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowLeft, ArrowRightIcon } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -100,12 +100,13 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <div className="mb-8">
         <Link
           href="/stations"
-          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+          className="group inline-flex items-center gap-2 rounded-full border border-forest/25 px-4 py-2 text-sm font-medium text-forest transition-all duration-300 hover:border-forest hover:bg-forest hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
         >
+          <ArrowLeft className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:-translate-x-0.5" aria-hidden />
           {t("backLink")}
         </Link>
       </div>
@@ -133,48 +134,48 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
       {!("error" in stats) && (
         <>
           <section className="grid gap-4 sm:grid-cols-3">
-            <Card className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">
+            <Card className="text-center !p-7">
+              <div className="font-display text-4xl font-bold tracking-tight text-forest">
                 {stats.stationCount}
               </div>
-              <p className="muted mt-1">{t("statsStationsLabel")}</p>
+              <p className="muted mt-2 text-sm">{t("statsStationsLabel")}</p>
             </Card>
-            <Card className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">
+            <Card className="text-center !p-7">
+              <div className="font-display text-4xl font-bold tracking-tight text-forest">
                 {stats.operatorCount}
               </div>
-              <p className="muted mt-1">{t("statsOperatorsLabel")}</p>
+              <p className="muted mt-2 text-sm">{t("statsOperatorsLabel")}</p>
             </Card>
-            <Card className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">
+            <Card className="text-center !p-7">
+              <div className="font-display text-4xl font-bold tracking-tight text-forest">
                 {stats.maxPowerKw
                   ? t("statsMaxPowerValue", { power: stats.maxPowerKw })
                   : t("statsUnavailable")}
               </div>
-              <p className="muted mt-1">{t("statsMaxPowerLabel")}</p>
+              <p className="muted mt-2 text-sm">{t("statsMaxPowerLabel")}</p>
             </Card>
           </section>
 
           {stats.operatorBreakdown.length > 0 && (
-            <section className="mt-10">
-              <h2 className="text-2xl font-semibold text-[var(--foreground)]">
+            <section className="mt-14">
+              <h2 className="font-display text-2xl font-semibold tracking-tight text-forest sm:text-3xl">
                 {t("operatorsTitle", { location })}
               </h2>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {stats.operatorBreakdown.map((operator) => {
                   const operatorStats = cityOperatorStats[operator.name];
                   return (
                     <div
                       key={operator.name}
-                      className="group relative border border-[var(--card-border)] rounded-[18px] p-5 bg-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                      className="card group relative !p-6 motion-safe:hover:-translate-y-0.5"
                     >
-                      <h3 className="text-lg font-semibold text-[var(--foreground)] pr-16">
+                      <h3 className="pr-24 font-display text-lg font-semibold tracking-tight text-forest">
                         {operator.name}
                       </h3>
 
                       {operatorStats && (
                         <div className="mt-3 flex flex-wrap gap-2">
-                          <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
+                          <span className="inline-flex items-center rounded-full bg-forest/10 px-3 py-1 text-xs font-semibold text-forest">
                             {operatorStats.completenessPercent}%{" "}
                             {t("operatorCompletenessLabel")}
                           </span>
@@ -190,7 +191,7 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       )}
 
                       {operatorStats && operatorStats.maxPowerKw && (
-                        <Badge className="absolute top-4 right-4 shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-md">
+                        <Badge className="absolute right-5 top-5 shrink-0 whitespace-nowrap !normal-case !tracking-normal">
                           {t("operatorMaxPowerLabel", {
                             power: operatorStats.maxPowerKw,
                           })}
@@ -199,14 +200,14 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
 
                       {operatorStats?.topConnectors?.length > 0 && (
                         <div className="mt-3">
-                          <p className="text-xs font-semibold text-[var(--muted)] uppercase mb-2">
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-forest/70">
                             {t("operatorConnectorsLabel")}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {operatorStats.topConnectors.map((c: { type: string; count: number }) => (
                               <span
                                 key={c.type}
-                                className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-700"
+                                className="inline-flex items-center rounded-full border border-forest/15 bg-cream px-3 py-1 text-xs font-medium text-forest"
                               >
                                 {normalizeConnectorLabel(c.type)}
                               </span>
@@ -222,13 +223,13 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
                       </p>
 
                       {operatorStats && (
-                        <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
-                          <p className="text-xs text-[var(--muted)]">
+                        <div className="mt-4 flex items-center justify-between gap-4 border-t border-forest/10 pt-4">
+                          <p className="text-xs text-forest/70">
                             {t("importedLabel", { date: formatDisplayDate(snapshotDate || new Date(), locale) })} / {t("sourceLabel", { date: formatDisplayDate(operatorStats.newestUpdateDate, locale) })}
                           </p>
                           <Link
                             href={`/stations?location=${city.slug}&operator=${encodeURIComponent(operator.name)}`}
-                            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:scale-105 group-hover:translate-x-1 group-hover:text-emerald-600 group-hover:border-emerald-600 group-hover:bg-emerald-50"
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-cream transition-all duration-300 hover:bg-sun hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest motion-safe:group-hover:-rotate-45"
                             aria-label={t("viewStationsLink")}
                           >
                             <ArrowRightIcon className="h-5 w-5" />
@@ -244,19 +245,20 @@ export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
         </>
       )}
 
-      <section className="mt-10 rounded-xl bg-emerald-50 p-8 text-center">
-        <h2 className="text-2xl font-semibold text-[var(--foreground)]">
+      <section className="mt-14 rounded-[2rem] bg-forest p-8 text-center text-cream sm:p-12">
+        <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
           {t("ctaTitle")}
         </h2>
-        <p className="muted mt-2">{t("ctaDescription", { location })}</p>
+        <p className="mx-auto mt-3 max-w-2xl text-cream/80">{t("ctaDescription", { location })}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Button as={Link} href={buildRegionalMapHref(city)}>
+          <Button as={Link} href={buildRegionalMapHref(city)} variant="cta">
             {t("mapCta")}
           </Button>
           <Button
             as={Link}
             href={buildRegionalStationsHref(city)}
             variant="secondary"
+            className="!border-cream/40 !text-cream hover:!border-cream hover:!bg-cream hover:!text-forest focus-visible:!outline-sun"
           >
             {t("stationsCta")}
           </Button>

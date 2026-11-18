@@ -19,7 +19,7 @@ const formatHpcShare = (row: ProvinceIntelligenceRow) =>
   formatPercent(row.hpcStationCount, row.stationCount);
 
 const formatPerCapita = (row: ProvinceIntelligenceRow, unknownLabel: string) =>
-  row.stationsPer100k === null
+  row.stationsPer100k == null
     ? unknownLabel
     : row.stationsPer100k.toFixed(2);
 
@@ -48,9 +48,9 @@ const ProvinceTable = ({
   formatPowerMetric: (powerKw: number | null) => string;
   localizeProvinceLabel: (value: string) => string;
 }) => (
-  <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-    <table className="min-w-full divide-y divide-slate-200 text-sm">
-      <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+  <div className="overflow-x-auto rounded-[1.5rem] border border-forest/10 bg-paper">
+    <table className="min-w-full divide-y divide-forest/10 text-sm">
+      <thead className="bg-forest/5 text-left text-xs uppercase tracking-wider text-forest/70">
         <tr>
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.province}
@@ -81,16 +81,16 @@ const ProvinceTable = ({
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-slate-100">
+      <tbody className="divide-y divide-forest/10">
         {rows.map((row) => {
           const regionalPage = findRegionalProvince(row.province);
           return (
-            <tr key={row.province} className="align-top">
-              <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+            <tr key={row.province} className="align-top transition-colors hover:bg-forest/5">
+              <th scope="row" className="px-4 py-4 text-left font-medium text-forest">
                 {regionalPage ? (
                   <Link
                     href={`/stations/${regionalPage.slug}`}
-                    className="text-emerald-700 hover:text-emerald-900 hover:underline"
+                    className="text-forest underline-offset-4 hover:text-forest/70 hover:underline"
                   >
                     {localizeProvinceLabel(row.province)}
                   </Link>
@@ -98,31 +98,31 @@ const ProvinceTable = ({
                   localizeProvinceLabel(row.province)
                 )}
               </th>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatInteger(row.stationCount)}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatInteger(row.connectorCount)}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatInteger(row.knownPowerConnectorCount)}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatInteger(row.hpcStationCount)}
-                <span className="ml-1 text-slate-400">
+                <span className="ml-1 text-forest/70">
                   ({formatHpcShare(row)})
                 </span>
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatPowerMetric(row.maxPowerKw) || unknownLabel}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatPowerMetric(row.averagePowerKw) || unknownLabel}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatInteger(row.operatorCount)}
               </td>
-              <td className="px-4 py-4 text-slate-700">
+              <td className="px-4 py-4 text-forest/80">
                 {formatPerCapita(row, unknownLabel)}
               </td>
             </tr>
@@ -163,7 +163,7 @@ export const ProvincesDetails = async ({ rows }: ProvincesDetailsProps) => {
           <Card as="article" key={row.province}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-slate-950">
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
                   {localizeFallback(row.province, tCommon)}
                 </h2>
                 <p className="muted mt-1 text-sm">
@@ -179,26 +179,26 @@ export const ProvincesDetails = async ({ rows }: ProvincesDetailsProps) => {
             </div>
             <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
               <div>
-                <dt className="text-slate-500">{t("maxPowerLabel")}</dt>
-                <dd className="mt-1 font-medium text-slate-950">
+                <dt className="text-forest/70">{t("maxPowerLabel")}</dt>
+                <dd className="mt-1 font-medium text-forest">
                   {formatPowerMetric(row.maxPowerKw) || tCommon("unknown")}
                 </dd>
               </div>
               <div>
-                <dt className="text-slate-500">{t("averagePowerLabel")}</dt>
-                <dd className="mt-1 font-medium text-slate-950">
+                <dt className="text-forest/70">{t("averagePowerLabel")}</dt>
+                <dd className="mt-1 font-medium text-forest">
                   {formatPowerMetric(row.averagePowerKw) || tCommon("unknown")}
                 </dd>
               </div>
               <div>
-                <dt className="text-slate-500">{t("knownPowerLabel")}</dt>
-                <dd className="mt-1 font-medium text-slate-950">
+                <dt className="text-forest/70">{t("knownPowerLabel")}</dt>
+                <dd className="mt-1 font-medium text-forest">
                   {formatInteger(row.knownPowerConnectorCount)}
                 </dd>
               </div>
               <div>
-                <dt className="text-slate-500">{t("operatorsLabel")}</dt>
-                <dd className="mt-1 font-medium text-slate-950">
+                <dt className="text-forest/70">{t("operatorsLabel")}</dt>
+                <dd className="mt-1 font-medium text-forest">
                   {formatInteger(row.operatorCount)}
                 </dd>
               </div>
@@ -213,7 +213,7 @@ export const ProvincesDetails = async ({ rows }: ProvincesDetailsProps) => {
             <h2 className="text-xl font-semibold">{t("comparisonTitle")}</h2>
             <p className="muted mt-1 text-sm">{t("comparisonSubtitle")}</p>
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-forest/70">
             {t("strongestProvinceLine", {
               province: strongestProvince
                 ? `${localizeFallback(strongestProvince.province, tCommon)} (${formatPowerMetric(strongestProvince.maxPowerKw)})`

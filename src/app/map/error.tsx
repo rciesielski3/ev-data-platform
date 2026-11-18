@@ -14,7 +14,7 @@ export default function MapError({
   const tCommon = useTranslations("common");
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <ErrorState
         title={t("title")}
         body={t("body")}

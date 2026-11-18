@@ -166,14 +166,14 @@ export default async function InsightsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}
         actions={
           <Link
             href="/stations"
-            className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
           >
             {t("browseStationsLink")}
           </Link>

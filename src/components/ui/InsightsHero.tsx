@@ -11,7 +11,7 @@ export const InsightsHero = async ({ summary }: InsightsHeroProps) => {
   const t = await getTranslations("insights");
 
   return (
-    <section className="mb-8 grid gap-4 md:grid-cols-3">
+    <section className="mb-10 grid gap-4 md:grid-cols-3">
       <MetricCard
         index={0}
         label={t("stationsMetricLabel")}

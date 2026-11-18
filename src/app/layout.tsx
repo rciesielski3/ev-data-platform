@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
 import Footer from "@/components/ui/Footer";
+import Wordmark from "@/components/ui/Wordmark";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import NavLinks, { type NavLink } from "@/components/ui/NavLinks";
@@ -30,10 +31,11 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const bricolage = Bricolage_Grotesque({
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  weight: "variable",
+  axes: ["opsz"],
   display: "swap",
 });
 
@@ -131,56 +133,30 @@ const RootLayout = async ({
         <GA4Script />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} antialiased min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
-            <div className="relative mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-              <Link href="/" aria-label={t("brand")}>
-                <svg
-                  viewBox="0 0 220 48"
-                  className="h-8 w-auto"
-                  role="img"
-                  aria-hidden="true"
-                >
-                  <rect
-                    x="0"
-                    y="4"
-                    width="40"
-                    height="40"
-                    rx="10"
-                    fill="#059669"
-                  />
-                  <path
-                    d="M25 17 L15.5 17 C11.5 17 11.5 24 15.5 24 L24.5 24 C28.5 24 28.5 31 24.5 31 L15 31"
-                    fill="none"
-                    stroke="#F7FAF7"
-                    strokeWidth="4.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <text
-                    x="52"
-                    y="31"
-                    fontFamily="Helvetica, Arial, sans-serif"
-                    fontSize="22"
-                    fontWeight="700"
-                    fill="#14201A"
-                  >
-                    EV<tspan fill="#059669">Source</tspan>
-                  </text>
-                </svg>
+          <header className="sticky top-0 z-20 border-b border-forest/15 bg-sand-200/95 shadow-[0_12px_32px_-12px_rgba(13,43,34,0.45)] backdrop-blur">
+            <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+              <Link
+                href="/"
+                aria-label={t("brand")}
+                className="rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest"
+              >
+                <Wordmark className="h-8 w-auto" />
               </Link>
 
-              <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+              <nav className="hidden items-center gap-1 text-sm font-medium lg:flex">
                 <NavLinks links={navLinks} />
-                <LanguageSwitcher
-                  currentLocale={locale}
-                  ariaLabel={t("languageSwitcherLabel")}
-                />
+                <div className="ml-3">
+                  <LanguageSwitcher
+                    currentLocale={locale}
+                    ariaLabel={t("languageSwitcherLabel")}
+                  />
+                </div>
               </nav>
 
-              <div className="flex items-center gap-3 md:hidden">
+              <div className="flex items-center gap-3 lg:hidden">
                 <LanguageSwitcher
                   currentLocale={locale}
                   ariaLabel={t("languageSwitcherLabel")}

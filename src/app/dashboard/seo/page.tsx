@@ -88,10 +88,10 @@ export default async function SEODashboardPage() {
   const underperformers = findUnderperformers(keywords, 5);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">{t("dashboard.title")}</h1>
-        <p className="text-gray-600 mb-8">{t("dashboard.description")}</p>
+    <div className="pb-20 pt-10">
+      <div className="page-shell">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-forest mb-2">{t("dashboard.title")}</h1>
+        <p className="muted mb-8">{t("dashboard.description")}</p>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -115,11 +115,11 @@ export default async function SEODashboardPage() {
 
         {/* Top Performers */}
         <div className="card mb-8">
-          <h2 className="text-xl font-bold mb-4">{t("topKeywords.title")}</h2>
+          <h2 className="font-display text-xl font-semibold tracking-tight mb-4">{t("topKeywords.title")}</h2>
           {topPerformers.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-300">
+                <thead className="border-b border-forest/20 text-xs uppercase tracking-wider text-forest/70">
                   <tr>
                     <th className="text-left py-2 px-4">Keyword</th>
                     <th className="text-right py-2 px-4">Position</th>
@@ -130,7 +130,7 @@ export default async function SEODashboardPage() {
                 </thead>
                 <tbody>
                   {topPerformers.map((keyword) => (
-                    <tr key={keyword.id} className="border-b border-gray-200">
+                    <tr key={keyword.id} className="border-b border-forest/10 hover:bg-forest/5">
                       <td className="py-3 px-4">{keyword.query}</td>
                       <td className="text-right py-3 px-4">
                         {keyword.currentPosition.toFixed(1)}
@@ -156,13 +156,13 @@ export default async function SEODashboardPage() {
 
         {/* Underperformers */}
         {underperformers.length > 0 && (
-          <div className="card bg-orange-50 border border-orange-200 mb-8">
-            <h2 className="text-xl font-bold mb-4 text-orange-900">
+          <div className="card bg-sun/15 border-sun/40 mb-8">
+            <h2 className="text-xl font-bold mb-4 text-forest">
               {t("underperformers.title")}
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-orange-300">
+                <thead className="border-b border-forest/20 text-xs uppercase tracking-wider text-forest/70">
                   <tr>
                     <th className="text-left py-2 px-4">Keyword</th>
                     <th className="text-right py-2 px-4">Current Position</th>
@@ -173,7 +173,7 @@ export default async function SEODashboardPage() {
                 </thead>
                 <tbody>
                   {underperformers.map((keyword) => (
-                    <tr key={keyword.id} className="border-b border-orange-100">
+                    <tr key={keyword.id} className="border-b border-forest/10">
                       <td className="py-3 px-4 font-medium">
                         {keyword.query}
                       </td>
@@ -181,9 +181,9 @@ export default async function SEODashboardPage() {
                         {keyword.currentPosition.toFixed(1)}
                       </td>
                       <td className="text-right py-3 px-4">
-                        {keyword.previousPosition?.toFixed(1) || "—"}
+                        {keyword.previousPosition?.toFixed(1) || "-"}
                       </td>
-                      <td className="text-right py-3 px-4 text-orange-600 font-medium">
+                      <td className="text-right py-3 px-4 text-forest font-semibold">
                         +
                         {(
                           keyword.currentPosition - keyword.previousPosition!
@@ -197,15 +197,15 @@ export default async function SEODashboardPage() {
                 </tbody>
               </table>
             </div>
-            <p className="muted mt-4 text-orange-700">
+            <p className="muted mt-4">
               {t("underperformers.recommendation")}
             </p>
           </div>
         )}
 
         {/* Recommendations */}
-        <div className="card bg-blue-50 border border-blue-200">
-          <h2 className="text-xl font-bold mb-4 text-blue-900">
+        <div className="card bg-forest/5">
+          <h2 className="text-xl font-bold mb-4 text-forest">
             Recommendations
           </h2>
           <ul className="space-y-2 text-sm">
@@ -242,7 +242,7 @@ function SummaryCard({
   return (
     <div className="card">
       <p className="muted text-sm mb-2">{label}</p>
-      <p className="text-2xl font-bold">{value}</p>
+      <p className="font-display text-3xl font-semibold tracking-tight text-forest">{value}</p>
     </div>
   );
 }

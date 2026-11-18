@@ -14,7 +14,7 @@ export default function OperatorsError({
   const tCommon = useTranslations("common");
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <ErrorState
         title={t("title")}
         body={t("body")}

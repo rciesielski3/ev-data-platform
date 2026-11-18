@@ -16,9 +16,9 @@ const ShareBar = ({ percentLabel }: { percentLabel: string }) => {
   const percent = Number(percentLabel.replace("%", ""));
 
   return (
-    <div className="mt-2 h-2 rounded-full bg-slate-100">
+    <div className="mt-2 h-2 rounded-full bg-forest/10">
       <div
-        className="share-bar-fill h-2 rounded-full bg-emerald-500"
+        className="share-bar-fill h-2 rounded-full bg-sun"
         style={
           { "--share-bar-width": `${Number.isFinite(percent) ? percent : 0}%` } as React.CSSProperties
         }
@@ -41,10 +41,10 @@ export const InsightsDetails = async ({ insights }: InsightsDetailsProps) => {
             {insights.topOperators.map((operator) => (
               <div key={operator.label}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="font-medium text-slate-900">
+                  <span className="font-medium text-forest">
                     {localizeFallback(operator.label, tCommon)}
                   </span>
-                  <span className="text-sm text-slate-500">
+                  <span className="text-sm text-forest/70">
                     {operator.stationCount} {t("stationsUnit")} /{" "}
                     {operator.stationShare}
                   </span>
@@ -66,10 +66,10 @@ export const InsightsDetails = async ({ insights }: InsightsDetailsProps) => {
             {insights.connectorDistribution.map((connector) => (
               <div key={connector.connectorType}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="font-medium text-slate-900">
+                  <span className="font-medium text-forest">
                     {localizeFallback(connector.connectorType, tCommon)}
                   </span>
-                  <span className="text-sm text-slate-500">
+                  <span className="text-sm text-forest/70">
                     {connector.connectorCount} {t("connectorsUnit")} /{" "}
                     {connector.connectorShare}
                   </span>
@@ -83,21 +83,21 @@ export const InsightsDetails = async ({ insights }: InsightsDetailsProps) => {
         <Card as="article">
           <h2 className="text-xl font-semibold">{t("highestPowerTitle")}</h2>
           <p className="muted mt-1 text-sm">{t("highestPowerSubtitle")}</p>
-          <div className="mt-5 divide-y divide-slate-100">
+          <div className="mt-5 divide-y divide-forest/10">
             {insights.highestPowerStations.map((station) => (
               <div
                 key={station.stationId}
                 className="grid gap-3 py-4 first:pt-0 last:pb-0 sm:grid-cols-[1fr_auto] sm:items-center"
               >
                 <div>
-                  <h3 className="font-medium text-slate-950">
+                  <h3 className="font-medium text-forest">
                     {localizeFallback(station.stationName, tCommon)}
                   </h3>
                   <p className="muted mt-1 text-sm">
                     {localizeFallback(station.operatorName, tCommon)} /{" "}
                     {localizeFallback(station.location, tCommon)}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-forest/70">
                     {localizeFallback(station.connectorType, tCommon)}
                   </p>
                 </div>
@@ -114,10 +114,10 @@ export const InsightsDetails = async ({ insights }: InsightsDetailsProps) => {
             {insights.provinceCoverage.map((province) => (
               <div key={province.province}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="font-medium text-slate-900">
+                  <span className="font-medium text-forest">
                     {localizeFallback(province.province, tCommon)}
                   </span>
-                  <span className="text-sm text-slate-500">
+                  <span className="text-sm text-forest/70">
                     {province.stationCount} {t("stationsUnit")} /{" "}
                     {province.stationShare}
                   </span>

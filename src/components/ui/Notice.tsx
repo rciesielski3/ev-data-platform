@@ -6,8 +6,8 @@ type NoticeTone = "warning" | "neutral" | "success";
 
 const TONE_CLASSES: Record<NoticeTone, string> = {
   warning: "border-amber-200 bg-amber-50 text-amber-900",
-  neutral: "text-center",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-900",
+  neutral: "text-center text-forest",
+  success: "border-forest/15 bg-forest/5 text-forest",
 };
 
 type NoticeProps = {
@@ -28,8 +28,8 @@ const Notice = ({
       <h2
         className={
           tone === "warning"
-            ? "mb-2 text-lg font-medium"
-            : "text-lg font-medium"
+            ? "font-display mb-2 text-xl font-semibold tracking-tight"
+            : "font-display text-xl font-semibold tracking-tight"
         }
       >
         {title}

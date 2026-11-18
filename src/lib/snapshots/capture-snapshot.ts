@@ -1,6 +1,8 @@
 import { IngestionStatus, Prisma } from "@prisma/client";
 
 import { buildChargePointTotals } from "@/features/charging/charge-points";
+import { buildStationDots } from "@/features/home/station-dots";
+import { buildStationInsights } from "@/features/home/station-insights";
 import { buildOperatorIntelligenceRows } from "@/features/charging/operator-intelligence";
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
 import { buildRegionalOperatorStats } from "@/features/charging/operator-stats";
@@ -16,11 +18,14 @@ export type CaptureSnapshotResult = {
 
 const getStationsForSnapshot = () =>
   prisma.chargingStation.findMany({
+    orderBy: { id: "asc" },
     select: {
       id: true,
       name: true,
       city: true,
       province: true,
+      latitude: true,
+      longitude: true,
       sourceUpdatedAt: true,
       operator: {
         select: {
@@ -82,6 +87,10 @@ export const captureSnapshot = async (
     const snapshot = buildDailySnapshot(provinceRows, operatorRows, evModelCount, operatorCount);
     const precomputedStats = {
       chargePoints: buildChargePointTotals(stations.flatMap((station) => station.connectors)),
+      home: {
+        stationMap: buildStationDots(stations),
+        insights: buildStationInsights(stations),
+      },
     };
 
     await prisma.dailySnapshot.upsert({

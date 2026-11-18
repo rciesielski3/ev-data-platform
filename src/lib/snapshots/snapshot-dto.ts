@@ -19,7 +19,9 @@ export type DailySnapshotDto = {
   capturedAt: string;
 };
 
-export const toDailySnapshotDto = (snapshot: DailySnapshot): DailySnapshotDto => ({
+export const toDailySnapshotDto = (
+  snapshot: Omit<DailySnapshot, "precomputedStats">,
+): DailySnapshotDto => ({
   date: snapshot.snapshotDate.toISOString().slice(0, 10),
   totalStationCount: snapshot.totalStationCount,
   totalConnectorCount: snapshot.totalConnectorCount,

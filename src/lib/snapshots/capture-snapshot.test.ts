@@ -60,8 +60,12 @@ describe("captureSnapshot", () => {
     expect(call.create.totalConnectorCount).toBe(1);
     expect(call.create.totalHpcStationCount).toBe(1);
     expect(call.create.knownPowerConnectorCount).toBe(1);
-    expect(call.create.precomputedStats).toEqual({
+    expect(call.create.precomputedStats).toMatchObject({
       chargePoints: { total: 1, ac: 0, dc: 1 },
+      home: {
+        stationMap: { dots: expect.any(Array) },
+        insights: { provinces: expect.any(Array), connectors: expect.any(Array) },
+      },
     });
     expect(call.update.precomputedStats).toEqual(call.create.precomputedStats);
     expect(call.create.latestImportStatus).toBe(IngestionStatus.SUCCESS);

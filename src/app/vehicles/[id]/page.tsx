@@ -21,8 +21,8 @@ import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
-import Badge from "@/components/ui/Badge";
 import BackLink from "@/components/ui/BackLink";
+import { BatteryChargingIcon, GaugeIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -125,9 +125,9 @@ const DetailRow = ({
   label: string;
   value: React.ReactNode;
 }) => (
-  <div className="flex justify-between border-b border-slate-100 pb-2">
-    <dt className="text-slate-500">{label}</dt>
-    <dd className="font-medium text-slate-900">{value}</dd>
+  <div className="flex items-baseline justify-between gap-4 border-b border-forest/10 pb-3 last:border-none last:pb-0">
+    <dt className="text-forest/70">{label}</dt>
+    <dd className="text-right font-medium text-forest">{value}</dd>
   </div>
 );
 
@@ -187,7 +187,7 @@ export default async function VehicleDetailPage({
   });
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
+    <main className="page-shell max-w-4xl pb-20 pt-12 sm:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -197,42 +197,52 @@ export default async function VehicleDetailPage({
       <BackLink href="/vehicles" label={t("backLink")} />
 
       <header className="mb-10">
-        <div className="text-lg font-medium text-slate-500">
+        <div className="text-xs font-semibold uppercase tracking-wider text-forest/70">
           {vehicle.brand.name}
         </div>
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+        <h1 className="mt-2 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-forest sm:text-5xl">
           {vehicle.modelName}
         </h1>
         {vehicle.variantName && (
-          <p className="my-2 text-xl text-slate-600">{vehicle.variantName}</p>
+          <p className="mt-2 text-xl text-forest/70">{vehicle.variantName}</p>
         )}
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
+          {vehicle.specs?.rangeWltpKm && (
+            <span className="rounded-full bg-sun px-3.5 py-1.5 text-sm font-semibold text-forest">
+              {vehicle.specs.rangeWltpKm} km WLTP
+            </span>
+          )}
           {vehicle.specs?.batteryCapacityKwhNet && (
-            <Badge className="rounded-full bg-blue-200 px-3 py-1 text-sm font-medium text-blue-700">
+            <span className="rounded-full bg-forest/10 px-3.5 py-1.5 text-sm font-medium text-forest">
               {vehicle.specs.batteryCapacityKwhNet} kWh
-            </Badge>
+            </span>
           )}
 
           {vehicle.specs?.dcMaxPowerKw && (
-            <Badge className="rounded-full bg-emerald-200 px-3 py-1 text-sm font-medium text-emerald-700">
-              {vehicle.specs.dcMaxPowerKw} kW
-            </Badge>
+            <span className="rounded-full bg-forest/10 px-3.5 py-1.5 text-sm font-medium text-forest">
+              {vehicle.specs.dcMaxPowerKw} kW DC
+            </span>
           )}
 
           {vehicle.specs?.systemPowerKw && (
-            <Badge className="rounded-full bg-orange-200 px-3 py-1 text-sm font-medium text-orange-700">
+            <span className="rounded-full bg-forest/10 px-3.5 py-1.5 text-sm font-medium text-forest">
               {vehicle.specs.systemPowerKw} kW
-            </Badge>
+            </span>
           )}
         </div>
       </header>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card as="section">
-          <h2 className="mb-4 text-xl font-medium text-slate-900">
-            {t("batteryRangeTitle")}
-          </h2>
-          <dl className="space-y-4 text-sm">
+          <div className="mb-6 flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-forest text-sun">
+              <GaugeIcon size={22} strokeWidth={1.75} aria-hidden="true" />
+            </span>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
+              {t("batteryRangeTitle")}
+            </h2>
+          </div>
+          <dl className="space-y-3 text-sm">
             <DetailRow
               label={t("rangeWltpLabel")}
               value={
@@ -245,7 +255,7 @@ export default async function VehicleDetailPage({
               label={t("winterRangeLabel")}
               value={
                 winterRange
-                  ? `${winterRange.lowKm}–${winterRange.highKm} km`
+                  ? `${winterRange.lowKm}-${winterRange.highKm} km`
                   : notAvailable
               }
             />
@@ -277,10 +287,15 @@ export default async function VehicleDetailPage({
         </Card>
 
         <Card as="section">
-          <h2 className="mb-4 text-xl font-medium text-slate-900">
-            {t("chargingPerformanceTitle")}
-          </h2>
-          <dl className="space-y-4 text-sm">
+          <div className="mb-6 flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sun text-forest">
+              <BatteryChargingIcon size={22} strokeWidth={1.75} aria-hidden="true" />
+            </span>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
+              {t("chargingPerformanceTitle")}
+            </h2>
+          </div>
+          <dl className="space-y-3 text-sm">
             <DetailRow
               label={t("dcFastLabel")}
               value={
@@ -337,12 +352,12 @@ export default async function VehicleDetailPage({
       </div>
 
       {chargingCost && (
-        <p className="mt-4 text-sm text-slate-500">
+        <p className="mt-4 text-sm text-forest/70">
           {t("chargingCostDisclaimer")}
         </p>
       )}
 
-      <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
+      <div className="mt-8 rounded-[1.5rem] bg-forest/5 p-6 text-sm text-forest/70">
         <p>
           {t("dataSourceLabel", { source: vehicle.sourceName.toUpperCase() })}
           {safeSourceUrl && (
@@ -352,7 +367,7 @@ export default async function VehicleDetailPage({
                 href={safeSourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-slate-900"
+                className="underline underline-offset-2 hover:text-forest focus-visible:outline-forest"
               >
                 {t("originalSourceLink")}
               </a>

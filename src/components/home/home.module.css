@@ -1,0 +1,463 @@
+.dot {
+  fill: #f6f1e7;
+  opacity: 0.9;
+  animation: appear 900ms ease-out backwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hot {
+  fill: #f2a65a;
+  opacity: 0.9;
+  animation: appear 900ms ease-out backwards;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+.enter {
+  animation: enter 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.drift {
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+  }
+  to {
+    transform: translate3d(0, -10px, 0) rotate(1deg);
+  }
+}
+
+.chip {
+  animation: float 7s ease-in-out infinite alternate;
+}
+
+.chipLate {
+  animation: float 9s 1s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+.arc path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: trace 2200ms 300ms ease-out backwards;
+}
+
+@keyframes trace {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .parallax {
+    animation: shift linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+
+  @keyframes shift {
+    from {
+      transform: translateY(24px);
+    }
+    to {
+      transform: translateY(-24px);
+    }
+  }
+}
+
+.bento {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 320ms ease;
+}
+
+.bento:hover,
+.bento:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 40px -24px rgb(13 43 34 / 0.45);
+}
+
+.bento .go {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 200ms ease;
+}
+
+.bento:hover .go,
+.bento:focus-visible .go {
+  transform: rotate(45deg);
+  background-color: #f2a65a;
+}
+
+.bar {
+  transform-origin: left;
+}
+
+@supports (animation-timeline: view()) {
+  .bar {
+    animation: grow linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 75%;
+  }
+
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marquee 60s linear infinite;
+}
+
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+
+  .track {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  .track li[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+.ring {
+  fill: none;
+  stroke: #f2a65a;
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring 3.6s ease-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+.pin {
+  fill: #f2a65a;
+  animation: pin 2.4s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes pin {
+  50% {
+    fill: #f6f1e7;
+  }
+}
+
+.spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 40s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #f2a65a;
+  animation: live 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes live {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.mosaic {
+  transition:
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 260ms ease;
+}
+
+.mosaic:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 28px -16px rgb(13 43 34 / 0.55);
+}
+
+.donut {
+  display: block;
+  width: 100%;
+}
+
+@supports (animation-timeline: view()) {
+  .donut {
+    animation: donut-in linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 70%;
+  }
+
+  @keyframes donut-in {
+    from {
+      opacity: 0;
+      transform: rotate(-210deg) scale(0.75);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(-90deg) scale(1);
+    }
+  }
+}
+
+.flow {
+  stroke-dasharray: 10 90;
+  animation: flow 2.4s linear infinite;
+}
+
+@keyframes flow {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hub {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hub 3s ease-in-out infinite;
+}
+
+@keyframes hub {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.badgePulse {
+  animation: badge 3s ease-in-out infinite;
+}
+
+@keyframes badge {
+  50% {
+    transform: scale(1.12) rotate(-6deg);
+  }
+}
+
+.chipIn {
+  animation:
+    chip-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    chip-cycle 6s ease-in-out infinite;
+  animation-delay: var(--d, 0s), calc(var(--d, 0s) * 4 + 1.6s);
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+}
+
+@keyframes chip-cycle {
+  0%,
+  28%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(242 166 90 / 0);
+    transform: scale(1);
+  }
+  8%,
+  20% {
+    box-shadow: 0 0 0 3px #f2a65a;
+    transform: scale(1.08);
+  }
+}
+
+.scanCard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, rgb(242 166 90 / 0.22), transparent);
+  border-bottom: 1px solid rgb(242 166 90 / 0.5);
+  animation: scan-card 4.5s ease-in-out 1s infinite;
+}
+
+@keyframes scan-card {
+  to {
+    top: 100%;
+  }
+}
+
+.segPulse {
+  animation: seg 8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 2s);
+}
+
+@keyframes seg {
+  0%,
+  26%,
+  100% {
+    stroke-width: 13;
+  }
+  8%,
+  18% {
+    stroke-width: 18;
+  }
+}
+
+.dotPulse {
+  animation: dot-pulse 8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 2s);
+}
+
+@keyframes dot-pulse {
+  0%,
+  26%,
+  100% {
+    transform: scale(1);
+  }
+  8%,
+  18% {
+    transform: scale(1.7);
+  }
+}
+
+.valueCard {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 320ms ease;
+}
+
+.valueCard:hover {
+  box-shadow: 0 26px 44px -28px rgb(13 43 34 / 0.5);
+}
+
+.iconTile {
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.bento:hover .iconTile,
+.bento:focus-visible .iconTile {
+  transform: rotate(-8deg) scale(1.1);
+}
+
+.beaconRing {
+  fill: none;
+  stroke: #f2a65a;
+  stroke-width: 1.6;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: beacon-ring var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+.beaconCore {
+  fill: #f2a65a;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: beacon-core var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes beacon-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  4% {
+    opacity: 0.95;
+  }
+  22%,
+  100% {
+    opacity: 0;
+    transform: scale(var(--s));
+  }
+}
+
+@keyframes beacon-core {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  4% {
+    opacity: 1;
+    transform: scale(1.7);
+  }
+  16% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  24%,
+  100% {
+    opacity: 0;
+  }
+}

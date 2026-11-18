@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { BlogPost } from "@/lib/blog/types";
 import { SITE_URL } from "@/lib/config/site";
@@ -26,42 +27,49 @@ export default function BlogPage() {
   })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <main className="flex-1">
-      <div className="mx-auto max-w-3xl px-6 py-12">
-        <div className="mb-12">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight">{t("ui.pageHeading")}</h1>
-          <p className="text-lg text-slate-600">
-            {t("ui.pageDescription")}
-          </p>
-        </div>
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
+      <header className="mb-12 max-w-2xl">
+        <h1 className="font-display text-4xl font-semibold tracking-tight text-forest sm:text-5xl">
+          {t("ui.pageHeading")}
+        </h1>
+        <p className="muted mt-4 text-lg">{t("ui.pageDescription")}</p>
+      </header>
 
-        <div className="space-y-8">
-          {posts.map((post) => (
-            <article
-              key={post.slug}
-              className="card border border-slate-200 p-6 hover:shadow-md transition-shadow"
-            >
-              <Link href={`/blog/${post.slug}`} className="group">
-                <h2 className="mb-2 text-2xl font-semibold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                  {post.title}
-                </h2>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <article
+            key={post.slug}
+            className="card group relative flex flex-col p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] sm:p-7"
+          >
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              {post.keywords.slice(0, 1).map((keyword: string) => (
+                <span key={keyword} className="badge">
+                  {keyword}
+                </span>
+              ))}
+              <span className="rounded-full bg-forest/5 px-3 py-1 text-xs font-medium text-forest/70">
+                {t("ui.minRead", {
+                  minutes: Math.ceil(post.content.split(/\s+/).length / 200),
+                })}
+              </span>
+            </div>
+
+            <h2 className="font-display text-xl font-semibold leading-snug tracking-tight text-forest">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="after:absolute after:inset-0 after:rounded-[1.5rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+              >
+                {post.title}
               </Link>
+            </h2>
 
-              <p className="mb-4 text-slate-600">{post.excerpt}</p>
+            <p className="muted mt-3 line-clamp-4 flex-1 text-sm leading-relaxed">
+              {post.excerpt}
+            </p>
 
-              <div className="mb-4 flex flex-wrap gap-2">
-                {post.keywords.slice(0, 3).map((keyword: string) => (
-                  <span
-                    key={keyword}
-                    className="badge inline-block bg-slate-100 text-slate-700 text-xs"
-                  >
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <time dateTime={post.date} className="text-slate-500">
+            <div className="mt-6 flex items-center justify-between gap-3 border-t border-forest/10 pt-4 text-sm">
+              <div className="flex flex-col text-forest/70">
+                <time dateTime={post.date}>
                   {new Date(post.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -69,19 +77,20 @@ export default function BlogPage() {
                   })}
                 </time>
                 {post.author && (
-                  <span className="text-slate-500">{t("ui.authorByline", { author: post.author })}</span>
+                  <span className="text-xs">
+                    {t("ui.authorByline", { author: post.author })}
+                  </span>
                 )}
               </div>
-
-              <Link
-                href={`/blog/${post.slug}`}
-                className="mt-4 inline-block text-emerald-600 font-medium hover:text-emerald-700"
+              <span
+                aria-hidden="true"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-cream transition-all duration-300 group-hover:bg-sun group-hover:text-forest motion-safe:group-hover:rotate-45"
               >
-                {t("ui.readMore")}
-              </Link>
-            </article>
-          ))}
-        </div>
+                <ArrowUpRight className="h-5 w-5" />
+              </span>
+            </div>
+          </article>
+        ))}
       </div>
     </main>
   );

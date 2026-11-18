@@ -135,9 +135,6 @@ const submitLead = async (formData: FormData) => {
   redirect("/contact?submitted=true");
 };
 
-const inputClassName =
-  "rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500";
-
 export default async function ContactPage({
   searchParams,
 }: {
@@ -151,12 +148,14 @@ export default async function ContactPage({
   const t = await getTranslations("contact");
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader title={t("title")} description={t("description")} />
-      <section className="mb-8 grid gap-4 sm:grid-cols-3">
-        <Card className="border border-[var(--card-border)] bg-emerald-50">
-          <FileBarChart className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">
+      <section className="mb-12 grid gap-4 sm:grid-cols-3">
+        <Card className="group p-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-forest text-sun transition-transform duration-300 motion-safe:group-hover:-rotate-6">
+            <FileBarChart className="h-[22px] w-[22px]" />
+          </div>
+          <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-forest">
             {t("overviewCustomReportsTitle")}
           </h3>
 
@@ -165,9 +164,11 @@ export default async function ContactPage({
           </p>
         </Card>
 
-        <Card className="border border-[var(--card-border)] bg-emerald-50">
-          <Link2 className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">
+        <Card className="group p-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-forest text-sun transition-transform duration-300 motion-safe:group-hover:-rotate-6">
+            <Link2 className="h-[22px] w-[22px]" />
+          </div>
+          <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-forest">
             {t("overviewFeaturedListingsTitle")}
           </h3>
 
@@ -176,9 +177,11 @@ export default async function ContactPage({
           </p>
         </Card>
 
-        <Card className="border border-[var(--card-border)] bg-emerald-50">
-          <MessageSquare className="h-5 w-5 text-[var(--accent)]" />
-          <h3 className="font-medium mt-3">{t("overviewFastResponseTitle")}</h3>
+        <Card className="group p-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-forest text-sun transition-transform duration-300 motion-safe:group-hover:-rotate-6">
+            <MessageSquare className="h-[22px] w-[22px]" />
+          </div>
+          <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-forest">{t("overviewFastResponseTitle")}</h3>
 
           <p className="muted mt-1 text-sm">
             {t("overviewFastResponseDescription")}
@@ -187,111 +190,113 @@ export default async function ContactPage({
       </section>
 
       {submitted === "true" ? (
+        <div className="mx-auto max-w-2xl">
         <Notice title={t("successTitle")} tone="success">
           <p className="muted mt-2">{t("successBody")}</p>
         </Notice>
+        </div>
       ) : (
-        <Card as="form" action={submitLead} className="space-y-5">
+        <Card as="form" action={submitLead} className="mx-auto max-w-2xl space-y-6 p-6 sm:p-10">
           {error === "invalid" && (
-            <p className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
               {t("validationErrorNotice")}
             </p>
           )}
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">{t("nameLabel")}</span>
-            <input type="text" name="name" className={inputClassName} />
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="font-medium text-forest">{t("nameLabel")}</span>
+            <input type="text" name="name" className="field-control" />
           </label>
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="font-medium text-forest">
               {t("emailLabel")}
             </span>
             <input
               type="email"
               name="email"
               required
-              className={inputClassName}
+              className="field-control"
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="font-medium text-forest">
               {t("companyLabel")}
             </span>
-            <input type="text" name="company" className={inputClassName} />
+            <input type="text" name="company" className="field-control" />
           </label>
 
           <fieldset className="flex flex-col space-y-3 text-sm">
-            <legend className="font-medium text-slate-700">
+            <legend className="mb-1 font-medium text-forest">
               {t("interestLabel")}
             </legend>
-            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
+            <label className="flex cursor-pointer gap-3 rounded-2xl border border-forest/15 bg-paper p-4 transition-colors duration-200 hover:border-forest/40 has-[:checked]:border-forest has-[:checked]:bg-sun/20 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-forest">
               <input
                 type="radio"
                 name="interest"
                 value="REPORT"
                 required
                 defaultChecked={interest === "REPORT" || !interest}
-                className="mt-1"
+                className="mt-1 h-4 w-4 accent-forest"
               />
               <span className="flex-1">
-                <span className="flex items-center gap-2 font-medium text-slate-900">
-                  <FileBarChart className="h-4 w-4 text-emerald-600" />
+                <span className="flex items-center gap-2 font-medium text-forest">
+                  <FileBarChart className="h-4 w-4 text-forest" />
                   {t("interestReportLabel")}
                 </span>
 
-                <span className="block text-slate-500">
+                <span className="block text-forest/70">
                   {t("interestReportDescription")}
                 </span>
               </span>
             </label>
-            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
+            <label className="flex cursor-pointer gap-3 rounded-2xl border border-forest/15 bg-paper p-4 transition-colors duration-200 hover:border-forest/40 has-[:checked]:border-forest has-[:checked]:bg-sun/20 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-forest">
               <input
                 type="radio"
                 name="interest"
                 value="FEATURED_LISTING"
                 defaultChecked={interest === "FEATURED_LISTING"}
-                className="mt-1"
+                className="mt-1 h-4 w-4 accent-forest"
               />
               <span className="flex-1">
-                <span className="flex items-center gap-2 font-medium text-slate-900">
-                  <Link2 className="h-4 w-4 text-emerald-600" />
+                <span className="flex items-center gap-2 font-medium text-forest">
+                  <Link2 className="h-4 w-4 text-forest" />
                   {t("interestFeaturedListingLabel")}
                 </span>
-                <span className="block text-slate-500">
+                <span className="block text-forest/70">
                   {t("interestFeaturedListingDescription")}
                 </span>
               </span>
             </label>
-            <label className="flex cursor-pointer gap-3 rounded-lg border border-[var(--card-border)] p-4 bg-emerald-50">
+            <label className="flex cursor-pointer gap-3 rounded-2xl border border-forest/15 bg-paper p-4 transition-colors duration-200 hover:border-forest/40 has-[:checked]:border-forest has-[:checked]:bg-sun/20 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-forest">
               <input
                 type="radio"
                 name="interest"
                 value="BOTH"
                 defaultChecked={interest === "BOTH"}
-                className="mt-1"
+                className="mt-1 h-4 w-4 accent-forest"
               />
               <span className="flex-1">
-                <span className="flex items-center gap-2 font-medium text-slate-900">
-                  <Package className="h-4 w-4 text-emerald-600" />
+                <span className="flex items-center gap-2 font-medium text-forest">
+                  <Package className="h-4 w-4 text-forest" />
                   {t("interestBothLabel")}
                 </span>
-                <span className="block text-slate-500">
+                <span className="block text-forest/70">
                   {t("interestBothDescription")}
                 </span>
               </span>
             </label>
           </fieldset>
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="font-medium text-forest">
               {t("messageLabel")}
             </span>
-            <textarea name="message" rows={4} className={inputClassName} />
+            <textarea name="message" rows={4} className="field-control" />
           </label>
 
-          <Button type="submit" variant="cta" size="lg">
+          <Button type="submit" variant="primary" size="lg" className="w-full sm:w-auto">
             {t("submitButton")}
           </Button>
 

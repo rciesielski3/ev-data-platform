@@ -15,7 +15,7 @@ export default function VehicleDetailError({
   const tCommon = useTranslations("common");
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
+    <main className="page-shell max-w-4xl pb-20 pt-12 sm:pt-16">
       <ErrorState
         title={t("title")}
         body={t("body")}

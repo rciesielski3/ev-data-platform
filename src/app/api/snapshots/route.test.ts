@@ -57,6 +57,7 @@ describe("GET /api/snapshots", () => {
         },
       },
       orderBy: { snapshotDate: "asc" },
+      omit: { precomputedStats: true },
     });
   });
 

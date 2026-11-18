@@ -7,7 +7,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Disclosure from "@/components/ui/Disclosure";
-import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
+import FilterField from "@/components/ui/FilterField";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import { buildStationQuality } from "@/features/charging/data-quality";
@@ -35,7 +35,7 @@ import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
-import { ArrowRightIcon, MapPin } from "lucide-react";
+import { ArrowRightIcon, MapPin, Zap } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -204,32 +204,26 @@ const StationsPage = async ({
   const totalPages = "error" in data ? 0 : Math.ceil(data.total / PAGE_SIZE);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}
         actions={
           <>
-            <Link
-              href="/insights"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
+            <Button as={Link} href="/insights" variant="secondary" size="sm">
               {t("viewInsightsLink")}
-            </Link>
-            <Link
-              href="/vehicles"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-            >
+            </Button>
+            <Button as={Link} href="/vehicles" variant="secondary" size="sm">
               {t("browseCatalogLink")}
-            </Link>
+            </Button>
           </>
         }
       />
 
-      <section className="mb-8">
+      <section className="card mb-8 !p-5 sm:!px-7">
         <Disclosure
           summary={
-            <span className="text-lg font-semibold">
+            <span className="font-display text-lg font-semibold tracking-tight text-forest">
               {tStationsPage("searchSection.heading")}
             </span>
           }
@@ -241,7 +235,7 @@ const StationsPage = async ({
               {tStationsPage("searchSection.body2Prefix")}{" "}
               <Link
                 href="/stations/warszawa"
-                className="text-emerald-700 underline hover:text-emerald-900"
+                className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30"
               >
                 {tStationsPage("searchSection.body2LinkWarsawText")}
               </Link>
@@ -254,7 +248,7 @@ const StationsPage = async ({
                   as={Link}
                   href={`/stations/${city.slug}`}
                   variant="secondary"
-                  className="shrink-0 rounded-full"
+                  size="sm" className="shrink-0"
                 >
                   {t(`cityNames.${city.i18nKey}`)}
                 </Button>
@@ -272,7 +266,7 @@ const StationsPage = async ({
         <>
           <Card
             as="form"
-            className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-6"
+            className="mb-10 grid gap-4 !rounded-[2rem] !p-5 sm:!p-7 md:grid-cols-2 lg:grid-cols-6"
           >
             <FilterField label={t("searchLabel")} className="lg:col-span-2">
               <input
@@ -280,7 +274,7 @@ const StationsPage = async ({
                 name="q"
                 defaultValue={filters.q}
                 placeholder={t("searchPlaceholder")}
-                className={filterInputClassName}
+                className="field-control"
               />
             </FilterField>
 
@@ -290,7 +284,7 @@ const StationsPage = async ({
                 name="location"
                 defaultValue={filters.location}
                 placeholder={t("locationPlaceholder")}
-                className={filterInputClassName}
+                className="field-control"
               />
             </FilterField>
 
@@ -298,7 +292,7 @@ const StationsPage = async ({
               <select
                 name="connector"
                 defaultValue={filters.connector ?? ""}
-                className={filterInputClassName}
+                className="field-control"
               >
                 <option value="">{t("anyConnector")}</option>
                 {data.connectorOptions.map((option) => (
@@ -316,7 +310,7 @@ const StationsPage = async ({
               <select
                 name="minPowerKw"
                 defaultValue={filters.minPowerKw?.toString() ?? ""}
-                className={filterInputClassName}
+                className="field-control"
               >
                 <option value="">{t("anyPower")}</option>
                 <option value="22">22 kW+</option>
@@ -333,7 +327,7 @@ const StationsPage = async ({
                 name="operator"
                 defaultValue={filters.operator}
                 placeholder={t("operatorPlaceholder")}
-                className={filterInputClassName}
+                className="field-control"
               />
               <datalist id="station-operators">
                 {data.operatorOptions.map((option) => (
@@ -342,7 +336,7 @@ const StationsPage = async ({
               </datalist>
             </FilterField>
 
-            <div className="flex items-end gap-3 lg:col-span-6">
+            <div className="flex flex-wrap items-end gap-3 lg:col-span-6">
               <Button type="submit">{t("searchButton")}</Button>
               <Button as={Link} href="/stations" variant="secondary">
                 {t("clearButton")}
@@ -351,7 +345,7 @@ const StationsPage = async ({
           </Card>
 
           <section className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm font-medium text-forest">
               {t("showingCount", {
                 shown: data.stations.length,
                 total: data.total,
@@ -359,7 +353,7 @@ const StationsPage = async ({
             </p>
 
             {data.latestRuns.length > 0 && (
-              <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+              <span className="inline-flex items-center rounded-full border border-forest/15 bg-paper px-3 py-1.5 text-xs font-medium text-forest/70">
                 {t("freshness", {
                   source: data.latestRuns[0].source.label,
                   date: formatDisplayDate(
@@ -377,7 +371,7 @@ const StationsPage = async ({
               <p className="muted mt-2">{t("noResultsBody")}</p>
             </Notice>
           ) : (
-            <section className="grid gap-4 lg:grid-cols-2">
+            <section className="grid gap-5 lg:grid-cols-2">
               {data.stations.map((station) => {
                 const strongestConnector = station.connectors[0];
                 const safeSourceUrl = getSafeHttpUrl(station.sourceUrl);
@@ -411,26 +405,26 @@ const StationsPage = async ({
                   <Card
                     key={station.id}
                     as="article"
-                    className="group flex h-full flex-col"
+                    className="group flex h-full flex-col !p-6 transition-shadow duration-300 hover:shadow-[var(--shadow-lift)]"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <p className="text-sm font-medium text-emerald-700">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-forest/70">
                           {localizeFallback(
                             formatStationOperatorLabel(station.operator),
                             tCommon,
                           )}
                         </p>
-                        <h2 className="mt-1 text-xl font-semibold text-slate-950">
+                        <h2 className="mt-1 font-display text-xl font-semibold leading-snug tracking-tight text-forest">
                           {station.name ??
                             station.externalCode ??
                             tCommon("chargingStationFallback")}
                         </h2>
                         <p className="muted mt-1 flex items-center gap-2 text-sm">
-                          <MapPin className="h-4 w-4 text-slate-400" />
+                          <MapPin className="h-4 w-4 shrink-0 text-forest/70" />
                           {locationLine}
                         </p>
-                        <div className="mt-3 flex flex-wrap items-center gap-3">
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
                           <StationCompletenessBadge
                             completeness={quality.completeness}
                           />
@@ -440,7 +434,8 @@ const StationsPage = async ({
                         </div>
                       </div>
                       {strongestConnector?.powerKw && (
-                        <Badge className="shrink-0 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
+                        <Badge className="!inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap !px-3.5 !py-1.5 !text-sm !normal-case !tracking-normal">
+                          <Zap className="h-4 w-4" aria-hidden />
                           {t("upToPower", {
                             power: strongestConnector.powerKw,
                           })}
@@ -448,23 +443,23 @@ const StationsPage = async ({
                       )}
                     </div>
 
-                    <dl className="my-5 grid gap-3 text-sm sm:grid-cols-2">
+                    <dl className="my-5 grid gap-4 border-t border-forest/10 pt-5 text-sm sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <dt className="text-slate-500">
+                        <dt className="text-xs font-semibold uppercase tracking-wider text-forest/70">
                           {t("connectorsLabel")}
                         </dt>
-                        <dd className="mt-1 font-medium text-slate-900">
+                        <dd className="mt-1.5 font-medium text-forest">
                           {connectorSummary.length > 0 ? (
                             <span className="flex flex-wrap gap-2">
                               {connectorSummary.map((connector) => (
                                 <span
                                   key={connector.key}
                                   title={connector.title}
-                                  className="inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs"
+                                  className="inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full border border-forest/15 bg-cream px-3 py-1 text-xs"
                                 >
                                   {localizeFallback(connector.label, tCommon)}
                                   {connector.currentType !== "Unknown" && (
-                                    <span className="shrink-0 rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700">
+                                    <span className="shrink-0 rounded-full bg-forest px-1.5 py-0.5 text-[10px] font-semibold text-cream">
                                       {connector.currentType}
                                     </span>
                                   )}
@@ -477,27 +472,29 @@ const StationsPage = async ({
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">
+                        <dt className="text-xs font-semibold uppercase tracking-wider text-forest/70">
                           {t("localizationLabel")}
                         </dt>
-                        <dd className="mt-1 font-medium text-slate-900">
+                        <dd className="mt-1.5 font-medium text-forest">
                           {mapHref && (
-                            <>
-                              <a
-                                href={mapHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-emerald-700 underline hover:text-emerald-900"
-                              >
-                                {t("mapLinkLabel")}
-                              </a>
-                            </>
+                            <Button
+                              as="a"
+                              href={mapHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1.5"
+                            >
+                              <MapPin className="h-4 w-4" aria-hidden />
+                              {t("mapLinkLabel")}
+                            </Button>
                           )}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate-500">{t("sourceLabel")}</dt>
-                        <dd className="mt-1 font-medium text-slate-900">
+                        <dt className="text-xs font-semibold uppercase tracking-wider text-forest/70">{t("sourceLabel")}</dt>
+                        <dd className="mt-1.5 font-medium text-forest">
                           {station.sourceName}
                           {safeSourceUrl && (
                             <>
@@ -506,7 +503,7 @@ const StationsPage = async ({
                                 href={safeSourceUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-emerald-700 underline hover:text-emerald-900"
+                                className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30"
                               >
                                 {t("originalLinkLabel")}
                               </a>
@@ -515,8 +512,8 @@ const StationsPage = async ({
                         </dd>
                       </div>
                     </dl>
-                    <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-3">
-                      <div className="text-xs text-slate-500">
+                    <div className="mt-auto flex items-center justify-between gap-4 border-t border-forest/10 pt-4">
+                      <div className="text-xs text-forest/70">
                         {station.sourceUpdatedAt
                           ? t("importedOnWithSource", {
                               date: formatDisplayDate(
@@ -537,7 +534,8 @@ const StationsPage = async ({
                       </div>
                       <Link
                         href={`/stations/${station.id}`}
-                        className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:scale-105 group-hover:border-[var(--accent)] group-hover:text-[var(--accent)] group-hover:translate-x-1"
+                        aria-label={station.name ?? station.externalCode ?? tCommon("chargingStationFallback")}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-cream transition-all duration-300 hover:bg-sun hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest motion-safe:group-hover:-rotate-45"
                       >
                         <ArrowRightIcon className="h-5 w-5" />
                       </Link>
@@ -549,22 +547,22 @@ const StationsPage = async ({
           )}
 
           {totalPages > 1 && (
-            <nav className="mt-8 flex justify-center gap-2">
+            <nav aria-label={tCommon("pagination")} className="mt-10 flex items-center justify-center gap-3">
               {filters.page > 1 && (
                 <Link
                   href={buildStationSearchHref(filters, filters.page - 1)}
-                  className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+                  className="rounded-full border border-forest/25 px-5 py-2.5 text-sm font-medium text-forest transition-colors hover:border-forest hover:bg-forest hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
                 >
                   {tCommon("previous")}
                 </Link>
               )}
-              <span className="flex items-center px-4 text-sm text-slate-500">
+              <span className="flex items-center px-2 text-sm text-forest/70">
                 {tCommon("pageOf", { page: filters.page, totalPages })}
               </span>
               {filters.page < totalPages && (
                 <Link
                   href={buildStationSearchHref(filters, filters.page + 1)}
-                  className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+                  className="rounded-full border border-forest/25 px-5 py-2.5 text-sm font-medium text-forest transition-colors hover:border-forest hover:bg-forest hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
                 >
                   {tCommon("next")}
                 </Link>
@@ -572,64 +570,64 @@ const StationsPage = async ({
             </nav>
           )}
 
-          <section className="mt-16 border-t border-slate-200 pt-12">
-            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+          <section className="mt-20 border-t border-forest/10 pt-14">
+            <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-forest sm:text-3xl">
               {tStationsPage("chargingTypesSection.heading")}
             </h2>
-            <p className="mb-4 leading-relaxed text-slate-700">
+            <p className="mb-4 max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("chargingTypesSection.body1")}
             </p>
-            <p className="leading-relaxed text-slate-700">
+            <p className="max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("chargingTypesSection.body2Prefix")}{" "}
-              <Link href="/vehicles" className="text-emerald-700 underline hover:text-emerald-900">
+              <Link href="/vehicles" className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30">
                 {tStationsPage("chargingTypesSection.body2LinkText")}
               </Link>
             </p>
           </section>
 
-          <section className="mt-12">
-            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+          <section className="mt-14">
+            <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-forest sm:text-3xl">
               {tStationsPage("pricingSection.heading")}
             </h2>
-            <p className="mb-4 leading-relaxed text-slate-700">
+            <p className="mb-4 max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("pricingSection.body1")}
             </p>
-            <p className="leading-relaxed text-slate-700">
+            <p className="max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("pricingSection.body2")}
             </p>
           </section>
 
-          <section className="mt-12">
-            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+          <section className="mt-14">
+            <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-forest sm:text-3xl">
               {tStationsPage("operatorsSection.heading")}
             </h2>
-            <p className="mb-4 leading-relaxed text-slate-700">
+            <p className="mb-4 max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("operatorsSection.body1")}
             </p>
-            <p className="leading-relaxed text-slate-700">
+            <p className="max-w-3xl leading-relaxed text-forest/80">
               {tStationsPage("operatorsSection.body2")}{" "}
-              <Link href="/insights" className="text-emerald-700 underline hover:text-emerald-900">
+              <Link href="/insights" className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30">
                 {tStationsPage("operatorsSection.body2InsightsLinkText")}
               </Link>
               {" "}
               {tStationsPage("operatorsSection.body2FaqText")}{" "}
-              <Link href="#faq" className="text-emerald-700 underline hover:text-emerald-900">
+              <Link href="#faq" className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30">
                 {tStationsPage("operatorsSection.body2FaqLinkText")}
               </Link>
             </p>
           </section>
 
           <section className="mt-12" id="faq">
-            <h2 className="mb-4 text-2xl font-semibold text-slate-950">
+            <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-forest sm:text-3xl">
               {tStationsPage("faqSection.heading")}
             </h2>
-            <div className="space-y-6">
+            <div className="grid gap-5 md:grid-cols-2">
               {tStationsPage.raw("faqSection.faqs").map((faq: { question: string; answer: string }, index: number) => (
-                <article key={index}>
-                  <h3 className="mb-2 text-lg font-semibold text-slate-950">
+                <article key={index} className="card !p-6">
+                  <h3 className="mb-2 font-display text-lg font-semibold tracking-tight text-forest">
                     {faq.question}
                   </h3>
-                  <p className="leading-relaxed text-slate-700">
+                  <p className="max-w-3xl leading-relaxed text-forest/80">
                     {faq.answer}
                   </p>
                 </article>

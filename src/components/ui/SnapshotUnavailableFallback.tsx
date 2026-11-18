@@ -13,10 +13,10 @@ export default function SnapshotUnavailableFallback({
   const t = useTranslations("common");
 
   return (
-    <div className={`rounded-lg border border-yellow-200 bg-yellow-50 p-4 ${className}`}>
+    <div className={`rounded-2xl border border-amber-200 bg-amber-50 p-4 ${className}`}>
       <div className="flex items-center gap-3">
-        <AlertCircle className="h-5 w-5 text-yellow-600" />
-        <p className="text-sm text-yellow-800">
+        <AlertCircle className="h-5 w-5 text-amber-700" />
+        <p className="text-sm text-amber-900">
           {message || t("snapshotUnavailable") || "Data is currently unavailable. Please try again in a moment."}
         </p>
       </div>

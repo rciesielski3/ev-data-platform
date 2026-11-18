@@ -76,7 +76,7 @@ const StationLocationMapClient = ({
   return (
     <div
       ref={mapElementRef}
-      className="relative z-0 h-72 w-full overflow-hidden rounded-lg border border-slate-200"
+      className="relative z-0 h-72 w-full overflow-hidden rounded-[1.5rem] border border-forest/10 sm:h-96"
       aria-label={title}
     />
   );

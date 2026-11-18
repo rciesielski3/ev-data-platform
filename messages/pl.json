@@ -9,6 +9,7 @@
     "unknownConnector": "Nieznane złącze",
     "unknownProvince": "Nieznane województwo",
     "chargingStationFallback": "Stacja ładowania",
+    "pagination": "Paginacja",
     "locationUnavailable": "Brak danych o lokalizacji",
     "noConnectorDetails": "Brak danych o złączach",
     "previous": "Poprzednia",
@@ -57,7 +58,7 @@
       "evCatalog": "Katalog EV"
     },
     "heroHeadline": "Pełny obraz polskiej infrastruktury ładowania, w jednym miejscu",
-    "heroSubhead": "Znormalizowane, ocenione pod względem jakości dane o stacjach ładowania i pojazdach elektrycznych — zebrane z 16 województw, gotowe do analizy.",
+    "heroSubhead": "Znormalizowane, ocenione pod względem jakości dane o stacjach ładowania i pojazdach elektrycznych - zebrane z 16 województw, gotowe do analizy.",
     "heroPrimaryCta": "Zobacz mapę stacji",
     "heroSecondaryCta": "Dla operatorów sieci ładowania →",
     "statStations": "Stacji ładowania",
@@ -68,13 +69,13 @@
     "valuePropsTitle": "Dlaczego EVSource",
     "valuePropsSubtitle": "Trzy rzeczy, które wyróżniają nasze dane na tle innych źródeł.",
     "valueQualityTitle": "Dane ocenione pod względem jakości",
-    "valueQualityBody": "Każda stacja i model pojazdu mają ocenę kompletności i świeżości — wiesz, na czym możesz polegać.",
+    "valueQualityBody": "Każda stacja i model pojazdu mają ocenę kompletności i świeżości - wiesz, na czym możesz polegać.",
     "valueNormalizedTitle": "Jedna, znormalizowana struktura",
-    "valueNormalizedBody": "Dane z EIPA/UDT i OpenEV Data są ujednolicone do wspólnego modelu — bez ręcznego czyszczenia formatów źródłowych.",
+    "valueNormalizedBody": "Dane z EIPA/UDT i OpenEV Data są ujednolicone do wspólnego modelu - bez ręcznego czyszczenia formatów źródłowych.",
     "valueBenchmarkTitle": "Gotowe do analiz porównawczych",
-    "valueBenchmarkBody": "Pokrycie województw, udziały operatorów i rozkład złączy — punkt odniesienia dla planowania sieci.",
+    "valueBenchmarkBody": "Pokrycie województw, udziały operatorów i rozkład złączy - punkt odniesienia dla planowania sieci.",
     "exploreTitle": "Przeglądaj dane",
-    "exploreSubtitle": "Zanurzenie się w danych EV — od mapy do analiz",
+    "exploreSubtitle": "Zanurzenie się w danych EV - od mapy do analiz",
     "infrastructureIntelligenceTitle": "Analiza Infrastruktury",
     "infrastructureIntelligenceSubtitle": "Poznaj głębokie analizy i trendy rozwoju sieci ładowania w Polsce",
     "coverageAnalysisTitle": "Pokrycie Geograficzne",
@@ -84,11 +85,11 @@
     "provinceBreakdownTitle": "Podział Wojewódzki",
     "provinceBreakdownHelper": "Szczegółowe statystyki dla każdego województwa Polski",
     "trendsAnalysisTitle": "Trendy Infrastruktury",
-    "trendsAnalysisHelper": "Śledź rozwój sieci ładowania w czasie — historyczne dane i prognozy",
+    "trendsAnalysisHelper": "Śledź rozwój sieci ładowania w czasie - historyczne dane i prognozy",
     "forOperatorsTitle": "Dla Operatorów",
     "forOperatorsSubtitle": "Rozwiązania B2B dla operatorów sieci ładowania",
     "reportsTitle": "Raporty infrastruktury",
-    "reportsHelper": "Dedykowane raporty dla operatorów sieci — zaawansowana analityka",
+    "reportsHelper": "Dedykowane raporty dla operatorów sieci - zaawansowana analityka",
     "operatorContactTitle": "Kontakt B2B",
     "operatorContactHelper": "Porozmawiaj z naszym zespołem o rozwiązaniach dla Twojej sieci",
     "promoteStationTitle": "Wypromuj swoją stację",
@@ -110,14 +111,14 @@
     "reportsEyebrow": "Raporty benchmarkowe",
     "reportsDescription": "Zobacz przykładowy raport benchmarkingowy i poznaj możliwości dedykowanej analizy infrastruktury dla operatorów sieci ładowania.",
     "b2bCtaTitle": "Analizy i raporty dla operatorów sieci ładowania",
-    "b2bCtaBody": "Raport porównawczy oparty na pełnym pokryciu rynku albo wyróżnione miejsce na liście operatorów — porozmawiajmy o Twoich potrzebach.",
+    "b2bCtaBody": "Raport porównawczy oparty na pełnym pokryciu rynku albo wyróżnione miejsce na liście operatorów - porozmawiajmy o Twoich potrzebach.",
     "b2bCtaButton": "Skontaktuj się",
     "chargingCardTitle": "Sprawdź czas ładowania dla Twojego modelu",
     "chargingCardDescription": "Porównaj pojazdy elektryczne i dowiedz się, jak długo trwa ich ładowanie na różnych typach złączy.",
     "snapshotAsOf": "Dane awaryjne z {date}. Baza danych jest chwilowo niedostępna."
   },
   "vehicles": {
-    "title": "Porównaj Modele Pojazdów Elektrycznych – evsource.pl",
+    "title": "Porównaj Modele Pojazdów Elektrycznych - evsource.pl",
     "description": "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
     "descriptionWithCount": "Przeglądaj {count} pojazdów elektrycznych w naszej bazie danych.",
     "activeFilter": "Aktywny filtr",
@@ -163,8 +164,8 @@
     "dataSourceLabel": "Źródło danych: {source}",
     "originalSourceLink": "Oryginalne źródło",
     "lastImportedLabel": "Ostatni import: {date}",
-    "metaTitle": "{vehicleName} — {highlights} | EVSource",
-    "metaTitleFallback": "{vehicleName} — dane techniczne, zasięg i ładowanie | EVSource",
+    "metaTitle": "{vehicleName} - {highlights} | EVSource",
+    "metaTitleFallback": "{vehicleName} - dane techniczne, zasięg i ładowanie | EVSource",
     "metaDescription": "Sprawdź {vehicleName}: {highlights}. Pełna specyfikacja techniczna, akumulator i osiągi ładowania.",
     "metaDescriptionFallback": "Sprawdź pełną specyfikację techniczną {vehicleName}: zasięg, akumulator, moc ładowania AC/DC i więcej.",
     "metaHighlightRange": "zasięg WLTP {rangeKm} km",
@@ -332,9 +333,9 @@
       "Connector power": "Moc złącza",
       "Payment/authentication": "Płatność/autoryzacja"
     },
-    "metaTitle": "{name} – {city} | EVSource",
+    "metaTitle": "{name} - {city} | EVSource",
     "metaTitleFallback": "{name} | EVSource",
-    "metaTitleWithPower": "{name} – {city} ({power}) | EVSource",
+    "metaTitleWithPower": "{name} - {city} ({power}) | EVSource",
     "metaTitleFallbackWithPower": "{name} ({power}) | EVSource",
     "metaTitleOperator": "Ładowarka {operator}",
     "metaTitleGeneric": "Stacja ładowania EV"
@@ -345,7 +346,7 @@
     "backLink": "Wróć do stacji"
   },
   "operatorPage": {
-    "metaTitle": "Stacje ładowania {name} – {count, plural, one {# lokalizacja} few {# lokalizacje} many {# lokalizacji} other {# lokalizacji}} | evsource.pl",
+    "metaTitle": "Stacje ładowania {name} - {count, plural, one {# lokalizacja} few {# lokalizacje} many {# lokalizacji} other {# lokalizacji}} | evsource.pl",
     "metaDescription": "Ładowarki {name} w Polsce: {stations, plural, one {# stacja} few {# stacje} many {# stacji} other {# stacji}} i {connectors, plural, one {# złącze} few {# złącza} many {# złączy} other {# złącza}}{hasPower, select, yes {, moc do {power} kW} other {}}.{hasCities, select, yes { Najwięcej stacji: {cities}.} other {}} Dane z rejestru EIPA/UDT.",
     "title": "Stacje ładowania {name}",
     "badge": "Operator sieci ładowania",
@@ -438,7 +439,7 @@
     "trustTitle": "Zaufanie",
     "trustBody": "Certyfikowane, rządowe dane zwiększają wiarygodność. Twoja infrastruktura wspierana jest oficjalnymi rejestrami EIPA/UDT Polska.",
     "simpleTitle": "Proste",
-    "simpleBody": "Żadna integracja nie jest wymagana—zajmujemy się listą i aktualizacjami. Wystarczy, że nam powiesz o swojej sieci.",
+    "simpleBody": "Żadna integracja nie jest wymagana-zajmujemy się listą i aktualizacjami. Wystarczy, że nam powiesz o swojej sieci.",
     "pricingTitle": "Cennik i zobowiązanie",
     "pricingPeriod": "rocznie",
     "pricingFeature1": "Widoczność w wyszukiwarce",
@@ -568,7 +569,7 @@
     "daysOld": "{count, plural, one {# dzień temu} few {# dni temu} many {# dni temu} other {# dni temu}}",
     "completePercent": "{percent}% kompletne",
     "freshExplanation": "Dane potwierdzone w ciągu ostatnich {days} dni.",
-    "staleExplanation": "Dane nie były potwierdzane od ponad {days} dni — mogą być nieaktualne.",
+    "staleExplanation": "Dane nie były potwierdzane od ponad {days} dni - mogą być nieaktualne.",
     "unknownExplanation": "Brak daty potwierdzenia danych dla tej stacji."
   },
   "map": {
@@ -622,7 +623,7 @@
     "body": "Dane mapy stacji ładowania są tymczasowo niedostępne. Spróbuj ponownie lub sprawdź, czy importy danych o ładowaniu się zakończyły."
   },
   "connectors": {
-    "title": "Rodzaje Ładowarek EV – Porównanie – evsource.pl",
+    "title": "Rodzaje Ładowarek EV - Porównanie - evsource.pl",
     "description": "Porównaj rodzaje ładowarek EV: CCS2, Type 2, CHAdeMO. Dowiedz się, które złącze pasuje do Twojego pojazdu elektrycznego.",
     "viewDetailsLink": "Zobacz szczegóły złącza"
   },
@@ -670,7 +671,7 @@
     }
   },
   "insights": {
-    "title": "Statystyki Ładowania EV & Analiza Rynku – evsource.pl",
+    "title": "Statystyki Ładowania EV & Analiza Rynku - evsource.pl",
     "description": "Poznaj statystyki infrastruktury ładowania EV w Polsce. Analizuj gęstość stacji ładowania, pokrycie operatorów, rozkład rodzajów ładowarek i trendy rynku pojazdów elektrycznych.",
     "og_title": "Analizy Ładowania EV - evsource.pl",
     "og_description": "Analizy statystyczne infrastruktury ładowania w Polsce: gęstość stacji, operatorzy, trendy rynku.",
@@ -829,7 +830,7 @@
     "knownPowerHeader": "Znana moc",
     "powerAvailabilityHeader": "Dostępność mocy",
     "lowestPerCapitaCoverageTitle": "Najsłabszy dostęp na mieszkańca",
-    "lowestPerCapitaCoverageSubtitle": "Stacje na 100 tys. mieszkańców — uwzględnia gęstość zaludnienia, nie tylko liczbę stacji. Źródło danych o ludności: GUS, dane szacunkowe.",
+    "lowestPerCapitaCoverageSubtitle": "Stacje na 100 tys. mieszkańców - uwzględnia gęstość zaludnienia, nie tylko liczbę stacji. Źródło danych o ludności: GUS, dane szacunkowe.",
     "perCapitaMetric": "{value} / 100 tys.",
     "stationsPer100kHeader": "Stacje / 100 tys.",
     "stateOfChargingLink": "Zobacz pełny raport"
@@ -843,7 +844,7 @@
   "stateOfCharging": {
     "badge": "Stan polskiej infrastruktury",
     "title": "Stan ładowania w Polsce",
-    "description": "Krajowy obraz infrastruktury ładowania pojazdów elektrycznych w Polsce — liczba stacji, udział szybkiego ładowania i dostęp na mieszkańca, na podstawie danych EIPA/UDT.",
+    "description": "Krajowy obraz infrastruktury ładowania pojazdów elektrycznych w Polsce - liczba stacji, udział szybkiego ładowania i dostęp na mieszkańca, na podstawie danych EIPA/UDT.",
     "asOfDate": "Stan na {date}, źródło: EIPA/UDT Poland.",
     "totalStationsLabel": "Stacje ładowania",
     "totalStationsHelper": "Łączna liczba stacji w bazie EIPA/UDT.",
@@ -970,26 +971,26 @@
   "stationsPage": {
     "searchSection": {
       "heading": "Wyszukaj Stacje Ładowania Blisko Ciebie",
-      "body1": "Nasza interaktywna mapa zawiera jedną z największych sieci stacji ładowania EV w Polsce. Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2, CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe informacje o każdej stacji — adres, dostępne złącza, moc ładowania, operator i godziny otwarcia — pomagają Ci wybrać idealne miejsce do ładowania.",
-      "body2Prefix": "Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd Dozoru Technicznego) i EIPA (Ewidencja Infrastruktury Paliw Alternatywnych — krajowy rejestr infrastruktury ładowania). Nasza baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do najbardziej aktualnych informacji.",
+      "body1": "Nasza interaktywna mapa zawiera jedną z największych sieci stacji ładowania EV w Polsce. Używając naszych zaawansowanych filtrów, możesz łatwo znaleźć ładowarkę odpowiednią do Twoich potrzeb. Wyszukuj po lokalizacji, typie złącza (Type 2, CCS, CHAdeMO), mocy (od 11 kW do 350 kW) i operatorze sieci. System geolokalizacji pozwala na wyszukanie stacji najbliżej Ciebie w promieniu aż 10 km. Szczegółowe informacje o każdej stacji - adres, dostępne złącza, moc ładowania, operator i godziny otwarcia - pomagają Ci wybrać idealne miejsce do ładowania.",
+      "body2Prefix": "Wszyscy operatorzy sieci ładowania w Polsce podlegają regulacjom UDT (Urząd Dozoru Technicznego) i EIPA (Ewidencja Infrastruktury Paliw Alternatywnych - krajowy rejestr infrastruktury ładowania). Nasza baza danych jest aktualizowana regularnie, aby zapewnić Ci dostęp do najbardziej aktualnych informacji.",
       "body2LinkWarsawText": "Sprawdź ładowarki w Warszawie",
       "body2Suffix": "lub wybierz miasto z listy poniżej, aby zobaczyć stacje w Twojej okolicy."
     },
     "chargingTypesSection": {
       "heading": "Rodzaje Ładowarek: AC vs DC vs 400kW",
-      "body1": "Rynek ładowarek EV w Polsce oferuje różne typy zasilania dostosowane do potrzeb kierowców. Ładowarki AC (prąd zmienny) pracują na napięciu jednofazowym (3,7 kW, 7,4 kW) lub trójfazowym (11 kW, 22 kW) — idealne do ładowania nocnego w domu lub przy pracy. Ładowarki DC (prąd stały), zwane też szybkimi ładowarkami, oferują moc od 50 kW do 350 kW i pozwalają na naładowanie baterii do 80% w 20–40 minut. Ładowarki 400kW to najnowsza technologia, dostępna przede wszystkim na autostradach.",
+      "body1": "Rynek ładowarek EV w Polsce oferuje różne typy zasilania dostosowane do potrzeb kierowców. Ładowarki AC (prąd zmienny) pracują na napięciu jednofazowym (3,7 kW, 7,4 kW) lub trójfazowym (11 kW, 22 kW) - idealne do ładowania nocnego w domu lub przy pracy. Ładowarki DC (prąd stały), zwane też szybkimi ładowarkami, oferują moc od 50 kW do 350 kW i pozwalają na naładowanie baterii do 80% w 20-40 minut. Ładowarki 400kW to najnowsza technologia, dostępna przede wszystkim na autostradach.",
       "body2Prefix": "Czas ładowania zależy od mocy ładowania i pojemności baterii pojazdu. Auto z baterią 60 kWh ładuje się ładowarką 22 kW około 3 godziny, a ładowarką 150 kW około 30 minut. W naszej bazie możesz filtrować stacje po minimalnej mocy, aby znaleźć właściwą ładowarkę dla Twojego pojazdu.",
       "body2LinkText": "Sprawdź czasy ładowania dla swoich modeli pojazdów →"
     },
     "pricingSection": {
       "heading": "Ile Kosztuje Ładowanie?",
       "body1": "Koszt ładowania EV w Polsce zależy od operatora sieci i typu ładowania. Większość operatorów (ORLEN Charging, Energa, GreenWay) oferuje abonament miesięczny oraz opłatę za minutę lub kWh. Ładowanie AC w domu jest zazwyczaj tańsze niż na publicznych stacjach szybkiego ładowania. Niektórzy operatorzy oferują specjalne taryfy dla regularnych użytkowników.",
-      "body2": "Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady) i pory dnia. Wiele sieci oferuje tańsze ładowanie nocą. Nasze detale stacji zawierają informacje o operatorze i jego taryfach — wyszukaj swoją lokalną stację, aby poznać dokładne ceny."
+      "body2": "Ceny mogą się znacznie różnić w zależności od lokalizacji (miasta, autostrady) i pory dnia. Wiele sieci oferuje tańsze ładowanie nocą. Nasze detale stacji zawierają informacje o operatorze i jego taryfach - wyszukaj swoją lokalną stację, aby poznać dokładne ceny."
     },
     "operatorsSection": {
       "heading": "Porównanie Operatorów Ładowania",
       "body1": "Polska ma kilku głównych operatorów sieci ładowania. ORLEN Charging to jedna z największych sieci, oferująca zarówno ładowanie AC, jak i szybkie ładowanie DC. Energa ma solidną infrastrukturę z naciskiem na miasta i trasy handlowe. GreenWay skupia się na dużych miastach i stacjach autostradowych z nowoczesną technologią 400kW. Mniejsze operatory, takie jak ElectroMobility+ czy Inergy, rozwijają się lokalnie.",
-      "body2": "Każdy operator ma inną strategię cenową i dostępność — niektórzy oferują darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze, aby porównać dostępność i taryfy.",
+      "body2": "Każdy operator ma inną strategię cenową i dostępność - niektórzy oferują darmowe ładowanie dla nowych użytkowników, a inni mają elastyczne opcje abonamentowe. W naszej mapie możesz filtrować stacje po wybranym operatorze, aby porównać dostępność i taryfy.",
       "body2InsightsLinkText": "Więcej informacji o operatorach →",
       "body2FaqText": "Masz pytania?",
       "body2FaqLinkText": "Sprawdź nasz FAQ"
@@ -1007,11 +1008,11 @@
         },
         {
           "question": "Jakie są godziny pracy ładowarek?",
-          "answer": "Większość publicznych ładowarek jest dostępna 24/7. Niektórzy operatorzy mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej stacji zawarte są w jej profilu — kliknij ikonę strzałki w prawo, aby zobaczyć pełne informacje."
+          "answer": "Większość publicznych ładowarek jest dostępna 24/7. Niektórzy operatorzy mogą mieć ograniczone godziny w małych miastach. Szczegóły dla każdej stacji zawarte są w jej profilu - kliknij ikonę strzałki w prawo, aby zobaczyć pełne informacje."
         },
         {
           "question": "Czy mogę zarezerwować ładowarkę?",
-          "answer": "Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging, Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na 15–30 minut przed przyjazdem. Sprawdź aplikację wybranego operatora, aby poznać szczegóły."
+          "answer": "Rezerwacja ładowarek zależy od operatora. Większość sieci (ORLEN Charging, Energa, GreenWay) pozwala na rezerwację przez aplikację mobilną na 15-30 minut przed przyjazdem. Sprawdź aplikację wybranego operatora, aby poznać szczegóły."
         }
       ]
     }
