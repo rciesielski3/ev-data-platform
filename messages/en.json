@@ -593,6 +593,13 @@
     "totalStations": "Total stations",
     "displayedStations": "Displayed stations",
     "mapMarkers": "Map markers",
+    "legend": {
+      "title": "Pin colour = fastest charger at the location",
+      "hpc": "HPC ≥150 kW",
+      "dc": "DC <150 kW",
+      "ac": "AC only",
+      "unknown": "Unknown power"
+    },
     "client": {
       "powerUnknown": "Power unknown",
       "upToPower": "up to {power} kW",

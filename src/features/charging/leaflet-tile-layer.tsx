@@ -8,6 +8,7 @@ import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 import { StationMapGroup } from "./station-map";
+import type { StationPowerClass } from "./station-map-power";
 import Badge from "@/components/ui/Badge";
 
 export const OSM_TILE_LAYER_URL =
@@ -18,16 +19,19 @@ export const OSM_TILE_LAYER_ATTRIBUTION =
 
 export const buildStationMarkerIcon = (
   leaflet: typeof import("leaflet"),
-  options?: { count?: number },
+  options?: { count?: number; powerClass?: StationPowerClass },
 ): DivIcon => {
   const count = options?.count;
+  const powerClass = options?.powerClass;
   const isCluster = typeof count === "number" && count > 1;
 
   return leaflet.divIcon({
     className: "station-map-marker-wrapper",
     html: `<span class="station-map-marker${
       isCluster ? " station-map-marker-cluster" : ""
-    }">${isCluster ? count : ""}</span>`,
+    }${powerClass ? ` station-map-marker-${powerClass}` : ""}">${
+      isCluster ? count : ""
+    }</span>`,
     iconSize: [34, 34],
     iconAnchor: [17, 17],
     ...(count !== undefined
