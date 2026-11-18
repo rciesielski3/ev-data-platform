@@ -51,12 +51,12 @@ const NavLinks = ({ links }: { links: NavLink[] }) => {
             key={link.href}
             href={link.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-full px-3 py-1 transition-colors ${
-              isActive
-                ? "bg-emerald-600 text-white"
-                : link.accent
-                  ? "border border-emerald-600 text-emerald-700 hover:bg-emerald-50"
-                  : "text-slate-600 hover:text-emerald-700"
+            className={`rounded-full px-4 py-2 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${
+              link.accent
+                ? "ml-1 bg-forest text-cream hover:bg-sun hover:text-forest"
+                : isActive
+                  ? "bg-forest/10 text-forest"
+                  : "text-forest/80 hover:bg-forest/10 hover:text-forest"
             }`}
           >
             {link.label}

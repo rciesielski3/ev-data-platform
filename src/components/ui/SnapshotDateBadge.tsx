@@ -18,7 +18,7 @@ export default function SnapshotDateBadge({
   const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: fnsLocale });
 
   return (
-    <p className={`text-sm text-gray-500 ${className}`}>
+    <p className={`text-sm text-forest/70 ${className}`}>
       Data updated {timeAgo}
     </p>
   );

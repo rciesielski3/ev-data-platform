@@ -12,7 +12,7 @@ export const CoverageHero = async ({ totals }: CoverageHeroProps) => {
   const t = await getTranslations("coverage");
 
   return (
-    <section className="mb-8 grid gap-4 md:grid-cols-4">
+    <section className="mb-10 grid gap-4 md:grid-cols-4">
       <MetricCard
         index={0}
         label={t("provincesMetricLabel")}

@@ -36,7 +36,7 @@ const LanguageSwitcher = ({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1 text-xs font-semibold"
+      className="flex items-center gap-0.5 rounded-full border border-forest/15 p-0.5 text-xs font-semibold"
     >
       {(Object.keys(LOCALE_LABELS) as SupportedLocale[]).map((locale) => (
         <button
@@ -44,10 +44,10 @@ const LanguageSwitcher = ({
           type="button"
           onClick={() => handleSwitch(locale)}
           aria-pressed={locale === currentLocale}
-          className={`rounded-full px-2.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 ${
+          className={`rounded-full px-2.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${
             locale === currentLocale
-              ? "bg-emerald-600 text-white"
-              : "text-slate-500 hover:text-slate-900"
+              ? "bg-forest text-cream"
+              : "text-forest/70 hover:text-forest"
           }`}
         >
           {LOCALE_LABELS[locale]}

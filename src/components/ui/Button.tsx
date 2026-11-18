@@ -5,24 +5,27 @@ export type ButtonVariant =
   | "secondary"
   | "ghost"
   | "warning"
-  | "cta";
+  | "cta"
+  | "inverse";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary:
-    "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:outline-emerald-600 shadow-xl hover:shadow-2xl font-semibold",
+    "bg-forest text-cream shadow-lg shadow-forest/20 hover:-translate-y-0.5 hover:bg-sun hover:text-forest focus-visible:outline-forest font-semibold",
   secondary:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:outline-emerald-600 hover:shadow-md",
+    "border border-forest/25 bg-transparent text-forest hover:border-forest hover:bg-forest hover:text-cream focus-visible:outline-forest",
   ghost:
-    "bg-white/70 text-emerald-800 hover:bg-white/90 hover:shadow-md focus-visible:outline-emerald-600",
+    "bg-forest/5 text-forest hover:bg-forest/10 focus-visible:outline-forest",
   warning:
-    "bg-amber-900 text-white hover:bg-amber-800 focus-visible:outline-amber-900",
-  cta: "bg-emerald-600 text-white shadow-md hover:bg-emerald-700 hover:shadow-lg focus-visible:outline-emerald-600",
+    "bg-amber-700 text-white hover:bg-amber-800 focus-visible:outline-amber-700",
+  inverse:
+    "border border-cream/30 text-cream hover:border-cream hover:bg-cream hover:text-forest focus-visible:outline-cream",
+  cta: "bg-sun text-forest font-semibold shadow-lg shadow-sun/30 hover:-translate-y-0.5 hover:bg-cream focus-visible:outline-sun",
 };
 
 const SIZE_CLASSES = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-sm",
-  lg: "px-6 py-3 text-base",
+  sm: "px-4 py-1.5 text-sm",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-7 py-3.5 text-base",
 };
 
 type ButtonOwnProps<T extends ElementType> = {
@@ -44,7 +47,7 @@ const Button = <T extends ElementType = "button">({
   const Component = (as ?? "button") as ElementType;
   const classNameValue = (className ?? "") as string;
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+    "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
     <Component

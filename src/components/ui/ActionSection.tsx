@@ -31,27 +31,27 @@ export const ActionSection = ({
   exportJsonLabel,
   exportJsonHref,
 }: ActionSectionProps) => (
-  <Card as="section" className="mt-8 mb-8 bg-gray-50">
+  <Card as="section" className="mt-8 mb-8 bg-forest/5">
     <div className="mb-4">
-      <h3 className="text-lg font-semibold text-slate-900">{heading}</h3>
+      <h3 className="font-display text-xl font-semibold tracking-tight text-forest">{heading}</h3>
       <p className="muted mt-1 text-sm">{description}</p>
     </div>
 
     <div className="grid gap-6 md:grid-cols-2">
       <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-forest/70">
           {analysisGroupLabel}
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href={primaryActionHref}
-            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
+            className="inline-flex min-h-10 items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun bg-forest text-cream hover:bg-sun hover:text-forest"
           >
             {primaryActionLabel}
           </Link>
           <Link
             href={secondaryActionHref}
-            className="rounded-md border border-emerald-600 bg-white px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 transition-colors"
+            className="inline-flex min-h-10 items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun border border-forest/30 bg-paper text-forest hover:border-forest hover:bg-sun"
           >
             {secondaryActionLabel}
           </Link>
@@ -59,19 +59,19 @@ export const ActionSection = ({
       </div>
 
       <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-forest/70">
           {exportGroupLabel}
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <a
             href={exportCsvHref}
-            className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            className="inline-flex min-h-10 items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun border border-forest/20 bg-paper text-forest hover:border-forest hover:bg-forest/5"
           >
             {exportCsvLabel}
           </a>
           <a
             href={exportJsonHref}
-            className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            className="inline-flex min-h-10 items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun border border-forest/20 bg-paper text-forest hover:border-forest hover:bg-forest/5"
           >
             {exportJsonLabel}
           </a>

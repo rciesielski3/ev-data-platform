@@ -46,14 +46,14 @@ const RankingList = ({
           className="flex items-baseline justify-between gap-4"
         >
           <span className="flex items-baseline gap-3">
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-forest/70">
               {index + 1}
             </span>
-            <span className="font-medium text-slate-900">
+            <span className="font-medium text-forest">
               {localizeProvinceLabel(row.province)}
             </span>
           </span>
-          <span className="text-sm text-slate-500">{metric(row)}</span>
+          <span className="text-sm text-forest/70">{metric(row)}</span>
         </li>
       ))}
     </ol>
@@ -68,9 +68,9 @@ const CoverageTable = ({
   headers: CoverageTableHeaders;
   localizeProvinceLabel: (value: string) => string;
 }) => (
-  <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-    <table className="min-w-full divide-y divide-slate-200 text-sm">
-      <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+  <div className="overflow-x-auto rounded-[1.5rem] border border-forest/10 bg-paper">
+    <table className="min-w-full divide-y divide-forest/10 text-sm">
+      <thead className="bg-forest/5 text-left text-xs uppercase tracking-wider text-forest/70">
         <tr>
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.province}
@@ -98,31 +98,31 @@ const CoverageTable = ({
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-slate-100">
+      <tbody className="divide-y divide-forest/10">
         {rows.map((row) => (
-          <tr key={row.province} className="align-top">
-            <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+          <tr key={row.province} className="align-top transition-colors hover:bg-forest/5">
+            <th scope="row" className="px-4 py-4 text-left font-medium text-forest">
               {localizeProvinceLabel(row.province)}
             </th>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.stationCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.hpcStationCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatRatio(row.hpcShare)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.connectorCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.knownPowerConnectorCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatRatio(row.powerAvailabilityRatio)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {row.stationsPer100k === null ? "" : row.stationsPer100k.toFixed(2)}
             </td>
           </tr>
@@ -142,7 +142,7 @@ export const CoverageDetails = async ({ coverage }: CoverageDetailsProps) => {
     <>
       <section className="mb-8 grid gap-4 lg:grid-cols-3">
         <Card as="article">
-          <h2 className="text-lg font-semibold text-slate-950">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
             {t("lowestStationCountTitle")}
           </h2>
           <p className="muted mt-1 text-sm">
@@ -161,7 +161,7 @@ export const CoverageDetails = async ({ coverage }: CoverageDetailsProps) => {
         </Card>
 
         <Card as="article">
-          <h2 className="text-lg font-semibold text-slate-950">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
             {t("lowestHpcCoverageTitle")}
           </h2>
           <p className="muted mt-1 text-sm">
@@ -182,7 +182,7 @@ export const CoverageDetails = async ({ coverage }: CoverageDetailsProps) => {
         </Card>
 
         <Card as="article">
-          <h2 className="text-lg font-semibold text-slate-950">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
             {t("highestStationCountTitle")}
           </h2>
           <p className="muted mt-1 text-sm">
@@ -202,8 +202,8 @@ export const CoverageDetails = async ({ coverage }: CoverageDetailsProps) => {
       </section>
 
       <section className="mb-8">
-        <Card as="article" className="border-emerald-200 bg-emerald-50">
-          <h2 className="text-lg font-semibold text-slate-950">
+        <Card as="article" className="border-forest/15 bg-forest/5">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
             {t("lowestPerCapitaCoverageTitle")}
           </h2>
           <p className="muted mt-1 text-sm">

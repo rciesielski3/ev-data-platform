@@ -1,7 +1,7 @@
 export default function MetricCardSkeleton() {
   return (
     <div
-      className="card h-32 animate-pulse bg-slate-50 shadow-xl"
+      className="h-32 animate-pulse rounded-[1.5rem] bg-forest/10"
       aria-hidden="true"
     />
   );
