@@ -29,7 +29,6 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/lib/db/get-leads.test.ts"],
     languageOptions: {
       parserOptions: { projectService: true, tsconfigRootDir: __dirname },
     },
