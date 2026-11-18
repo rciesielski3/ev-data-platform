@@ -20,7 +20,15 @@ const station = (overrides: Record<string, unknown> = {}) => ({
   name: "Test Station",
   province: "Mazowieckie",
   operator: { name: "GreenWay", normalizedName: "greenway" },
-  connectors: [{ id: "connector-1", powerKw: 150 }],
+  connectors: [
+    {
+      id: "connector-1",
+      powerKw: 150,
+      connectorType: "ccs2",
+      chargingMode: "7",
+      sourcePointId: "point-1",
+    },
+  ],
   ...overrides,
 });
 
@@ -52,6 +60,10 @@ describe("captureSnapshot", () => {
     expect(call.create.totalConnectorCount).toBe(1);
     expect(call.create.totalHpcStationCount).toBe(1);
     expect(call.create.knownPowerConnectorCount).toBe(1);
+    expect(call.create.precomputedStats).toEqual({
+      chargePoints: { total: 1, ac: 0, dc: 1 },
+    });
+    expect(call.update.precomputedStats).toEqual(call.create.precomputedStats);
     expect(call.create.latestImportStatus).toBe(IngestionStatus.SUCCESS);
     expect(call.create.lastSuccessfulImportRunId).toBe("run-1");
     expect(call.create.error).toBeNull();
