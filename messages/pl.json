@@ -593,6 +593,13 @@
     "totalStations": "Łącznie stacji",
     "displayedStations": "Wyświetlone stacje",
     "mapMarkers": "Znaczniki na mapie",
+    "legend": {
+      "title": "Kolor pinezki = najszybsza ładowarka w lokalizacji",
+      "hpc": "HPC ≥150 kW",
+      "dc": "DC <150 kW",
+      "ac": "Tylko AC",
+      "unknown": "Moc nieznana"
+    },
     "client": {
       "powerUnknown": "Moc nieznana",
       "upToPower": "do {power} kW",

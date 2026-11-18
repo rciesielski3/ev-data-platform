@@ -143,4 +143,22 @@ describe("buildStationMarkerIcon", () => {
     expect(options.html).not.toContain("station-map-marker-cluster");
     expect(options.html).toBe(`<span class="station-map-marker"></span>`);
   });
+
+  it("adds the power class modifier to single and cluster markers", async () => {
+    const leaflet = (await import("leaflet")) as typeof LeafletNamespace;
+    const { buildStationMarkerIcon } = await import(
+      "@/features/charging/leaflet-tile-layer"
+    );
+
+    expect(
+      getOptions(buildStationMarkerIcon(leaflet, { count: 1, powerClass: "ac" }))
+        .html,
+    ).toBe(`<span class="station-map-marker station-map-marker-ac"></span>`);
+    expect(
+      getOptions(buildStationMarkerIcon(leaflet, { count: 4, powerClass: "hpc" }))
+        .html,
+    ).toBe(
+      `<span class="station-map-marker station-map-marker-cluster station-map-marker-hpc">4</span>`,
+    );
+  });
 });
