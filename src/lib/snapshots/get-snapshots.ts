@@ -24,7 +24,6 @@ export const getSnapshotByDate = (date: Date) =>
 export const getLatestSnapshot = () =>
   prisma.dailySnapshot.findFirst({
     orderBy: { snapshotDate: "desc" },
-    omit: { precomputedStats: true },
   });
 
 export const getLatestPrecomputedStats = () =>

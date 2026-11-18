@@ -177,6 +177,39 @@ body {
   content: none;
 }
 
+.station-map-marker-hpc {
+  background: #047857;
+  color: #ffffff;
+}
+
+.station-map-marker-dc {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.station-map-marker-ac {
+  background: #a7f3d0;
+  color: #064e3b;
+}
+
+.station-map-marker-ac::after {
+  background: #047857;
+}
+
+.station-map-marker-unknown {
+  background: #64748b;
+  color: #ffffff;
+}
+
+.station-map-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgb(15 23 42 / 0.3);
+}
+
 .station-map-popup {
   min-width: 220px;
 }

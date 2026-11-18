@@ -1,5 +1,8 @@
 import { IngestionStatus, Prisma } from "@prisma/client";
 
+import { buildChargePointTotals } from "@/features/charging/charge-points";
+import { buildStationDots } from "@/features/home/station-dots";
+import { buildStationInsights } from "@/features/home/station-insights";
 import { buildOperatorIntelligenceRows } from "@/features/charging/operator-intelligence";
 import { buildProvinceIntelligenceRows } from "@/features/charging/province-intelligence";
 import { buildRegionalOperatorStats } from "@/features/charging/operator-stats";
@@ -15,11 +18,14 @@ export type CaptureSnapshotResult = {
 
 const getStationsForSnapshot = () =>
   prisma.chargingStation.findMany({
+    orderBy: { id: "asc" },
     select: {
       id: true,
       name: true,
       city: true,
       province: true,
+      latitude: true,
+      longitude: true,
       sourceUpdatedAt: true,
       operator: {
         select: {
@@ -32,6 +38,8 @@ const getStationsForSnapshot = () =>
           id: true,
           powerKw: true,
           connectorType: true,
+          chargingMode: true,
+          sourcePointId: true,
         },
       },
     },
@@ -77,6 +85,13 @@ export const captureSnapshot = async (
     const provinceRows = buildProvinceIntelligenceRows(stations);
     const operatorRows = buildOperatorIntelligenceRows(stations);
     const snapshot = buildDailySnapshot(provinceRows, operatorRows, evModelCount, operatorCount);
+    const precomputedStats = {
+      chargePoints: buildChargePointTotals(stations.flatMap((station) => station.connectors)),
+      home: {
+        stationMap: buildStationDots(stations),
+        insights: buildStationInsights(stations),
+      },
+    };
 
     await prisma.dailySnapshot.upsert({
       where: { snapshotDate },
@@ -90,6 +105,7 @@ export const captureSnapshot = async (
         totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
+        precomputedStats,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,
@@ -103,6 +119,7 @@ export const captureSnapshot = async (
         totalOperatorCount: snapshot.totalOperatorCount,
         provinceMetrics: snapshot.provinceMetrics as Prisma.InputJsonValue,
         operatorStats: regionOperatorStats as Prisma.InputJsonValue,
+        precomputedStats,
         latestImportStatus: latestImportRun?.status ?? null,
         lastSuccessfulImportRunId,
         error: null,

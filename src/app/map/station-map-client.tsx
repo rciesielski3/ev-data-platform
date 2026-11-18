@@ -12,6 +12,10 @@ import {
   buildStationMarkerIcon,
 } from "@/features/charging/leaflet-tile-layer";
 import type { StationMapGroup } from "@/features/charging/station-map";
+import {
+  STATION_POWER_CLASSES,
+  classifyGroupPower,
+} from "@/features/charging/station-map-power";
 
 type StationMapClientProps = {
   groups: StationMapGroup[];
@@ -201,7 +205,10 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
       leaflet
         .marker(coordinates, {
-          icon: buildStationMarkerIcon(leaflet, { count: group.stationCount }),
+          icon: buildStationMarkerIcon(leaflet, {
+            count: group.stationCount,
+            powerClass: classifyGroupPower(group),
+          }),
           title:
             group.stationCount === 1
               ? group.stations[0]?.name
@@ -227,6 +234,22 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
           className="relative z-0 h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
           aria-label="Charging station map"
         />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200 px-4 py-3 text-xs">
+          <span className="muted">{t("legend.title")}</span>
+          <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            {STATION_POWER_CLASSES.map((powerClass) => (
+              <li key={powerClass} className="flex items-center gap-1.5">
+                <span
+                  aria-hidden="true"
+                  className={`station-map-legend-swatch station-map-marker-${powerClass}`}
+                />
+                <span className="font-medium text-slate-700">
+                  {t(`legend.${powerClass}`)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <aside className="max-h-[32rem] space-y-3 overflow-y-auto pr-1 lg:h-[42rem] lg:max-h-none">

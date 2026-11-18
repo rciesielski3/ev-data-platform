@@ -9,6 +9,7 @@ import {
   buildCoverageAnalysisFromRows,
   type CoverageAnalysis,
 } from "@/features/charging/coverage-analysis";
+import { readChargePointTotals } from "@/features/charging/charge-points";
 import { MetricCard } from "@/features/charging/metric-card";
 import type { OperatorIntelligenceRow } from "@/features/charging/operator-intelligence";
 import type { ProvinceIntelligenceRow } from "@/features/charging/province-intelligence";
@@ -16,9 +17,10 @@ import {
   getOperatorIntelligenceRows,
   getProvinceIntelligenceRows,
 } from "@/lib/db/cached-queries";
-import { formatDisplayDate } from "@/lib/display/data-display";
+import { formatDisplayDate, formatDisplayNumber } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";
 
 export const revalidate = 3600;
 
@@ -200,15 +202,20 @@ export default async function StateOfChargingPage() {
   const locale = (await getLocale()) as SupportedLocale;
   const t = await getTranslations("stateOfCharging");
   const tCommon = await getTranslations("common");
+  const tChargePoints = await getTranslations("chargePoints");
 
   let provinceRows: ProvinceIntelligenceRow[];
   let operatorRows: OperatorIntelligenceRow[];
+  let chargePoints: ReturnType<typeof readChargePointTotals>;
 
   try {
-    [provinceRows, operatorRows] = await Promise.all([
+    let latestSnapshot: Awaited<ReturnType<typeof getLatestSnapshot>>;
+    [provinceRows, operatorRows, latestSnapshot] = await Promise.all([
       getProvinceIntelligenceRows(),
       getOperatorIntelligenceRows(),
+      getLatestSnapshot().catch(() => null),
     ]);
+    chargePoints = readChargePointTotals(latestSnapshot?.precomputedStats);
   } catch (error) {
     console.error("Failed to fetch state of charging snapshot data:", error);
     return (
@@ -240,12 +247,26 @@ export default async function StateOfChargingPage() {
         {t("asOfDate", { date: formatDisplayDate(new Date(), locale) })}
       </p>
 
-      <section className="mb-8 grid gap-4 sm:grid-cols-4">
+      <section
+        className={`mb-8 grid gap-4 ${
+          chargePoints ? "sm:grid-cols-2 lg:grid-cols-5" : "sm:grid-cols-4"
+        }`}
+      >
         <MetricCard
           label={t("totalStationsLabel")}
           value={totals.stationCount}
           helper={t("totalStationsHelper")}
         />
+        {chargePoints && (
+          <MetricCard
+            label={tChargePoints("label")}
+            value={chargePoints.total}
+            helper={tChargePoints("helper", {
+              ac: formatDisplayNumber(chargePoints.ac, locale),
+              dc: formatDisplayNumber(chargePoints.dc, locale),
+            })}
+          />
+        )}
         <MetricCard
           label={t("totalConnectorsLabel")}
           value={totals.connectorCount}

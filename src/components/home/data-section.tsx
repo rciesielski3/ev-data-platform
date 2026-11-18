@@ -12,7 +12,7 @@ import styles from "./home.module.css";
 const percent = (share: number) => `${Math.round(share * 100)}%`;
 
 export const DataSection = ({ content }: { content: HomeContent }) => {
-  const { insights, locale } = content;
+  const { insights, locale, chargePoints } = content;
   const topCount = insights.provinces[0]?.count ?? 1;
   const segmentClasses = ["stroke-sun", "stroke-cream", "stroke-cream/45"];
   const dotClasses = ["bg-sun", "bg-cream", "bg-cream/45"];
@@ -66,6 +66,12 @@ export const DataSection = ({ content }: { content: HomeContent }) => {
 
         <article data-reveal className="flex min-w-0 flex-col rounded-[2rem] bg-forest p-6 text-cream sm:p-8">
           <h3 className="font-display text-xl font-semibold">{insights.labels.connectors}</h3>
+          {chargePoints && (
+            <p className="mt-2 text-sm text-cream/75">
+              <span className="font-semibold text-cream">{chargePoints.total}</span> {chargePoints.label} ·{" "}
+              {chargePoints.split}
+            </p>
+          )}
           <div className="mt-6 flex flex-1 flex-col items-center gap-8 sm:flex-row lg:flex-col lg:justify-around">
             <Donut
               className="w-48 shrink-0"

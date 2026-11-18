@@ -3,10 +3,18 @@ import { syncGscData } from '@/server/jobs/sync-gsc';
 
 export const dynamic = 'force-dynamic';
 
-export const POST = async (req: NextRequest) => {
-  // Verify Vercel cron signature (optional but recommended)
-  const authHeader = req.headers.get('authorization');
-  if (process.env.NODE_ENV === 'production' && !authHeader?.startsWith('Bearer ')) {
+const isAuthorized = (request: NextRequest) => {
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    return process.env.NODE_ENV !== 'production';
+  }
+
+  return request.headers.get('authorization') === `Bearer ${cronSecret}`;
+};
+
+const handleSync = async (req: NextRequest) => {
+  if (!isAuthorized(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -33,3 +41,6 @@ export const POST = async (req: NextRequest) => {
     );
   }
 };
+
+export const GET = handleSync;
+export const POST = handleSync;

@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { readChargePointTotals } from "@/features/charging/charge-points";
 import { buildFallbackStationTotals } from "@/features/charging/fallback-stations";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { prisma } from "@/lib/db/prisma";
@@ -7,7 +8,7 @@ import { formatDisplayDate, formatDisplayNumber } from "@/lib/display/data-displ
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 
-import { getCachedLatestSnapshot } from "./latest-snapshot";
+import { getCachedLatestSnapshot, getCachedPrecomputedStats } from "./latest-snapshot";
 import { loadHomeInsights } from "./load-home-insights";
 import { formatRelativeTime } from "./relative-time";
 import type { StationDotMap } from "./station-dots";
@@ -37,6 +38,7 @@ export type HomeContent = {
   hero: { badge: string; headline: string; subhead: string; primary: HomeLink; secondary: HomeLink };
   stats: HomeStat[];
   freshness: HomeFreshness[];
+  chargePoints: { label: string; total: string; split: string } | null;
   snapshotNote: string | null;
   valueProps: { title: string; subtitle: string; items: HomeCard[] };
   explore: { title: string; subtitle: string; items: HomeCard[] };
@@ -92,16 +94,20 @@ const loadRuns = async () => {
 };
 
 export const getHomeContent = async (): Promise<HomeContent> => {
-  const [locale, t, tHero, tNav, tCommon, totals, runs, home] = await Promise.all([
+  const [locale, t, tHero, tNav, tCommon, tChargePoints, totals, runs, home, precomputed] = await Promise.all([
     getLocale() as Promise<SupportedLocale>,
     getTranslations("home"),
     getTranslations("hero"),
     getTranslations("nav"),
     getTranslations("common"),
+    getTranslations("chargePoints"),
     loadTotals(),
     loadRuns(),
     loadHomeInsights(),
+    getCachedPrecomputedStats().catch(() => null),
   ]);
+
+  const chargePoints = readChargePointTotals(precomputed?.precomputedStats);
 
   const freshness = (
     [
@@ -148,6 +154,16 @@ export const getHomeContent = async (): Promise<HomeContent> => {
       },
     ],
     freshness,
+    chargePoints: chargePoints
+      ? {
+          label: tChargePoints("statLabel"),
+          total: formatDisplayNumber(chargePoints.total, locale),
+          split: tChargePoints("split", {
+            ac: formatDisplayNumber(chargePoints.ac, locale),
+            dc: formatDisplayNumber(chargePoints.dc, locale),
+          }),
+        }
+      : null,
     snapshotNote: totals.snapshotAt
       ? t("snapshotAsOf", { date: formatDisplayDate(totals.snapshotAt, locale) })
       : null,
