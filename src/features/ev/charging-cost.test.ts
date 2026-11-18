@@ -55,11 +55,11 @@ describe("buildWinterRangeNote", () => {
 });
 
 describe("formatPlnRange", () => {
-  it("formats a PLN range with an en dash and currency suffix", () => {
-    expect(formatPlnRange([46, 110])).toBe("46–110 zł");
+  it("formats a PLN range with a hyphen and currency suffix", () => {
+    expect(formatPlnRange([46, 110])).toBe("46-110 zł");
   });
 
   it("formats a range where both ends are equal", () => {
-    expect(formatPlnRange([0, 0])).toBe("0–0 zł");
+    expect(formatPlnRange([0, 0])).toBe("0-0 zł");
   });
 });

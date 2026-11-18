@@ -149,7 +149,7 @@ const normalizeBrandName = (brandName: string) =>
     .toLowerCase()
     .replaceAll("&", "and");
 
-// Hand-curated by real Poland EV-market relevance, ordered by priority — no sales-volume
+// Hand-curated by real Poland EV-market relevance, ordered by priority - no sales-volume
 // data exists in this schema. "kia" has no catalog coverage yet, so it's a no-op for now.
 const POLAND_RELEVANT_BRAND_NAMES = [
   "skoda",

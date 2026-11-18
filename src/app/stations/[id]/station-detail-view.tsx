@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
+import { ArrowLeft, Cable, Zap } from "lucide-react";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -110,9 +111,9 @@ const DetailRow = ({
   label: string;
   value: React.ReactNode;
 }) => (
-  <div className="border-b border-slate-100 pb-3">
-    <dt className="text-sm text-slate-500">{label}</dt>
-    <dd className="mt-1 font-medium text-slate-900">{value}</dd>
+  <div className="border-b border-forest/10 pb-3 last:border-b-0 last:pb-0">
+    <dt className="text-xs font-semibold uppercase tracking-wider text-forest/70">{label}</dt>
+    <dd className="mt-1 font-medium text-forest">{value}</dd>
   </div>
 );
 
@@ -123,10 +124,10 @@ const InfoCard = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <div className="rounded-xl border border-slate-200 p-4 bg-slate-50">
-    <h3 className="mb-3 text-sm font-medium text-slate-500">{title}</h3>
+  <div className="rounded-2xl border border-forest/10 bg-cream p-5">
+    <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-forest/70">{title}</h3>
 
-    <div className="space-y-2 text-slate-900">{children}</div>
+    <div className="space-y-2 text-forest">{children}</div>
   </div>
 );
 
@@ -188,7 +189,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
   const closingPeriods = details.closingPeriods ?? [];
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="page-shell max-w-5xl pb-20 pt-12 sm:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -214,60 +215,63 @@ export const StationDetailView = async ({ id }: { id: string }) => {
       <div className="mb-8">
         <Link
           href="/stations"
-          className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+          className="group inline-flex items-center gap-2 rounded-full border border-forest/25 px-4 py-2 text-sm font-medium text-forest transition-all duration-300 hover:border-forest hover:bg-forest hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
         >
+          <ArrowLeft className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:-translate-x-0.5" aria-hidden />
           {t("backLink")}
         </Link>
       </div>
 
-      <header className="mb-10">
-        <p className="text-lg font-medium text-slate-500">
+      <header className="mb-10 max-w-4xl">
+        <p className="text-xs font-semibold uppercase tracking-wider text-forest/70">
           {localizeFallback(details.operatorName, tCommon)}
         </p>
-        <h1 className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
+        <h1 className="mt-2 font-display text-4xl font-semibold leading-tight tracking-tight text-forest sm:text-5xl">
           {details.title === "Charging station"
             ? tCommon("chargingStationFallback")
             : details.title}
         </h1>
-        <p className="muted mt-3 max-w-3xl">{locationLine}</p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <p className="muted mt-4 max-w-3xl text-lg">{locationLine}</p>
+        <div className="mt-5 flex flex-wrap gap-2">
           {details.connectors.length > 0 && (
-            <Badge className="rounded-full bg-blue-200 px-3 py-1 text-sm font-medium text-blue-700">
+            <Badge className="!inline-flex items-center gap-1.5 !border !border-forest/15 !bg-paper !normal-case !tracking-normal">
+              <Cable className="h-4 w-4" aria-hidden />
               {t("connectorsCount", { count: details.connectors.length })}
             </Badge>
           )}
 
           {station.connectors[0]?.powerKw && (
-            <Badge className="rounded-full bg-emerald-200 px-3 py-1 text-sm font-medium text-emerald-700">
+            <Badge className="!inline-flex items-center gap-1.5 !normal-case !tracking-normal">
+              <Zap className="h-4 w-4" aria-hidden />
               {t("upToPower", {
                 power: station.connectors[0].powerKw,
               })}
             </Badge>
           )}
 
-          <Badge className="rounded-full bg-slate-200 px-3 py-1 text-sm font-medium text-slate-700">
+          <Badge className="!border !border-forest/15 !bg-paper !normal-case !tracking-normal">
             {details.quality.completeness.scorePercent}%{" "}
             {t("completenessLabel")}
           </Badge>
         </div>
       </header>
 
-      <Card as="section" className="my-6">
+      <Card as="section" className="my-6 !p-6 sm:!p-8">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-900">
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
             {t("dataQualityTitle")}
           </h2>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm text-slate-500">{t("completenessLabel")}</p>
+          <div className="rounded-2xl border border-forest/10 bg-cream p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-forest/70">{t("completenessLabel")}</p>
 
-            <p className="mt-2 text-3xl font-bold text-slate-900">
+            <p className="mt-2 font-display text-4xl font-bold text-forest">
               {details.quality.completeness.scorePercent}%
             </p>
 
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-forest/70">
               {t("fieldsPresent", {
                 present: details.quality.completeness.presentFieldCount,
                 total: details.quality.completeness.totalFieldCount,
@@ -275,7 +279,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
             </p>
 
             {details.quality.completeness.missingFields.length > 0 && (
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-forest/70">
                 {t("missingFields", {
                   list: missingFieldLabels.join(", "),
                 })}
@@ -283,8 +287,8 @@ export const StationDetailView = async ({ id }: { id: string }) => {
             )}
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm text-slate-500">{t("freshnessLabel")}</p>
+          <div className="rounded-2xl border border-forest/10 bg-cream p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-forest/70">{t("freshnessLabel")}</p>
 
             <div className="mt-2">
               <StationFreshnessIndicator
@@ -292,7 +296,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
               />
             </div>
 
-            <p className="mt-3 text-xs text-slate-600">
+            <p className="mt-3 text-xs text-forest/70">
               {details.quality.freshness.bucket === "unknown"
                 ? t("freshnessNoTimestamp")
                 : t("freshnessBasedOn", {
@@ -305,8 +309,8 @@ export const StationDetailView = async ({ id }: { id: string }) => {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card as="section">
-          <h2 className="mb-5 text-xl font-medium text-slate-900">
+        <Card as="section" className="min-w-0">
+          <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight text-forest">
             {t("stationDetailsTitle")}
           </h2>
           <dl className="space-y-3">
@@ -338,7 +342,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
                         href={details.mapHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-700 underline hover:text-emerald-900"
+                        className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30"
                       >
                         {t("mapLinkLabel")}
                       </a>
@@ -359,7 +363,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
                         href={details.safeSourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-700 underline hover:text-emerald-900"
+                        className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30"
                       >
                         {t("originalLink")}
                       </a>
@@ -371,9 +375,9 @@ export const StationDetailView = async ({ id }: { id: string }) => {
           </dl>
         </Card>
 
-        <Card as="section">
+        <Card as="section" className="min-w-0">
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-medium text-slate-900">
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
               {t("connectorsTitle")}
             </h2>
           </div>
@@ -381,9 +385,9 @@ export const StationDetailView = async ({ id }: { id: string }) => {
           {details.connectors.length === 0 ? (
             <p className="muted text-sm">{t("noConnectorsImported")}</p>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-slate-200">
+            <div className="overflow-x-auto rounded-2xl border border-forest/10">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-500">
+                <thead className="bg-cream text-xs uppercase tracking-wider text-forest/70">
                   <tr>
                     <th className="px-4 py-3 font-medium">
                       {t("connectorTypeHeader")}
@@ -399,19 +403,19 @@ export const StationDetailView = async ({ id }: { id: string }) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
+                <tbody className="divide-y divide-forest/10 bg-paper">
                   {details.connectors.map((connector) => (
-                    <tr key={connector.id}>
-                      <td className="px-4 py-3 font-medium text-slate-900">
+                    <tr key={connector.id} className="transition-colors hover:bg-forest/5">
+                      <td className="px-4 py-3 font-medium text-forest">
                         {localizeFallback(connector.type, tCommon)}
                       </td>
-                      <td className="px-4 py-3 text-slate-700">
+                      <td className="px-4 py-3 text-forest/80">
                         {localizeFallback(connector.power, tCommon)}
                       </td>
-                      <td className="px-4 py-3 text-slate-700">
+                      <td className="px-4 py-3 text-forest/80">
                         {localizeFallback(connector.currentType, tCommon)}
                       </td>
-                      <td className="px-4 py-3 text-slate-700">
+                      <td className="px-4 py-3 text-forest/80">
                         {localizeFallback(connector.sourceUpdatedAt, tCommon)}
                       </td>
                     </tr>
@@ -425,7 +429,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
 
       {details.mapHref && (
         <Card as="section" className="mt-6">
-          <h2 className="mb-5 text-xl font-medium text-slate-900">
+          <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight text-forest">
             {t("locationMapTitle")}
           </h2>
           <StationLocationMapClient
@@ -441,7 +445,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
       )}
 
       <Card as="section" className="mt-6">
-        <h2 className="mb-5 text-xl font-medium text-slate-900">
+        <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight text-forest">
           {t("hoursAccessibilityTitle")}
         </h2>
 
@@ -454,11 +458,11 @@ export const StationDetailView = async ({ id }: { id: string }) => {
                 </p>
               ))
             ) : (
-              <p className="text-slate-500">{t("notProvidedBySource")}</p>
+              <p className="text-forest/70">{t("notProvidedBySource")}</p>
             )}
 
             {closingPeriods.length > 0 && (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-forest/70">
                 {t("scheduledClosures", {
                   periods: closingPeriods.join("; "),
                 })}
@@ -493,7 +497,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
           )}
         </div>
       </Card>
-      <div className="mt-8 rounded-xl bg-slate-100 p-6 text-sm text-slate-500">
+      <div className="mt-8 rounded-2xl border border-forest/10 bg-paper p-6 text-sm text-forest/70">
         <p>
           {t("dataSourceLabel", {
             source: details.sourceName?.toUpperCase() ?? tCommon("unknown"),
@@ -506,7 +510,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
                 href={details.safeSourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-slate-900"
+                className="font-medium text-forest underline decoration-sun decoration-2 underline-offset-4 hover:bg-sun/30"
               >
                 {t("originalSourceLink")}
               </a>

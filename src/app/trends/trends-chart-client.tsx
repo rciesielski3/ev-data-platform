@@ -22,36 +22,57 @@ type TrendsChartClientProps = {
   };
 };
 
+const FOREST = "#0d2b22";
+const AMBER = "#c27428";
+const FOREST_MID = "#3f6a58";
+const GRID = "rgb(13 43 34 / 0.1)";
+const TICK = { fontSize: 12, fill: "rgb(13 43 34 / 0.7)" };
+
 const TrendsChartClient = ({ points, labels }: TrendsChartClientProps) => (
   <ResponsiveContainer width="100%" height={320}>
     <LineChart data={points} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-      <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#64748b" />
-      <YAxis tick={{ fontSize: 12 }} stroke="#64748b" allowDecimals={false} />
-      <Tooltip />
-      <Legend />
+      <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false} />
+      <XAxis dataKey="date" tick={TICK} stroke={GRID} tickLine={false} />
+      <YAxis tick={TICK} stroke={GRID} tickLine={false} allowDecimals={false} />
+      <Tooltip
+        cursor={{ stroke: GRID }}
+        contentStyle={{
+          background: "#fbf8f1",
+          border: "1px solid rgb(13 43 34 / 0.1)",
+          borderRadius: 16,
+          boxShadow: "0 8px 24px rgb(13 43 34 / 0.12)",
+          color: FOREST,
+          fontSize: 13,
+        }}
+        labelStyle={{ color: FOREST, fontWeight: 600 }}
+      />
+      <Legend
+        wrapperStyle={{ fontSize: 13 }}
+        formatter={(value: string) => <span style={{ color: FOREST }}>{value}</span>}
+      />
       <Line
         type="monotone"
         dataKey="totalStationCount"
         name={labels.totalStationCount}
-        stroke="#059669"
-        strokeWidth={2}
+        stroke={FOREST}
+        strokeWidth={2.5}
         dot={false}
       />
       <Line
         type="monotone"
         dataKey="totalHpcStationCount"
         name={labels.totalHpcStationCount}
-        stroke="#2563eb"
-        strokeWidth={2}
+        stroke={AMBER}
+        strokeWidth={2.5}
         dot={false}
       />
       <Line
         type="monotone"
         dataKey="totalConnectorCount"
         name={labels.totalConnectorCount}
-        stroke="#d97706"
-        strokeWidth={2}
+        stroke={FOREST_MID}
+        strokeWidth={2.5}
+        strokeDasharray="6 4"
         dot={false}
       />
     </LineChart>

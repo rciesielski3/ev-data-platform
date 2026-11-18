@@ -15,25 +15,53 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-const FeatureItem = ({ children }: { children: React.ReactNode }) => (
-  <li className="flex gap-2">
-    <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+const IconTile = ({
+  children,
+  tone = "forest",
+}: {
+  children: React.ReactNode;
+  tone?: "forest" | "sun";
+}) => (
+  <div
+    className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 motion-safe:group-hover:-rotate-6 ${
+      tone === "forest" ? "bg-forest text-sun" : "bg-sun text-forest"
+    }`}
+  >
+    {children}
+  </div>
+);
 
+const FeatureItem = ({
+  children,
+  dark = false,
+}: {
+  children: React.ReactNode;
+  dark?: boolean;
+}) => (
+  <li className="flex gap-3">
+    <span
+      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+        dark ? "bg-sun text-forest" : "bg-forest/10 text-forest"
+      }`}
+    >
+      <Check className="h-3 w-3" strokeWidth={3} />
+    </span>
     <span>{children}</span>
   </li>
 );
 
+const tierCard =
+  "group relative flex flex-col p-7 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] sm:p-8";
+
 export default async function ReportsPage() {
   const t = await getTranslations("reports");
-  
-  // Fetch GA metrics for current user (mock implementation for now)
+
   const gaMetrics = await getGaMetrics("professional");
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader title={t("title")} description={t("description")} />
 
-      {/* GA Metrics Section (if user has GA linked) */}
       {gaMetrics && (
         <section className="mt-10">
           <GaMetricsCard
@@ -44,126 +72,134 @@ export default async function ReportsPage() {
         </section>
       )}
 
-      <section className="mt-10 grid gap-6 sm:grid-cols-3">
-        <Card
-          as="article"
-          className="flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-        >
-          <FileBarChart className="mb-3 h-6 w-6 text-[var(--accent)]" />
-          <h2 className="text-xl font-semibold">{t("starterName")}</h2>
-          <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
+      <section className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
+        <Card as="article" className={tierCard}>
+          <IconTile>
+            <FileBarChart className="h-[22px] w-[22px]" />
+          </IconTile>
+          <h2 className="mt-6 font-display text-2xl font-semibold tracking-tight text-forest">
+            {t("starterName")}
+          </h2>
+          <p className="mt-3 font-display text-4xl font-semibold tracking-tight text-forest">
             {t("starterPrice")}
           </p>
           <p className="muted text-xs">{t("starterPriceNote")}</p>
-          <p className="muted mt-3 text-sm">{t("starterDescription")}</p>
-          <ul className="muted mt-4 flex-1 space-y-2 text-sm">
+          <p className="muted mt-4 text-sm">{t("starterDescription")}</p>
+          <ul className="mt-6 flex-1 space-y-3 text-sm text-forest/80">
             <FeatureItem>{t("starterFeature1")}</FeatureItem>
             <FeatureItem>{t("starterFeature2")}</FeatureItem>
             <FeatureItem>{t("starterFeature3")}</FeatureItem>
             <FeatureItem>{t("starterFeature4")}</FeatureItem>
             <FeatureItem>{t("starterFeature5")}</FeatureItem>
           </ul>
-          <Button as={Link} href="/contact" className="mt-6">
+          <Button as={Link} href="/contact" variant="secondary" className="mt-8">
             {t("starterCta")}
           </Button>
         </Card>
 
         <Card
           as="article"
-          className="flex flex-col border-emerald-200 ring-1 ring-emerald-100 shadow-lg scale-[1.02] transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          className={`${tierCard} !border-0 !bg-forest text-cream shadow-[var(--shadow-lift)] lg:-my-3`}
         >
-          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-200 text-emerald-700">
+          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
             {t("professionalBadge")}
           </Badge>
-          <TrendingUp className="mb-3 h-6 w-6 text-[var(--accent)]" />
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-xl font-semibold">{t("professionalName")}</h2>
-          </div>
-          <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
+          <IconTile tone="sun">
+            <TrendingUp className="h-[22px] w-[22px]" />
+          </IconTile>
+          <h2 className="mt-6 font-display text-2xl font-semibold tracking-tight">
+            {t("professionalName")}
+          </h2>
+          <p className="mt-3 font-display text-4xl font-semibold tracking-tight">
             {t("professionalPrice")}
           </p>
-          <p className="muted text-xs">{t("professionalPriceNote")}</p>
-          <p className="muted mt-3 text-sm">{t("professionalDescription")}</p>
-          <ul className="muted mt-4 flex-1 space-y-2 text-sm">
-            <FeatureItem>{t("professionalFeature1")}</FeatureItem>
-            <FeatureItem>{t("professionalFeature2")}</FeatureItem>
-            <FeatureItem>{t("professionalFeature3")}</FeatureItem>
-            <FeatureItem>{t("professionalFeature4")}</FeatureItem>
-            <FeatureItem>{t("professionalFeature5")}</FeatureItem>
+          <p className="text-xs text-cream/70">{t("professionalPriceNote")}</p>
+          <p className="mt-4 text-sm text-cream/80">
+            {t("professionalDescription")}
+          </p>
+          <ul className="mt-6 flex-1 space-y-3 text-sm text-cream/90">
+            <FeatureItem dark>{t("professionalFeature1")}</FeatureItem>
+            <FeatureItem dark>{t("professionalFeature2")}</FeatureItem>
+            <FeatureItem dark>{t("professionalFeature3")}</FeatureItem>
+            <FeatureItem dark>{t("professionalFeature4")}</FeatureItem>
+            <FeatureItem dark>{t("professionalFeature5")}</FeatureItem>
           </ul>
-          <Button as={Link} href="/contact" className="mt-6">
+          <Button as={Link} href="/contact" variant="cta" className="mt-8">
             {t("professionalCta")}
           </Button>
         </Card>
 
-        <Card
-          as="article"
-          className="flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-        >
-          <Building2 className="mb-3 h-6 w-6 text-[var(--accent)]" />
-          <h2 className="text-xl font-semibold">{t("enterpriseName")}</h2>
-          <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
+        <Card as="article" className={tierCard}>
+          <IconTile>
+            <Building2 className="h-[22px] w-[22px]" />
+          </IconTile>
+          <h2 className="mt-6 font-display text-2xl font-semibold tracking-tight text-forest">
+            {t("enterpriseName")}
+          </h2>
+          <p className="mt-3 font-display text-4xl font-semibold tracking-tight text-forest">
             {t("enterprisePriceNote")}
           </p>
-          <p className="muted mt-3 text-sm">{t("enterpriseDescription")}</p>
-          <Button
-            as={Link}
-            href="/contact"
-            variant="secondary"
-            className="mt-6 text-center"
-          >
+          <p className="muted mt-4 flex-1 text-sm">
+            {t("enterpriseDescription")}
+          </p>
+          <Button as={Link} href="/contact" variant="secondary" className="mt-8">
             {t("enterpriseCta")}
           </Button>
         </Card>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-16">
         <Card
           as="article"
-          className="flex flex-col gap-4 border-emerald-200 bg-emerald-50 sm:flex-row sm:items-center sm:justify-between"
+          className="flex flex-col gap-6 p-7 sm:p-10 md:flex-row md:items-center md:justify-between"
         >
           <div>
-            <h2 className="text-xl font-semibold">{t("listingTitle")}</h2>
-            <p className="muted mt-1 max-w-2xl text-sm">
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
+              {t("listingTitle")}
+            </h2>
+            <p className="muted mt-2 max-w-2xl text-sm">
               {t("listingDescription")}
             </p>
-            <p className="mt-3 text-lg font-semibold text-[var(--foreground)]">
+            <p className="mt-4 font-display text-3xl font-semibold tracking-tight text-forest">
               {t("listingPrice")}
             </p>
             <p className="muted text-xs">{t("listingPriceNote")}</p>
           </div>
-          <Button as={Link} href="/contact" variant="cta">
-            <ArrowRight className="h-4 w-4" />
+          <Button as={Link} href="/contact" variant="primary" size="lg">
             {t("listingCta")}
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </Card>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-6">
         <Card
           as="article"
-          className="flex flex-col items-center gap-3 border-emerald-200 bg-emerald-50 text-center"
+          className="group flex flex-col items-start gap-5 p-7 sm:flex-row sm:items-center sm:p-10"
         >
-          <FileBarChart className="h-8 w-8 text-[var(--accent)]" />
-          <h2 className="text-xl font-semibold">{t("sampleTitle")}</h2>
-          <p className="muted max-w-2xl text-sm">{t("sampleDescription")}</p>
-          <Button
-            as={Link}
-            href="/reports/sample"
-            variant="cta"
-            className="mt-2"
-          >
+          <IconTile tone="sun">
+            <FileBarChart className="h-[22px] w-[22px]" />
+          </IconTile>
+          <div className="flex-1">
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
+              {t("sampleTitle")}
+            </h2>
+            <p className="muted mt-2 max-w-2xl text-sm">
+              {t("sampleDescription")}
+            </p>
+          </div>
+          <Button as={Link} href="/reports/sample" variant="secondary">
             {t("sampleCta")}
           </Button>
         </Card>
       </section>
 
-      <section className="mt-10 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+      <section className="mt-20 rounded-[2rem] bg-forest px-6 py-14 text-center text-cream sm:px-12">
+        <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
           {t("closingTitle")}
         </h2>
-        <p className="muted mx-auto mt-2 max-w-xl">{t("closingBody")}</p>
-        <Button as={Link} href="/contact" className="mt-6">
+        <p className="mx-auto mt-3 max-w-xl text-cream/80">{t("closingBody")}</p>
+        <Button as={Link} href="/contact" variant="cta" size="lg" className="mt-8">
           {t("closingCta")}
         </Button>
       </section>

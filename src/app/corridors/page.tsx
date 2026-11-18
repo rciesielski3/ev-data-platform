@@ -29,21 +29,21 @@ const getCorridorAnalyses = cache(
 const formatKm = (value: number) => `${value.toFixed(0)} km`;
 
 const SegmentRow = ({ segment, t }: { segment: SegmentGap; t: Awaited<ReturnType<typeof getTranslations<"corridors">>> }) => (
-  <tr className="align-top">
-    <th scope="row" className="px-4 py-4 text-left font-medium text-slate-950">
+  <tr className="align-top transition-colors hover:bg-forest/5">
+    <th scope="row" className="px-4 py-4 text-left font-medium text-forest">
       {segment.fromLabel} → {segment.toLabel}
     </th>
-    <td className="px-4 py-4 text-slate-700">{formatKm(segment.segmentLengthKm)}</td>
-    <td className="px-4 py-4 text-slate-700">
+    <td className="px-4 py-4 text-forest/80">{formatKm(segment.segmentLengthKm)}</td>
+    <td className="px-4 py-4 text-forest/80">
       {segment.nearestHpcDistanceKm === null
-        ? "—"
+        ? "-"
         : formatKm(segment.nearestHpcDistanceKm)}
     </td>
     <td className="px-4 py-4">
       {segment.hasGap ? (
-        <span className="badge bg-amber-100 text-amber-900">{t("statusGap")}</span>
+        <span className="badge bg-sun text-forest">{t("statusGap")}</span>
       ) : (
-        <span className="badge bg-emerald-100 text-emerald-900">{t("statusCovered")}</span>
+        <span className="badge bg-forest/10 text-forest">{t("statusCovered")}</span>
       )}
     </td>
   </tr>
@@ -66,7 +66,7 @@ const CorridorCard = ({
   <Card as="article" className="mb-6">
     <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h2 className="text-lg font-semibold text-slate-950">{corridor.name}</h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest">{corridor.name}</h2>
         <p className="muted mt-1 text-sm">
           {t("summary", {
             coveredPercent: formatPercent(
@@ -78,9 +78,9 @@ const CorridorCard = ({
         </p>
       </div>
     </div>
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-      <table className="min-w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+    <div className="overflow-x-auto rounded-2xl border border-forest/10 bg-paper">
+      <table className="min-w-full divide-y divide-forest/10 text-sm">
+        <thead className="bg-forest/5 text-left text-xs uppercase tracking-wider text-forest/70">
           <tr>
             <th scope="col" className="px-4 py-3 font-medium">
               {headers.segment}
@@ -96,7 +96,7 @@ const CorridorCard = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-forest/10">
           {corridor.segments.map((segment) => (
             <SegmentRow key={`${segment.fromLabel}-${segment.toLabel}`} segment={segment} t={t} />
           ))}
@@ -110,12 +110,12 @@ const CorridorCardsSkeleton = () => (
   <div className="space-y-6" aria-hidden="true">
     {[0, 1, 2].map((index) => (
       <Card key={index} as="article" className="mb-6 animate-pulse">
-        <div className="mb-4 h-6 w-48 rounded bg-slate-200" />
-        <div className="mb-4 h-4 w-64 rounded bg-slate-100" />
+        <div className="mb-4 h-6 w-48 rounded-xl bg-forest/10" />
+        <div className="mb-4 h-4 w-64 rounded-xl bg-forest/5" />
         <div className="space-y-2">
-          <div className="h-10 rounded bg-slate-100" />
-          <div className="h-10 rounded bg-slate-100" />
-          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-10 rounded-xl bg-forest/5" />
+          <div className="h-10 rounded-xl bg-forest/5" />
+          <div className="h-10 rounded-xl bg-forest/5" />
         </div>
       </Card>
     ))}
@@ -169,7 +169,7 @@ export default async function CorridorsPage() {
     );
 
     return (
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main className="page-shell pb-20 pt-12 sm:pt-16">
         <PageHeader
           title={t("title")}
           description={t("description")}
@@ -177,13 +177,13 @@ export default async function CorridorsPage() {
             <>
               <a
                 href="/api/exports/corridors?format=csv"
-                className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
               >
                 {t("exportCsvLink")}
               </a>
               <a
                 href="/api/exports/corridors?format=json"
-                className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+                className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
               >
                 {t("exportJsonLink")}
               </a>
@@ -191,8 +191,8 @@ export default async function CorridorsPage() {
           }
         />
 
-        <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
-          <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
+        <Card as="section" className="mb-8 border-forest/10 bg-forest/5 text-forest">
+          <h2 className="mb-2 font-display text-lg font-semibold tracking-tight">{t("explainerTitle")}</h2>
           <p>{t("explainerBody")}</p>
         </Card>
 
@@ -230,7 +230,7 @@ export default async function CorridorsPage() {
   } catch (error) {
     console.error("Corridors page error:", error);
     return (
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main className="page-shell pb-20 pt-12 sm:pt-16">
         <Notice
           title="Unavailable"
           description="Corridor analysis is not yet available. Please check back later."

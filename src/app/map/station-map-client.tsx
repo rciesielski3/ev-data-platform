@@ -221,7 +221,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
   return (
     <section className="grid gap-6 lg:grid-cols-[3fr_1fr]">
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-[2rem] border border-forest/10 bg-paper shadow-[var(--shadow-soft)]">
         <div
           ref={mapElementRef}
           className="relative z-0 h-[32rem] min-h-[24rem] w-full lg:h-[42rem]"
@@ -229,15 +229,15 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
         />
       </div>
 
-      <aside className="h-[42rem] overflow-y-auto pr-1 space-y-3">
+      <aside className="max-h-[32rem] space-y-3 overflow-y-auto pr-1 lg:h-[42rem] lg:max-h-none">
         <div>
-          <h2 className="text-lg font-semibold text-slate-950">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
             {t("client.mapResultsTitle")}
           </h2>
         </div>
 
         {featuredGroups.length === 0 ? (
-          <div className="card text-sm text-slate-600">
+          <div className="card text-sm text-forest/70">
             {t("client.noStationsMatch")}
           </div>
         ) : (

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTransition, type FormEvent } from "react";
 
 import Button from "@/components/ui/Button";
-import FilterField, { filterInputClassName } from "@/components/ui/FilterField";
+import FilterField from "@/components/ui/FilterField";
 import type { StationMapFilters } from "@/features/charging/station-map";
 import Card from "@/components/ui/Card";
 
@@ -55,13 +55,13 @@ const StationMapFiltersClient = ({
   };
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 !rounded-[2rem] !p-5 sm:!p-6">
       <form onSubmit={updateFilters} className="grid gap-4 md:grid-cols-4">
         <FilterField label={t("provinceLabel")}>
           <select
             name="province"
             defaultValue={filters.province ?? ""}
-            className={filterInputClassName}
+            className="field-control"
           >
             <option value="">{t("allProvinces")}</option>
             {provinceOptions.map((province) => (
@@ -76,7 +76,7 @@ const StationMapFiltersClient = ({
           <select
             name="connector"
             defaultValue={filters.connector ?? ""}
-            className={filterInputClassName}
+            className="field-control"
           >
             <option value="">{t("anyConnector")}</option>
             {connectorOptions.map((connectorType) => (
@@ -91,7 +91,7 @@ const StationMapFiltersClient = ({
           <select
             name="minPowerKw"
             defaultValue={filters.minPowerKw?.toString() ?? ""}
-            className={filterInputClassName}
+            className="field-control"
           >
             <option value="">{t("anyPower")}</option>
             {POWER_OPTIONS.map((power) => (
@@ -102,7 +102,7 @@ const StationMapFiltersClient = ({
           </select>
         </FilterField>
 
-        <div className="flex items-end gap-3">
+        <div className="flex flex-wrap items-end gap-3">
           <Button type="submit" variant="primary" disabled={isPending}>
             {isPending ? t("updatingButton") : t("updateButton")}
           </Button>

@@ -109,22 +109,22 @@ const getMapData = unstable_cache(
 
 const MapPanelLoading = () => (
   <>
-    <div className="card mb-6 grid gap-4 md:grid-cols-4">
+    <div className="card mb-6 grid gap-4 !rounded-[2rem] !p-5 sm:!p-6 md:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
-          className="h-10 animate-pulse rounded-md bg-slate-200"
+          className="h-12 animate-pulse rounded-xl bg-forest/10"
         />
       ))}
     </div>
-    <div className="mb-4 h-5 w-96 max-w-full animate-pulse rounded bg-slate-200" />
+    <div className="mb-4 h-5 w-96 max-w-full animate-pulse rounded-2xl bg-forest/10" />
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-      <div className="h-[32rem] animate-pulse rounded-lg border border-slate-200 bg-white lg:h-[42rem]" />
+      <div className="h-[32rem] animate-pulse rounded-[2rem] bg-forest/10 lg:h-[42rem]" />
       <div className="space-y-3">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-28 animate-pulse rounded-xl border border-slate-200 bg-white"
+            className="h-28 animate-pulse rounded-[1.5rem] bg-forest/10"
           />
         ))}
       </div>
@@ -155,27 +155,27 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
           )}
       />
 
-      <Card>
-        <div className="mb-6 grid gap-4 sm:grid-cols-3">
-          <Card className="text-center bg-slate-50 shadow-xl">
-            <p className="text-3xl font-bold text-[var(--accent)]">
+      <div>
+        <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-5">
+          <Card className="text-center !p-4 sm:!p-6">
+            <p className="font-display text-2xl font-bold tracking-tight text-forest sm:text-4xl">
               <AnimatedCount end={data.total} />
             </p>
-            <p className="muted text-sm">{t("totalStations")}</p>
+            <p className="muted mt-1 text-xs sm:text-sm">{t("totalStations")}</p>
           </Card>
 
-          <Card className="text-center bg-slate-50 shadow-xl">
-            <p className="text-3xl font-bold text-[var(--accent)]">
+          <Card className="text-center !p-4 sm:!p-6">
+            <p className="font-display text-2xl font-bold tracking-tight text-forest sm:text-4xl">
               <AnimatedCount end={data.stationDtos.length} />
             </p>
-            <p className="muted text-sm">{t("displayedStations")}</p>
+            <p className="muted mt-1 text-xs sm:text-sm">{t("displayedStations")}</p>
           </Card>
 
-          <Card className="text-center bg-slate-50 shadow-xl">
-            <p className="text-3xl font-bold text-[var(--accent)]">
+          <Card className="text-center !p-4 sm:!p-6">
+            <p className="font-display text-2xl font-bold tracking-tight text-forest sm:text-4xl">
               <AnimatedCount end={data.groups.length} />
             </p>
-            <p className="muted text-sm">{t("mapMarkers")}</p>
+            <p className="muted mt-1 text-xs sm:text-sm">{t("mapMarkers")}</p>
           </Card>
         </div>
 
@@ -191,7 +191,7 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
         )}
 
         <StationMapClient groups={data.groups} />
-      </Card>
+      </div>
     </>
   );
 };
@@ -205,7 +205,7 @@ const StationMapPage = async ({
   const params = await searchParams;
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}

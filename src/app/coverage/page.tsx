@@ -39,7 +39,7 @@ export default async function CoveragePage() {
   const isEmpty = coverage !== null && coverage.isEmpty;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}
@@ -47,19 +47,19 @@ export default async function CoveragePage() {
           <>
             <Link
               href="/provinces"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+              className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
               {t("provinceIntelligenceLink")}
             </Link>
             <Link
               href="/insights"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+              className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
               {t("viewInsightsLink")}
             </Link>
             <Link
               href="/state-of-charging"
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+              className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
               {t("stateOfChargingLink")}
             </Link>
@@ -67,8 +67,8 @@ export default async function CoveragePage() {
         }
       />
 
-      <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
-        <h2 className="mb-2 text-lg font-medium">{t("explainerTitle")}</h2>
+      <Card as="section" className="mb-8 border-forest/10 bg-forest/5 text-forest">
+        <h2 className="mb-2 font-display text-lg font-semibold tracking-tight">{t("explainerTitle")}</h2>
         <p>
           {t("explainerBodyPrefix")} <strong>{t("explainerBodyStrong")}</strong>
           {t("explainerBodySuffix")}

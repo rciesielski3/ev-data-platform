@@ -106,14 +106,14 @@ export default async function ProvincesPage() {
   );
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}
       />
 
       {snapshotDate && (
-        <p className="text-sm text-gray-500">
+        <p className="muted mb-6 text-sm">
           Data as of {snapshotDate.toLocaleDateString()}
         </p>
       )}

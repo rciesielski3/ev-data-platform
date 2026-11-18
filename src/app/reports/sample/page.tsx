@@ -2,6 +2,7 @@ import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
@@ -97,9 +98,9 @@ const OperatorBenchmarkTable = ({
   unknownLabel: string;
   localizeOperatorLabel: (value: string) => string;
 }) => (
-  <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-    <table className="min-w-full divide-y divide-slate-200 text-sm">
-      <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+  <div className="overflow-x-auto rounded-[1.5rem] border border-forest/10 bg-paper">
+    <table className="min-w-full divide-y divide-forest/10 text-sm">
+      <thead className="bg-forest/5 text-left text-xs uppercase tracking-wider text-forest/70">
         <tr>
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.operator}
@@ -118,25 +119,25 @@ const OperatorBenchmarkTable = ({
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-slate-100">
+      <tbody className="divide-y divide-forest/10">
         {rows.map((row) => (
-          <tr key={row.operatorName} className="align-top">
+          <tr key={row.operatorName} className="align-top transition-colors hover:bg-forest/5">
             <th
               scope="row"
-              className="px-4 py-4 text-left font-medium text-slate-950"
+              className="px-4 py-4 text-left font-medium text-forest"
             >
               {localizeOperatorLabel(row.operatorName)}
             </th>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.stationCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatPercent(row.stationCount, totalStations)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.provinceCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {row.maxPowerKw === null
                 ? unknownLabel
                 : formatConnectorPower(row.maxPowerKw)}
@@ -167,9 +168,9 @@ const ProvinceCoverageTable = ({
   unknownLabel: string;
   localizeProvinceLabel: (value: string) => string;
 }) => (
-  <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-    <table className="min-w-full divide-y divide-slate-200 text-sm">
-      <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+  <div className="overflow-x-auto rounded-[1.5rem] border border-forest/10 bg-paper">
+    <table className="min-w-full divide-y divide-forest/10 text-sm">
+      <thead className="bg-forest/5 text-left text-xs uppercase tracking-wider text-forest/70">
         <tr>
           <th scope="col" className="px-4 py-3 font-medium">
             {headers.province}
@@ -188,30 +189,30 @@ const ProvinceCoverageTable = ({
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-slate-100">
+      <tbody className="divide-y divide-forest/10">
         {rows.map((row) => (
-          <tr key={row.province} className="align-top">
+          <tr key={row.province} className="align-top transition-colors hover:bg-forest/5">
             <th
               scope="row"
-              className="px-4 py-4 text-left font-medium text-slate-950"
+              className="px-4 py-4 text-left font-medium text-forest"
             >
               {localizeProvinceLabel(row.province)}
             </th>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.stationCount)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {formatInteger(row.hpcStationCount)}
-              <span className="ml-1 text-slate-400">
+              <span className="ml-1 text-forest/70">
                 ({formatPercent(row.hpcStationCount, row.stationCount)})
               </span>
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {row.maxPowerKw === null
                 ? unknownLabel
                 : formatConnectorPower(row.maxPowerKw)}
             </td>
-            <td className="px-4 py-4 text-slate-700">
+            <td className="px-4 py-4 text-forest/80">
               {row.averagePowerKw === null
                 ? unknownLabel
                 : formatConnectorPower(row.averagePowerKw)}
@@ -242,7 +243,7 @@ export default async function SampleReportPage() {
 
   if ("error" in data) {
     return (
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main className="page-shell pb-20 pt-12 sm:pt-16">
         <PageHeader title={t("title")} description={t("description")} />
         <Notice title={tCommon("setupRequiredTitle")} tone="warning">
           <p>{data.error}</p>
@@ -303,24 +304,21 @@ export default async function SampleReportPage() {
       : null;
 
   return (
-    <main className="report-print mx-auto max-w-6xl px-6 py-12 print:max-w-none print:px-0">
+    <main className="report-print page-shell pb-20 pt-12 sm:pt-16 print:max-w-none print:px-0">
       <PageHeader
         title={t("title")}
         description={t("description")}
         actions={
-          <Link
-            href="/contact"
-            className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
-          >
+          <Button as={Link} href="/contact" size="sm">
             {t("ctaButtonLabel")}
-          </Link>
+          </Button>
         }
       />
 
       <div className="sample-banner mb-8 print:break-inside-avoid">
         <Notice title={t("sampleBannerTitle")} tone="warning">
           <p>{t("sampleBannerBody")}</p>
-          <span className="mt-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+          <span className="mt-3 inline-flex rounded-full bg-sun px-3 py-1 text-xs font-semibold uppercase tracking-wider text-forest">
             {t("badge")}
           </span>
         </Notice>
@@ -351,12 +349,14 @@ export default async function SampleReportPage() {
 
       <section className="mb-8 print:break-inside-avoid">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("marketShareTitle")}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">{t("marketShareTitle")}</h2>
           <p className="muted mt-1 text-sm">{t("marketShareSubtitle")}</p>
           {leadingOperator && (
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-forest/70">
               {t("marketShareLeaderLine", {
                 operator: localizeLabel(leadingOperator.operatorName),
+                stations: leadingOperator.stationCount,
+                connectors: leadingOperator.connectorCount,
                 share: formatPercent(
                   leadingOperator.stationCount,
                   totalStations,
@@ -382,7 +382,7 @@ export default async function SampleReportPage() {
 
       <section className="mb-8 print:break-inside-avoid">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">
             {t("provinceCoverageTitle")}
           </h2>
           <p className="muted mt-1 text-sm">{t("provinceCoverageSubtitle")}</p>
@@ -403,7 +403,7 @@ export default async function SampleReportPage() {
 
       <section className="mb-8 print:break-inside-avoid">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("powerStructureTitle")}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">{t("powerStructureTitle")}</h2>
           <p className="muted mt-1 text-sm">{t("powerStructureSubtitle")}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
@@ -434,7 +434,7 @@ export default async function SampleReportPage() {
 
       <section className="map-section mb-8 print:hidden">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{t("mapSectionTitle")}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">{t("mapSectionTitle")}</h2>
           <p className="muted mt-1 text-sm">
             {t("mapSectionSubtitle", { count: SAMPLE_MAP_STATION_LIMIT })}
           </p>
@@ -443,26 +443,26 @@ export default async function SampleReportPage() {
       </section>
 
       <Card as="section" className="mb-8 print:break-inside-avoid">
-        <h2 className="text-lg font-semibold text-slate-950">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest">
           {t("methodologyTitle")}
         </h2>
         <p className="muted mt-2 text-sm">{t("methodologyBody")}</p>
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
           <div>
-            <dt className="text-slate-500">{t("dataSourceLabel")}</dt>
-            <dd className="mt-1 font-medium text-slate-950">
+            <dt className="text-forest/70">{t("dataSourceLabel")}</dt>
+            <dd className="mt-1 font-medium text-forest">
               {t("dataSourceLine")}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-500">{t("snapshotDateLabel")}</dt>
-            <dd className="mt-1 font-medium text-slate-950">
+            <dt className="text-forest/70">{t("snapshotDateLabel")}</dt>
+            <dd className="mt-1 font-medium text-forest">
               {formatDisplayDate(new Date(), locale)}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-500">{t("hpcDefinitionLabel")}</dt>
-            <dd className="mt-1 font-medium text-slate-950">
+            <dt className="text-forest/70">{t("hpcDefinitionLabel")}</dt>
+            <dd className="mt-1 font-medium text-forest">
               {t("hpcDefinitionLine", { threshold: HPC_POWER_KW })}
             </dd>
           </div>
@@ -471,16 +471,13 @@ export default async function SampleReportPage() {
 
       <Card
         as="section"
-        className="cta-section border-emerald-200 bg-emerald-50 text-emerald-900 print:hidden"
+        className="cta-section !border-0 !bg-forest p-8 text-cream sm:p-10 print:hidden"
       >
-        <h2 className="text-lg font-semibold">{t("ctaTitle")}</h2>
-        <p className="mt-2">{t("ctaBody")}</p>
-        <Link
-          href="/contact"
-          className="mt-4 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-        >
+        <h2 className="font-display text-2xl font-semibold tracking-tight">{t("ctaTitle")}</h2>
+        <p className="mt-2 max-w-2xl text-cream/80">{t("ctaBody")}</p>
+        <Button as={Link} href="/contact" variant="cta" className="mt-6">
           {t("ctaButtonLabel")}
-        </Link>
+        </Button>
       </Card>
 
       <p className="muted mt-6 text-center text-xs print:hidden">

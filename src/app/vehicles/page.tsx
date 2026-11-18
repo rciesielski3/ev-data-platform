@@ -6,8 +6,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
-import PageHeader from "@/components/ui/PageHeader";
-import { filterInputClassName } from "@/components/ui/FilterField";
 import AnimatedCount from "@/components/ui/CountUp";
 import { buildChargingCostEstimate } from "@/features/ev/charging-cost";
 import {
@@ -26,7 +24,7 @@ import { formatDisplayDate } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackVehicles } from "@/lib/fallback/vehicles-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, CarFrontIcon, SearchIcon, TagIcon } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -78,7 +76,7 @@ export const generateMetadata = async ({
 
   if (isFilteredView(filters)) {
     return {
-      title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
+      title: t("title") || "Electric Vehicles & EV Models - evsource.pl",
       description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
       alternates: { canonical: "/vehicles" },
       robots: { index: false, follow: true },
@@ -86,7 +84,7 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: t("title") || "Electric Vehicles & EV Models – evsource.pl",
+    title: t("title") || "Electric Vehicles & EV Models - evsource.pl",
     description: t("description") || "Porównaj 2000+ modeli pojazdów elektrycznych. Zasięg, pojemność baterii, czas ładowania, ceny i specyfikacje.",
     alternates: { canonical: "/vehicles" },
   };
@@ -103,25 +101,16 @@ const BrandLogo = ({
 }) => (
   <span
     aria-label={`${brandName} logo`}
-    className={`flex shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-[0.62rem] font-bold uppercase leading-none text-slate-700 ${
-      size === "sm" ? "h-6 w-6" : "h-10 w-10"
+    className={`flex shrink-0 items-center justify-center rounded-full border border-forest/15 bg-cream text-[0.62rem] font-bold uppercase leading-none text-forest ${
+      size === "sm" ? "h-6 w-6" : "h-11 w-11"
     }`}
-    style={
-      brandMark.kind === "icon"
-        ? { borderColor: `#${brandMark.hex}` }
-        : undefined
-    }
     title={brandName}
   >
     {brandMark.kind === "icon" ? (
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className={
-          size === "sm"
-            ? "h-3.5 w-3.5 text-slate-800"
-            : "h-5 w-5 text-slate-800"
-        }
+        className={size === "sm" ? "h-3.5 w-3.5" : "h-5 w-5"}
       >
         <path fill="currentColor" d={brandMark.path} />
       </svg>
@@ -168,64 +157,79 @@ export default async function VehiclesPage({
     const brand = topBrands.find((b) => b.slug === filters.brand);
     if (brand?.name) return brand.name;
 
-    if (data.vehicles.length === 0) return "—";
-    return data.vehicles[0]?.brand.name || "—";
+    if (data.vehicles.length === 0) return "-";
+    return data.vehicles[0]?.brand.name || "-";
   };
 
   const activeBrandLabel = getActiveBrandLabel();
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <PageHeader
-        title={t("title")}
-        description={t("descriptionWithCount", { count: data.total })}
-        actions={
-          <form className="flex w-full max-w-xl items-center gap-2">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
+      <header className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-forest sm:text-5xl">
+            {t("title")}
+          </h1>
+          <p className="muted mt-4 max-w-2xl text-lg">
+            {t("descriptionWithCount", { count: data.total })}
+          </p>
+        </div>
+        <form className="flex w-full max-w-xl items-center gap-2" role="search">
+          <div className="relative flex-1">
+            <SearchIcon
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-forest/70"
+            />
             <input
               type="search"
               name="q"
               defaultValue={filters.q}
               placeholder={t("searchPlaceholder")}
-              className={`${filterInputClassName} flex-1`}
+              aria-label={t("searchPlaceholder")}
+              className="field-control !pl-10"
             />
-            <Button type="submit">{t("searchButton")}</Button>
-          </form>
-        }
-      />
+          </div>
+          <Button type="submit">{t("searchButton")}</Button>
+        </form>
+      </header>
 
-      <section className="mb-8 grid gap-4 md:grid-cols-2">
-        <Card className="text-center bg-slate-50 shadow-xl">
-          <p className="text-3xl font-bold text-[var(--accent)]">
-            <AnimatedCount end={vehicleCount} />
-          </p>
-          <p className="muted text-sm">{t("availableVehicles")}</p>
+      <section className="mb-10 grid gap-4 md:grid-cols-2">
+        <Card className="flex items-center gap-5">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-forest text-sun">
+            <CarFrontIcon size={22} strokeWidth={1.75} aria-hidden="true" />
+          </span>
+          <div>
+            <p className="font-display text-3xl font-semibold tracking-tight text-forest">
+              <AnimatedCount end={vehicleCount} />
+            </p>
+            <p className="muted text-sm">{t("availableVehicles")}</p>
+          </div>
         </Card>
 
-        <Card className="text-center bg-slate-50 shadow-xl">
-          <p className="text-3xl font-bold text-[var(--accent)]">
-            {activeBrandLabel}
-          </p>
-          <p className="muted text-sm">{t("activeFilter")}</p>
+        <Card className="flex items-center gap-5">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sun text-forest">
+            <TagIcon size={22} strokeWidth={1.75} aria-hidden="true" />
+          </span>
+          <div className="min-w-0">
+            <p className="truncate font-display text-3xl font-semibold tracking-tight text-forest">
+              {activeBrandLabel}
+            </p>
+            <p className="muted text-sm">{t("activeFilter")}</p>
+          </div>
         </Card>
       </section>
 
-      <div className="mb-3">
-        <h2 className="text-sm font-semibold text-slate-700">
-          {t("browseByBrand")}
-        </h2>
-      </div>
+      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-forest/70">
+        {t("browseByBrand")}
+      </h2>
 
       {topBrands.length > 0 && (
-        <div className="mb-8 -mx-6 flex flex-nowrap gap-2 overflow-x-auto px-6 pb-1">
+        <div className="-mx-5 mb-10 flex flex-nowrap gap-2 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8">
           <Button
             as={Link}
             href={buildVehicleSearchHref({ ...filters, brand: undefined }, 1)}
             variant={filters.brand ? "secondary" : "primary"}
-            className={
-              filters.brand
-                ? "shrink-0 rounded-full"
-                : "shrink-0 rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
-            }
+            className="shrink-0"
           >
             {t("allBrandsLabel")}
           </Button>
@@ -242,11 +246,7 @@ export default async function VehiclesPage({
                   1,
                 )}
                 variant={isSelected ? "primary" : "secondary"}
-                className={
-                  isSelected
-                    ? "shrink-0 rounded-full border border-slate-900 bg-slate-900 text-white hover:bg-slate-800"
-                    : "shrink-0 rounded-full"
-                }
+                className="shrink-0"
               >
                 <BrandLogo
                   brandMark={brandMark}
@@ -265,7 +265,7 @@ export default async function VehiclesPage({
           <p className="muted mt-2">{t("noResultsBody")}</p>
         </Notice>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {data.vehicles.map((vehicle) => {
             const brandMark = buildBrandMark(vehicle.brand.name);
             const chargingCost = buildChargingCostEstimate(
@@ -288,37 +288,23 @@ export default async function VehiclesPage({
                 as={Link}
                 href={`/vehicles/${vehicle.id}`}
                 interactive
-                className="group block"
+                className="group flex flex-col focus-visible:outline-forest"
               >
-                <div className="mb-4 flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-sm font-medium text-slate-500">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-forest/70">
                       {vehicle.brand.name}
                     </div>
 
-                    <h2 className="text-xl font-bold text-slate-900 transition-colors group-hover:text-[var(--accent)]">
+                    <h2 className="mt-1 font-display text-2xl font-semibold leading-tight tracking-tight text-forest">
                       {vehicle.modelName}
                     </h2>
 
                     {vehicle.variantName && (
-                      <p className="text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-forest/70">
                         {vehicle.variantName}
                       </p>
                     )}
-
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {vehicle.specs?.rangeWltpKm && (
-                        <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-                          {vehicle.specs.rangeWltpKm} km WLTP
-                        </span>
-                      )}
-
-                      {specChips.length > 0 && (
-                        <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                          {specChips.join(" · ")}
-                        </span>
-                      )}
-                    </div>
                   </div>
                   <BrandLogo
                     brandMark={brandMark}
@@ -326,10 +312,24 @@ export default async function VehiclesPage({
                   />
                 </div>
 
-                <dl className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 text-sm">
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {vehicle.specs?.rangeWltpKm && (
+                    <span className="rounded-full bg-sun px-3 py-1 text-xs font-semibold text-forest">
+                      {vehicle.specs.rangeWltpKm} km WLTP
+                    </span>
+                  )}
+
+                  {specChips.length > 0 && (
+                    <span className="rounded-full bg-forest/10 px-3 py-1 text-xs font-medium text-forest">
+                      {specChips.join(" · ")}
+                    </span>
+                  )}
+                </div>
+
+                <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-forest/10 pt-4 text-sm">
                   <div>
-                    <dt className="text-slate-500">{t("drivetrainLabel")}</dt>
-                    <dd className="font-medium text-slate-900">
+                    <dt className="text-forest/70">{t("drivetrainLabel")}</dt>
+                    <dd className="mt-0.5 font-medium text-forest">
                       {localizeFallback(
                         formatDrivetrainLabel(vehicle.specs?.drivetrain),
                         tCommon,
@@ -338,8 +338,8 @@ export default async function VehiclesPage({
                   </div>
 
                   <div>
-                    <dt className="text-slate-500">{t("chargingCostLabel")}</dt>
-                    <dd className="font-medium text-slate-900">
+                    <dt className="text-forest/70">{t("chargingCostLabel")}</dt>
+                    <dd className="mt-0.5 font-medium text-forest">
                       {chargingCost
                         ? t("chargingCostFromLabel", {
                             price: chargingCost.dcCostRangePln![0],
@@ -348,13 +348,15 @@ export default async function VehiclesPage({
                     </dd>
                   </div>
                 </dl>
-                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-3">
-                  <p className="text-xs text-slate-500">
+                <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+                  <p className="text-xs text-forest/70">
                     {vehicle.sourceName.toUpperCase()} •{" "}
                     {formatDisplayDate(vehicle.importedAt, locale)}
                   </p>
 
-                  <ArrowRightIcon className="h-5 w-5 text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-cream transition-all duration-300 group-hover:rotate-45 group-hover:bg-sun group-hover:text-forest">
+                    <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                  </span>
                 </div>
               </Card>
             );
@@ -363,7 +365,7 @@ export default async function VehiclesPage({
       )}
 
       {totalPages > 1 && (
-        <div className="mt-8 flex justify-center gap-2">
+        <nav aria-label={tCommon("pagination")} className="mt-12 flex items-center justify-center gap-3">
           {filters.page > 1 && (
             <Button
               as={Link}
@@ -373,7 +375,7 @@ export default async function VehiclesPage({
               {tCommon("previous")}
             </Button>
           )}
-          <div className="flex items-center px-4 text-sm text-slate-500">
+          <div className="px-2 text-sm text-forest/70">
             {tCommon("pageOf", { page: filters.page, totalPages })}
           </div>
           {filters.page < totalPages && (
@@ -385,7 +387,7 @@ export default async function VehiclesPage({
               {tCommon("next")}
             </Button>
           )}
-        </div>
+        </nav>
       )}
     </main>
   );

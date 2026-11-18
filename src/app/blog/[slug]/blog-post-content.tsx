@@ -5,6 +5,9 @@ import type { BlogPost } from "@/lib/blog/types";
 import { trackBlogPostView } from "@/lib/analytics/events";
 import { parseMarkdown } from "@/lib/blog/markdown";
 
+const INLINE_CONTENT =
+  "[&_a]:font-medium [&_a]:text-forest [&_a]:underline [&_a]:decoration-amber-700 [&_a]:decoration-2 [&_a]:underline-offset-4 hover:[&_a]:bg-sun/40 [&_strong]:font-semibold [&_strong]:text-forest [&_code]:rounded [&_code]:bg-forest/5 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-base";
+
 interface BlogPostContentProps {
   post: BlogPost;
 }
@@ -19,7 +22,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   const sections = parseMarkdown(post.content);
 
   return (
-    <article className="prose prose-sm max-w-none">
+    <article className="max-w-3xl text-lg leading-8 text-forest/90">
       {sections.map((section, index) => {
         if (section.type === "heading") {
           const HeadingTag = `h${section.level}` as
@@ -32,14 +35,14 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           return (
             <HeadingTag
               key={index}
-              className={`mt-8 mb-4 font-bold text-slate-900 ${
+              className={`font-display font-semibold tracking-tight text-forest ${
                 section.level === 1
-                  ? "text-3xl"
+                  ? "mb-5 mt-12 text-3xl"
                   : section.level === 2
-                    ? "text-2xl"
+                    ? "mb-4 mt-12 border-t border-forest/10 pt-10 text-2xl first:mt-0 first:border-t-0 first:pt-0 sm:text-3xl"
                     : section.level === 3
-                      ? "text-xl"
-                      : "text-lg"
+                      ? "mb-3 mt-8 text-xl sm:text-2xl"
+                      : "mb-3 mt-6 text-lg"
               }`}
             >
               {section.content || ""}
@@ -51,7 +54,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           return (
             <p
               key={index}
-              className="mb-4 text-slate-700 leading-relaxed"
+              className={`mb-6 ${INLINE_CONTENT}`}
               dangerouslySetInnerHTML={{
                 __html: section.content || "",
               }}
@@ -63,7 +66,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           return section.ordered ? (
             <ol
               key={index}
-              className="mb-4 ml-6 list-decimal space-y-2 text-slate-700"
+              className={`mb-6 ml-6 list-decimal space-y-3 marker:font-semibold marker:text-forest/70 ${INLINE_CONTENT}`}
             >
               {section.items?.map((item, i) => (
                 <li
@@ -77,7 +80,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           ) : (
             <ul
               key={index}
-              className="mb-4 ml-6 list-disc space-y-2 text-slate-700"
+              className={`mb-6 ml-6 list-disc space-y-3 marker:text-sun ${INLINE_CONTENT}`}
             >
               {section.items?.map((item, i) => (
                 <li
@@ -95,7 +98,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           return (
             <blockquote
               key={index}
-              className="mb-4 border-l-4 border-emerald-500 bg-slate-50 pl-4 italic text-slate-700"
+              className={`mb-6 rounded-r-2xl border-l-4 border-sun bg-forest/5 py-4 pl-6 pr-5 font-display text-xl italic text-forest ${INLINE_CONTENT}`}
               dangerouslySetInnerHTML={{
                 __html: section.content || "",
               }}

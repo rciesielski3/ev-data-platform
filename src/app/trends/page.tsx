@@ -43,6 +43,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const RANGE_DAYS = { "30": 30, "90": 90 } as const;
+const RANGE_CHIP =
+  "inline-flex min-h-10 items-center rounded-full px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest";
+
 type RangeKey = keyof typeof RANGE_DAYS;
 
 const isRangeKey = (value: string | undefined): value is RangeKey =>
@@ -95,14 +98,14 @@ export default async function TrendsPage({
   const metrics = await getTrendMetrics();
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="page-shell pb-20 pt-12 sm:pt-16">
       <PageHeader
         title={t("title")}
         description={t("description")}
         actions={
           <Link
             href="/insights"
-            className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
+            className="text-sm font-medium text-forest underline decoration-forest/30 underline-offset-4 transition-colors hover:decoration-forest focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
           >
             {t("viewInsightsLink")}
           </Link>
@@ -119,8 +122,8 @@ export default async function TrendsPage({
         </Notice>
       ) : (
         <>
-          <Card as="section" className="mb-8 border-emerald-200 bg-emerald-50 text-emerald-900">
-            <h2 className="mb-2 text-lg font-medium">{t("infrastructureTitle")}</h2>
+          <Card as="section" className="mb-8 border-forest/10 bg-forest/5 text-forest">
+            <h2 className="mb-2 font-display text-lg font-semibold tracking-tight">{t("infrastructureTitle")}</h2>
             <p>{t("infrastructureDescription")}</p>
           </Card>
 
@@ -133,25 +136,25 @@ export default async function TrendsPage({
           <section>
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-xl font-semibold">{t("chartTitle")}</h2>
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-forest">{t("chartTitle")}</h2>
                 <p className="muted mt-1 text-sm">{t("chartSubtitle")}</p>
               </div>
               <div className="flex gap-2">
                 <Link
                   href="/trends?range=30"
-                  className={`badge ${activeRange === "30" ? "bg-emerald-600 text-white" : ""}`}
+                  className={`${RANGE_CHIP} ${activeRange === "30" ? "bg-forest text-cream" : "bg-forest/5 text-forest hover:bg-forest/10"}`}
                 >
                   {t("range30d")}
                 </Link>
                 <Link
                   href="/trends?range=90"
-                  className={`badge ${activeRange === "90" ? "bg-emerald-600 text-white" : ""}`}
+                  className={`${RANGE_CHIP} ${activeRange === "90" ? "bg-forest text-cream" : "bg-forest/5 text-forest hover:bg-forest/10"}`}
                 >
                   {t("range90d")}
                 </Link>
               </div>
             </div>
-            <div className="card">
+            <div className="card p-4 sm:p-6">
               <TrendsChartClient
                 points={points}
                 labels={{

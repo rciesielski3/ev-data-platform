@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
 import type { BlogPost } from "@/lib/blog/types";
@@ -108,98 +109,95 @@ export default async function BlogPostPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
-      <div className="mx-auto max-w-3xl px-6 py-12">
-        {/* Header */}
-        <header className="mb-8">
-          <Link
-            href="/blog"
-            className="mb-4 inline-block text-emerald-600 hover:text-emerald-700 font-medium"
-          >
-            {t("ui.backToBlog")}
-          </Link>
+      <div className="page-shell pb-20 pt-12 sm:pt-16">
+        <div className="mx-auto max-w-3xl">
+          <header className="mb-10">
+            <Link
+              href="/blog"
+              className="mb-6 inline-flex items-center gap-1.5 rounded-full text-sm font-medium text-forest/70 transition-colors hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("ui.backToBlog")}
+            </Link>
 
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-slate-900">
-            {post.title}
-          </h1>
+            <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight text-forest sm:text-5xl">
+              {post.title}
+            </h1>
 
-          <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-slate-600">
-            <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            {post.author && <span>{t("ui.authorByline", { author: post.author })}</span>}
-            <span>
-              {t("ui.minRead", { minutes: Math.ceil(post.content.split(/\s+/).length / 200) })}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {post.keywords.map((keyword: string) => (
-              <span
-                key={keyword}
-                className="badge inline-block bg-emerald-100 text-emerald-700 text-xs"
-              >
-                {keyword}
+            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-forest/70">
+              <time dateTime={post.date}>
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              {post.author && <span>{t("ui.authorByline", { author: post.author })}</span>}
+              <span className="rounded-full bg-forest/5 px-3 py-1 text-xs font-medium">
+                {t("ui.minRead", { minutes: Math.ceil(post.content.split(/\s+/).length / 200) })}
               </span>
-            ))}
-          </div>
-        </header>
+            </div>
 
-        <div className="border-t border-slate-200 pt-8">
-          {/* Blog content with tracking */}
-          <BlogPostContent post={post} />
+            <div className="mt-5 flex flex-wrap gap-2">
+              {post.keywords.map((keyword: string) => (
+                <span key={keyword} className="badge">
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          </header>
+
+          <div className="border-t border-forest/10 pt-10">
+            <BlogPostContent post={post} />
+          </div>
         </div>
 
-        {/* Related links */}
-        <aside className="mt-12 border-t border-slate-200 pt-8">
-          <h3 className="mb-4 text-lg font-semibold text-slate-900">
+        <aside className="mx-auto mt-16 max-w-3xl border-t border-forest/10 pt-10">
+          <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-forest">
             {t("ui.exploreMore")}
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Link
               href="/stations"
-              className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
+              className="card block p-5 transition-all duration-300 motion-safe:hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
-              <h4 className="font-semibold text-emerald-600 mb-2">
+              <h3 className="mb-2 font-display text-lg font-semibold text-forest">
                 {t("ui.exploreSectionHeadings.stationsDirectory")}
-              </h4>
-              <p className="text-sm text-slate-600">
+              </h3>
+              <p className="muted text-sm">
                 {t("ui.exploreSectionDescriptions.stationsDirectory")}
               </p>
             </Link>
             <Link
               href="/insights"
-              className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
+              className="card block p-5 transition-all duration-300 motion-safe:hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
-              <h4 className="font-semibold text-emerald-600 mb-2">
+              <h3 className="mb-2 font-display text-lg font-semibold text-forest">
                 {t("ui.exploreSectionHeadings.keyInsights")}
-              </h4>
-              <p className="text-sm text-slate-600">
+              </h3>
+              <p className="muted text-sm">
                 {t("ui.exploreSectionDescriptions.keyInsights")}
               </p>
             </Link>
             <Link
               href="/coverage"
-              className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
+              className="card block p-5 transition-all duration-300 motion-safe:hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
-              <h4 className="font-semibold text-emerald-600 mb-2">
+              <h3 className="mb-2 font-display text-lg font-semibold text-forest">
                 {t("ui.exploreSectionHeadings.coverageAnalysis")}
-              </h4>
-              <p className="text-sm text-slate-600">
+              </h3>
+              <p className="muted text-sm">
                 {t("ui.exploreSectionDescriptions.coverageAnalysis")}
               </p>
             </Link>
             <Link
               href="/operators"
-              className="card border border-slate-200 p-4 hover:shadow-md transition-shadow"
+              className="card block p-5 transition-all duration-300 motion-safe:hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             >
-              <h4 className="font-semibold text-emerald-600 mb-2">
+              <h3 className="mb-2 font-display text-lg font-semibold text-forest">
                 {t("ui.exploreSectionHeadings.operators")}
-              </h4>
-              <p className="text-sm text-slate-600">
+              </h3>
+              <p className="muted text-sm">
                 {t("ui.exploreSectionDescriptions.operators")}
               </p>
             </Link>

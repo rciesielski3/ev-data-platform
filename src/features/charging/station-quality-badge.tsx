@@ -6,25 +6,25 @@ import type {
 } from "@/features/charging/data-quality";
 
 const FRESHNESS_BG_CLASS: Record<StationFreshness["bucket"], string> = {
-  fresh: "bg-emerald-100",
+  fresh: "bg-forest/10",
   stale: "bg-amber-100",
-  unknown: "bg-slate-100",
+  unknown: "bg-sand-200",
 };
 
 const FRESHNESS_DOT_CLASS: Record<StationFreshness["bucket"], string> = {
-  fresh: "bg-emerald-500",
+  fresh: "bg-forest",
   stale: "bg-amber-500",
-  unknown: "bg-slate-400",
+  unknown: "bg-sand-400",
 };
 
 const FRESHNESS_TEXT_CLASS: Record<StationFreshness["bucket"], string> = {
-  fresh: "text-emerald-700",
-  stale: "text-amber-700",
-  unknown: "text-slate-500",
+  fresh: "text-forest",
+  stale: "text-amber-800",
+  unknown: "text-sand-600",
 };
 
 const COMPLETENESS_CLASS = {
-  complete: "bg-emerald-100 text-emerald-800",
+  complete: "bg-forest/10 text-forest",
   partial: "bg-amber-100 text-amber-800",
   poor: "bg-red-100 text-red-800",
 };
