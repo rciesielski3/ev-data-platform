@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 
@@ -15,7 +14,7 @@ import {
 } from "@/features/ev/vehicle-seo";
 import { buildFallbackVehicleDetail } from "@/features/ev/fallback-vehicles";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
-import { prisma } from "@/lib/db/prisma";
+import { getVehicleById } from "@/lib/db/cached-detail-queries";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
@@ -25,16 +24,6 @@ import BackLink from "@/components/ui/BackLink";
 import { BatteryChargingIcon, GaugeIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-
-const getCachedVehicleById = cache((id: string) =>
-  prisma.evModel.findUnique({
-    where: { id },
-    include: {
-      brand: true,
-      specs: true,
-    },
-  }),
-);
 
 const decodeRouteId = (id: string) => {
   try {
@@ -46,7 +35,7 @@ const decodeRouteId = (id: string) => {
 
 const loadVehicle = async (id: string) => {
   try {
-    return { vehicle: await getCachedVehicleById(id), fromSnapshot: false };
+    return { vehicle: await getVehicleById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicle detail: database unavailable, serving snapshot");
