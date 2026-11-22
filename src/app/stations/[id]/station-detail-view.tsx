@@ -20,32 +20,13 @@ import {
 import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
+import { getStationById } from "@/lib/db/cached-detail-queries";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
 import { DATA_SOURCES } from "@/lib/sources/constants";
-
-const getCachedStationById = cache((id: string) =>
-  prisma.chargingStation.findUnique({
-    where: { id },
-    include: {
-      operator: {
-        select: {
-          name: true,
-          normalizedName: true,
-        },
-      },
-      connectors: {
-        orderBy: [
-          { powerKw: { sort: "desc", nulls: "last" } },
-          { connectorType: "asc" },
-        ],
-      },
-    },
-  }),
-);
 
 const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
   prisma.chargingStation.findUnique({
@@ -61,7 +42,7 @@ const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
 
 const loadStation = async (id: string) => {
   try {
-    return { station: await getCachedStationById(id), fromSnapshot: false };
+    return { station: await getStationById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("station detail: database unavailable, serving snapshot");
