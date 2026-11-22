@@ -4,7 +4,24 @@ import { unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/db/prisma";
 
-const DETAIL_REVALIDATE_SECONDS = 86400;
+const DETAIL_REVALIDATE_SECONDS = 21600;
+
+class RecordNotFoundError extends Error {}
+
+const requireRecord = async <T>(lookup: Promise<T | null>): Promise<T> => {
+  const record = await lookup;
+  if (record === null) throw new RecordNotFoundError();
+  return record;
+};
+
+const nullWhenMissing = async <T>(read: () => Promise<T>): Promise<T | null> => {
+  try {
+    return await read();
+  } catch (error) {
+    if (error instanceof RecordNotFoundError) return null;
+    throw error;
+  }
+};
 
 export const reviveDates = <T extends object, K extends keyof T>(
   value: T,
@@ -22,7 +39,7 @@ export const reviveDates = <T extends object, K extends keyof T>(
 
 const fetchStationById = unstable_cache(
   (id: string) =>
-    prisma.chargingStation.findUnique({
+    requireRecord(prisma.chargingStation.findUnique({
       where: { id },
       include: {
         operator: { select: { name: true, normalizedName: true } },
@@ -33,23 +50,25 @@ const fetchStationById = unstable_cache(
           ],
         },
       },
-    }),
+    })),
   ["station-by-id"],
   { revalidate: DETAIL_REVALIDATE_SECONDS },
 );
 
 const fetchVehicleById = unstable_cache(
   (id: string) =>
-    prisma.evModel.findUnique({
-      where: { id },
-      include: { brand: true, specs: true },
-    }),
+    requireRecord(
+      prisma.evModel.findUnique({
+        where: { id },
+        include: { brand: true, specs: true },
+      }),
+    ),
   ["vehicle-by-id"],
   { revalidate: DETAIL_REVALIDATE_SECONDS },
 );
 
 export const getStationById = cache(async (id: string) => {
-  const station = await fetchStationById(id);
+  const station = await nullWhenMissing(() => fetchStationById(id));
   if (!station) return null;
 
   return {
@@ -61,7 +80,7 @@ export const getStationById = cache(async (id: string) => {
 });
 
 export const getVehicleById = cache(async (id: string) => {
-  const vehicle = await fetchVehicleById(id);
+  const vehicle = await nullWhenMissing(() => fetchVehicleById(id));
   if (!vehicle) return null;
 
   return {
