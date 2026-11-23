@@ -15,36 +15,12 @@ export interface MarkdownSection {
   items?: string[];
 }
 
-const DEFAULT_BUTTON_LABELS: Record<string, string> = {
-  "/map": "Open the map",
-  "/stations": "Browse stations",
-  "/operators": "Compare operators",
-  "/coverage": "See coverage",
-  "/insights": "Read the insights",
-};
-
-const isSafeHref = (href: string) => /^(\/|https:\/\/)\S*$/.test(href);
-
-const defaultLabel = (path: string) => {
-  const known = DEFAULT_BUTTON_LABELS[path];
-  if (known) return known;
-  const words = path.replace(/^\/+|\/+$/g, "").replace(/[-\/]+/g, " ");
-  return words ? `Open ${words}` : "Open";
-};
+const isSafeHref = (href: string) => /^(\/(?![\/\\])|https:\/\/)\S*$/.test(href);
 
 const parseButton = (line: string): MarkdownSection | null => {
-  const trimmed = line.trim();
-  const explicit = trimmed.match(/^:::button\s+(\S+)\s*\|\s*(.+)$/);
-  if (explicit) {
-    const label = explicit[2].trim();
-    return isSafeHref(explicit[1]) && label
-      ? { type: "button", href: explicit[1], label }
-      : null;
-  }
-  const legacy = trimmed.match(/^[^:]{1,40}:\s*(\/[a-z\-\/]*)$/);
-  return legacy
-    ? { type: "button", href: legacy[1], label: defaultLabel(legacy[1]) }
-    : null;
+  const match = line.trim().match(/^:::button\s+(\S+)\s*\|\s*(.+)$/);
+  if (!match || !isSafeHref(match[1])) return null;
+  return { type: "button", href: match[1], label: match[2].trim() };
 };
 
 /**

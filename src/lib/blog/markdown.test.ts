@@ -266,13 +266,15 @@ This is a paragraph with [link](/url).
     }
   });
 
-  it("should turn legacy Label: /path lines into buttons", () => {
-    expect(parseMarkdown("Map: /map")).toEqual([
-      { type: "button", href: "/map", label: "Open the map" },
-    ]);
-    expect(parseMarkdown("Check nearby: /map")[0].type).toBe("button");
-    expect(parseMarkdown("Guide: /some-page")).toEqual([
-      { type: "button", href: "/some-page", label: "Open some page" },
-    ]);
+  it("should reject protocol-relative button hrefs", () => {
+    for (const line of [":::button //evil.com | Hi", ":::button /\\evil.com | Hi"]) {
+      expect(parseMarkdown(line)[0].type).toBe("paragraph");
+    }
+  });
+
+  it("should leave prose that looks like Label: /path alone", () => {
+    for (const line of ["Map: /map", "- Map: /map", "> Tip: /map", "Time: 10:30"]) {
+      expect(parseMarkdown(line).some((x) => x.type === "button")).toBe(false);
+    }
   });
 });
