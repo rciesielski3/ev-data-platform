@@ -516,7 +516,7 @@ Stay informed about policy changes that may affect your electrification ROI.
 
 ## Fleet Operator Success Stories
 
-Leading Polish fleet operators demonstrate the viability of electrification:
+Leading Polish fleet operators show that electrification can work:
 - Logistics companies are electrifying urban delivery fleets
 - Municipal services increasingly deploy electric buses and vans
 - Specialized services pioneer electric alternatives
@@ -554,7 +554,7 @@ Deploy 2-5 vehicles in favorable routes to prove the model before full-scale exp
 
 ## Conclusion
 
-Fleet electrification represents one of the most significant opportunities for Polish businesses to reduce costs, improve reliability, and enhance environmental performance simultaneously. With comprehensive charging infrastructure development and supportive policies, fleet operators of all sizes can successfully transition to electric vehicles.
+Fleet electrification represents one of the most significant opportunities for Polish businesses to reduce costs, improve reliability, and enhance environmental performance simultaneously. With comprehensive charging infrastructure development and supportive policies, fleet operators of all sizes can transition to electric vehicles.
 
 The economics can be compelling when routes and charging fit: a well-planned electric fleet can lower running costs while reducing operational complexity and environmental impact. Forward-thinking fleet operators positioning themselves today for tomorrow's electric transportation will capture first-mover advantages in cost efficiency and market differentiation.
 
