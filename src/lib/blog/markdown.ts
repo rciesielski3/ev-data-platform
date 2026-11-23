@@ -6,12 +6,46 @@
 import { escapeHtml } from "@/lib/utils/escape-html";
 
 export interface MarkdownSection {
-  type: "heading" | "paragraph" | "list" | "blockquote";
+  type: "heading" | "paragraph" | "list" | "blockquote" | "button";
+  href?: string;
+  label?: string;
   level?: number;
   content?: string;
   ordered?: boolean;
   items?: string[];
 }
+
+const DEFAULT_BUTTON_LABELS: Record<string, string> = {
+  "/map": "Open the map",
+  "/stations": "Browse stations",
+  "/operators": "Compare operators",
+  "/coverage": "See coverage",
+  "/insights": "Read the insights",
+};
+
+const isSafeHref = (href: string) => /^(\/|https:\/\/)\S*$/.test(href);
+
+const defaultLabel = (path: string) => {
+  const known = DEFAULT_BUTTON_LABELS[path];
+  if (known) return known;
+  const words = path.replace(/^\/+|\/+$/g, "").replace(/[-\/]+/g, " ");
+  return words ? `Open ${words}` : "Open";
+};
+
+const parseButton = (line: string): MarkdownSection | null => {
+  const trimmed = line.trim();
+  const explicit = trimmed.match(/^:::button\s+(\S+)\s*\|\s*(.+)$/);
+  if (explicit) {
+    const label = explicit[2].trim();
+    return isSafeHref(explicit[1]) && label
+      ? { type: "button", href: explicit[1], label }
+      : null;
+  }
+  const legacy = trimmed.match(/^[^:]{1,40}:\s*(\/[a-z\-\/]*)$/);
+  return legacy
+    ? { type: "button", href: legacy[1], label: defaultLabel(legacy[1]) }
+    : null;
+};
 
 /**
  * Parse markdown content into structured sections
@@ -32,6 +66,13 @@ export const parseMarkdown = (content: string): MarkdownSection[] => {
         level: headingMatch[1].length,
         content: headingMatch[2],
       });
+      i++;
+      continue;
+    }
+
+    const button = parseButton(line);
+    if (button) {
+      sections.push(button);
       i++;
       continue;
     }
@@ -119,4 +160,3 @@ const convertMarkdownFormatting = (text: string): string => {
 
   return result;
 };
-

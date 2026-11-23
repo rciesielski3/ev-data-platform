@@ -171,7 +171,8 @@ This is a paragraph with [link](/url).
     });
 
     it("should escape HTML injection in link text", () => {
-      const content = "[<img src=x onerror=\"alert('xss')\">](https://example.com)";
+      const content =
+        "[<img src=x onerror=\"alert('xss')\">](https://example.com)";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
@@ -208,7 +209,8 @@ This is a paragraph with [link](/url).
     });
 
     it("should escape script tags in list items", () => {
-      const content = "- Item with **<script>alert('xss')</script>**\n- Normal item";
+      const content =
+        "- Item with **<script>alert('xss')</script>**\n- Normal item";
       const sections = parseMarkdown(content);
 
       const listSection = sections.find((s) => s.type === "list");
@@ -235,12 +237,42 @@ This is a paragraph with [link](/url).
     });
 
     it("should reject data: protocol in links", () => {
-      const content = "[click me](data:text/html,<script>alert('xss')</script>)";
+      const content =
+        "[click me](data:text/html,<script>alert('xss')</script>)";
       const sections = parseMarkdown(content);
 
       const paragraph = sections.find((s) => s.type === "paragraph");
       expect(paragraph?.content).not.toContain("href=");
       expect(paragraph?.content).toContain("click me");
     });
+  });
+
+  it("should parse :::button lines", () => {
+    expect(parseMarkdown(":::button /map | Open the map")).toEqual([
+      { type: "button", href: "/map", label: "Open the map" },
+    ]);
+    expect(parseMarkdown(":::button https://example.com/x | Go")).toEqual([
+      { type: "button", href: "https://example.com/x", label: "Go" },
+    ]);
+  });
+
+  it("should fall back to a paragraph for malformed or unsafe buttons", () => {
+    for (const line of [
+      ":::button /map",
+      ":::button javascript:alert(1) | Hi",
+      ":::button http://example.com | Hi",
+    ]) {
+      expect(parseMarkdown(line)[0].type).toBe("paragraph");
+    }
+  });
+
+  it("should turn legacy Label: /path lines into buttons", () => {
+    expect(parseMarkdown("Map: /map")).toEqual([
+      { type: "button", href: "/map", label: "Open the map" },
+    ]);
+    expect(parseMarkdown("Check nearby: /map")[0].type).toBe("button");
+    expect(parseMarkdown("Guide: /some-page")).toEqual([
+      { type: "button", href: "/some-page", label: "Open some page" },
+    ]);
   });
 });
