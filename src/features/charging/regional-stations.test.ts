@@ -220,3 +220,31 @@ describe("summarizeRegionalOperatorStats", () => {
     });
   });
 });
+
+describe("buildRegionalCityStats implausible power", () => {
+  it("ignores a 1200 kW CHAdeMO for max power but keeps it in the average", () => {
+    const stats = buildRegionalCityStats([
+      {
+        operator: { name: "ORLEN", normalizedName: "orlen" },
+        connectors: [
+          { powerKw: 1200, connectorType: "chademo" },
+          { powerKw: 600, connectorType: "ccs2" },
+        ],
+      },
+    ]);
+
+    expect(stats.maxPowerKw).toBe(600);
+    expect(stats.averagePowerKw).toBe(900);
+  });
+
+  it("keeps a genuine 400 kW CCS2", () => {
+    const stats = buildRegionalCityStats([
+      {
+        operator: { name: "ORLEN", normalizedName: "orlen" },
+        connectors: [{ powerKw: 400, connectorType: "ccs2" }],
+      },
+    ]);
+
+    expect(stats.maxPowerKw).toBe(400);
+  });
+});

@@ -226,3 +226,48 @@ describe("toKnownProvinceKey", () => {
     expect(toKnownProvinceKey(UNKNOWN_PROVINCE)).toBeNull();
   });
 });
+
+describe("buildProvinceIntelligenceRows implausible power", () => {
+  it("uses the 600 kW CCS2 as province max and HPC evidence for a hub with a 1200 kW CHAdeMO", () => {
+    const [row] = buildProvinceIntelligenceRows([
+      {
+        province: "Lubelskie",
+        connectors: [
+          { powerKw: 1200, connectorType: "chademo" },
+          { powerKw: 600, connectorType: "ccs2" },
+        ],
+      },
+    ]);
+
+    expect(row.maxPowerKw).toBe(600);
+    expect(row.hpcStationCount).toBe(1);
+    expect(row.connectorCount).toBe(2);
+    expect(row.knownPowerConnectorCount).toBe(2);
+    expect(row.averagePowerKw).toBe(900);
+  });
+
+  it("does not classify a station as HPC from an implausible 350 kW Type 2 or 1200 kW CHAdeMO", () => {
+    const [row] = buildProvinceIntelligenceRows([
+      {
+        province: "Lubelskie",
+        connectors: [
+          { powerKw: 350, connectorType: "type2" },
+          { powerKw: 1200, connectorType: "chademo" },
+          { powerKw: 22, connectorType: "type2" },
+        ],
+      },
+    ]);
+
+    expect(row.hpcStationCount).toBe(0);
+    expect(row.maxPowerKw).toBe(22);
+  });
+
+  it("keeps a genuine 400 kW CCS2 as HPC", () => {
+    const [row] = buildProvinceIntelligenceRows([
+      { province: "Lubelskie", connectors: [{ powerKw: 400, connectorType: "ccs2" }] },
+    ]);
+
+    expect(row.hpcStationCount).toBe(1);
+    expect(row.maxPowerKw).toBe(400);
+  });
+});

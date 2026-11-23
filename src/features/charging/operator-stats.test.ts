@@ -84,3 +84,18 @@ describe("buildRegionalOperatorStats", () => {
     expect(result.warszawa.Orlen.stationCount).toBe(2);
   });
 });
+
+describe("buildRegionalOperatorStats implausible power", () => {
+  it("ignores a 1200 kW CHAdeMO for max power and keeps the 600 kW CCS2", () => {
+    const result = buildRegionalOperatorStats([
+      station({
+        connectors: [
+          { powerKw: 1200, connectorType: "chademo" },
+          { powerKw: 600, connectorType: "ccs2" },
+        ],
+      }),
+    ]);
+
+    expect(result.warszawa.TestOp.maxPowerKw).toBe(600);
+  });
+});

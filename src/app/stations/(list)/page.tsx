@@ -23,6 +23,7 @@ import {
   parseStationSearchParams,
   type StationSearchParams,
 } from "@/features/charging/station-search";
+import { getMaxPlausiblePowerKw } from "@/features/charging/connectors";
 import { buildOpenStreetMapHref } from "@/features/charging/station-details";
 import {
   StationCompletenessBadge,
@@ -373,7 +374,7 @@ const StationsPage = async ({
           ) : (
             <section className="grid gap-5 lg:grid-cols-2">
               {data.stations.map((station) => {
-                const strongestConnector = station.connectors[0];
+                const maxPowerKw = getMaxPlausiblePowerKw(station.connectors);
                 const safeSourceUrl = getSafeHttpUrl(station.sourceUrl);
                 const mapHref = buildOpenStreetMapHref(
                   station.latitude,
@@ -433,14 +434,14 @@ const StationsPage = async ({
                           />
                         </div>
                       </div>
-                      {strongestConnector?.powerKw && (
+                      {maxPowerKw ? (
                         <Badge className="!inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap !px-3.5 !py-1.5 !text-sm !normal-case !tracking-normal">
                           <Zap className="h-4 w-4" aria-hidden />
                           {t("upToPower", {
-                            power: strongestConnector.powerKw,
+                            power: maxPowerKw,
                           })}
                         </Badge>
-                      )}
+                      ) : null}
                     </div>
 
                     <dl className="my-5 grid gap-4 border-t border-forest/10 pt-5 text-sm sm:grid-cols-2">

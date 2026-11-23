@@ -223,3 +223,30 @@ describe("findOperatorPage / buildOperatorPageHrefLookup", () => {
     expect(hrefFor("Other")).toBeNull();
   });
 });
+
+describe("buildOperatorPages implausible power", () => {
+  it("uses the 600 kW CCS2 for station and operator max when a CHAdeMO reports 1200 kW", () => {
+    const stations = stationsFor("ORLEN", OPERATOR_PAGE_MIN_STATIONS, {
+      connectors: [
+        { connectorType: "chademo", powerKw: 1200 },
+        { connectorType: "ccs2", powerKw: 600 },
+      ],
+    });
+
+    const [page] = buildOperatorPages(stations);
+
+    expect(page.maxPowerKw).toBe(600);
+    expect(page.stations[0].maxPowerKw).toBe(600);
+    expect(page.connectorCount).toBe(OPERATOR_PAGE_MIN_STATIONS * 2);
+  });
+
+  it("keeps a genuine 400 kW CCS2", () => {
+    const [page] = buildOperatorPages(
+      stationsFor("ORLEN", OPERATOR_PAGE_MIN_STATIONS, {
+        connectors: [{ connectorType: "ccs2", powerKw: 400 }],
+      }),
+    );
+
+    expect(page.maxPowerKw).toBe(400);
+  });
+});

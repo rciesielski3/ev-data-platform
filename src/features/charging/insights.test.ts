@@ -4,7 +4,6 @@ import {
   buildChargingInsights,
   formatConnectorPower,
   formatPercent,
-  isPlausibleConnectorPower,
 } from "@/features/charging/insights";
 
 const baseInput = {
@@ -300,41 +299,6 @@ describe("formatters", () => {
     expect(formatPercent(1, 0)).toBe("0%");
     expect(formatConnectorPower(22.5)).toBe("22.5 kW");
     expect(formatConnectorPower(150)).toBe("150 kW");
-  });
-});
-
-describe("isPlausibleConnectorPower", () => {
-  it("rejects CHAdeMO above its spec maximum (ORLEN MOP 1200 kW rows)", () => {
-    expect(isPlausibleConnectorPower("chademo", 1200)).toBe(false);
-  });
-
-  it("rejects Type 2 above the AC maximum", () => {
-    expect(isPlausibleConnectorPower("type2", 350)).toBe(false);
-  });
-
-  it("keeps genuine high-power connectors", () => {
-    expect(isPlausibleConnectorPower("ccs2", 400)).toBe(true);
-    expect(isPlausibleConnectorPower("ccs2", 600)).toBe(true);
-    expect(isPlausibleConnectorPower("chademo", 400)).toBe(true);
-    expect(isPlausibleConnectorPower("chademo", 150)).toBe(true);
-    expect(isPlausibleConnectorPower("type2", 22)).toBe(true);
-  });
-
-  it("does not judge unknown connector types", () => {
-    expect(isPlausibleConnectorPower("unknown", 1200)).toBe(true);
-  });
-
-  it("applies the caps at the boundary", () => {
-    expect(isPlausibleConnectorPower("chademo", 400)).toBe(true);
-    expect(isPlausibleConnectorPower("chademo", 401)).toBe(false);
-    expect(isPlausibleConnectorPower("type2", 44)).toBe(true);
-    expect(isPlausibleConnectorPower("type2", 45)).toBe(false);
-  });
-
-  it("recognizes connector type aliases and casing", () => {
-    expect(isPlausibleConnectorPower("CHAdeMO", 1200)).toBe(false);
-    expect(isPlausibleConnectorPower("Type 2", 350)).toBe(false);
-    expect(isPlausibleConnectorPower("Type 2 Combo", 350)).toBe(true);
   });
 });
 

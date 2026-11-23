@@ -1,3 +1,4 @@
+import { isPlausibleConnectorPower } from "@/features/charging/connectors";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { getProvincePopulationAndArea } from "@/features/charging/province-population";
 
@@ -6,6 +7,7 @@ export const HPC_POWER_KW = 150;
 
 export type ProvinceIntelligenceConnectorInput = {
   powerKw?: number | null;
+  connectorType?: string | null;
 };
 
 export type ProvinceIntelligenceOperatorInput = {
@@ -110,6 +112,11 @@ export const buildProvinceIntelligenceRows = (
 
       row.knownPowerConnectorCount += 1;
       row.totalPowerKw += connector.powerKw;
+
+      if (!isPlausibleConnectorPower(connector.connectorType, connector.powerKw)) {
+        continue;
+      }
+
       row.maxPowerKw =
         row.maxPowerKw === null
           ? connector.powerKw

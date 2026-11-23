@@ -41,6 +41,7 @@ describe("cached-queries", () => {
           connectors: {
             select: {
               powerKw: true,
+              connectorType: true,
             },
           },
         },
@@ -111,6 +112,7 @@ describe("cached-queries", () => {
             select: {
               id: true,
               powerKw: true,
+              connectorType: true,
             },
           },
         },
@@ -227,6 +229,7 @@ describe("cached-queries", () => {
           connectors: {
             select: {
               powerKw: true,
+              connectorType: true,
             },
           },
         },
@@ -279,7 +282,10 @@ describe("cached-queries", () => {
         "longitude",
         "connectors",
       ]);
-      expect(callArgs.select.connectors.select).toEqual({ powerKw: true });
+      expect(callArgs.select.connectors.select).toEqual({
+        powerKw: true,
+        connectorType: true,
+      });
     });
   });
 });

@@ -10,10 +10,10 @@ import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import {
   buildChargingInsights,
-  isPlausibleConnectorPower,
   type HighestPowerStationRow,
   type OperatorInsightRow,
 } from "@/features/charging/insights";
+import { isPlausibleConnectorPower } from "@/features/charging/connectors";
 import { getOperatorIntelligenceRows } from "@/lib/db/cached-queries";
 import { prisma } from "@/lib/db/prisma";
 import { getLatestSnapshot } from "@/lib/snapshots/get-snapshots";

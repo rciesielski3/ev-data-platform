@@ -1,3 +1,4 @@
+import { getMaxPlausiblePowerKw } from "@/features/charging/connectors";
 import { HPC_POWER_KW } from "@/features/charging/province-intelligence";
 import type {
   CorridorDefinition,
@@ -17,7 +18,7 @@ export const NEAREST_HPC_SEARCH_RADIUS_KM = 500;
 export type CorridorStationInput = {
   latitude: number;
   longitude: number;
-  connectors: { powerKw?: number | null }[];
+  connectors: { powerKw?: number | null; connectorType?: string | null }[];
 };
 
 export type NearestHpcResult = {
@@ -56,12 +57,7 @@ const equirectangularDistanceKm = (
 };
 
 const stationHasHpcConnector = (station: CorridorStationInput): boolean =>
-  station.connectors.some(
-    (connector) =>
-      connector.powerKw !== null &&
-      connector.powerKw !== undefined &&
-      connector.powerKw >= HPC_POWER_KW,
-  );
+  (getMaxPlausiblePowerKw(station.connectors) ?? 0) >= HPC_POWER_KW;
 
 /**
  * Finds the closest HPC (150 kW+) station to a waypoint within

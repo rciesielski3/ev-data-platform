@@ -137,6 +137,32 @@ export const getConnectorKnowledge = (
   return CONNECTOR_KNOWLEDGE[key];
 };
 
+const MAX_PLAUSIBLE_POWER_KW: Partial<Record<ConnectorKey, number>> = {
+  chademo: 400,
+  type2: 44,
+};
+
+export const isPlausibleConnectorPower = (
+  connectorType: string | null | undefined,
+  powerKw: number,
+) => {
+  const max = MAX_PLAUSIBLE_POWER_KW[getConnectorKnowledge(connectorType).key];
+
+  return max === undefined || powerKw <= max;
+};
+
+export const getMaxPlausiblePowerKw = (
+  connectors:
+    | readonly { connectorType?: string | null; powerKw?: number | null }[]
+    | null
+    | undefined,
+) =>
+  (connectors ?? []).reduce<number | null>((max, { connectorType, powerKw }) => {
+    if (typeof powerKw !== "number" || !Number.isFinite(powerKw)) return max;
+    if (!isPlausibleConnectorPower(connectorType, powerKw)) return max;
+    return max === null || powerKw > max ? powerKw : max;
+  }, null);
+
 export const formatConnectorLabel = (type: string | null | undefined) =>
   getConnectorKnowledge(type).label;
 

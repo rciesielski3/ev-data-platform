@@ -37,6 +37,7 @@ describe("GET /api/corridors/analysis", () => {
         connectors: {
           select: {
             powerKw: true,
+            connectorType: true,
           },
         },
       },
