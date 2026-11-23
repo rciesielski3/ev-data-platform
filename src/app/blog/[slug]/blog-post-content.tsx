@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { BlogPost } from "@/lib/blog/types";
 import { trackBlogPostView } from "@/lib/analytics/events";
 import { parseMarkdown } from "@/lib/blog/markdown";
@@ -103,6 +105,26 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 __html: section.content || "",
               }}
             />
+          );
+        }
+
+        if (section.type === "button") {
+          return (
+            <div
+              key={index}
+              className="my-8 flex justify-center rounded-3xl bg-forest/5 px-6 py-8"
+            >
+              <Link
+                href={section.href}
+                className="group inline-flex items-center gap-2 rounded-full bg-forest px-7 py-3.5 text-base font-semibold text-cream shadow-sm transition-colors duration-200 hover:bg-sun hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+              >
+                {section.label}
+                <ArrowRight
+                  aria-hidden="true"
+                  className="h-5 w-5 transition-transform duration-200 motion-safe:group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
           );
         }
 

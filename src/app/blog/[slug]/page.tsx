@@ -11,6 +11,7 @@ import {
   buildBreadcrumbSchema,
   serializeJsonLd,
 } from "@/lib/seo/article-schema";
+import { PostIllustration } from "@/components/blog/post-illustration";
 import BlogPostContent from "./blog-post-content";
 
 interface Props {
@@ -111,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
       />
       <div className="page-shell pb-20 pt-12 sm:pt-16">
         <div className="mx-auto max-w-3xl">
-          <header className="mb-10">
+          <header className="mb-8">
             <Link
               href="/blog"
               className="mb-6 inline-flex items-center gap-1.5 rounded-full text-sm font-medium text-forest/70 transition-colors hover:text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
@@ -120,9 +121,13 @@ export default async function BlogPostPage({ params }: Props) {
               {t("ui.backToBlog")}
             </Link>
 
-            <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight text-forest sm:text-5xl">
+            <h1 className="font-display text-4xl font-semibold leading-[1.1] tracking-tight text-forest sm:text-5xl">
               {post.title}
             </h1>
+
+            <p className="mt-5 text-xl leading-8 text-forest/80 sm:text-2xl sm:leading-9">
+              {post.excerpt}
+            </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-forest/70">
               <time dateTime={post.date}>
@@ -147,7 +152,14 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </header>
 
-          <div className="border-t border-forest/10 pt-10">
+          <div className="mb-12 overflow-hidden rounded-3xl shadow-[var(--shadow-lift)]">
+            <PostIllustration
+              slug={post.slug}
+              className="sm:aspect-[600/240]"
+            />
+          </div>
+
+          <div>
             <BlogPostContent post={post} />
           </div>
         </div>
