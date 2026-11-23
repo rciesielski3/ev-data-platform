@@ -1021,6 +1021,16 @@
     "discoveryTitle": "Odkryj infrastrukturę ładowania EV",
     "discoverySubtitle": "Znajdź ładowarkę blisko ciebie"
   },
+  "share": {
+    "label": "Udostępnij:",
+    "ariaLabel": "Udostępnij w serwisie {network} (otwiera się w nowej karcie)",
+    "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "x": "X",
+    "ogDefaultBadge": "Dane o ładowaniu pojazdów elektrycznych",
+    "ogDefaultTitle": "Infrastruktura ładowania EV w Polsce",
+    "ogRegionBadge": "Stacje ładowania EV"
+  },
   "dateFormat": {
     "imported": "Zaimportowano {date}",
     "source": "źródło {date}"

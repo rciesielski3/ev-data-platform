@@ -5,12 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getAllBlogSlugsLocalized } from "@/lib/blog/posts";
 import type { BlogPost } from "@/lib/blog/types";
-import { SITE_URL } from "@/lib/config/site";
+import { OG_IMAGE_PATH, SITE_URL } from "@/lib/config/site";
 import {
   buildArticleSchema,
   buildBreadcrumbSchema,
   serializeJsonLd,
 } from "@/lib/seo/article-schema";
+import ShareLinks from "@/components/ui/share-links";
 import { PostIllustration } from "@/components/blog/post-illustration";
 import BlogPostContent from "./blog-post-content";
 
@@ -58,7 +59,7 @@ export const generateMetadata = async ({
       authors: post.author ? [post.author] : [],
       images: [
         {
-          url: `${SITE_URL}/og-image.png`,
+          url: `${SITE_URL}${OG_IMAGE_PATH}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -162,6 +163,8 @@ export default async function BlogPostPage({ params }: Props) {
           <div>
             <BlogPostContent post={post} />
           </div>
+
+          <ShareLinks url={url} title={post.title} className="mt-10" />
         </div>
 
         <aside className="mx-auto mt-16 max-w-3xl border-t border-forest/10 pt-10">

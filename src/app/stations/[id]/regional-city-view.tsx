@@ -24,8 +24,9 @@ import type { RegionalCity } from "@/lib/config/regional-cities";
 import { prisma } from "@/lib/db/prisma";
 import { formatDisplayDate } from "@/lib/display/data-display";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { generatePageMetadata } from "@/lib/seo/metadata";
 
-const loadRegionalOperatorStats = unstable_cache(
+export const loadRegionalOperatorStats = unstable_cache(
   async (slug: string) => {
     const [row] = await prisma.$queryRaw<
       { snapshotDate: Date; operatorStats: Record<string, OperatorCityStats> }[]
@@ -71,11 +72,12 @@ export const generateRegionalCityMetadata = async (
   const locale = (await getLocale()) as SupportedLocale;
   const location = buildRegionalCityLocation(city, locale);
 
-  return {
+  return generatePageMetadata({
+    path: `/stations/${city.slug}`,
     title: t("metaTitle", { name: city.name }),
     description: t("metaDescription", { location }),
-    alternates: { canonical: `/stations/${city.slug}` },
-  };
+    withDefaultImage: false,
+  });
 };
 
 export const RegionalCityView = async ({ city }: { city: RegionalCity }) => {
