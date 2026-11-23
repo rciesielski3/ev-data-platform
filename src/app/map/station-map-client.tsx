@@ -232,7 +232,9 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       }
     };
 
-    void renderMarkers();
+    renderMarkers().catch((error: unknown) => {
+      console.error("map: failed to render markers", error);
+    });
 
     return () => {
       cancelled = true;
