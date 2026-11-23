@@ -12,10 +12,7 @@ import {
   buildStationMarkerIcon,
 } from "@/features/charging/leaflet-tile-layer";
 import type { StationMapGroup } from "@/features/charging/station-map";
-import {
-  STATION_POWER_CLASSES,
-  classifyGroupPower,
-} from "@/features/charging/station-map-power";
+import { STATION_POWER_CLASSES } from "@/features/charging/station-map-power";
 
 type StationMapClientProps = {
   groups: StationMapGroup[];
@@ -23,6 +20,7 @@ type StationMapClientProps = {
 
 const DEFAULT_CENTER: [number, number] = [51.7, 18.6];
 const DEFAULT_ZOOM = 6.3;
+const MARKER_BATCH_SIZE = 100;
 
 const StationMapClient = ({ groups }: StationMapClientProps) => {
   const t = useTranslations("map");
@@ -86,7 +84,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       )
       .join("");
     const extraCount =
-      group.stations.length > 3 ? group.stations.length - 3 : 0;
+      group.distinctStationCount > 3 ? group.distinctStationCount - 3 : 0;
 
     return `
   <article class="station-map-popup">
@@ -191,6 +189,8 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       return;
     }
 
+    let cancelled = false;
+
     markerLayer.clearLayers();
 
     if (groups.length === 0) {
@@ -198,32 +198,47 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       return;
     }
 
-    const bounds = leaflet.latLngBounds([]);
-
-    for (const group of groups) {
-      const coordinates: [number, number] = [group.latitude, group.longitude];
-
-      leaflet
-        .marker(coordinates, {
-          icon: buildStationMarkerIcon(leaflet, {
-            count: group.stationCount,
-            powerClass: classifyGroupPower(group),
-          }),
-          title:
-            group.stationCount === 1
-              ? group.stations[0]?.name
-              : t("client.markerTitleMultiple", { count: group.stationCount }),
-        })
-        .bindPopup(buildPopupHtml(group), { maxWidth: 320 })
-        .addTo(markerLayer);
-      bounds.extend(coordinates);
-    }
-
     if (groups.length === 1) {
       map.setView([groups[0].latitude, groups[0].longitude], 12);
     } else {
       map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
     }
+
+    const renderMarkers = async () => {
+      for (let start = 0; start < groups.length; start += MARKER_BATCH_SIZE) {
+        for (const group of groups.slice(start, start + MARKER_BATCH_SIZE)) {
+          leaflet
+            .marker([group.latitude, group.longitude], {
+              icon: buildStationMarkerIcon(leaflet, {
+                count: group.stationCount,
+                powerClass: group.powerClass,
+              }),
+              title:
+                group.stationCount === 1
+                  ? group.stations[0]?.name
+                  : t("client.markerTitleMultiple", {
+                      count: group.stationCount,
+                    }),
+            })
+            .bindPopup(() => buildPopupHtml(group), { maxWidth: 320 })
+            .addTo(markerLayer);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        if (cancelled) {
+          return;
+        }
+      }
+    };
+
+    renderMarkers().catch((error: unknown) => {
+      console.error("map: failed to render markers", error);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [groups, mapSetupRevision, t, buildPopupHtml]);
 
   return (

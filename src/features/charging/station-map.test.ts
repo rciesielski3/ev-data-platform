@@ -4,6 +4,7 @@ import {
   buildStationMapWhere,
   formatStationMapDto,
   groupStationMapDtos,
+  MAP_GROUP_STATION_LIMIT,
   parseStationMapFilters,
 } from "@/features/charging/station-map";
 
@@ -179,5 +180,66 @@ describe("groupStationMapDtos", () => {
       connectorLabels: ["Type 2"],
       operatorNames: ["Fast Charge"],
     });
+  });
+
+  it("caps group stations but keeps the true stationCount", () => {
+    const stations = Array.from({ length: 8 }, (_, index) => ({
+      id: `station-${index}`,
+      name: `Charger ${index}`,
+      operatorName: "Fast Charge",
+      latitude: 52.2297,
+      longitude: 21.0122,
+      province: "Mazowieckie",
+      maxPowerKw: 50,
+      connectorLabels: ["CCS2"],
+      detailsHref: `/stations/station-${index}`,
+    }));
+
+    const [group] = groupStationMapDtos(stations);
+
+    expect(group.stationCount).toBe(8);
+    expect(group.stations).toHaveLength(MAP_GROUP_STATION_LIMIT);
+    expect(group.stations[0]).not.toHaveProperty("latitude");
+    expect(group.stations[0]).not.toHaveProperty("province");
+  });
+
+  it("deduplicates identical stations before capping", () => {
+    const stations = Array.from({ length: 8 }, (_, index) => ({
+      id: `station-${index}`,
+      name: "Same Charger",
+      operatorName: "Fast Charge",
+      latitude: 52.2297,
+      longitude: 21.0122,
+      province: "Mazowieckie",
+      maxPowerKw: 50,
+      connectorLabels: ["CCS2"],
+      detailsHref: `/stations/station-${index}`,
+    }));
+
+    const [group] = groupStationMapDtos(stations);
+
+    expect(group.stationCount).toBe(8);
+    expect(group.distinctStationCount).toBe(1);
+    expect(group.stations).toHaveLength(1);
+  });
+
+  it("classifies the marker and keeps the strongest stations from the full group", () => {
+    const stations = Array.from({ length: 8 }, (_, index) => ({
+      id: `station-${index}`,
+      name: `Charger ${index}`,
+      operatorName: "Fast Charge",
+      latitude: 52.2297,
+      longitude: 21.0122,
+      province: "Mazowieckie",
+      maxPowerKw: index === 7 ? 150 : 11,
+      connectorLabels: [index === 7 ? "CCS2" : "Type 2"],
+      detailsHref: `/stations/station-${index}`,
+    }));
+
+    const [group] = groupStationMapDtos(stations);
+
+    expect(group.distinctStationCount).toBe(8);
+    expect(group.powerClass).toBe("hpc");
+    expect(group.stations[0].id).toBe("station-7");
   });
 });

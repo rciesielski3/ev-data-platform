@@ -116,7 +116,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
 
           {expanded && (
             <ul className="mt-3 space-y-2">
-              {group.stations.slice(0, 5).map((station) => (
+              {group.stations.map((station) => (
                 <li
                   key={station.id}
                   className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-100 px-3 py-2"
