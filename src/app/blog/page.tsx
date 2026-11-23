@@ -2,21 +2,26 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { PostIllustration } from "@/components/blog/post-illustration";
 import type { BlogPost } from "@/lib/blog/types";
 import { SITE_URL } from "@/lib/config/site";
 
-export const metadata: Metadata = {
-  title: "Blog | EVSource",
-  description:
-    "Stay updated with the latest insights on EV charging infrastructure, adoption trends, and fleet electrification in Poland.",
-  openGraph: {
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("blog.ui");
+  const description = t("metaDescription");
+
+  return {
     title: "Blog | EVSource",
-    description:
-      "Stay updated with the latest insights on EV charging infrastructure, adoption trends, and fleet electrification in Poland.",
-    url: `${SITE_URL}/blog`,
-    type: "website",
-  },
+    description,
+    alternates: { canonical: "/blog" },
+    openGraph: {
+      title: "Blog | EVSource",
+      description,
+      url: `${SITE_URL}/blog`,
+      type: "website",
+    },
+  };
 };
 
 export default function BlogPage() {
