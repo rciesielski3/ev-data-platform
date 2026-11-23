@@ -10,6 +10,7 @@ import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
 import {
   buildChargingInsights,
+  isPlausibleConnectorPower,
   type HighestPowerStationRow,
   type OperatorInsightRow,
 } from "@/features/charging/insights";
@@ -85,7 +86,11 @@ const getHighestPowerStationRows = async (): Promise<HighestPowerStationRow[]> =
   const stationRows: HighestPowerStationRow[] = [];
 
   for (const connector of connectors) {
-    if (connector.powerKw === null || seenStationIds.has(connector.station.id)) {
+    if (
+      connector.powerKw === null ||
+      seenStationIds.has(connector.station.id) ||
+      !isPlausibleConnectorPower(connector.connectorType, connector.powerKw)
+    ) {
       continue;
     }
 
