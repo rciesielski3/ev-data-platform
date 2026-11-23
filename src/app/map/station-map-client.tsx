@@ -11,7 +11,10 @@ import {
   StationGroupCard,
   buildStationMarkerIcon,
 } from "@/features/charging/leaflet-tile-layer";
-import type { StationMapGroup } from "@/features/charging/station-map";
+import {
+  buildStationDetailsHref,
+  type StationMapGroup,
+} from "@/features/charging/station-map";
 import { STATION_POWER_CLASSES } from "@/features/charging/station-map-power";
 
 type StationMapClientProps = {
@@ -43,13 +46,13 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
     if (group.stationCount === 1 && primaryStation) {
       return `
   <article class="station-map-popup">
-    <p>${escapeHtml(primaryStation.operatorName)}</p>
+    <p>${escapeHtml(group.operatorNames[0] ?? "")}</p>
 
     <h3>${escapeHtml(primaryStation.name)}</h3>
 
     <div class="station-map-popup-chips">
       <span class="station-map-popup-chip station-map-popup-chip-power">
-        ${escapeHtml(formatPower(primaryStation.maxPowerKw))}
+        ${escapeHtml(formatPower(group.maxPowerKw))}
       </span>
 
       ${group.connectorLabels
@@ -66,7 +69,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
 
     <a
       class="station-map-popup-link"
-      href="${escapeHtml(primaryStation.detailsHref)}"
+      href="${escapeHtml(buildStationDetailsHref(primaryStation.id))}"
     >
       ${escapeHtml(t("client.viewStationDetailsLink"))}
     </a>
@@ -78,7 +81,7 @@ const StationMapClient = ({ groups }: StationMapClientProps) => {
       .slice(0, 3)
       .map(
         (station) =>
-          `<li><a href="${escapeHtml(station.detailsHref)}">${escapeHtml(
+          `<li><a href="${escapeHtml(buildStationDetailsHref(station.id))}">${escapeHtml(
             station.name,
           )}</a></li>`,
       )

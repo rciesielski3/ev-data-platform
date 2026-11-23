@@ -39,10 +39,9 @@ export const MAP_GROUP_STATION_LIMIT = 5;
 
 export type StationMapDto = ReturnType<typeof formatStationMapDto>;
 
-export type StationMapGroupStation = Omit<
-  StationMapDto,
-  "latitude" | "longitude" | "province"
->;
+export type StationMapGroupStation = Pick<StationMapDto, "id" | "name">;
+
+export const buildStationDetailsHref = (id: string) => `/stations/${id}`;
 
 export type StationMapGroup = {
   id: string;
@@ -176,7 +175,7 @@ export const formatStationMapDto = (station: StationMapInput) => ({
   province: displayValue(station.province),
   maxPowerKw: maxPowerKw(station.connectors),
   connectorLabels: uniqueConnectorLabels(station.connectors),
-  detailsHref: `/stations/${station.id}`,
+  detailsHref: buildStationDetailsHref(station.id),
 });
 
 export const groupStationMapDtos = (
@@ -260,14 +259,7 @@ export const groupStationMapDtos = (
       stations: [...stations]
         .sort((a, b) => (b.maxPowerKw ?? -1) - (a.maxPowerKw ?? -1))
         .slice(0, MAP_GROUP_STATION_LIMIT)
-        .map((station) => ({
-          id: station.id,
-          name: station.name,
-          operatorName: station.operatorName,
-          maxPowerKw: station.maxPowerKw,
-          connectorLabels: station.connectorLabels,
-          detailsHref: station.detailsHref,
-        })),
+        .map((station) => ({ id: station.id, name: station.name })),
     };
   });
 };

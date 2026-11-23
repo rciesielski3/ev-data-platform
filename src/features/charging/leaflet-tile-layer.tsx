@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 
 import Card from "@/components/ui/Card";
-import { StationMapGroup } from "./station-map";
+import { buildStationDetailsHref, type StationMapGroup } from "./station-map";
 import type { StationPowerClass } from "./station-map-power";
 import Badge from "@/components/ui/Badge";
 
@@ -59,7 +59,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
           ? t("client.stationsNearbyPopup", {
               count: group.stationCount,
             })
-          : primaryStation?.operatorName}
+          : group.operatorNames[0]}
       </p>
 
       <h3 className="mt-1 text-lg font-semibold text-slate-950">
@@ -87,7 +87,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
       {!isGrouped && primaryStation && (
         <div className="mt-4 flex items-center justify-end border-t border-slate-200 pt-3">
           <Link
-            href={primaryStation.detailsHref}
+            href={buildStationDetailsHref(primaryStation.id)}
             aria-label={t("viewDetailsLink")}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 transition-all group-hover:translate-x-1 group-hover:border-[var(--accent)] group-hover:text-[var(--accent)]"
           >
@@ -129,7 +129,7 @@ export const StationGroupCard = ({ group }: { group: StationMapGroup }) => {
                   </span>
 
                   <Link
-                    href={station.detailsHref}
+                    href={buildStationDetailsHref(station.id)}
                     aria-label={station.name}
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 transition-all hover:translate-x-1 hover:border-[var(--accent)] hover:text-[var(--accent)]"
                   >

@@ -199,8 +199,7 @@ describe("groupStationMapDtos", () => {
 
     expect(group.stationCount).toBe(8);
     expect(group.stations).toHaveLength(MAP_GROUP_STATION_LIMIT);
-    expect(group.stations[0]).not.toHaveProperty("latitude");
-    expect(group.stations[0]).not.toHaveProperty("province");
+    expect(Object.keys(group.stations[0]).sort()).toEqual(["id", "name"]);
   });
 
   it("deduplicates identical stations before capping", () => {
