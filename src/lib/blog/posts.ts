@@ -572,7 +572,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "How to Choose a Charging Network? Guide for New EV Owners",
     excerpt: "Practical tips for choosing the right charging network for your needs.",
     keywords: ["choose charging network", "which network", "best network"],
-    date: "2026-09-20",
+    date: "2026-11-22",
     author: "EVSource Team",
     content: `# How to Choose\n\n## Your Needs\n\n1. Mostly home? One network\n2. Highways? ORLEN best\n3. Cities? Energa everywhere\n4. Everywhere? Multi-network\n\n## Subscription vs Pay-as-you-go\n\nSubscription: If 50k+/y...`, // See messages/en.json for full content
   },
@@ -581,7 +581,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "How Much Does EV Charging Cost? Complete Analysis",
     excerpt: "Compare home, public, and gas car charging costs.",
     keywords: ["EV charging cost", "electricity price", "cost of ownership"],
-    date: "2026-09-20",
+    date: "2026-10-04",
     author: "EVSource Team",
     content: `# How Much Does Charging Cost?\n\n## Home\n\nStandard: 7.50-12 PLN/100km\nNight: 3.75-7 PLN/100km (50% cheaper!)\n\n## Public\n\nAC: 8-15 PLN/session\nDC: 20-50 PLN/session\n\n## vs Gas\n\nDiesel: 42 PLN/100km\nGaso...`, // See messages/en.json for full content
   },
@@ -590,7 +590,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "How Long Does It Take to Charge an EV?",
     excerpt: "Complete guide to charging times for different chargers, models, and weather conditions.",
     keywords: ["charging time EV", "how long to charge", "charging speed"],
-    date: "2026-09-20",
+    date: "2026-10-18",
     author: "EVSource Team",
     content: `# How Long Does Charging Take?\n\n## Times for Popular Models\n\n### Home charging (3.7 kW)\nNissan Leaf: 4-6h\nVolkswagen ID.4: 6-8h\nTesla Model 3: 7-9h\n\n### Public AC (11-22 kW)\n1-3 hours depending on pow...`, // See messages/en.json for full content
   },
@@ -599,7 +599,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "Home vs Public Charging: Which to Choose?",
     excerpt: "Compare convenience, costs, and practicality of home vs public charging networks.",
     keywords: ["home charging", "public stations", "charging comparison"],
-    date: "2026-09-20",
+    date: "2026-10-11",
     author: "EVSource Team",
     content: `# Home vs Public\n\n## Convenience\n\nHome: Always available, no waiting\nPublic: Access when away from home\n\n## Costs\n\nHome at night: Cheapest\nPublic: 2-3x more expensive\n\n## When to Choose\n\nHome: For dai...`, // See messages/en.json for full content
   },
@@ -608,7 +608,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "Planning Electric Car Road Trips: Long-Distance Guide",
     excerpt: "Guide to planning efficient and comfortable long-distance EV trips.",
     keywords: ["electric car road trip", "long distance EV", "EV travel"],
-    date: "2026-09-20",
+    date: "2026-11-01",
     author: "EVSource Team",
     content: `# Planning EV Road Trips\n\n## Route Planning\n\n1. Use Google Maps or ABRP\n2. Add DC stations every 200-250 km\n3. Check availability online\n4. Note addresses and numbers\n\n## Before You Leave\n\n- Charge to...`, // See messages/en.json for full content
   },
@@ -617,7 +617,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "Charging Your EV in Winter: Practical Tips",
     excerpt: "How to efficiently charge in cold weather. Tips for energy savings and battery protection.",
     keywords: ["winter charging", "EV winter", "cold weather charging"],
-    date: "2026-09-20",
+    date: "2026-10-25",
     author: "EVSource Team",
     content: `# Charging EV in Winter\n\n## Challenges\n\nCold reduces range by 20-40%\nBattery charges slower\nClimate control uses energy\n\n## Tips\n\n### Before Trip\n- Preheat while charging\n- Charge to 100%\n- Plan with ...`, // See messages/en.json for full content
   },
@@ -626,7 +626,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "Charging at Home: Complete Installation Guide",
     excerpt: "How to install a wall-box and save with overnight charging.",
     keywords: ["charging at home", "wall-box installation", "home charger"],
-    date: "2026-09-20",
+    date: "2026-09-27",
     author: "EVSource Team",
     content: `# Charging at Home\n\n## Types\n\n### Schuko (2.3 kW)\n8-12 hours.\n\n### AC 3.7 kW\nStandard, 6-8h, cost: 3-7.5k PLN.\n\n### AC 11 kW\nFast, 2-3h.\n\n## Installation\n\n1. Power\n2. Wall-box\n3. Electrician\n4. Subsid...`, // See messages/en.json for full content
   },
@@ -644,7 +644,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "ORLEN Charge vs Energa: Charging Network Comparison",
     excerpt: "Detailed comparison of Poland's two largest charging networks. Prices, availability, quality.",
     keywords: ["ORLEN Charge", "Energa charging", "network comparison"],
-    date: "2026-09-20",
+    date: "2026-11-08",
     author: "EVSource Team",
     content: `# ORLEN vs Energa\n\n## Prices\n\nORLEN AC: 0.99 PLN/kWh\nEnerga AC: 0.85 PLN/kWh\n\nORLEN DC: 1.99 PLN/kWh\nEnerga DC: 1.79 PLN/kWh\n\n## Availability\n\nORLEN: Highways, cities\nEnerga: Everywhere, dense\n\n## App...`, // See messages/en.json for full content
   },
@@ -653,7 +653,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     title: "Tesla Supercharger vs Public Networks: Worth It?",
     excerpt: "Compare Tesla Supercharger to public networks. Speed, availability, price.",
     keywords: ["Tesla Supercharger", "charger comparison", "Tesla vs others"],
-    date: "2026-09-20",
+    date: "2026-11-15",
     author: "EVSource Team",
     content: `# Tesla vs Others\n\n## Speed\n\nTesla: 150-250 kW (fastest)\nPublic: 50-150 kW (slower)\n\n## Availability\n\nTesla: 50+ stations in Poland\nPublic: 1000+ network combinations\n\n## Cost\n\nTesla: 2.49 PLN/kWh\nORL...`, // See messages/en.json for full content
   },
