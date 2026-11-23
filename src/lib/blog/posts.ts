@@ -301,13 +301,13 @@ Fleet electrification is one of the most significant opportunities for reducing 
 
 ## Why Fleet Electrification Matters
 
-Fleet operations represent 30-40% of Poland's commercial vehicle emissions. Transitioning to electric vehicles offers compelling financial and operational benefits for fleet operators.
+Transitioning to electric vehicles can offer fleet operators financial and operational benefits, depending on routes, vehicle class and energy tariffs.
 
 ### Economic Benefits
-- **Fuel Cost Reduction**: Electricity costs are 60-70% lower per kilometer than diesel
-- **Maintenance Savings**: EVs have 50% lower maintenance costs (no oil changes, fewer moving parts)
+- **Fuel Cost Reduction**: Electricity typically costs less per kilometer than diesel, especially with depot charging on a favorable tariff
+- **Maintenance Savings**: EVs typically need less maintenance (no oil changes, fewer moving parts)
 - **Tax Incentives**: Preferential tax treatment for electric commercial vehicles
-- **Energy Efficiency**: Direct energy conversion is 3-4x more efficient than combustion engines
+- **Energy Efficiency**: Electric drivetrains convert energy far more efficiently than combustion engines
 
 ### Operational Benefits
 - **Reduced Downtime**: Simplified maintenance schedules and fewer repairs
@@ -317,7 +317,7 @@ Fleet operations represent 30-40% of Poland's commercial vehicle emissions. Tran
 
 ### Environmental Impact
 - **Zero Direct Emissions**: No tailpipe emissions improve urban air quality
-- **Reduced Carbon Footprint**: 50-70% lower lifecycle emissions vs. diesel vehicles
+- **Reduced Carbon Footprint**: Lower lifecycle emissions than diesel vehicles in most cases, with the gap depending on the electricity mix
 - **Regulatory Compliance**: Positioning for increasingly strict emissions regulations
 
 ## Fleet Electrification Strategy
@@ -349,8 +349,8 @@ Begin by analyzing your current operations:
 Different EV types suit different operations:
 
 **Urban Delivery Fleets**:
-- Light vans (5-10 kWh daily) ideal for last-mile delivery
-- Short ranges (150-200 km) appropriate for daily urban routes
+- Light vans ideal for last-mile delivery
+- Shorter ranges appropriate for daily urban routes
 - Fast-charging capable vehicles for midday top-ups
 - Depot charging overnight for complete battery recovery
 
@@ -379,7 +379,7 @@ Successful electrification requires strategic charging infrastructure:
 - Foundation of fleet electrification
 - Most charging occurs overnight with low-cost electricity
 - Options: Standard 3.7 kW, accelerated 11-22 kW, or DC fast charging
-- Typical ROI: 5-7 years for medium-sized fleets
+- Payback depends on fleet size, utilization and electricity tariff
 
 **Public Network Access**:
 - Essential for regional and long-distance operations
@@ -395,7 +395,7 @@ Successful electrification requires strategic charging infrastructure:
 
 **Charging Infrastructure Partnerships**:
 - Network operator relationships critical for fleet operations
-- Negotiate volume-based pricing (30-50% discounts common)
+- Negotiate volume-based pricing
 - Ensure API integration with fleet management systems
 - Establish priority access agreements
 
@@ -437,17 +437,11 @@ Use our [stations directory](/stations) to:
 
 ## Total Cost of Ownership Analysis
 
-Electric vehicles have higher upfront acquisition costs but dramatically lower operating costs:
-
-**Typical 5-Year TCO Comparison** (Mid-size delivery van):
-- Diesel vehicle: 180,000-220,000 PLN
-- Electric vehicle: 200,000-240,000 PLN (before incentives)
-- After tax incentives: 160,000-180,000 PLN
-- Breakeven point: 18-24 months typically
+Electric vehicles usually have higher upfront acquisition costs but lower operating costs. Whether and when an EV breaks even depends on annual mileage, vehicle class, electricity tariff and available incentives, so model your own routes rather than relying on generic averages.
 
 **Key TCO Factors**:
-1. Fuel/electricity costs (largest savings area)
-2. Maintenance costs (significant savings for EVs)
+1. Fuel/electricity costs (often the main savings area)
+2. Maintenance costs (typically lower for EVs)
 3. Vehicle acquisition and depreciation
 4. Charging infrastructure investment
 5. Tax and incentive programs
@@ -523,11 +517,11 @@ Stay informed about policy changes that may affect your electrification ROI.
 ## Fleet Operator Success Stories
 
 Leading Polish fleet operators demonstrate the viability of electrification:
-- Logistics companies have electrified 30-50% of urban delivery fleets
+- Logistics companies are electrifying urban delivery fleets
 - Municipal services increasingly deploy electric buses and vans
 - Specialized services pioneer electric alternatives
 
-These operators confirm economic viability, improved reliability, and enhanced corporate reputation through electrification.
+Operators report benefits in reliability and corporate reputation, though results vary by case.
 
 ## Getting Started
 
@@ -562,7 +556,7 @@ Deploy 2-5 vehicles in favorable routes to prove the model before full-scale exp
 
 Fleet electrification represents one of the most significant opportunities for Polish businesses to reduce costs, improve reliability, and enhance environmental performance simultaneously. With comprehensive charging infrastructure development and supportive policies, fleet operators of all sizes can successfully transition to electric vehicles.
 
-The economics are compelling: electrified fleets achieve positive ROI within 2-3 years while reducing operational complexity and environmental impact. Forward-thinking fleet operators positioning themselves today for tomorrow's electric transportation will capture first-mover advantages in cost efficiency and market differentiation.
+The economics can be compelling when routes and charging fit: a well-planned electric fleet can lower running costs while reducing operational complexity and environmental impact. Forward-thinking fleet operators positioning themselves today for tomorrow's electric transportation will capture first-mover advantages in cost efficiency and market differentiation.
 
 For detailed information about charging infrastructure, regional coverage, and operator insights, explore our [comprehensive database](/stations) and [operator profiles](/operators).
 `,

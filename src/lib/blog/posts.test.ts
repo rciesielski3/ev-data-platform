@@ -5,6 +5,9 @@ import {
   getBlogPostsSorted,
   blogPosts,
 } from "./posts";
+import { blogPostsPL } from "./posts-pl";
+import enMessages from "../../../messages/en.json";
+import plMessages from "../../../messages/pl.json";
 
 describe("blog/posts", () => {
   it("should have 13 blog posts", () => {
@@ -77,5 +80,76 @@ describe("blog/posts", () => {
     // Spot-check a few posts have expected keywords
     const first = blogPosts.find(p => p.slug === "charging-network-comparison");
     expect(first?.keywords).toContain("charging network comparison");
+  });
+});
+
+describe("fleet-operator-guide unsourced figures", () => {
+  const removedEn = [
+    "30-40%",
+    "60-70%",
+    "50% lower maintenance",
+    "3-4x",
+    "50-70%",
+    "5-7 years",
+    "30-50%",
+    "18-24 months",
+    "2-3 years",
+    "180,000",
+    "5-10 kWh",
+  ];
+  const tsContent = getBlogPostBySlug("fleet-operator-guide")?.content ?? "";
+
+  it("keeps the English post and the Polish entry", () => {
+    expect(tsContent.length).toBeGreaterThan(0);
+    expect(blogPostsPL.map((post) => post.slug)).toContain("fleet-operator-guide");
+  });
+
+  it.each(removedEn)("English copy does not contain %s", (figure) => {
+    expect(tsContent).not.toContain(figure);
+  });
+
+  const removedPl = [
+    "30-40%",
+    "60-70%",
+    "50% niższe",
+    "3-4x",
+    "50-70%",
+    "5-7 lat",
+    "30-50%",
+    "18-24 miesi",
+    "2-3 latach",
+    "180 000",
+    "5-10 kWh",
+  ];
+  const localizedContent = {
+    en: (enMessages.blog.posts["fleet-operator-guide"] as { content: string }).content,
+    pl: (plMessages.blog.posts["fleet-operator-guide"] as { content: string }).content,
+  };
+
+  it("keeps posts.ts and messages/en.json copies identical", () => {
+    expect(localizedContent.en.trim()).toBe(tsContent.trim());
+  });
+
+  it.each([
+    ["posts.ts", tsContent],
+    ["messages/en.json", localizedContent.en],
+    ["messages/pl.json", localizedContent.pl],
+  ])("%s has no percentage ranges, PLN totals or ROI figures", (_name, content) => {
+    expect(content).not.toMatch(/\d+\s*[-–]\s*\d+\s*%/);
+    expect(content).not.toMatch(/\d{3}[ ,]\d{3}\s*PLN/);
+    expect(content).not.toMatch(/ROI[^.\n]*\d/);
+  });
+
+  it("keeps the localized guide content in both message files", () => {
+    expect(localizedContent.en.length).toBeGreaterThan(0);
+    expect(localizedContent.pl.length).toBeGreaterThan(0);
+  });
+
+  it.each(removedEn)("messages/en.json guide does not contain %s", (figure) => {
+    expect(localizedContent.en).not.toContain(figure);
+  });
+
+  it.each(removedPl)("messages/pl.json guide does not contain %s", (figure) => {
+    expect(localizedContent.pl).not.toContain(figure);
   });
 });
