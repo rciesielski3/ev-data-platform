@@ -11,10 +11,8 @@ import {
   StationGroupCard,
   buildStationMarkerIcon,
 } from "@/features/charging/leaflet-tile-layer";
-import {
-  buildStationDetailsHref,
-  type StationMapGroup,
-} from "@/features/charging/station-map";
+import { buildStationDetailsHref } from "@/features/charging/station-details-href";
+import type { StationMapGroup } from "@/features/charging/station-map";
 import { STATION_POWER_CLASSES } from "@/features/charging/station-map-power";
 
 type StationMapClientProps = {

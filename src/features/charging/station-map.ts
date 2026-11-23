@@ -41,8 +41,6 @@ export type StationMapDto = ReturnType<typeof formatStationMapDto>;
 
 export type StationMapGroupStation = Pick<StationMapDto, "id" | "name">;
 
-export const buildStationDetailsHref = (id: string) => `/stations/${id}`;
-
 export type StationMapGroup = {
   id: string;
   latitude: number;
@@ -175,7 +173,6 @@ export const formatStationMapDto = (station: StationMapInput) => ({
   province: displayValue(station.province),
   maxPowerKw: maxPowerKw(station.connectors),
   connectorLabels: uniqueConnectorLabels(station.connectors),
-  detailsHref: buildStationDetailsHref(station.id),
 });
 
 export const groupStationMapDtos = (

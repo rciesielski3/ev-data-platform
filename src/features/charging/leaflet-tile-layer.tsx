@@ -7,7 +7,8 @@ import { useTranslations } from "next-intl";
 import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 
 import Card from "@/components/ui/Card";
-import { buildStationDetailsHref, type StationMapGroup } from "./station-map";
+import { buildStationDetailsHref } from "./station-details-href";
+import type { StationMapGroup } from "./station-map";
 import type { StationPowerClass } from "./station-map-power";
 import Badge from "@/components/ui/Badge";
 

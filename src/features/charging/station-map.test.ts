@@ -1,3 +1,4 @@
+import { buildStationDetailsHref } from "@/features/charging/station-details-href";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -98,7 +99,6 @@ describe("formatStationMapDto", () => {
       province: "Mazowieckie",
       maxPowerKw: 150,
       connectorLabels: ["CCS2", "Type 2", "CHAdeMO"],
-      detailsHref: "/stations/station-1",
     });
   });
 
@@ -133,7 +133,6 @@ describe("groupStationMapDtos", () => {
         province: "Mazowieckie",
         maxPowerKw: 150,
         connectorLabels: ["CCS2", "Type 2"],
-        detailsHref: "/stations/station-1",
       },
       {
         id: "station-2",
@@ -144,7 +143,6 @@ describe("groupStationMapDtos", () => {
         province: "Mazowieckie",
         maxPowerKw: 50,
         connectorLabels: ["CCS2", "CHAdeMO"],
-        detailsHref: "/stations/station-2",
       },
       {
         id: "station-3",
@@ -155,7 +153,6 @@ describe("groupStationMapDtos", () => {
         province: "Malopolskie",
         maxPowerKw: null,
         connectorLabels: ["Type 2"],
-        detailsHref: "/stations/station-3",
       },
     ]);
 
@@ -192,7 +189,6 @@ describe("groupStationMapDtos", () => {
       province: "Mazowieckie",
       maxPowerKw: 50,
       connectorLabels: ["CCS2"],
-      detailsHref: `/stations/station-${index}`,
     }));
 
     const [group] = groupStationMapDtos(stations);
@@ -212,7 +208,6 @@ describe("groupStationMapDtos", () => {
       province: "Mazowieckie",
       maxPowerKw: 50,
       connectorLabels: ["CCS2"],
-      detailsHref: `/stations/station-${index}`,
     }));
 
     const [group] = groupStationMapDtos(stations);
@@ -232,7 +227,6 @@ describe("groupStationMapDtos", () => {
       province: "Mazowieckie",
       maxPowerKw: index === 7 ? 150 : 11,
       connectorLabels: [index === 7 ? "CCS2" : "Type 2"],
-      detailsHref: `/stations/station-${index}`,
     }));
 
     const [group] = groupStationMapDtos(stations);
@@ -240,5 +234,29 @@ describe("groupStationMapDtos", () => {
     expect(group.distinctStationCount).toBe(8);
     expect(group.powerClass).toBe("hpc");
     expect(group.stations[0].id).toBe("station-7");
+  });
+
+  it("builds station detail links from the id", () => {
+    expect(buildStationDetailsHref("abc")).toBe("/stations/abc");
+  });
+
+  it("keeps operator, power and connectors at group level for a single station", () => {
+    const [group] = groupStationMapDtos([
+      {
+        id: "station-1",
+        name: "Solo",
+        operatorName: "City Energy",
+        latitude: 52.2297,
+        longitude: 21.0122,
+        province: "Mazowieckie",
+        maxPowerKw: 50,
+        connectorLabels: ["CCS2"],
+      },
+    ]);
+
+    expect(group.operatorNames).toEqual(["City Energy"]);
+    expect(group.maxPowerKw).toBe(50);
+    expect(group.connectorLabels).toEqual(["CCS2"]);
+    expect(group.stations).toEqual([{ id: "station-1", name: "Solo" }]);
   });
 });
