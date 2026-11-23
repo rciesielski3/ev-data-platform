@@ -1029,6 +1029,7 @@
     "ui": {
       "pageHeading": "Blog",
       "pageDescription": "Practical guides and data on charging an EV in Poland: what it costs, where to plug in and how to pick the right network",
+      "metaDescription": "Guides to charging an EV in Poland: charging costs, home charging, road trip planning and a comparison of charging networks, with data from EIPA.",
       "readMore": "Read more →",
       "backToBlog": "← Back to Blog",
       "exploreMore": "Explore More",
