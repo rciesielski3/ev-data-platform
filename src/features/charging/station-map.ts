@@ -1,6 +1,10 @@
 import type { Prisma } from "@prisma/client";
 
 import { formatConnectorLabel } from "@/features/charging/connectors";
+import {
+  classifyGroupPower,
+  type StationPowerClass,
+} from "@/features/charging/station-map-power";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 
 export type StationMapParams = {
@@ -31,17 +35,26 @@ export type StationMapInput = {
   }>;
 };
 
+export const MAP_GROUP_STATION_LIMIT = 5;
+
 export type StationMapDto = ReturnType<typeof formatStationMapDto>;
+
+export type StationMapGroupStation = Omit<
+  StationMapDto,
+  "latitude" | "longitude" | "province"
+>;
 
 export type StationMapGroup = {
   id: string;
   latitude: number;
   longitude: number;
   stationCount: number;
+  distinctStationCount: number;
+  powerClass: StationPowerClass;
   maxPowerKw: number | null;
   connectorLabels: string[];
   operatorNames: string[];
-  stations: StationMapDto[];
+  stations: StationMapGroupStation[];
 };
 
 const UNKNOWN = "Unknown";
@@ -242,7 +255,19 @@ export const groupStationMapDtos = (
       maxPowerKw: powers.length > 0 ? Math.max(...powers) : null,
       connectorLabels: group.connectorLabels,
       operatorNames: group.operatorNames,
-      stations,
+      distinctStationCount: stations.length,
+      powerClass: classifyGroupPower({ stations }),
+      stations: [...stations]
+        .sort((a, b) => (b.maxPowerKw ?? -1) - (a.maxPowerKw ?? -1))
+        .slice(0, MAP_GROUP_STATION_LIMIT)
+        .map((station) => ({
+          id: station.id,
+          name: station.name,
+          operatorName: station.operatorName,
+          maxPowerKw: station.maxPowerKw,
+          connectorLabels: station.connectorLabels,
+          detailsHref: station.detailsHref,
+        })),
     };
   });
 };
