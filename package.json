@@ -71,6 +71,7 @@
   },
   "overrides": {
     "deepmerge-ts": "^8.0.0",
+    "effect": "^3.22.1",
     "postcss": "$postcss",
     "rimraf": "^6.1.4"
   }
