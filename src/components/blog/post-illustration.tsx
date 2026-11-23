@@ -300,7 +300,12 @@ const ChooseScene = () => (
       [430, 90],
     ].map(([cx, cy], i) => (
       <g key={cx}>
-        <circle cx={cx} cy={cy} r="34" fill={i === 1 ? COLORS.sun : COLORS.cream} />
+        <circle
+          cx={cx}
+          cy={cy}
+          r="34"
+          fill={i === 1 ? COLORS.sun : COLORS.cream}
+        />
         <Bolt x={cx - 20} y={cy - 26} s={0.45} fill={COLORS.forest} />
       </g>
     ))}
@@ -400,6 +405,93 @@ const FleetScene = () => (
   </>
 );
 
+const HowToScene = () => (
+  <>
+    <Car x={70} y={140} s={1.7} />
+    <path
+      d="M250 200c40 40 80 20 110-10"
+      stroke={COLORS.cream}
+      strokeWidth="7"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <Plug x={400} y={150} s={1.5} />
+    {[0, 1, 2].map((i) => (
+      <circle
+        key={i}
+        cx={250 + i * 50}
+        cy="50"
+        r="15"
+        fill={i === 2 ? COLORS.sun : COLORS.cream}
+        opacity={i === 2 ? 1 : 0.8}
+      />
+    ))}
+    <path
+      d="M270 50h10M320 50h10"
+      stroke={COLORS.cream}
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+  </>
+);
+
+const HomeVsPublicScene = () => (
+  <>
+    <path d="M60 230V140l80-50 80 50v90z" fill={COLORS.cream} />
+    <path
+      d="M44 144 140 80l96 64"
+      stroke={COLORS.sun}
+      strokeWidth="8"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <rect x="118" y="180" width="44" height="50" rx="6" fill={COLORS.forest} />
+    <path
+      d="M300 40v200"
+      stroke={COLORS.cream}
+      strokeWidth="4"
+      strokeDasharray="10 12"
+      strokeLinecap="round"
+      opacity=".5"
+    />
+    <circle cx="300" cy="140" r="22" fill={COLORS.sun} />
+    <Bolt x={288} y={124} s={0.4} fill={COLORS.forest} />
+    <rect
+      x="360"
+      y="150"
+      width="40"
+      height="80"
+      fill={COLORS.cream}
+      opacity=".35"
+    />
+    <rect
+      x="500"
+      y="130"
+      width="50"
+      height="100"
+      fill={COLORS.cream}
+      opacity=".25"
+    />
+    <rect x="420" y="110" width="56" height="120" rx="14" fill={COLORS.cream} />
+    <rect
+      x="432"
+      y="124"
+      width="32"
+      height="22"
+      rx="4"
+      fill={COLORS.forest}
+      opacity=".4"
+    />
+    <Bolt x={418} y={146} s={0.8} />
+    <path
+      d="M448 230v-10"
+      stroke={COLORS.cream}
+      strokeWidth="6"
+      strokeLinecap="round"
+    />
+  </>
+);
+
 const DefaultScene = () => (
   <>
     <circle cx="300" cy="140" r="96" fill={COLORS.cream} opacity=".12" />
@@ -410,9 +502,9 @@ const DefaultScene = () => (
 
 const SCENES: Record<string, () => ReactNode> = {
   "home-ev-charging": HomeScene,
-  "how-to-charge-ev": HomeScene,
+  "how-to-charge-ev": HowToScene,
   "ev-charging-costs": CoinsScene,
-  "ev-home-vs-public": CoinsScene,
+  "ev-home-vs-public": HomeVsPublicScene,
   "ev-charging-speed": GaugeScene,
   "ev-winter-charging": WinterScene,
   "ev-road-trip": RoadScene,
@@ -423,8 +515,6 @@ const SCENES: Record<string, () => ReactNode> = {
   "ev-adoption-by-region": RegionScene,
   "fleet-operator-guide": FleetScene,
 };
-
-
 
 export const PostIllustration = ({
   slug,
