@@ -31,12 +31,10 @@ const StationsOgImage = async ({
 }) => {
   const { id } = await params;
   const city = findRegionalCity(id);
+
+  if (!city) return new Response(null, { status: 404 });
+
   const t = await getTranslations({ locale: "pl", namespace: "share" });
-
-  if (!city) {
-    return renderOgCard({ badge: t("ogDefaultBadge"), title: t("ogDefaultTitle") });
-  }
-
   const tRegion = await getTranslations({
     locale: "pl",
     namespace: "regionalStations",
