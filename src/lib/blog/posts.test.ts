@@ -56,7 +56,7 @@ describe("blog/posts", () => {
 
   it("should sort blog posts by date descending", () => {
     const sorted = getBlogPostsSorted();
-    expect(sorted[0].date).toBe("2026-09-20"); // Latest Phase 2D posts
+    expect(sorted[0].date).toBe("2026-11-22"); // Latest post (choosing-charging-network)
     expect(sorted[sorted.length - 1].date).toBe("2026-07-28"); // Oldest (fleet-operator-guide)
   });
 
