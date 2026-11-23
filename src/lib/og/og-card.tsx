@@ -113,7 +113,7 @@ export const renderOgCard = async ({ badge, title, stat }: OgCardInput) => {
       fonts: [{ name: "Inter", data: fontData, weight: 600, style: "normal" }],
       headers: {
         "Cache-Control":
-          "public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000",
+          "public, max-age=86400, s-maxage=86400, stale-while-revalidate=2592000",
       },
     },
   );
