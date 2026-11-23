@@ -137,13 +137,9 @@ export default async function BlogPostPage({ params }: Props) {
                   day: "numeric",
                 })}
               </time>
-              {post.author && (
-                <span>{t("ui.authorByline", { author: post.author })}</span>
-              )}
+              {post.author && <span>{t("ui.authorByline", { author: post.author })}</span>}
               <span className="rounded-full bg-forest/5 px-3 py-1 text-xs font-medium">
-                {t("ui.minRead", {
-                  minutes: Math.ceil(post.content.split(/\s+/).length / 200),
-                })}
+                {t("ui.minRead", { minutes: Math.ceil(post.content.split(/\s+/).length / 200) })}
               </span>
             </div>
 

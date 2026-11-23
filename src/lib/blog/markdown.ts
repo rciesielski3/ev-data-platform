@@ -5,15 +5,12 @@
 
 import { escapeHtml } from "@/lib/utils/escape-html";
 
-export interface MarkdownSection {
-  type: "heading" | "paragraph" | "list" | "blockquote" | "button";
-  href?: string;
-  label?: string;
-  level?: number;
-  content?: string;
-  ordered?: boolean;
-  items?: string[];
-}
+export type MarkdownSection =
+  | { type: "heading"; level: number; content: string }
+  | { type: "paragraph"; content: string }
+  | { type: "blockquote"; content: string }
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "button"; href: string; label: string };
 
 const isSafeHref = (href: string) => /^(\/(?![\/\\])|https:\/\/)\S*$/.test(href);
 

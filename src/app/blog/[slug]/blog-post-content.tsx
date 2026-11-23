@@ -28,7 +28,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       {sections.map((section, index) => {
         if (section.type === "heading") {
           const HeadingTag = `h${section.level}` as
-            "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6";
           return (
             <HeadingTag
               key={index}
@@ -103,7 +108,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           );
         }
 
-        if (section.type === "button" && section.href) {
+        if (section.type === "button") {
           return (
             <div
               key={index}
