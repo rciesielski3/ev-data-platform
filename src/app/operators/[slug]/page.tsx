@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server";
 import BackLink from "@/components/ui/BackLink";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import ShareLinks from "@/components/ui/share-links";
 import { getConnectorPageHref } from "@/features/charging/connector-pages";
 import { CONNECTOR_KNOWLEDGE } from "@/features/charging/connectors";
 import { formatConnectorPower, formatInteger } from "@/features/charging/insights";
@@ -45,6 +46,7 @@ export const generateMetadata = async ({
 
   return generatePageMetadata({
     path: getOperatorPageHref(page.slug),
+    withDefaultImage: false,
     title: t("metaTitle", { name: page.shortName, count: page.stationCount }),
     description: t("metaDescription", {
       name: page.shortName,
@@ -114,6 +116,11 @@ const OperatorLandingPage = async ({
             provinces: page.provinceCount,
           })}
         </p>
+        <ShareLinks
+          url={`${SITE_URL}${getOperatorPageHref(page.slug)}`}
+          title={t("title", { name })}
+          className="mt-6"
+        />
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

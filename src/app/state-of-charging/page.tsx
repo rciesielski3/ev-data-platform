@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Card from "@/components/ui/Card";
 import Notice from "@/components/ui/Notice";
 import PageHeader from "@/components/ui/PageHeader";
+import ShareLinks from "@/components/ui/share-links";
 import {
   buildCoverageAnalysisFromRows,
   type CoverageAnalysis,
@@ -17,6 +18,7 @@ import {
   getOperatorIntelligenceRows,
   getProvinceIntelligenceRows,
 } from "@/lib/db/cached-queries";
+import { SITE_URL } from "@/lib/config/site";
 import { formatDisplayDate, formatDisplayNumber } from "@/lib/display/data-display";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -241,7 +243,11 @@ export default async function StateOfChargingPage() {
 
   return (
     <main className="page-shell pb-20 pt-12 sm:pt-16">
-      <PageHeader title={t("title")} description={t("description")} />
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        actions={<ShareLinks url={`${SITE_URL}/state-of-charging`} title={t("title")} />}
+      />
 
       <p className="muted mb-8 text-sm">
         {t("asOfDate", { date: formatDisplayDate(new Date(), locale) })}

@@ -11,12 +11,14 @@ export interface PageMetadataInput {
   path: string;
   title: string;
   description: string;
+  withDefaultImage?: boolean;
 }
 
 export const generatePageMetadata = ({
   path,
   title,
   description,
+  withDefaultImage = true,
 }: PageMetadataInput): Metadata => ({
   title,
   description,
@@ -27,13 +29,15 @@ export const generatePageMetadata = ({
     title,
     description,
     siteName: "evsource.pl",
-    images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: title }],
+    ...(withDefaultImage && {
+      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: title }],
+    }),
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: [OG_IMAGE_PATH],
+    ...(withDefaultImage && { images: [OG_IMAGE_PATH] }),
   },
 });
 

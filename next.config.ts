@@ -9,7 +9,10 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  /* keep config minimal for MVP */
+  outputFileTracingIncludes: {
+    "/operators/[slug]/opengraph-image": ["./src/lib/og/inter-600.woff"],
+    "/stations/[id]/opengraph-image": ["./src/lib/og/inter-600.woff"],
+  },
 };
 
 export default withNextIntl(nextConfig);
