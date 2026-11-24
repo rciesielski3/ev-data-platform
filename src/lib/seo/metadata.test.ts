@@ -25,6 +25,20 @@ describe("generateConnectorMetadata", () => {
   });
 });
 
+describe("generatePageMetadata withDefaultImage", () => {
+  it("omits the default image so a file-based opengraph-image can apply", () => {
+    const metadata = generatePageMetadata({
+      path: "/operators/x",
+      title: "t",
+      description: "d",
+      withDefaultImage: false,
+    });
+
+    expect(metadata.openGraph).not.toHaveProperty("images");
+    expect(metadata.twitter).not.toHaveProperty("images");
+  });
+});
+
 describe("generateFAQSchema", () => {
   it("builds a FAQPage JSON-LD object from question/answer pairs", () => {
     const schema = generateFAQSchema([

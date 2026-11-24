@@ -1021,6 +1021,14 @@
     "discoveryTitle": "Discover EV charging infrastructure",
     "discoverySubtitle": "Find a charger near you"
   },
+  "share": {
+    "label": "Share:",
+    "ariaLabel": "Share on {network} (opens in a new tab)",
+    "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "x": "X",
+    "ogRegionBadge": "EV charging stations"
+  },
   "dateFormat": {
     "imported": "Imported {date}",
     "source": "source {date}"

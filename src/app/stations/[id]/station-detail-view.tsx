@@ -26,6 +26,7 @@ import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { localizeFallback } from "@/lib/display/localize-fallback";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
 import type { SupportedLocale } from "@/lib/i18n/constants";
+import { generatePageMetadata } from "@/lib/seo/metadata";
 import { DATA_SOURCES } from "@/lib/sources/constants";
 
 const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
@@ -72,16 +73,21 @@ export const generateStationDetailMetadata = async (
     maxPowerKw: station.connectors[0]?.powerKw ?? null,
   });
 
-  return {
+  const { alternates, ...metadata } = generatePageMetadata({
+    path: `/stations/${id}`,
     title: buildStationMetaTitle(
       summaryParts,
       pickReadableStationName([station.name]),
       t,
     ),
     description: buildSummarySentence(summaryParts, t, locale),
+  });
+
+  return {
+    ...metadata,
     ...(fromSnapshot
       ? { robots: { index: false, follow: true } }
-      : { alternates: { canonical: `/stations/${id}` } }),
+      : { alternates }),
   };
 };
 
