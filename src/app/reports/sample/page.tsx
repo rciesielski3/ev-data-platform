@@ -63,7 +63,7 @@ const getSampleMapGroups = unstable_cache(
 
     return groupStationMapDtos(stations.map(formatStationMapDto));
   },
-  ["reports-sample-map-groups-v2"],
+  ["reports-sample-map-groups-v3"],
   { revalidate: 3600 },
 );
 
