@@ -103,7 +103,7 @@ const getMapData = unstable_cache(
       isLimited: total > stationDtos.length,
     };
   },
-  ["map-station-data-v2"],
+  ["map-station-data-v3"],
   { revalidate: 600 },
 );
 
