@@ -114,6 +114,10 @@ describe("formatStationMapDto", () => {
     ["returns null when only implausible", [["chademo", 1200]], null],
     ["keeps legitimate ccs2", [["ccs2", 400]], 400],
     ["does not cap unknown types", [["mystery", 1200]], 1200],
+    ["keeps chademo at the 400 kW limit", [["chademo", 400]], 400],
+    ["drops chademo just above the limit", [["chademo", 401]], null],
+    ["does not judge a null type", [[null, 1200]], 1200],
+    ["returns null without connectors", [], null],
   ] as const)("maxPowerKw %s", (_label, connectors, expected) => {
     const dto = formatStationMapDto({
       id: "s",
