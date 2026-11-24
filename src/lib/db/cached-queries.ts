@@ -38,6 +38,7 @@ export const getProvinceIntelligenceRows = unstable_cache(
         connectors: {
           select: {
             powerKw: true,
+            connectorType: true,
           },
         },
       },
@@ -46,7 +47,7 @@ export const getProvinceIntelligenceRows = unstable_cache(
 
     return buildProvinceIntelligenceRows(stations);
   },
-  ["province-intelligence-rows"],
+  ["province-intelligence-rows-v2"],
   { revalidate: 3600 },
 );
 
@@ -74,6 +75,7 @@ export const getOperatorIntelligenceRows = unstable_cache(
           select: {
             id: true,
             powerKw: true,
+            connectorType: true,
           },
         },
       },
@@ -82,7 +84,7 @@ export const getOperatorIntelligenceRows = unstable_cache(
 
     return buildOperatorIntelligenceRows(stations);
   },
-  ["operator-intelligence-rows"],
+  ["operator-intelligence-rows-v2"],
   { revalidate: 3600 },
 );
 
@@ -102,7 +104,7 @@ export const getOperatorPages = unstable_cache(
 
     return buildOperatorPages(stations);
   },
-  ["operator-pages"],
+  ["operator-pages-v2"],
   { revalidate: 86400 },
 );
 
@@ -119,6 +121,7 @@ export const getCorridorStations = cache(
         connectors: {
           select: {
             powerKw: true,
+            connectorType: true,
           },
         },
       },

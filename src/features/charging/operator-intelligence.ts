@@ -1,3 +1,4 @@
+import { isPlausibleConnectorPower } from "@/features/charging/connectors";
 import { toKnownProvinceKey } from "@/features/charging/province-intelligence";
 import {
   formatStationOperatorLabel,
@@ -7,6 +8,7 @@ import {
 export type OperatorIntelligenceConnectorInput = {
   id?: string | null;
   powerKw?: number | null;
+  connectorType?: string | null;
 };
 
 export type OperatorIntelligenceStationInput = {
@@ -98,6 +100,10 @@ export const buildOperatorIntelligenceRows = (
 
       accumulator.knownPowerConnectorCount += 1;
       accumulator.totalPowerKw += powerKw;
+
+      if (!isPlausibleConnectorPower(connector.connectorType, powerKw)) {
+        continue;
+      }
 
       if (
         accumulator.maxPowerKw === null ||

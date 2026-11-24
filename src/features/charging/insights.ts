@@ -1,8 +1,7 @@
 import { toOperatorGroupKey } from "@/features/charging/operator-intelligence";
 import {
   formatConnectorLabel,
-  getConnectorKnowledge,
-  type ConnectorKey,
+  isPlausibleConnectorPower,
 } from "@/features/charging/connectors";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 
@@ -79,21 +78,6 @@ export const formatPercent = (value: number, total: number) => {
 
 export const formatConnectorPower = (powerKw: number) =>
   `${Number.isInteger(powerKw) ? powerKw.toFixed(0) : powerKw.toFixed(1)} kW`;
-
-const MAX_PLAUSIBLE_POWER_KW: Partial<Record<ConnectorKey, number>> = {
-  chademo: 400,
-  type2: 44,
-};
-
-export const isPlausibleConnectorPower = (
-  connectorType: string | null | undefined,
-  powerKw: number,
-) => {
-  const key = getConnectorKnowledge(connectorType)?.key;
-  const max = key ? MAX_PLAUSIBLE_POWER_KW[key] : undefined;
-
-  return max === undefined || powerKw <= max;
-};
 
 export const buildChargingInsights = (input: ChargingInsightsInput) => {
   const operatorTotals = new Map<string, { label: string; stationCount: number }>();

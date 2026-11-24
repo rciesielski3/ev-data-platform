@@ -1,5 +1,6 @@
 import {
   getConnectorKnowledge,
+  getMaxPlausiblePowerKw,
   type ConnectorKey,
 } from "@/features/charging/connectors";
 import { toKnownProvinceKey } from "@/features/charging/province-intelligence";
@@ -150,20 +151,11 @@ export const getOperatorCityHref = (cityName: string): string | null => {
   return city ? `/stations/${city.slug}` : null;
 };
 
-const getStationMaxPowerKw = (
-  connectors: OperatorPageStationInput["connectors"],
-) =>
-  (connectors ?? []).reduce<number | null>((max, connector) => {
-    const power = connector.powerKw;
-    if (typeof power !== "number" || !Number.isFinite(power)) return max;
-    return max === null || power > max ? power : max;
-  }, null);
-
 const addStation = (
   accumulator: OperatorAccumulator,
   station: OperatorPageStationInput,
 ) => {
-  const maxPowerKw = getStationMaxPowerKw(station.connectors);
+  const maxPowerKw = getMaxPlausiblePowerKw(station.connectors);
   const city = cleanText(station.city);
 
   accumulator.stations.push({

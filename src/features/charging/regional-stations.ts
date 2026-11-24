@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
+import { isPlausibleConnectorPower } from "@/features/charging/connectors";
 import type { OperatorCityStats } from "@/features/charging/operator-stats";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import type { SupportedLocale } from "@/lib/i18n/constants";
@@ -61,6 +62,7 @@ const TOP_OPERATOR_COUNT = 4;
 
 export type RegionalCityConnectorInput = {
   powerKw?: number | null;
+  connectorType?: string | null;
 };
 
 export type RegionalCityOperatorInput = {
@@ -112,6 +114,11 @@ export const buildRegionalCityStats = (
 
       knownPowerConnectorCount += 1;
       totalPowerKw += connector.powerKw;
+
+      if (!isPlausibleConnectorPower(connector.connectorType, connector.powerKw)) {
+        continue;
+      }
+
       maxPowerKw =
         maxPowerKw === null
           ? connector.powerKw

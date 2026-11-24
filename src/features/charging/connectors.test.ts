@@ -7,6 +7,8 @@ import {
   getConnectorCurrentType,
   getConnectorImagePath,
   getConnectorKnowledge,
+  getMaxPlausiblePowerKw,
+  isPlausibleConnectorPower,
 } from "@/features/charging/connectors";
 
 describe("getConnectorKnowledge", () => {
@@ -116,5 +118,68 @@ describe("formatPowerKw", () => {
     expect(formatPowerKw("")).toBe("Unknown");
     expect(formatPowerKw("   ")).toBe("Unknown");
     expect(formatPowerKw("fast")).toBe("Unknown");
+  });
+});
+
+describe("isPlausibleConnectorPower", () => {
+  it("rejects CHAdeMO above its spec maximum (ORLEN MOP 1200 kW rows)", () => {
+    expect(isPlausibleConnectorPower("chademo", 1200)).toBe(false);
+  });
+
+  it("rejects Type 2 above the AC maximum", () => {
+    expect(isPlausibleConnectorPower("type2", 350)).toBe(false);
+  });
+
+  it("keeps genuine high-power connectors", () => {
+    expect(isPlausibleConnectorPower("ccs2", 400)).toBe(true);
+    expect(isPlausibleConnectorPower("ccs2", 600)).toBe(true);
+    expect(isPlausibleConnectorPower("chademo", 400)).toBe(true);
+    expect(isPlausibleConnectorPower("chademo", 150)).toBe(true);
+    expect(isPlausibleConnectorPower("type2", 22)).toBe(true);
+  });
+
+  it("does not judge unknown connector types", () => {
+    expect(isPlausibleConnectorPower("unknown", 1200)).toBe(true);
+  });
+
+  it("applies the caps at the boundary", () => {
+    expect(isPlausibleConnectorPower("chademo", 400)).toBe(true);
+    expect(isPlausibleConnectorPower("chademo", 401)).toBe(false);
+    expect(isPlausibleConnectorPower("type2", 44)).toBe(true);
+    expect(isPlausibleConnectorPower("type2", 45)).toBe(false);
+  });
+
+  it("recognizes connector type aliases and casing", () => {
+    expect(isPlausibleConnectorPower("CHAdeMO", 1200)).toBe(false);
+    expect(isPlausibleConnectorPower("Type 2", 350)).toBe(false);
+    expect(isPlausibleConnectorPower("Type 2 Combo", 350)).toBe(true);
+  });
+});
+
+describe("getMaxPlausiblePowerKw", () => {
+  it("ignores the 1200 kW CHAdeMO and returns the 600 kW CCS2 of the same hub", () => {
+    expect(
+      getMaxPlausiblePowerKw([
+        { connectorType: "chademo", powerKw: 1200 },
+        { connectorType: "ccs2", powerKw: 600 },
+        { connectorType: "ccs2", powerKw: 600 },
+      ]),
+    ).toBe(600);
+  });
+
+  it("returns null when every known power is implausible or missing", () => {
+    expect(
+      getMaxPlausiblePowerKw([
+        { connectorType: "chademo", powerKw: 1200 },
+        { connectorType: "ccs2", powerKw: null },
+      ]),
+    ).toBeNull();
+    expect(getMaxPlausiblePowerKw([])).toBeNull();
+    expect(getMaxPlausiblePowerKw(null)).toBeNull();
+  });
+
+  it("keeps a genuine 400 kW CCS2 and judges connectors without a type as unknown", () => {
+    expect(getMaxPlausiblePowerKw([{ connectorType: "ccs2", powerKw: 400 }])).toBe(400);
+    expect(getMaxPlausiblePowerKw([{ powerKw: 1200 }])).toBe(1200);
   });
 });

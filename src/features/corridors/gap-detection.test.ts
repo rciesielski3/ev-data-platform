@@ -174,3 +174,31 @@ describe("buildAllCorridorAnalyses", () => {
     expect(analyses.map((analysis) => analysis.id)).toEqual(["c1", "c2"]);
   });
 });
+
+describe("findNearestHpc implausible power", () => {
+  it("does not treat an implausible Type 2 350 kW or CHAdeMO 1200 kW as HPC", () => {
+    const fake: CorridorStationInput = {
+      latitude: lodz.latitude,
+      longitude: lodz.longitude,
+      connectors: [
+        { powerKw: 350, connectorType: "type2" },
+        { powerKw: 1200, connectorType: "chademo" },
+      ],
+    };
+
+    expect(findNearestHpc(lodz, [fake])).toBeNull();
+  });
+
+  it("keeps a station whose CCS2 connector is genuinely 150 kW or more", () => {
+    const real: CorridorStationInput = {
+      latitude: lodz.latitude,
+      longitude: lodz.longitude,
+      connectors: [
+        { powerKw: 1200, connectorType: "chademo" },
+        { powerKw: 600, connectorType: "ccs2" },
+      ],
+    };
+
+    expect(findNearestHpc(lodz, [real])?.station).toBe(real);
+  });
+});

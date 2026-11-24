@@ -12,6 +12,7 @@ import {
   buildStationSummaryParts,
   buildSummarySentence,
 } from "@/features/charging/station-summary";
+import { getMaxPlausiblePowerKw } from "@/features/charging/connectors";
 import { buildStationPlaceJsonLd } from "@/features/charging/station-seo";
 import {
   buildStationMetaTitle,
@@ -70,7 +71,7 @@ export const generateStationDetailMetadata = async (
       station.operator?.name ?? station.operator?.normalizedName ?? null,
     city: station.city,
     connectorTypes: station.connectors.map((c) => c.connectorType),
-    maxPowerKw: station.connectors[0]?.powerKw ?? null,
+    maxPowerKw: getMaxPlausiblePowerKw(station.connectors),
   });
 
   const { alternates, ...metadata } = generatePageMetadata({
@@ -146,6 +147,7 @@ export const StationDetailView = async ({ id }: { id: string }) => {
   }
 
   const details = buildStationDetails(station, locale);
+  const maxPowerKw = getMaxPlausiblePowerKw(station.connectors);
   const normalizedAddress = details.address?.trim() ?? "";
 
   const normalizedCity = details.city?.trim() ?? "";
@@ -227,14 +229,14 @@ export const StationDetailView = async ({ id }: { id: string }) => {
             </Badge>
           )}
 
-          {station.connectors[0]?.powerKw && (
+          {maxPowerKw ? (
             <Badge className="!inline-flex items-center gap-1.5 !normal-case !tracking-normal">
               <Zap className="h-4 w-4" aria-hidden />
               {t("upToPower", {
-                power: station.connectors[0].powerKw,
+                power: maxPowerKw,
               })}
             </Badge>
-          )}
+          ) : null}
 
           <Badge className="!border !border-forest/15 !bg-paper !normal-case !tracking-normal">
             {details.quality.completeness.scorePercent}%{" "}

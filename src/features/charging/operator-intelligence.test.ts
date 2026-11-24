@@ -205,3 +205,43 @@ describe("buildOperatorIntelligenceRows", () => {
     });
   });
 });
+
+describe("buildOperatorIntelligenceRows implausible power", () => {
+  const hub = station({
+    id: "hub",
+    name: "HUB ORLEN MOP",
+    operator: { name: "ORLEN", normalizedName: "orlen" },
+    connectors: [
+      { powerKw: 1200, connectorType: "chademo" },
+      { powerKw: 600, connectorType: "ccs2" },
+    ],
+  });
+
+  it("uses the 600 kW CCS2 as the operator max while still counting the CHAdeMO connector", () => {
+    const [row] = buildOperatorIntelligenceRows([hub]);
+
+    expect(row.maxPowerKw).toBe(600);
+    expect(row.strongestStationName).toBe("HUB ORLEN MOP");
+    expect(row.connectorCount).toBe(2);
+    expect(row.knownPowerConnectorCount).toBe(2);
+    expect(row.averagePowerKw).toBe(900);
+  });
+
+  it("leaves max null when the only known power is implausible", () => {
+    const [row] = buildOperatorIntelligenceRows([
+      station({ connectors: [{ powerKw: 1200, connectorType: "chademo" }] }),
+    ]);
+
+    expect(row.maxPowerKw).toBeNull();
+    expect(row.strongestStationName).toBeNull();
+    expect(row.knownPowerConnectorCount).toBe(1);
+  });
+
+  it("still lets a genuine 400 kW CCS2 win", () => {
+    const [row] = buildOperatorIntelligenceRows([
+      station({ connectors: [{ powerKw: 400, connectorType: "ccs2" }] }),
+    ]);
+
+    expect(row.maxPowerKw).toBe(400);
+  });
+});

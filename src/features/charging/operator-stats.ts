@@ -1,3 +1,4 @@
+import { getMaxPlausiblePowerKw } from "@/features/charging/connectors";
 import { matchesRegionalCity } from "@/features/charging/regional-stations";
 import { formatStationOperatorLabel } from "@/features/charging/station-search";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
@@ -63,10 +64,8 @@ const calculateStatsFromStations = (stations: Array<{
     .slice(0, 5);
 
   const maxPowerKw = stations.reduce((max, station) => {
-    return station.connectors.reduce((stationMax, connector) => {
-      if (connector.powerKw == null) return stationMax;
-      return stationMax === null ? connector.powerKw : Math.max(stationMax, connector.powerKw);
-    }, max);
+    const stationMax = getMaxPlausiblePowerKw(station.connectors);
+    return stationMax === null || (max !== null && max >= stationMax) ? max : stationMax;
   }, null as number | null);
 
   return {
