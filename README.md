@@ -358,9 +358,9 @@ Please credit if you reuse it in your own work 🙌
 ### Google Search Console (GSC)
 
 1. Visit [Google Search Console](https://search.google.com/search-console)
-2. Add property: `https://www.evdatasource.com`
+2. Add property: `https://evsource.pl`
 3. Verify ownership via DNS record or HTML file
-4. Submit sitemap: `https://www.evdatasource.com/sitemap.xml`
+4. Submit sitemap: `https://evsource.pl/sitemap.xml`
 5. Monitor Coverage report for indexing status
 6. Track Performance metrics (clicks, impressions, CTR, position)
 7. Monitor Core Web Vitals in the Experience section
@@ -368,9 +368,9 @@ Please credit if you reuse it in your own work 🙌
 ### Bing Webmaster Tools
 
 1. Visit [Bing Webmaster Tools](https://www.bing.com/webmasters)
-2. Add site: `https://www.evdatasource.com`
+2. Add site: `https://evsource.pl`
 3. Verify via DNS or HTML file
-4. Submit sitemap: `https://www.evdatasource.com/sitemap.xml`
+4. Submit sitemap: `https://evsource.pl/sitemap.xml`
 5. Monitor Crawl Issues and Index Explorer
 
 ### Automated Monitoring
