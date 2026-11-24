@@ -4,6 +4,19 @@ Open-source platform for collecting, normalizing and exploring electric vehicle 
 
 Built with Next.js, TypeScript, Prisma, PostgreSQL and PostGIS.
 
+[![CI](https://github.com/rciesielski3/ev-data-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/rciesielski3/ev-data-platform/actions/workflows/ci.yml)
+[![Quality Gates](https://github.com/rciesielski3/ev-data-platform/actions/workflows/quality.yml/badge.svg)](https://github.com/rciesielski3/ev-data-platform/actions/workflows/quality.yml)
+
+**Live demo:** <https://ev-data-platform.vercel.app> (Polish UI by default, with an EN switch)
+
+## Screenshots
+
+| Charging station map | Station search |
+| --- | --- |
+| ![Interactive Leaflet map of EV charging stations in Poland with clustered markers and a results list](docs/images/map-view.jpg) | ![Charging station search page with filters for city, connector, minimum power and operator](docs/images/station-search.png) |
+
+![Charging insights dashboard showing station, connector and known-power totals, top operators and connector distribution](docs/images/insights-dashboard.png)
+
 ---
 
 ## Features
@@ -105,7 +118,7 @@ Application will be available at `http://localhost:3000`.
 
 ### Environment Setup
 
-See [SECRETS.md](./docs/SECRETS.md) for required environment variables and secrets configuration.
+See [`.env.example`](./.env.example) for the variables the app reads (`DATABASE_URL` is the minimum for local development).
 
 ### Commands
 
@@ -116,6 +129,7 @@ See [SECRETS.md](./docs/SECRETS.md) for required environment variables and secre
 | `npm run lint`             | Run ESLint                                       |
 | `npm run typecheck`        | Run TypeScript check                             |
 | `npm run test`             | Run Vitest suite                                 |
+| `npm run test:coverage`    | Run Vitest with V8 coverage report               |
 | `npm run validate`         | Full validation: lint + typecheck + test + build |
 | `npm run db:push`          | Sync database schema                             |
 | `npm run db:studio`        | Open Prisma Studio                               |
@@ -123,6 +137,16 @@ See [SECRETS.md](./docs/SECRETS.md) for required environment variables and secre
 | `npm run import:eipa`      | Import EIPA charging stations                    |
 | `npm run import:eipa:test` | Import EIPA with limit (for testing)             |
 | `npm run import:openev`    | Import OpenEV models                             |
+
+---
+
+## Testing Strategy
+
+- **Runner:** Vitest (`environment: node`), configured in `vitest.config.ts`; `vitest.setup.ts` is the shared setup file.
+- **Scope:** unit tests co-located with the code as `*.test.ts` under `src/lib`, `src/features`, `src/server/jobs`, `src/components` and `src/app` (API route handlers and one page module). They cover validators, normalizers, EIPA/OpenEV source handling, search and filter logic, snapshots, SEO helpers, caching and config checks. There are no browser or end-to-end tests.
+- **Current numbers** (`npm run test:coverage`, 2026-11-24): 85 test files, 866 tests, all passing. V8 coverage over `src/lib` and `src/features` is about 78% statements, 92% branches and 87% functions. Coverage is uneven: validators and snapshots are near 100%, while the EIPA/OpenEV importers and fetchers are mostly untested (roughly 5-30% lines), as they need a live database and upstream APIs.
+- **CI:** [`ci.yml`](.github/workflows/ci.yml) runs lint, typecheck, `npm run test` and the production build on every pull request and push to `main`, plus a non-blocking `npm audit` and a gitleaks secret scan. [`quality.yml`](.github/workflows/quality.yml) runs `prisma validate`, knip (unused files/dependencies) and a Conventional Commits check on PR titles. Coverage is reported locally; CI does not enforce a threshold.
+- **Locally:** `npm run validate:quick` (lint + typecheck + tests) or `npm run validate` (adds the build).
 
 ---
 
@@ -190,10 +214,25 @@ Then verify: `/`, `/vehicles`, `/stations`, `/map`, `/connectors`, `/insights`, 
 
 See [Performance Audit Report (2026-07-30)](./docs/performance-audit-2026-07-30.md) for Core Web Vitals analysis, bundle size optimization roadmap, and prioritized recommendations to improve FCP/LCP on key pages.
 
-**Key Metrics:**
+**Key Metrics (as measured in that audit; they may be out of date since later optimizations):**
 - **Priority Pages:** `/map` (23.7s load), `/vehicles` (3.6s load), `/trends`/`/coverage`/`/stations` (query timeouts)
 - **Optimization Targets:** Lazy-load Leaflet component (Priority 1), paginate vehicles (Priority 2), add database indexes (Priority 3)
 - **Expected Impact:** 60-80% reduction in FCP/LCP, all metrics into "Good" range (<2.5s, <0.1 CLS)
+
+---
+
+## Documentation
+
+The [`docs/`](./docs) folder holds project notes rather than user guides:
+
+- [`PROJECT_SOURCE_OF_TRUTH.md`](./docs/PROJECT_SOURCE_OF_TRUTH.md): project overview and decisions
+- [`performance-audit-2026-07-30.md`](./docs/performance-audit-2026-07-30.md): Core Web Vitals audit
+- [`leaflet-refactor-decision.md`](./docs/leaflet-refactor-decision.md): map component decision record
+- [`worktree-policy.md`](./docs/worktree-policy.md) and [`branch-status-2026-07-08.md`](./docs/branch-status-2026-07-08.md): branch and worktree workflow notes
+- [`seo/`](./docs/seo): keyword research, locale architecture, Search Console tracking and phase reports
+- [`images/`](./docs/images): README screenshots (captured from the live demo)
+
+Operational runbooks live in [`runbooks/`](./runbooks) (Neon backup).
 
 ---
 
