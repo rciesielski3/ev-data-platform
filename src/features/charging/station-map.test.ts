@@ -102,6 +102,35 @@ describe("formatStationMapDto", () => {
     });
   });
 
+  it.each([
+    [
+      "drops implausible chademo power",
+      [
+        ["chademo", 1200],
+        ["ccs2", 600],
+      ],
+      600,
+    ],
+    ["returns null when only implausible", [["chademo", 1200]], null],
+    ["keeps legitimate ccs2", [["ccs2", 400]], 400],
+    ["does not cap unknown types", [["mystery", 1200]], 1200],
+  ] as const)("maxPowerKw %s", (_label, connectors, expected) => {
+    const dto = formatStationMapDto({
+      id: "s",
+      name: null,
+      latitude: 50,
+      longitude: 19,
+      province: null,
+      operator: null,
+      connectors: connectors.map(([connectorType, powerKw]) => ({
+        connectorType,
+        powerKw,
+      })),
+    });
+
+    expect(dto.maxPowerKw).toBe(expected);
+  });
+
   it("hides technical EIPA operator identifiers in DTOs", () => {
     const dto = formatStationMapDto({
       id: "station-2",

@@ -1,6 +1,9 @@
 import type { Prisma } from "@prisma/client";
 
-import { formatConnectorLabel } from "@/features/charging/connectors";
+import {
+  formatConnectorLabel,
+  getMaxPlausiblePowerKw,
+} from "@/features/charging/connectors";
 import {
   classifyGroupPower,
   type StationPowerClass,
@@ -89,14 +92,6 @@ const uniqueConnectorLabels = (
   return labels;
 };
 
-const maxPowerKw = (connectors: StationMapInput["connectors"]) => {
-  const powers = connectors
-    .map((connector) => connector.powerKw)
-    .filter((power): power is number => typeof power === "number");
-
-  return powers.length > 0 ? Math.max(...powers) : null;
-};
-
 const roundToPrecision = (value: number, precision: number) => {
   const factor = 10 ** precision;
 
@@ -171,7 +166,7 @@ export const formatStationMapDto = (station: StationMapInput) => ({
   latitude: station.latitude,
   longitude: station.longitude,
   province: displayValue(station.province),
-  maxPowerKw: maxPowerKw(station.connectors),
+  maxPowerKw: getMaxPlausiblePowerKw(station.connectors),
   connectorLabels: uniqueConnectorLabels(station.connectors),
 });
 
