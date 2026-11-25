@@ -39,4 +39,5 @@ jobs:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
           GLOBAL_CONFIG_ID: ${{ secrets.GLOBAL_CONFIG_ID }}
+          VERCEL_TEAM_ID: team_dX85XFWwhA0d47B50yM5CSud
           DRY_RUN: ${{ inputs.dry_run && '1' || '' }}

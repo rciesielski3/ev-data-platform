@@ -1,3 +1,4 @@
+import { isPeriodOver, parseStoreId } from "./helpers";
 import { LIMIT_CU_HOURS, levelFromUsage } from "./level";
 
 const NEON_API = "https://console.neon.tech/api/v2";
@@ -47,7 +48,10 @@ const fetchConsumption = async (): Promise<Consumption> => {
 };
 
 const writeLevel = async (value: Record<string, unknown>): Promise<void> => {
-  const response = await fetch(`${VERCEL_API}/${encodeURIComponent(requireEnv("GLOBAL_CONFIG_ID"))}/items`, {
+  const storeId = parseStoreId(requireEnv("GLOBAL_CONFIG_ID"));
+  const teamId = process.env.VERCEL_TEAM_ID;
+  const query = teamId ? `?teamId=${encodeURIComponent(teamId)}` : "";
+  const response = await fetch(`${VERCEL_API}/${storeId}/items${query}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${requireEnv("VERCEL_API_TOKEN")}`,
@@ -61,9 +65,10 @@ const writeLevel = async (value: Record<string, unknown>): Promise<void> => {
 const main = async (): Promise<void> => {
   const dryRun = process.env.DRY_RUN === "1";
   const consumption = await fetchConsumption();
-  const cuHours = Math.round(consumption.cuHours * 100) / 100;
+  const periodOver = isPeriodOver(consumption.periodEnd, new Date());
+  const cuHours = periodOver ? 0 : Math.round(consumption.cuHours * 100) / 100;
   const payload = {
-    level: levelFromUsage(consumption.cuHours, LIMIT_CU_HOURS),
+    level: periodOver ? "normal" : levelFromUsage(consumption.cuHours, LIMIT_CU_HOURS),
     cuHours,
     limit: LIMIT_CU_HOURS,
     checkedAt: new Date().toISOString(),
