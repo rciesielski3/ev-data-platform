@@ -91,7 +91,8 @@ describe("vehicle detail loader under the budget guard", () => {
     setLevel(level);
     const { vehicles } = await loadFallbackVehicles();
     const metadata = await generateVehicleMetadata({ params: Promise.resolve({ id: vehicles[0].id }) });
-    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.robots).toBeUndefined();
+    expect(metadata.alternates?.canonical).toBeDefined();
     expect(mocks.getVehicleById).not.toHaveBeenCalled();
     expect(mocks.prismaCall).not.toHaveBeenCalled();
   });

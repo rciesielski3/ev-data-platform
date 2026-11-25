@@ -49,7 +49,7 @@ const loadVehicle = async (id: string) => {
       if (paused) return { vehicle: null, fromSnapshot: true };
       throw error;
     }
-    return { vehicle, fromSnapshot: true };
+    return { vehicle, fromSnapshot: !paused };
   }
 };
 

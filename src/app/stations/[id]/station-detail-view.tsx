@@ -58,7 +58,7 @@ const loadStation = async (id: string) => {
       if (paused) return { station: null, fromSnapshot: true };
       throw error;
     }
-    return { station, fromSnapshot: true };
+    return { station, fromSnapshot: !paused };
   }
 };
 

@@ -77,7 +77,8 @@ describe("station detail loader under the budget guard", () => {
   it.each(["saving", "frozen"])("serves the snapshot in %s without touching the database", async (level) => {
     setLevel(level);
     const metadata = await generateStationDetailMetadata("st-1");
-    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.robots).toBeUndefined();
+    expect(metadata.alternates?.canonical).toBeDefined();
     expect(mocks.getStationById).not.toHaveBeenCalled();
     expect(mocks.prismaCall).not.toHaveBeenCalled();
   });
