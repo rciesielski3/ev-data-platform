@@ -59,7 +59,12 @@ const writeLevel = async (value: Record<string, unknown>): Promise<void> => {
     },
     body: JSON.stringify({ items: [{ operation: "upsert", key: ITEM_KEY, value }] }),
   });
-  await readJson(response, "Vercel Global Config update");
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as { error?: { code?: unknown; message?: unknown } } | null;
+    const code = typeof body?.error?.code === "string" ? body.error.code : "unknown";
+    const message = typeof body?.error?.message === "string" ? body.error.message : "no message";
+    throw new Error(`Vercel Global Config update failed with HTTP ${response.status} (${code}: ${message})`);
+  }
 };
 
 const main = async (): Promise<void> => {
