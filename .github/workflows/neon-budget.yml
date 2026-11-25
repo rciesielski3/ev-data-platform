@@ -1,0 +1,43 @@
+name: Neon budget check
+
+on:
+  schedule:
+    - cron: "17 5,17 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print the level and payload without writing to Global Config"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neon-budget
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Check Neon budget
+        run: npx tsx scripts/neon-budget/check.ts
+        env:
+          NEON_PROJECT_ID: sparkling-meadow-78717373
+          NEON_ORG_ID: org-jolly-bird-48400667
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+          GLOBAL_CONFIG_ID: ${{ secrets.GLOBAL_CONFIG_ID }}
+          VERCEL_TEAM_ID: team_dX85XFWwhA0d47B50yM5CSud
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
