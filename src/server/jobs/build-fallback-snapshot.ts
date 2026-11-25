@@ -85,11 +85,16 @@ const writeSnapshot = (fileName: string, snapshot: { generatedAt: string }, coun
   console.log(`[fallback] wrote ${count} records to ${outputPath}`);
 };
 
+const byId = (left: { id: string }, right: { id: string }) =>
+  left.id.localeCompare(right.id, "en", { numeric: true });
+
 const main = async () => {
   const stations = await buildStations();
+  stations.stations.sort(byId);
   writeSnapshot("stations.json", stations, stations.stations.length);
 
   const vehicles = await buildVehicles();
+  vehicles.vehicles.sort(byId);
   writeSnapshot("vehicles.json", vehicles, vehicles.vehicles.length);
 };
 

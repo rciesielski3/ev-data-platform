@@ -24,6 +24,7 @@
     "import:eipa:test": "EIPA_IMPORT_LIMIT=100 npm run import:eipa",
     "import:openev": "tsx src/server/jobs/run-openev-import.ts",
     "import:all": "npm run import:eipa && npm run import:openev",
+    "fallback:refresh": "tsx src/server/jobs/build-fallback-snapshot.ts",
     "snapshot:backfill": "tsx src/server/jobs/backfill-snapshot.ts",
     "test": "vitest run",
     "test:watch": "vitest",
