@@ -1,4 +1,4 @@
-const UNAVAILABLE_ERROR_NAMES = ["PrismaClientInitializationError"];
+const UNAVAILABLE_ERROR_NAMES = ["PrismaClientInitializationError", "DatabaseBudgetPausedError"];
 const UNAVAILABLE_ERROR_CODES = ["P1001", "P1002", "P1008", "P1017"];
 
 export const isDatabaseUnavailableError = (error: unknown): boolean => {

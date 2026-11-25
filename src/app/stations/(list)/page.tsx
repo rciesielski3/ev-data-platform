@@ -30,6 +30,7 @@ import {
   StationFreshnessIndicator,
 } from "@/features/charging/station-quality-badge";
 import { REGIONAL_CITIES } from "@/lib/config/regional-cities";
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { loadFallbackStations } from "@/lib/fallback/stations-snapshot";
@@ -172,6 +173,7 @@ const getCachedStationsData = (filters: ReturnType<typeof parseStationSearchPara
 
 const getStationsData = async (filters: ReturnType<typeof parseStationSearchParams>) => {
   try {
+    await throwIfBudgetPaused("all");
     return await getCachedStationsData(filters);
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;

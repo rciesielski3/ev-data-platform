@@ -18,6 +18,7 @@ import {
   type VehicleSearchParams,
 } from "@/features/ev/vehicle-search";
 import { buildFallbackVehiclesData } from "@/features/ev/fallback-vehicles";
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate } from "@/lib/display/data-display";
@@ -33,6 +34,11 @@ const isFilteredView = (
 ): boolean => Boolean(filters.q || filters.brand) || filters.page > 1;
 
 const PAGE_SIZE = 24;
+
+const loadVehiclesData = async (filters: ReturnType<typeof parseVehicleSearchParams>) => {
+  await throwIfBudgetPaused("all");
+  return getVehiclesData(filters);
+};
 
 const getVehiclesData = (filters: ReturnType<typeof parseVehicleSearchParams>) =>
   unstable_cache(
@@ -139,7 +145,7 @@ export default async function VehiclesPage({
 
   let topBrands: Awaited<ReturnType<typeof getTopVehicleBrands>> = [];
 
-  const { vehicles, total, brands } = await getVehiclesData(filters).catch(async (error: unknown) => {
+  const { vehicles, total, brands } = await loadVehiclesData(filters).catch(async (error: unknown) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("vehicles: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();

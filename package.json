@@ -34,6 +34,7 @@
     "@google-analytics/data": "^6.1.0",
     "@prisma/client": "^6.9.0",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/global-config": "1.5.1",
     "@vercel/speed-insights": "^2.0.0",
     "date-fns": "^4.4.0",
     "leaflet": "^1.9.4",
