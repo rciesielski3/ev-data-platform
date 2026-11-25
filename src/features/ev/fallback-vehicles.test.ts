@@ -75,3 +75,23 @@ describe("buildFallbackVehicleDetail", () => {
     expect(buildFallbackVehicleDetail(vehicles, "missing", generatedAt)).toBeNull();
   });
 });
+
+describe("buildFallbackVehicleDetail dbId matching", () => {
+  const withDbId = [vehicle({ id: "tesla:model_3", dbId: "cmveh123" }), vehicle({ id: "legacy" })];
+
+  it("matches by database id", () => {
+    const detail = buildFallbackVehicleDetail(withDbId, "cmveh123", generatedAt);
+    expect(detail?.id).toBe("cmveh123");
+    expect(detail?.sourceRecordId).toBe("tesla:model_3");
+    expect(detail?.specs?.modelId).toBe("cmveh123");
+  });
+
+  it("still matches by source id", () => {
+    expect(buildFallbackVehicleDetail(withDbId, "tesla:model_3", generatedAt)?.id).toBe("cmveh123");
+    expect(buildFallbackVehicleDetail(withDbId, "legacy", generatedAt)?.id).toBe("legacy");
+  });
+
+  it("returns null when neither id matches", () => {
+    expect(buildFallbackVehicleDetail(withDbId, "cmother", generatedAt)).toBeNull();
+  });
+});

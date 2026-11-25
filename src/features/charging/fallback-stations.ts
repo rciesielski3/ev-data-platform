@@ -7,6 +7,7 @@ import { DATA_SOURCES } from "@/lib/sources/constants";
 
 export type FallbackStationRecord = {
   id: string;
+  dbId?: string;
   name: string | null;
   city: string | null;
   province: string | null;
@@ -96,7 +97,7 @@ export const buildFallbackStationsData = (
 };
 
 const toDetail = (station: FallbackStationRecord, importedAt: Date): FallbackStationDetail => ({
-  id: station.id,
+  id: station.dbId ?? station.id,
   sourceName: DATA_SOURCES.EIPA.key,
   sourceRecordId: station.id,
   externalCode: station.externalCode,
@@ -137,7 +138,7 @@ const toDetail = (station: FallbackStationRecord, importedAt: Date): FallbackSta
 });
 
 export const buildFallbackStationDetail = (stations: FallbackStationRecord[], id: string, generatedAt: string) => {
-  const station = stations.find((candidate) => candidate.id === id);
+  const station = stations.find((candidate) => candidate.dbId === id || candidate.id === id);
   return station ? toDetail(station, new Date(generatedAt)) : null;
 };
 
