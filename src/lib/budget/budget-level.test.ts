@@ -48,6 +48,15 @@ describe("parseBudgetLevel", () => {
     expect(parseBudgetLevel(null)).toBe("normal");
     expect(parseBudgetLevel(undefined)).toBe("normal");
   });
+
+  it("expires the level once the billing period has ended", () => {
+    const value = { level: "frozen", periodEnd: "2026-12-01T00:00:00Z" };
+    const before = Date.parse("2026-11-30T23:59:59Z");
+    const after = Date.parse("2026-12-01T00:00:00Z");
+    expect(parseBudgetLevel(value, before)).toBe("frozen");
+    expect(parseBudgetLevel(value, after)).toBe("normal");
+    expect(parseBudgetLevel({ level: "saving", periodEnd: "garbage" }, after)).toBe("saving");
+  });
 });
 
 describe("getBudgetLevel", () => {
