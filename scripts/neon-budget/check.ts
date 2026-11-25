@@ -76,6 +76,7 @@ const main = async (): Promise<void> => {
     level: periodOver ? "normal" : levelFromUsage(consumption.cuHours, LIMIT_CU_HOURS),
     cuHours,
     limit: LIMIT_CU_HOURS,
+    periodEnd: consumption.periodEnd,
     checkedAt: new Date().toISOString(),
   };
 

@@ -20,9 +20,13 @@ export const levelFromUsage = (cuHours: number, limit: number): BudgetLevel => {
   return "normal";
 };
 
-export const parseBudgetLevel = (value: unknown): BudgetLevel => {
+export const parseBudgetLevel = (value: unknown, now: number = Date.now()): BudgetLevel => {
   if (typeof value !== "object" || value === null) return "normal";
-  const { level } = value as { level?: unknown };
+  const { level, periodEnd } = value as { level?: unknown; periodEnd?: unknown };
+  if (typeof periodEnd === "string") {
+    const end = Date.parse(periodEnd);
+    if (Number.isFinite(end) && end <= now) return "normal";
+  }
   return level === "saving" || level === "frozen" ? level : "normal";
 };
 
