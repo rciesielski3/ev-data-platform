@@ -111,3 +111,20 @@ describe("buildFallbackStationTotals", () => {
     expect(buildFallbackStationTotals(stations)).toEqual({ stationCount: 3, operatorCount: 2, provinceCount: 2 });
   });
 });
+
+describe("buildFallbackStationDetail dbId matching", () => {
+  const withDbId = [station({ id: "910", dbId: "cmabc123" }), station({ id: "911" })];
+
+  it("matches by database id and exposes it as the detail id", () => {
+    expect(buildFallbackStationDetail(withDbId, "cmabc123", generatedAt)?.id).toBe("cmabc123");
+  });
+
+  it("still matches by source id", () => {
+    expect(buildFallbackStationDetail(withDbId, "910", generatedAt)?.sourceRecordId).toBe("910");
+    expect(buildFallbackStationDetail(withDbId, "911", generatedAt)?.id).toBe("911");
+  });
+
+  it("returns null when neither id matches", () => {
+    expect(buildFallbackStationDetail(withDbId, "cmother", generatedAt)).toBeNull();
+  });
+});

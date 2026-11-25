@@ -5,6 +5,7 @@ import type { NormalizedEvModel } from "@/lib/sources/openev/types";
 
 export type FallbackVehicleRecord = {
   id: string;
+  dbId?: string;
   brandSlug: string;
   brandName: string;
   modelName: string;
@@ -29,8 +30,10 @@ const matchesFilters = (vehicle: FallbackVehicleRecord, filters: VehicleSearchFi
 const toListItem = (vehicle: FallbackVehicleRecord, importedAt: Date): FallbackVehicleListItem => {
   const brand = { id: vehicle.brandSlug, slug: vehicle.brandSlug, name: vehicle.brandName, createdAt: importedAt, updatedAt: importedAt };
 
+  const id = vehicle.dbId ?? vehicle.id;
+
   return {
-    id: vehicle.id,
+    id,
     brandId: brand.id,
     brand,
     sourceName: "openev",
@@ -47,8 +50,8 @@ const toListItem = (vehicle: FallbackVehicleRecord, importedAt: Date): FallbackV
     isManualOverride: false,
     rawPayload: null,
     specs: {
-      id: vehicle.id,
-      modelId: vehicle.id,
+      id,
+      modelId: id,
       ...vehicle.specs,
       manualOverrides: null,
       importedAt,
@@ -58,7 +61,7 @@ const toListItem = (vehicle: FallbackVehicleRecord, importedAt: Date): FallbackV
 };
 
 export const buildFallbackVehicleDetail = (vehicles: FallbackVehicleRecord[], id: string, generatedAt: string) => {
-  const vehicle = vehicles.find((candidate) => candidate.id === id);
+  const vehicle = vehicles.find((candidate) => candidate.dbId === id || candidate.id === id);
   return vehicle ? toListItem(vehicle, new Date(generatedAt)) : null;
 };
 
