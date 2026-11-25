@@ -57,7 +57,7 @@ vi.mock("next-intl/server", () => ({
 }));
 vi.mock("@/app/stations/[id]/station-location-map-client", () => ({ default: () => null }));
 
-import { generateStationDetailMetadata } from "./station-detail-view";
+import { generateStationDetailMetadata, redirectLegacyStationId } from "./station-detail-view";
 import { resetBudgetLevelCache } from "@/lib/budget/budget-level";
 
 const setLevel = (level: string | null) => {
@@ -79,6 +79,20 @@ describe("station detail loader under the budget guard", () => {
     const metadata = await generateStationDetailMetadata("st-1");
     expect(metadata.robots).toEqual({ index: false, follow: true });
     expect(mocks.getStationById).not.toHaveBeenCalled();
+    expect(mocks.prismaCall).not.toHaveBeenCalled();
+  });
+
+  it.each(["saving", "frozen"])("returns a not-found result instead of a 500 for an id missing from the snapshot in %s", async (level) => {
+    setLevel(level);
+    const metadata = await generateStationDetailMetadata("not-in-snapshot");
+    expect(metadata.robots).toEqual({ index: false, follow: false });
+    expect(mocks.getStationById).not.toHaveBeenCalled();
+    expect(mocks.prismaCall).not.toHaveBeenCalled();
+  });
+
+  it("does not look up legacy numeric ids in the database while paused", async () => {
+    setLevel("saving");
+    await expect(redirectLegacyStationId("99999")).resolves.toBeUndefined();
     expect(mocks.prismaCall).not.toHaveBeenCalled();
   });
 

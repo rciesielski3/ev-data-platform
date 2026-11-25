@@ -14,6 +14,7 @@ import {
 } from "@/features/ev/vehicle-seo";
 import { buildFallbackVehicleDetail } from "@/features/ev/fallback-vehicles";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
+import { DatabaseBudgetPausedError } from "@/lib/budget/database-budget-paused-error";
 import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { getVehicleById } from "@/lib/db/cached-detail-queries";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
@@ -40,10 +41,14 @@ const loadVehicle = async (id: string) => {
     return { vehicle: await getVehicleById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
-    console.warn("vehicle detail: database unavailable, serving snapshot");
+    const paused = error instanceof DatabaseBudgetPausedError;
+    if (!paused) console.warn("vehicle detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackVehicles();
     const vehicle = buildFallbackVehicleDetail(snapshot.vehicles, decodeRouteId(id), snapshot.generatedAt);
-    if (!vehicle) throw error;
+    if (!vehicle) {
+      if (paused) return { vehicle: null, fromSnapshot: true };
+      throw error;
+    }
     return { vehicle, fromSnapshot: true };
   }
 };

@@ -21,6 +21,7 @@ import {
 import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
+import { DatabaseBudgetPausedError } from "@/lib/budget/database-budget-paused-error";
 import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { getStationById } from "@/lib/db/cached-detail-queries";
 import { prisma } from "@/lib/db/prisma";
@@ -49,10 +50,14 @@ const loadStation = async (id: string) => {
     return { station: await getStationById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;
-    console.warn("station detail: database unavailable, serving snapshot");
+    const paused = error instanceof DatabaseBudgetPausedError;
+    if (!paused) console.warn("station detail: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();
     const station = buildFallbackStationDetail(snapshot.stations, id, snapshot.generatedAt);
-    if (!station) throw error;
+    if (!station) {
+      if (paused) return { station: null, fromSnapshot: true };
+      throw error;
+    }
     return { station, fromSnapshot: true };
   }
 };
@@ -131,7 +136,10 @@ const FRESHNESS_SOURCE_KEYS: Record<string, string> = {
 export const redirectLegacyStationId = async (id: string) => {
   const { station } = await loadStation(id);
   if (!/^\d+$/.test(id) || station) return;
-  const aliased = await findStationIdBySourceRecordId(id).catch((error) => {
+  const aliased = await (async () => {
+    await throwIfBudgetPaused("detail");
+    return findStationIdBySourceRecordId(id);
+  })().catch((error) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     return null;
   });
