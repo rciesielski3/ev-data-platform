@@ -17,7 +17,7 @@ describe("station summary sentence messages", () => {
     ["en", enMessages],
     ["pl", plMessages],
   ])("%s defines every summary key in the stations namespace", (_locale, messages) => {
-    const namespace = messages.stations as Record<string, string>;
+    const namespace = messages.stations as unknown as Record<string, unknown>;
 
     SUMMARY_KEYS.forEach((key) => {
       expect(namespace[key]).toEqual(expect.any(String));
