@@ -14,6 +14,7 @@ import {
 } from "@/features/ev/vehicle-seo";
 import { buildFallbackVehicleDetail } from "@/features/ev/fallback-vehicles";
 import { formatDrivetrainLabel } from "@/features/ev/vehicle-search";
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { getVehicleById } from "@/lib/db/cached-detail-queries";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { formatDisplayDate, getSafeHttpUrl } from "@/lib/display/data-display";
@@ -35,6 +36,7 @@ const decodeRouteId = (id: string) => {
 
 const loadVehicle = async (id: string) => {
   try {
+    await throwIfBudgetPaused("detail");
     return { vehicle: await getVehicleById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { DatabaseBudgetPausedError } from "@/lib/budget/database-budget-paused-error";
 import { isDatabaseUnavailableError } from "./database-unavailable";
 
 const withName = (name: string, code?: string) => Object.assign(new Error("boom"), { name, code });
@@ -7,6 +8,10 @@ const withName = (name: string, code?: string) => Object.assign(new Error("boom"
 describe("isDatabaseUnavailableError", () => {
   it("detects Prisma initialization errors", () => {
     expect(isDatabaseUnavailableError(withName("PrismaClientInitializationError"))).toBe(true);
+  });
+
+  it("detects budget-paused errors", () => {
+    expect(isDatabaseUnavailableError(new DatabaseBudgetPausedError())).toBe(true);
   });
 
   it("detects unreachable-server, timeout and auth-failure codes", () => {

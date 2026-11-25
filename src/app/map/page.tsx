@@ -15,6 +15,7 @@ import {
   parseStationMapFilters,
   type StationMapParams,
 } from "@/features/charging/station-map";
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { buildFallbackMapData } from "@/features/charging/fallback-stations";
@@ -107,6 +108,11 @@ const getMapData = unstable_cache(
   { revalidate: 600 },
 );
 
+const loadMapData = async (filters: ReturnType<typeof parseStationMapFilters>) => {
+  await throwIfBudgetPaused("all");
+  return getMapData(filters);
+};
+
 const MapPanelLoading = () => (
   <>
     <div className="card mb-6 grid gap-4 !rounded-[2rem] !p-5 sm:!p-6 md:grid-cols-4">
@@ -136,7 +142,7 @@ const MapDataPanel = async ({ params }: { params: StationMapParams }) => {
   const t = await getTranslations("map");
 
   const filters = parseStationMapFilters(params);
-  const data = await getMapData(filters).catch(async (error: unknown) => {
+  const data = await loadMapData(filters).catch(async (error: unknown) => {
     if (!isDatabaseUnavailableError(error)) throw error;
     console.warn("map: database unavailable, serving snapshot");
     const snapshot = await loadFallbackStations();

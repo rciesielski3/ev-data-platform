@@ -21,6 +21,7 @@ import {
 import { buildFallbackStationDetail } from "@/features/charging/fallback-stations";
 import { buildStationDetails } from "@/features/charging/station-details";
 import { StationFreshnessIndicator } from "@/features/charging/station-quality-badge";
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { getStationById } from "@/lib/db/cached-detail-queries";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
@@ -44,6 +45,7 @@ const findStationIdBySourceRecordId = cache((sourceRecordId: string) =>
 
 const loadStation = async (id: string) => {
   try {
+    await throwIfBudgetPaused("detail");
     return { station: await getStationById(id), fromSnapshot: false };
   } catch (error) {
     if (!isDatabaseUnavailableError(error)) throw error;

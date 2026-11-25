@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { throwIfBudgetPaused } from "@/lib/budget/budget-level";
 import { prisma } from "@/lib/db/prisma";
 import { isDatabaseUnavailableError } from "@/lib/db/database-unavailable";
 import { SITE_URL } from "@/lib/config/site";
@@ -35,6 +36,7 @@ const loadSitemapRecords = async (): Promise<{
   vehicles: { id: string; updatedAt: Date }[];
 }> => {
   try {
+    await throwIfBudgetPaused("all");
     const [stations, vehicles] = await Promise.all([
       prisma.chargingStation.findMany({
         select: { id: true, updatedAt: true },
@@ -56,6 +58,7 @@ const loadSitemapRecords = async (): Promise<{
 
 const loadOperatorSitemapEntries = async (): Promise<MetadataRoute.Sitemap> => {
   try {
+    await throwIfBudgetPaused("all");
     const pages = await getOperatorPages();
     return pages.map((page) => ({
       url: `${SITE_URL}${getOperatorPageHref(page.slug)}`,
