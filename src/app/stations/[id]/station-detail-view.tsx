@@ -65,6 +65,7 @@ export const generateStationDetailMetadata = async (
   }
 
   const t = await getTranslations("stationDetail");
+  const tStations = await getTranslations("stations");
   const locale = await getLocale();
   const summaryParts = buildStationSummaryParts({
     operatorName:
@@ -81,7 +82,7 @@ export const generateStationDetailMetadata = async (
       pickReadableStationName([station.name]),
       t,
     ),
-    description: buildSummarySentence(summaryParts, t, locale),
+    description: buildSummarySentence(summaryParts, tStations, locale),
   });
 
   return {
