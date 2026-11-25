@@ -27,9 +27,9 @@ Poland's charging infrastructure is served by several key operators, each with d
 
 ### Network Coverage Areas
 
-**Urban vs. Rural Distribution**: Major cities like Warsaw, Kraków, and Wrocław have dense charging networks, with concentrations reaching 20+ charging points per city. However, rural areas and smaller towns show significant gaps in coverage, particularly in eastern Poland.
+**Urban vs. Rural Distribution**: Major cities like Warsaw, Kraków, and Wrocław have dense charging networks, with the densest concentrations of charging points in the country. However, rural areas and smaller towns show significant gaps in coverage, particularly in eastern Poland.
 
-**Corridor Connectivity**: The primary highway corridors (A1, A2, A4) are increasingly well-served with fast-charging stations, enabling long-distance EV travel. According to [SEO Phase 2 corridor analysis data](/corridors), highway coverage has expanded by over 35% in the past two years.
+**Corridor Connectivity**: The primary highway corridors (A1, A2, A4) are increasingly well-served with fast-charging stations, enabling long-distance EV travel. Our [corridor analysis](/corridors) shows how well each highway is covered today.
 
 **Regional Variability**: Some regions have achieved excellent coverage density (Mazovia, Silesia, Greater Poland), while others remain underserved. This regional disparity is crucial information for planning cross-country EV adoption strategies.
 
@@ -50,12 +50,12 @@ Different networks offer varying charging speeds:
 
 ### 3. Reliability and Uptime
 
-Network reliability is critical for EV drivers. Leading operators maintain uptime rates exceeding 95%, with transparent status reporting and 24/7 support.
+Network reliability is critical for EV drivers. Look for operators with transparent status reporting and 24/7 support.
 
 ### 4. Pricing Models
 
 Charging costs vary significantly:
-- **Per-kWh pricing**: Most common, ranging from 1.50 PLN to 2.50 PLN per kWh
+- **Per-kWh pricing**: Most common, with rates that differ between operators and between AC and DC
 - **Connection fees**: Some networks charge per charging session
 - **Time-based pricing**: Rare but available for standard chargers
 
@@ -152,14 +152,14 @@ Poland's EV market has experienced remarkable growth over the past five years, t
 ### EV Density and Per-Capita Adoption
 
 Regional adoption rates vary significantly when measured per capita and per area. Our [coverage analysis](/coverage) tracks these metrics across all regions, revealing:
-- Urban centers consistently outpace rural areas by 3-4x
+- Urban centers consistently outpace rural areas
 - Regional capital cities drive regional adoption
 - Coastal regions show higher adoption rates than inland areas
 
 ### Charging Infrastructure as an Adoption Driver
 
 The correlation between charging infrastructure and EV adoption is strong. Regions investing in charging networks see accelerated adoption:
-- Regions with >50 public charging points show 2.3x higher adoption rates
+- Regions with more public charging points tend to show higher adoption rates
 - Corridor coverage strongly influences highway vehicle adoption
 - Residential charging access supports urban EV growth
 
@@ -175,8 +175,8 @@ EV adoption correlates strongly with regional income levels:
 ### Age and Urban Density
 
 Younger, urban populations show greater EV adoption interest:
-- Cities with populations over 200,000 show 40% higher adoption
-- Age groups 25-45 drive the majority of EV purchases
+- Larger cities tend to show higher adoption
+- Working-age buyers account for a large share of EV purchases
 - University towns show disproportionately high EV interest
 
 ## Policy and Incentive Impact
@@ -227,7 +227,7 @@ The urban-rural divide in EV adoption reflects infrastructure disparities:
 ## Regional Growth Projections
 
 Based on current trends and planned infrastructure investments, regional EV adoption is expected to:
-- Increase 40-60% year-over-year in leading regions
+- Keep growing year over year in leading regions
 - Gradually expand from urban centers to regional towns
 - Accelerate in industrial regions with fleet adoption
 - Remain challenged in rural areas without infrastructure investment
@@ -568,7 +568,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["choose charging network", "which network", "best network"],
     date: "2026-11-22",
     author: "EVSource Team",
-    content: `# How to Choose\n\n## Your Needs\n\n1. Mostly home? One network\n2. Highways? ORLEN best\n3. Cities? Energa everywhere\n4. Everywhere? Multi-network\n\n## Subscription vs Pay-as-you-go\n\nSubscription: If 50k+/y...`, // See messages/en.json for full content
+    content: `# How to Choose\n\n## Your Needs\n\n1. Mostly home? One network\n2. Highways? ORLEN best\n3. Cities? Energa everywhere\n4. Everywhere? Multi-network\n\n## Subscription vs Pay-as-you-go\n\nSubscription: only if savings beat the fee...`, // See messages/en.json for full content
   },
   {
     slug: "ev-charging-costs",
@@ -577,7 +577,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["EV charging cost", "electricity price", "cost of ownership"],
     date: "2026-10-04",
     author: "EVSource Team",
-    content: `# How Much Does Charging Cost?\n\n## Home\n\nStandard: 7.50-12 PLN/100km\nNight: 3.75-7 PLN/100km (50% cheaper!)\n\n## Public\n\nAC: 8-15 PLN/session\nDC: 20-50 PLN/session\n\n## vs Gas\n\nDiesel: 42 PLN/100km\nGaso...`, // See messages/en.json for full content
+    content: `# How Much Does Charging Cost?\n\n## Home\n\nStandard: cheaper than public\nNight: cheaper still\n\n## Public\n\nAC: varies by operator\nDC: costs more per kWh than AC\n\n## vs Gas\n\nDiesel and petrol: typically costlier per 100km than EV at night...`, // See messages/en.json for full content
   },
   {
     slug: "ev-charging-speed",
@@ -586,7 +586,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["charging time EV", "how long to charge", "charging speed"],
     date: "2026-10-18",
     author: "EVSource Team",
-    content: `# How Long Does Charging Take?\n\n## Times for Popular Models\n\n### Home charging (3.7 kW)\nNissan Leaf: 4-6h\nVolkswagen ID.4: 6-8h\nTesla Model 3: 7-9h\n\n### Public AC (11-22 kW)\n1-3 hours depending on pow...`, // See messages/en.json for full content
+    content: `# How Long Does Charging Take?\n\n## Times for Popular Models\n\n### Home charging (3.7 kW)\nDepends on battery size; the car is full by morning\n\n### Public AC (11-22 kW)\nA few hours depending on pow...`, // See messages/en.json for full content
   },
   {
     slug: "ev-home-vs-public",
@@ -595,7 +595,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["home charging", "public stations", "charging comparison"],
     date: "2026-10-11",
     author: "EVSource Team",
-    content: `# Home vs Public\n\n## Convenience\n\nHome: Always available, no waiting\nPublic: Access when away from home\n\n## Costs\n\nHome at night: Cheapest\nPublic: 2-3x more expensive\n\n## When to Choose\n\nHome: For dai...`, // See messages/en.json for full content
+    content: `# Home vs Public\n\n## Convenience\n\nHome: Always available, no waiting\nPublic: Access when away from home\n\n## Costs\n\nHome at night: Cheapest\nPublic: more expensive\n\n## When to Choose\n\nHome: For dai...`, // See messages/en.json for full content
   },
   {
     slug: "ev-road-trip",
@@ -613,7 +613,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["winter charging", "EV winter", "cold weather charging"],
     date: "2026-10-25",
     author: "EVSource Team",
-    content: `# Charging EV in Winter\n\n## Challenges\n\nCold reduces range by 20-40%\nBattery charges slower\nClimate control uses energy\n\n## Tips\n\n### Before Trip\n- Preheat while charging\n- Charge to 100%\n- Plan with ...`, // See messages/en.json for full content
+    content: `# Charging EV in Winter\n\n## Challenges\n\nCold reduces range noticeably\nBattery charges slower\nClimate control uses energy\n\n## Tips\n\n### Before Trip\n- Preheat while charging\n- Charge to 100%\n- Plan with ...`, // See messages/en.json for full content
   },
   {
     slug: "home-ev-charging",
@@ -622,7 +622,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["charging at home", "wall-box installation", "home charger"],
     date: "2026-09-27",
     author: "EVSource Team",
-    content: `# Charging at Home\n\n## Types\n\n### Schuko (2.3 kW)\n8-12 hours.\n\n### AC 3.7 kW\nStandard, 6-8h, cost: 3-7.5k PLN.\n\n### AC 11 kW\nFast, 2-3h.\n\n## Installation\n\n1. Power\n2. Wall-box\n3. Electrician\n4. Subsid...`, // See messages/en.json for full content
+    content: `# Charging at Home\n\n## Types\n\n### Schuko (2.3 kW)\nSlow, a backup option.\n\n### AC 3.7 kW\nStandard, fits a night, cost varies.\n\n### AC 11 kW\nFast.\n\n## Installation\n\n1. Power\n2. Wall-box\n3. Electrician\n4. Subsid...`, // See messages/en.json for full content
   },
   {
     slug: "how-to-charge-ev",
@@ -640,7 +640,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["ORLEN Charge", "Energa charging", "network comparison"],
     date: "2026-11-08",
     author: "EVSource Team",
-    content: `# ORLEN vs Energa\n\n## Prices\n\nORLEN AC: 0.99 PLN/kWh\nEnerga AC: 0.85 PLN/kWh\n\nORLEN DC: 1.99 PLN/kWh\nEnerga DC: 1.79 PLN/kWh\n\n## Availability\n\nORLEN: Highways, cities\nEnerga: Everywhere, dense\n\n## App...`, // See messages/en.json for full content
+    content: `# ORLEN vs Energa\n\n## Prices\n\nTariffs change often; check the current price per kWh in each operator's app\n\n## Availability\n\nORLEN: Highways, cities\nEnerga: Everywhere, dense\n\n## App...`, // See messages/en.json for full content
   },
   {
     slug: "tesla-supercharger-vs-others",
@@ -649,7 +649,7 @@ For detailed information about charging infrastructure, regional coverage, and o
     keywords: ["Tesla Supercharger", "charger comparison", "Tesla vs others"],
     date: "2026-11-15",
     author: "EVSource Team",
-    content: `# Tesla vs Others\n\n## Speed\n\nTesla: 150-250 kW (fastest)\nPublic: 50-150 kW (slower)\n\n## Availability\n\nTesla: 50+ stations in Poland\nPublic: 1000+ network combinations\n\n## Cost\n\nTesla: 2.49 PLN/kWh\nORL...`, // See messages/en.json for full content
+    content: `# Tesla vs Others\n\n## Speed\n\nTesla: among the fastest\nPublic: varies by site\n\n## Availability\n\nTesla: along main routes\nPublic: much wider choice\n\n## Cost\n\nPrices change often; check each app\nORL...`, // See messages/en.json for full content
   },
 ];
 
